@@ -6,9 +6,7 @@ import WheelCard from '../../components/wheel/WheelCard';
 import { useGetAllWheelHistoryMutation } from '../../apiServices/workflow/rewards/GetWheelApi';
 import * as Keychain from 'react-native-keychain';
 import { useSelector } from 'react-redux';
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
+
 
 
 // create a component
@@ -112,8 +110,7 @@ const WheelList = ({ navigation }) => {
 
     return (
         <View style={[styles.container, {backgroundColor:ternaryThemeColor}]}>
-    return (
-        <View style={styles.container}>
+   
             {/* Navigator */}
             <View
                 style={{
@@ -175,10 +172,10 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         height:'100%'
     }
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#2c3e50',
-    },
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     backgroundColor: '#2c3e50',
+    // },
 });
 
 //make this component available to the app

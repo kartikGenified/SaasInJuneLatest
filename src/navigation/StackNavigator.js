@@ -55,37 +55,19 @@ import Scheme from '../screens/scheme/Scheme';
 import WheelList from '../screens/wheel/WheelList';
 import SpinWheel from '../screens/wheel/SpinWheel';
 import DataNotFound from '../screens/data not found/DataNotFound';
+import Splash from '../screens/common/Splash';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {/* <Stack.Screen options={
-                    {
-                        headerShown:false
-                    }
-                } name="EditProfile" component={EditProfile}></Stack.Screen>
-
-                <Stack.Screen options={
-                    {
-                        headerShown:false
-                    }
-                } name="Profile" component={Profile}></Stack.Screen> */}
-                {/* 
-                <Stack.Screen options={
+                
+            <Stack.Screen options={
                     {
                         headerShown: false
                     }
-                } name="Feedback" component={Feedback}></Stack.Screen>
- */}
-
-                <Stack.Screen options={
-                    {
-                        headerShown: false
-                    }
-                } name="WheelList" component={WheelList}></Stack.Screen>
-
+                } name="Splash" component={Splash}></Stack.Screen>
 
                 <Stack.Screen options={
                     {

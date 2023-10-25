@@ -23,6 +23,7 @@ const Profile = ({ navigation }) => {
   const [showProfilePic, setShowProfilePic] = useState(false);
   const [profileName, setProfileName] = useState(false);
   const [showNoDataFoundMessage, setShowNoDataFoundMessage] = useState(false)
+  const [showProfileData, setShowProfileData] = useState(false)
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -55,7 +56,12 @@ const Profile = ({ navigation }) => {
     isError: getActiveMembershipIsError
   }] = useGetActiveMembershipMutation()
 
-  
+  useEffect(()=>{
+    if(formFields!==undefined && formValues!==undefined)
+    {
+      setShowProfileData(true)
+    }
+  },[formFields,formValues])
 
   useEffect(() => {
     if (getActiveMembershipData) {
@@ -152,14 +158,7 @@ const Profile = ({ navigation }) => {
   const name = profileName ? fetchProfileData?.body.name : '';
   const membership = getActiveMembershipData && getActiveMembershipData.body?.tier.name
   const accountVerified = true;
-  const mobile = '91-8712312312';
-  const gender = 'Male';
-  const age = '30 year';
-  const aadharNumber = '1231231231231123';
-  const panNo = 'QWERT12345';
-  const email = 'Qwerty@gmail.com';
-  const address =
-    '314, 3rd Floor, HB Twin tower NSP, Pitampura, Delhi, India, 110034';
+  
 
   const ProfileBox=(props)=>{
     const image = props.image
@@ -170,20 +169,20 @@ const Profile = ({ navigation }) => {
       {
         navigation.navigate("BankAccounts")
       }
-      else if(title==="Passbook")
+      else if(title==="Check Passbook")
       {
         navigation.navigate("Passbook")
       }
     }
     return(
-      <View style={{height:70,width:'50%',alignItems:'center',justifyContent:'center',flexDirection:'row',borderWidth:1.4,borderColor:ternaryThemeColor,borderRadius:10,marginLeft:10,backgroundColor:'white',elevation:10}}>
+      <View style={{height:80,width:'50%',alignItems:'center',justifyContent:'center',flexDirection:'row',borderWidth:1.4,borderColor:ternaryThemeColor,borderRadius:10,marginLeft:10,backgroundColor:'white',elevation:10}}>
       <View style={{width:'30%',alignItems:"center",justifyContent:"center",height:'100%'}}>
         <View style={{height:50,width:50,borderRadius:25,alignItems:"center",justifyContent:'center',borderColor:'#DDDDDD',borderWidth:1,marginLeft:4}}>
           <Image style={{height:30,width:30,resizeMode:'contain'}} source={image}></Image>
         </View>
       </View>
       <View style={{width:'70%',alignItems:"center",justifyContent:"center",height:'100%'}}>
-        <PoppinsTextMedium style={{color:'black',fontWeight:'600',marginBottom:4}} content={title}></PoppinsTextMedium>
+        <PoppinsTextMedium style={{color:'black',fontWeight:'600',marginBottom:4,width:'100%'}} content={title}></PoppinsTextMedium>
         <TouchableOpacity onPress={()=>{handleNavigation()}} style={{height:24,width:60,borderRadius:4,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center'}}>
           <PoppinsTextMedium style={{color:'white'}} content={buttonTitle}></PoppinsTextMedium>
         </TouchableOpacity>
@@ -208,16 +207,18 @@ const Profile = ({ navigation }) => {
     };
 
     return (
-      <View style={{ width: '100%' }}>
+      <View style={{ width: '100%',marginBottom:20 }}>
         <View
           style={{
-            height: 120,
+            
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
             borderBottomWidth: 0.3,
             borderColor: 'white',
+            paddingBottom:40,
+            
           }}>
           {showProfilePic && (
             <View
@@ -249,7 +250,7 @@ const Profile = ({ navigation }) => {
               marginLeft: 10,
             }}>
             <PoppinsText
-              style={{ color: 'white', fontSize: 20 }}
+              style={{ color: 'black', fontSize: 20 }}
               content={name}></PoppinsText>
             {getActiveMembershipData && <View
               style={{
@@ -264,7 +265,7 @@ const Profile = ({ navigation }) => {
                   showSuccessModal
                 }>
                 <PoppinsTextMedium
-                  style={{ color: 'white', fontSize: 14 }}
+                  style={{ color: 'black', fontSize: 14 }}
                   content={membership}></PoppinsTextMedium>
               </TouchableOpacity>
 
@@ -282,7 +283,7 @@ const Profile = ({ navigation }) => {
                   source={require('../../../assets/images/verified.png')}></Image>
 
                 <PoppinsTextMedium
-                  style={{ color: 'white' }}
+                  style={{ color: 'black' }}
                   content="Account Verified"></PoppinsTextMedium>
 
 
@@ -335,7 +336,7 @@ const Profile = ({ navigation }) => {
   };
 
   return (
-      <View style={{ ...styles.container, backgroundColor: ternaryThemeColor }}>
+      <View style={{ ...styles.container, backgroundColor: "white" }}>
         <View
           style={{
             height: 50,
@@ -379,8 +380,7 @@ const Profile = ({ navigation }) => {
             justifyContent: 'center',
           }}>
           {/* <ProfileData></ProfileData> */}
-          {formFields &&
-            
+          {showProfileData &&
             formFields.map((item, index) => {
               console.log(item, formValues[index]);
               return (
@@ -388,12 +388,12 @@ const Profile = ({ navigation }) => {
                   key={index}
                   data={formValues[index] === null ? 'N/A' : formValues[index]}
                   title={item.label}
-                  photo={require('../../../assets/images/eye.png')}></DisplayOnlyTextInput>
+                  photo={require('../../../assets/images/eye.png')}>
+                    
+                  </DisplayOnlyTextInput>
               );
             })}
-            {
-              showNoDataFoundMessage && <PoppinsTextMedium content="No "></PoppinsTextMedium>
-            }
+            
         
         </View>
         <View style={{width:'100%',backgroundColor:"white",alignItems:"center",justifyContent:'center'}}>

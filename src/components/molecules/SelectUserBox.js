@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
         margin:10,
-        elevation:10,
+        elevation:4,
         borderRadius:10,
         borderWidth:0.8,
         borderColor:'#DDDDDD'

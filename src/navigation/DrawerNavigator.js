@@ -35,7 +35,9 @@ const CustomDrawer=()=>{
       ? useSelector(state => state.apptheme.primaryThemeColor)
       : '#FF9B00';
     const userData = useSelector(state=>state.appusersdata.userData)
-  console.log("userData",userData)
+    const kycData = useSelector(state=>state.kycDataSlice.kycData)
+  console.log("kycCompleted",kycData)
+
 const navigation = useNavigation()
 
 const [
@@ -274,6 +276,7 @@ return (
           marginLeft: 10,
           position: 'absolute',
           left: 4,
+          resizeMode:'contain'
         }}
         source={{uri:BaseUrlImages+profileImage}}></Image>
       <View style={{justifyContent: 'center', marginLeft: 50}}>
@@ -288,7 +291,7 @@ return (
         </Text>}
         {userData && <Text style={{color: 'white', margin: 0}}>{userData.user_type} Account</Text>}
         
-        <View style={{flexDirection: 'row',marginTop:4}}>
+       {!Object.values(kycData).includes('false') ? <View style={{flexDirection: 'row',marginTop:4}}>
            <View
             style={{
               height: 22,
@@ -300,29 +303,29 @@ return (
               flexDirection: 'row',
               marginTop: 2,
             }}>
-            {/* <Image
-              style={{height: 16, width: 16,resizeMode:"contain"}}
-              source={require('../../assets/images/greenTick.png')}></Image> */}
+            <Image style={{height:10,width:10,resizeMode:'contain'}} source={require('../../assets/images/tickBlue.png')}></Image>
             <Text style={{marginLeft:4,color:'black',fontSize: 10, fontWeight: '500'}}>KYC Status</Text>
           </View>
-           {/* <View
-            style={{
-              height: 22,
-              width: 80,
-              borderRadius: 20,
-              backgroundColor: 'white',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              marginTop: 2,
-              marginLeft: 8,
-            }}>
-            <Image
-              style={{height: 16, width: 16}}
-              source={require('../../assets/images/whiteUser.png')}></Image>
-            <Text style={{fontSize: 10, fontWeight: '500',color:'black'}}>TDS Status</Text>
-          </View> */}
-        </View>
+           
+        </View> :
+        <View style={{flexDirection: 'row',marginTop:4}}>
+        <View
+         style={{
+           height: 22,
+           width: 80,
+           borderRadius: 20,
+           backgroundColor: 'white',
+           alignItems: 'center',
+           justifyContent: 'center',
+           flexDirection: 'row',
+           marginTop: 2,
+         }}>
+         <Image style={{height:10,width:10,resizeMode:'contain'}} source={require('../../assets/images/cancel.png')}></Image>
+         <Text style={{marginLeft:4,color:'black',fontSize: 10, fontWeight: '500'}}>KYC Status</Text>
+       </View>
+        
+     </View>
+        }
       </View>
     </View>
     <ScrollView  style={{marginBottom:140}}>

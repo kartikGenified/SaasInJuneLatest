@@ -99,6 +99,7 @@ const PasswordLogin = ({navigation,route}) => {
     const userId = route.params.userId
     const needsApproval = route.params.needsApproval
     console.log("Needs approval",needsApproval)
+    const height = Dimensions.get('window').height
     const getUserId=(data)=>{
         console.log(data)
         setUsername(data)
@@ -152,40 +153,8 @@ const PasswordLogin = ({navigation,route}) => {
   return (
     <LinearGradient
       colors={["white", "white"]}
-      style={styles.container}>
-      {/* <View
-        style={{
-          height: 140,
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <View
-          style={{
-            ...styles.semicircle,
-            width: width + 60,
-            borderRadius: (width + width) / 2,
-            height: width + 60,
-            top: -(width / 2),
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <Image
-              style={{height: 20, width: 20, resizeMode: 'contain', right: 90}}
-              source={require('../../../assets/images/blackBack.png')}></Image>
-          </TouchableOpacity>
-          <Image
-            style={{
-              height: 110,
-              width: 140,
-              resizeMode: 'contain',
-              top: width / 8,
-            }}
-            source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
-        </View>
-      </View> */}
+      style={{...styles.container,height:height}}>
+      
       <View style={{width:'100%',alignItems: 'center',
           justifyContent: 'center',
           backgroundColor:ternaryThemeColor,}}>
@@ -201,7 +170,7 @@ const PasswordLogin = ({navigation,route}) => {
         }}>
         
           <TouchableOpacity
-          style={{height:50,alignItems:"center",justifyContent:'center',position:"absolute",left:10,top:20}}
+          style={{height:50,alignItems:"center",justifyContent:'center',position:"absolute",left:10,top:30}}
             onPress={() => {
               navigation.goBack();
             }}>
@@ -211,24 +180,21 @@ const PasswordLogin = ({navigation,route}) => {
           </TouchableOpacity>
           <Image
             style={{
-              height: 50,
-              width: 100,
-              resizeMode: 'contain',
-              top:20,
-            position:"absolute",
-            left:50,
-              borderRadius:10
-              
-              
+              height: 80,
+              width: 120,
+              resizeMode: 'center',
+              top:10,
+              position:"absolute",
+              left:50,
             }}
-            source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
+            source={require('../../../assets/images/ozoneWhiteLogo.png')}></Image>
 
-             <View style={{alignItems:'center',justifyContent:"center",position:'absolute',right:10,top:10}}>
+             <View style={{alignItems:'center',justifyContent:"center",position:'absolute',right:10,top:14}}>
         {/* <PoppinsTextMedium style={{fontSize:18}} content ="Don't have an account ?"></PoppinsTextMedium> */}
         <ButtonNavigate
               handleOperation={handleNavigationToRegister}
-              backgroundColor="#353535"
-              style={{color: 'white', fontSize: 16}}
+              backgroundColor="white"
+              style={{color: 'black', fontSize: 16}}
               content="Register"
               >
         </ButtonNavigate>
@@ -261,7 +227,7 @@ const PasswordLogin = ({navigation,route}) => {
               navigateTo="Dashboard"
               openModal={success}></MessageModal>
           )}
-      <ScrollView style={{width:'100%'}}>
+      <ScrollView style={{width:'100%',height:height-140}}>
        
         
         <View style={{width:"100%",alignItems:"center",justifyContent:"center",marginTop:30}}>
@@ -285,7 +251,7 @@ const PasswordLogin = ({navigation,route}) => {
             <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:14}} content="Forget Password"></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
-        <View style={{width:"100%",alignItems:'center',justifyContent:"center"}}>
+        <View style={{width:"100%",alignItems:'flex-start',justifyContent:"center",marginLeft:20,marginTop:300}}>
         <ButtonNavigateArrow
               handleOperation={handleLogin}
               backgroundColor={buttonThemeColor}
@@ -308,7 +274,6 @@ const PasswordLogin = ({navigation,route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
     width: '100%',
     alignItems: 'center'
   },

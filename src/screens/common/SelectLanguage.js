@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { BaseUrl } from '../../utils/BaseUrl';
 
 
-const SelectLanguage = () => {
+const SelectLanguage = ({navigation}) => {
     const [language, setLanguage] = useState()
     const primaryThemeColor = useSelector((state)=>state.apptheme.primaryThemeColor) ? useSelector((state)=>state.apptheme.primaryThemeColor) : "#FF9B00"
     const secondaryThemeColor = useSelector((state)=>state.apptheme.secondaryThemeColor) ? useSelector((state)=>state.apptheme.secondaryThemeColor) : "#FFB533"
@@ -21,24 +21,24 @@ const SelectLanguage = () => {
     console.log(useSelector((state)=>state.apptheme.primaryThemeColor))
     const setSelectedLanguage=(language)=>{
         setLanguage(language)
-        console.log(language)    
+        console.log(language)   
+        navigation.navigate('SelectUser')
     }
-    // http://103.153.58.83:5000/api/images/images-1691486775689-218266578.png
 
     return (
         
-        <LinearGradient colors={[ternaryThemeColor,secondaryThemeColor]} style={{height:'100%',width:'100%'}}>
+        <LinearGradient colors={[ternaryThemeColor,ternaryThemeColor,secondaryThemeColor]} style={{height:'100%',width:'100%'}}>
             <View style={{height:'20%',width:'100%',alignItems:'center',justifyContent:"center"}}>
-                <Image style={{height:110,width:140,resizeMode:'contain'}} source={{uri:`${BaseUrl}/api/images/${icon}`}}></Image>
+                <Image style={{height:200,width:240,resizeMode:'contain'}} source={require('../../../assets/images/ozoneWhiteLogo.png')}></Image>
             </View>
-            <View style={{height:'30%',width:'100%',alignItems:'center',justifyContent:"center"}}>
+            <View style={{height:'30%',width:'100%',alignItems:'center',justifyContent:"flex-end"}}>
                 <PoppinsText style={{color:'white',fontSize:24}} content="Choose" />
                 <PoppinsText style={{color:'white',fontSize:28,marginTop:8}} content="Your Language"/>
             </View>
-            <View style={{height:"50%",width:'100%',alignItems:"center",justifyContent:"center"}}>
+            <View style={{height:"50%",width:'100%',alignItems:"center",justifyContent:"flex-start"}}>
             <SelectLanguageBox selectedLanguage={language}   setSelectedLanguage={setSelectedLanguage} languageHindi = 'हिन्दी' languageEnglish = 'Hindi' image = {require('../../../assets/images/languageHindi.png')}></SelectLanguageBox>
             <SelectLanguageBox selectedLanguage={language} setSelectedLanguage={setSelectedLanguage} languageHindi = 'English' languageEnglish = 'English' image = {require('../../../assets/images/languageEnglish.png')}></SelectLanguageBox>
-            {language && <ButtonNavigate backgroundColor= {ternaryThemeColor} style={{color:'white',fontSize:16}} content="Continue" navigateTo="SelectUser"></ButtonNavigate>}
+            
             </View>
         </LinearGradient>
         

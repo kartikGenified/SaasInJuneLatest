@@ -51,7 +51,7 @@ const DashboardMenuBox=(props)=>{
 
     return(
         <View style={{borderColor:'#DDDDDD',borderRadius:20,borderWidth:1.2,width:'90%',alignItems:"center",justifyContent:"center",backgroundColor:'white',padding:4}}>
-        <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{width:500,flexWrap:"wrap",flexDirection:"row"}} horizontal={true}>
+        <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{width:'100%',flexWrap:"wrap",flexDirection:"row",alignItems:'center',justifyContent:"center"}} horizontal={true}>
         {
             data.map((item,index)=>{
                 return(

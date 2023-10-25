@@ -81,28 +81,22 @@ const SelectUser = ({navigation}) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {/* <View
-          style={{
-            ...styles.semicircle,
-            width: width + 60,
-            borderRadius: (width + width) / 2,
-            height: width + 60,
-            top: -(width / 2),
-          }}> */}
+        
           <Image
             style={{
-              height: 110,
-              width: 140,
-              resizeMode: 'contain',
-              top: 20,
+              height: 200,
+              width: 240,
+              resizeMode: 'stretch',
+              top: 60,
             }}
             source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
-            <View style={{width:'80%',alignItems:"center",justifyContent:'center',borderColor:ternaryThemeColor,borderTopWidth:1,borderBottomWidth:1,height:40}}>
-              <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} content="Are You A"></PoppinsTextMedium>
+
+            <View style={{width:'80%',alignItems:"center",justifyContent:'center',borderColor:ternaryThemeColor,borderTopWidth:1,borderBottomWidth:1,height:40,marginTop:40}}>
+              <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} content="ARE YOU A"></PoppinsTextMedium>
             </View>
         {/* </View> */}
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={{flex:1}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
        
      
       
@@ -154,7 +148,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop:20,
+    marginTop:100,
     
   },
 });

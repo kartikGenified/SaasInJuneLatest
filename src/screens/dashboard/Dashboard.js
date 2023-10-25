@@ -20,12 +20,14 @@ import { setLocation } from '../../../redux/slices/userLocationSlice';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import { useGetkycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
+import { setKycData } from '../../../redux/slices/userKycStatusSlice';
 
 const Dashboard = ({navigation}) => {
 
     const [dashboardItems, setDashboardItems] = useState()
     const [bannerArray, setBannerArray] = useState()
     const [showKyc, setShowKyc] = useState(true)
+    const dispatch = useDispatch()
     const userId = useSelector((state)=>state.appusersdata.userId)
     console.log("user id is from dashboard",userId)
     
@@ -53,6 +55,12 @@ const Dashboard = ({navigation}) => {
         {
           const tempStatus = Object.values(getKycStatusData.body)
           setShowKyc(tempStatus.includes(false))
+          
+            dispatch(
+              setKycData(getKycStatusData.body)
+                    )
+          
+          
         }
       }
       else if(getKycStatusError)
@@ -93,8 +101,6 @@ const Dashboard = ({navigation}) => {
       isError:getFormIsError
   }] =useGetFormMutation()
 
-    const dispatch = useDispatch()
-
 
     useEffect(()=>{
       let lat=''
@@ -107,9 +113,9 @@ const Dashboard = ({navigation}) => {
       const getLocation=(lat,lon)=>{
           if(lat!=='' && lon!=='')
           {
-              console.log("latitude and longitude",lat,lon)
+              console.log("latitude",lat," and longitude",lon)
               try{
-                  axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}+&lon=${lon}&format=json`,{headers:{
+                  axios.post(`https://nominatim.openstreetmap.org/reverse?lat=${lat}+&lon=${lon}&format=json`,{headers:{
                       'Content-Type': 'application/json'
                   }}).then((res)=>{console.log("Addres Data",res.data)
                   dispatch(setLocation(res.data))
@@ -180,8 +186,11 @@ const Dashboard = ({navigation}) => {
           {
             dispatch(setIsGenuinityOnly())
           }
+          const removedWorkFlow = getWorkflowData.body[0].program.filter((item,index)=>{
+            return item!=="Warranty"
+          })
             console.log("getWorkflowData",getWorkflowData.body[0].program)
-            dispatch(setProgram(getWorkflowData.body[0].program))
+            dispatch(setProgram(removedWorkFlow))
             dispatch(setWorkflow(getWorkflowData.body[0].workflow_id))
             
         }
