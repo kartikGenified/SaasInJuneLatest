@@ -16,14 +16,18 @@ import { setUserData } from '../../../redux/slices/appUserDataSlice';
 import { setId } from '../../../redux/slices/appUserDataSlice';
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
-import MessageModal from '../../components/modals/MessageModal';
+import ModalWithBorder from "../../components/modals/ModalWithBorder";
+import ButtonOval from "../../components/atoms/buttons/ButtonOval";
+import Icon from "react-native-vector-icons/Feather";
+import Close from "react-native-vector-icons/Ionicons";
+
 
 const PasswordLogin = ({navigation,route}) => {
   const [username, setUsername] = useState("influencer_5")
   const [passwords, setPasswords] = useState("123456")
-  const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
   const [message, setMessage] = useState("")
+  const [openModalWithBorder, setModalWithBorder] = useState(false);
   const width = Dimensions.get('window').width;
 
 
@@ -81,8 +85,8 @@ const PasswordLogin = ({navigation,route}) => {
         {
           saveUserDetails(passwordLoginData.body)
           saveToken(passwordLoginData.body.token)
-          setSuccess(true)
           setMessage(passwordLoginData.message)
+          setModalWithBorder(true)
         }
       }
       else if(passwordLoginError){
@@ -145,10 +149,41 @@ const PasswordLogin = ({navigation,route}) => {
 
     const modalClose = () => {
       setError(false);
-      setSuccess(false)
       setMessage('')
       navigation.navigate('Dashboard')
 
+    };
+    const modalWithBorderClose = () => {
+      setModalWithBorder(false);
+      navigation.navigate('Dashboard')
+    };
+    const ModalContent = () => {
+      return (
+        <View style={{width:'100%',alignItems:"center",justifyContent:"center",height:'40%'}}>
+          <View style={{ marginTop: 40, alignItems: 'center',width:'100%',height:'100%'}}>
+            <Icon  name="check-circle" size={53} color={ternaryThemeColor} />
+            <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
+  
+            <View style={{ marginTop: 10, marginBottom: 30 }}>
+              <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
+            </View>
+  
+            <View style={{ alignItems: 'center'}}>
+              <ButtonOval handleOperation={modalWithBorderClose} backgroundColor="#000000" content="OK" style={{ color: 'white', paddingVertical: 4 }} />
+            </View>
+  
+          </View>
+  
+          <TouchableOpacity style={[{
+            backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10,right:-10,
+          }]} onPress={()=>{
+            setModalWithBorder(false)
+          }} >
+            <Close name="close" size={17} color="#ffffff" />
+          </TouchableOpacity>
+  
+        </View>
+      )
     };
   return (
     <LinearGradient
@@ -220,12 +255,13 @@ const PasswordLogin = ({navigation,route}) => {
               message={message}
               openModal={error}></ErrorModal>
           )}
-          {success && (
-            <MessageModal
-              modalClose={modalClose}
+          {openModalWithBorder && (
+            <ModalWithBorder
+              modalClose={modalWithBorderClose}
               message={message}
-              navigateTo="Dashboard"
-              openModal={success}></MessageModal>
+              openModal={openModalWithBorder}
+              comp={ModalContent}
+            ></ModalWithBorder>
           )}
       <ScrollView style={{width:'100%',height:height-140}}>
        
@@ -245,10 +281,10 @@ const PasswordLogin = ({navigation,route}) => {
             // maxLength={10}
               ></TextInputRectangularWithPlaceholder>
         </View>
-        <View style={{flexDirection:"row",alignItems:"center",justifyContent:'center',width:'90%'}}>
-          <PoppinsTextMedium style={{color:"#727272",fontSize:14}} content = "Not remembering password? "></PoppinsTextMedium>
+        <View style={{flexDirection:"row",alignItems:"center",justifyContent:'center',width:'90%',marginTop:10,marginLeft:10}}>
+          <PoppinsTextMedium style={{color:"#727272",fontSize:16}} content = "Not remembering password? "></PoppinsTextMedium>
           <TouchableOpacity >
-            <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:14}} content="Forget Password"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:16}} content="Forget Password"></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
         <View style={{width:"100%",alignItems:'flex-start',justifyContent:"center",marginLeft:20,marginTop:300}}>

@@ -1,10 +1,12 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import {View, StyleSheet,TouchableOpacity,Image} from 'react-native';
 import PoppinsTextMedium from '../electrons/customFonts/PoppinsTextMedium';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import { SvgUri } from 'react-native-svg';
-
+import { useIsFocused } from '@react-navigation/native';
 const SelectUserBox = (props) => {
+    const [boxColor, setBoxColor] = useState('white')
+    const focused = useIsFocused()
     const image = BaseUrlImages+props.image
     // const image = 'https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/atom.svg'
     // console.log(image)
@@ -16,8 +18,13 @@ const SelectUserBox = (props) => {
     const registrationRequired = props.registrationRequired
     console.log(props.content, registrationRequired)
 
+    useEffect(()=>{
+        setBoxColor("white")
+    },[focused])
     const checkRegistrationRequired=()=>{
-        if(registrationRequired.includes(props.content))
+        setBoxColor(color)
+        setTimeout(() => {
+            if(registrationRequired.includes(props.content))
         {
             checkApprovalFlow(true)
             console.log("registration required")
@@ -27,6 +34,8 @@ const SelectUserBox = (props) => {
             console.log("registration not required")
 
         }
+        }, 400);
+        
     }
 
     const checkApprovalFlow=(registrationRequired)=>{
@@ -56,9 +65,9 @@ const SelectUserBox = (props) => {
     return (
         <TouchableOpacity onPress={()=>{
             checkRegistrationRequired()
-        }} style={{...styles.container,backgroundColor:'white'}}>
+        }} style={{...styles.container,backgroundColor:boxColor}}>
             
-            {image && <View style={{height:70,width:70,borderRadius:35,backgroundColor:"white",alignItems:"center",justifyContent:'center'}}>
+            {image && <View style={{height:90,width:90,borderRadius:45,backgroundColor:"white",alignItems:"center",justifyContent:'center'}}>
             <Image source={{uri:image}} style={styles.image}></Image></View>}
 
             
@@ -81,9 +90,9 @@ const styles = StyleSheet.create({
        
     },
     image:{
-        height:80,
-        width:80,
-        marginBottom:8
+        height:70,
+        width:70,
+        marginBottom:8,resizeMode:'contain'
        
         
     }

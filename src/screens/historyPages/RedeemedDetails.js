@@ -19,7 +19,7 @@ const RedeemedDetails = ({navigation,route}) => {
     const data = route.params.data
     const redeemedDate=moment(data.created_at).format("DD MMM YYYY")
     const redeemedId = data.ref_no
-    const redemptionMode = data.redemption
+    const redemptionMode = data.redemption_type==="1" ? "Points" : "N/A"
 
 
 

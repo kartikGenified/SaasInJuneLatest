@@ -24,8 +24,8 @@ const ScannedDetails = ({navigation,route}) => {
                 <Image style={{height:100,width:100,resizeMode:'contain'}} source={{uri:BaseUrlImages+image}}></Image>
                </View>
                <View style={{alignItems:"flex-start",justifyContent:"center",position:"absolute",bottom:10,left:20}}>
-               <PoppinsTextMedium style={{margin:4,fontSize:18,fontWeight:'700'}} content={`Product Name : ${productName}`}></PoppinsTextMedium>
-                <PoppinsTextMedium style={{margin:4,fontSize:18,fontWeight:'700'}} content={`Product S.No : ${productSerialNumber}`}></PoppinsTextMedium>
+               <PoppinsTextMedium style={{margin:4,fontSize:18,fontWeight:'700',color:'black'}} content={`Product Name : ${productName}`}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{margin:4,fontSize:18,fontWeight:'700',color:'black'}} content={`Product S.No : ${productSerialNumber}`}></PoppinsTextMedium>
                 {/* <PoppinsTextMedium style={{margin:4,fontSize:18,fontWeight:'700'}} content={`Recieved In `}></PoppinsTextMedium> */}
                </View>
                 </View>

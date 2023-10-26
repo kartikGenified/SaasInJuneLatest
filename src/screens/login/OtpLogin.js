@@ -135,7 +135,7 @@ const OtpLogin = ({navigation, route}) => {
   };
   const navigateToOtp=()=>{
     sendOtpFunc({mobile,name,user_type,user_type_id})
-    navigation.navigate('VerifyOtp',{navigationParams})
+    // navigation.navigate('VerifyOtp',{navigationParams})
   }
   const handleButtonPress=()=>{
     // console.log("first",getNameData.message)

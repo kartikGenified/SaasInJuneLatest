@@ -17,6 +17,8 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import { useGetActiveMembershipMutation } from '../../apiServices/membership/AppMembershipApi';
 import { useIsFocused } from '@react-navigation/native';
 import PlatinumModal from '../../components/platinum/PlatinumModal';
+import  Edit  from 'react-native-vector-icons/Entypo';
+
 const Profile = ({ navigation }) => {
   const [formFields, setFormFields] = useState();
   const [formValues, setFormValues] = useState();
@@ -93,7 +95,7 @@ const Profile = ({ navigation }) => {
         setShowNoDataFoundMessage(true)
       }
 
-    } else {
+    } else if(getFormError) {
       console.log('Form Field Error', getFormError);
     }
   }, [getFormData, getFormError]);
@@ -191,7 +193,23 @@ const Profile = ({ navigation }) => {
     )
     
   }
-
+  const GreyBar=()=>{
+    return(
+      <View style={{width:'100%',height:50,flexDirection:"row",alignItems:'center',justifyContent:'space-evenly',backgroundColor:'#F9F9F9',borderTopWidth:1,borderBottomWidth:1,borderColor:'#DDDDDD'}}>
+        <View style={{flexDirection:"row",alignItems:'center',justifyContent:'center'}}>
+          <Image style={{height:20,width:20,resizeMode:"contain"}} source={require('../../../assets/images/mobileBlack.png')}></Image>
+          <PoppinsTextMedium style={{color:'black',marginLeft:8}} content={fetchProfileData.body.mobile}></PoppinsTextMedium>
+        </View>
+        {fetchProfileData.body.gender!==null && <View style={{width:1,borderWidth:0.8,borderColor:'#353535',height:'30%'}}></View>}
+        {fetchProfileData.body.gender!==null && <View style={{flexDirection:"row",alignItems:'center',justifyContent:'center'}}>
+          <Image style={{height:20,width:20,resizeMode:"contain"}} source={require('../../../assets/images/genderBlack.png')}></Image>
+          <PoppinsTextMedium style={{color:'black',marginLeft:8}} content={fetchProfileData.body.gender}></PoppinsTextMedium>
+        </View>}
+        
+        
+      </View>
+    )
+  }
   const ProfileHeader = () => {
 
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
@@ -205,6 +223,7 @@ const Profile = ({ navigation }) => {
       setIsSuccessModalVisible(true);
       console.log("hello")
     };
+    
 
     return (
       <View style={{ width: '100%',marginBottom:20 }}>
@@ -223,12 +242,14 @@ const Profile = ({ navigation }) => {
           {showProfilePic && (
             <View
               style={{
-                height: 100,
-                width: 100,
+                height: 110,
+                width: 110,
                 backgroundColor: 'white',
-                borderRadius: 50,
+                borderRadius: 55,
                 alignItems: 'center',
                 justifyContent: 'center',
+                borderWidth:1,
+                borderColor:'#DDDDDD'
               }}>
               {fetchProfileData ? (
                 <Image
@@ -260,7 +281,7 @@ const Profile = ({ navigation }) => {
               }}>
               <Image
                 style={{ height: 16, width: 16, resizeMode: 'contain' }}
-                source={require('../../../assets/images/reward.png')}></Image>
+                source={require('../../../assets/images/rewardBlack.png')}></Image>
               <TouchableOpacity    onPress={
                   showSuccessModal
                 }>
@@ -310,10 +331,8 @@ const Profile = ({ navigation }) => {
                   savedImage: fetchProfileData.body.profile_pic
                 });
               }}
-              style={{ height: 30, width: 30 }}>
-              <Image
-                style={{ height: 30, width: 30, resizeMode: 'contain' }}
-                source={require('../../../assets/images/editWhite.png')}></Image>
+              style={{ height: 40, width: 40,borderRadius:20,backgroundColor:"white",borderWidth:1,borderColor:ternaryThemeColor,alignItems:"center",justifyContent:'center'}}>
+              <Edit name="edit" size={20} color={ternaryThemeColor}></Edit>
             </TouchableOpacity>
           </View>
         </View>
@@ -356,7 +375,7 @@ const Profile = ({ navigation }) => {
               style={{ height: 20, width: 20, resizeMode: 'contain' }}
               source={require('../../../assets/images/blackBack.png')}></Image>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{ height: 30, width: 30, position: 'absolute', right: 20 }}
             onPress={() => {
               navigation.goBack();
@@ -364,9 +383,10 @@ const Profile = ({ navigation }) => {
             <Image
               style={{ height: 30, width: 30, resizeMode: 'contain' }}
               source={require('../../../assets/images/notificationOn.png')}></Image>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {!showNoDataFoundMessage && <ProfileHeader></ProfileHeader>}
+        {fetchProfileData && <GreyBar></GreyBar>}
     <ScrollView>
 
         <View

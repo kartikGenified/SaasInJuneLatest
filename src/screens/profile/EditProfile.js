@@ -179,7 +179,7 @@ console.log("saved image",profileImage)
     return (
       
      
-        <View style={{height:'100%',backgroundColor:ternaryThemeColor}}>
+        <View style={{height:'100%',backgroundColor:"white"}}>
            
           <Modal
         animationType="slide"
@@ -207,8 +207,8 @@ console.log("saved image",profileImage)
             </View>
             <View style={{height:150,width:150,borderRadius:75,backgroundColor:'white',alignItems:'center',justifyContent:'center',borderColor:'#DDDDDD',borderWidth:0.6,marginTop:20}}>
             <View style={{height:130,width:130,borderRadius:65 ,backgroundColor:'white',alignItems:'center',justifyContent:'center',borderColor:'#DDDDDD',borderWidth:0.6}}>
-              {profileImage!==route.params?.savedImage && <Image style={{height:130,width:130,borderRadius:65 }} source={{uri:profileImage?.uri}}></Image>}
-              {profileImage===route.params?.savedImage && <Image style={{height:130,width:130,borderRadius:65 }} source={{uri:BaseUrlImages+profileImage}}></Image>}
+              {profileImage!==route.params?.savedImage && <Image style={{height:130,width:130,borderRadius:65,resizeMode:"contain" }} source={{uri:profileImage?.uri}}></Image>}
+              {profileImage===route.params?.savedImage && <Image style={{height:130,width:130,borderRadius:65,resizeMode:'contain' }} source={{uri:BaseUrlImages+profileImage}}></Image>}
 
             </View>
             </View>
@@ -248,15 +248,15 @@ console.log("saved image",profileImage)
             
         </View>
         <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-start",marginLeft:20}}>
-       <View style={{backgroundColor:"white",height:100,width:100,borderRadius:50,alignItems:"center",justifyContent:"center",flexDirection:"row"}}>
-       {profileImage!==route.params?.savedImage && profileImage!==null && <Image style={{height:98,width:98,borderRadius:49 }} source={{uri:profileImage.uri}}></Image>}
-              {profileImage===route.params?.savedImage && <Image style={{height:98,width:98,borderRadius:49 }} source={{uri:BaseUrlImages+profileImage}}></Image>}
+       <View style={{backgroundColor:"white",height:110,width:110,borderRadius:50,alignItems:"center",justifyContent:"center",flexDirection:"row",borderWidth:1,borderColor:'#DDDDDD'}}>
+       {profileImage!==route.params?.savedImage && profileImage!==null && <Image style={{height:98,width:98,borderRadius:49,resizeMode:"contain" }} source={{uri:profileImage.uri}}></Image>}
+              {profileImage===route.params?.savedImage && <Image style={{height:98,width:98,borderRadius:49,resizeMode:"contain" }} source={{uri:BaseUrlImages+profileImage}}></Image>}
 
        </View>
        <TouchableOpacity onPress={()=>{
         setModalVisible(true)
-       }} style={{height:50,width:160,padding:4,backgroundColor:"white",marginLeft:20,borderRadius:30,alignItems:"center",justifyContent:'center'}}>
-        <PoppinsTextMedium style={{color:'#171717',fontWeight:'600',fontSize:14}} content ="Change Profile Picture"></PoppinsTextMedium>
+       }} style={{height:50,width:160,padding:4,backgroundColor:ternaryThemeColor,marginLeft:20,borderRadius:30,alignItems:"center",justifyContent:'center'}}>
+        <PoppinsTextMedium style={{color:'white',fontWeight:'600',fontSize:14}} content ="Change Profile Picture"></PoppinsTextMedium>
        </TouchableOpacity>
 
         </View>
@@ -290,11 +290,11 @@ console.log("saved image",profileImage)
             
 
         </View>
-        <View style={{height:60,width:'100%',backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:"center",marginBottom:20}}>
+        <View style={{height:60,width:'100%',backgroundColor:"white",alignItems:'center',justifyContent:"center",marginBottom:20}}>
               <TouchableOpacity onPress={()=>{
                 updateProfile()
-              }} style={{height:40,width:200,backgroundColor:"white",borderRadius:4,alignItems:'center',justifyContent:"center"}}>
-                <PoppinsTextMedium style={{color:'#171717',fontWeight:'700',fontSize:16}} content="Update Profile"></PoppinsTextMedium>
+              }} style={{height:40,width:200,backgroundColor:ternaryThemeColor,borderRadius:4,alignItems:'center',justifyContent:"center"}}>
+                <PoppinsTextMedium style={{color:'white',fontWeight:'700',fontSize:16}} content="Update Profile"></PoppinsTextMedium>
               </TouchableOpacity>
             </View>
         </View>

@@ -1,33 +1,37 @@
-import React, {useState,useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import  Icon  from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-const ErrorModal = (props) => {
+
+const ModalWithBorder = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation()
+
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
-    const navigateTo = props.navigateTo
-    
-  useEffect(()=>{
-    if(props.openModal===true)
-    {
-        setModalVisible(true)
+  const navigation = useNavigation()
+  const navigateTo = props.navigateTo
+  const Comp = props.comp
+
+  useEffect(() => {
+    if (props.openModal === true) {
+      console.log("Trying to close the modal")
+      setModalVisible(true)
     }
-    else{
-        setModalVisible(false)
+    else {
+      setModalVisible(false)
     }
-  },[])
-  const closeModal=()=>{
+  }, [])
+  
+  const closeModal = () => {
+
     setModalVisible(!modalVisible)
     props.modalClose()
     navigateTo && navigation.navigate(navigateTo)
   }
-   
+
 
 
   return (
@@ -37,20 +41,11 @@ const ErrorModal = (props) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-            props.modalClose()
-          setModalVisible(!modalVisible);
+          closeModal()
         }}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-          <Text style={{color:'black',fontSize:24,fontWeight:'600'}}>SORRY</Text>
-          <Icon name="disabled-by-default" size={100} color="red"></Icon>
-
-            <Text style={{...styles.modalText,fontSize:20,fontWeight:'600'}}>{props.message}</Text>
-            <Pressable
-              style={{...styles.button,backgroundColor:ternaryThemeColor,width:100}}
-              onPress={() => closeModal()}>
-              <Text style={styles.textStyle}>Hide</Text>
-            </Pressable>
+          <View style={[styles.modalView, { borderWidth: 3, borderColor: ternaryThemeColor, }]}>
+            <Comp></Comp>
           </View>
         </View>
       </Modal>
@@ -63,13 +58,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(52, 52, 52, 0.8)'
+    backgroundColor: 'rgba(52, 52, 52, 0.8)',
   },
   modalView: {
-   
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 60,
+    // marginHorizontal: 100,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius:20,
+    borderBottomRightRadius:20,
+    width: '80%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -79,6 +77,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+
   },
   button: {
     borderRadius: 10,
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
   buttonOpen: {
     backgroundColor: '#F194FF',
   },
-  
+
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
@@ -100,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ErrorModal;
+export default ModalWithBorder;

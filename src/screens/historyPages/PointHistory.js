@@ -101,9 +101,9 @@ const PointHistory = ({navigation}) => {
                     <Image style={{height:40,width:40,resizeMode:"contain"}} source={require('../../../assets/images/box.png')}></Image>
                 </View>
                 <View style={{alignItems:"flex-start",justifyContent:"center",marginLeft:20}}>
-                    <PoppinsTextMedium style={{fontWeight:'700',fontSize:14}} content={description}></PoppinsTextMedium>
-                    <PoppinsTextMedium style={{fontWeight:'400',fontSize:12}} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
-                    <PoppinsTextMedium style={{fontWeight:'200',fontSize:12}} content={time}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{fontWeight:'700',fontSize:14,color:'black'}} content={description}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{fontWeight:'400',fontSize:12,color:'black'}} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{fontWeight:'200',fontSize:12,color:'black'}} content={time}></PoppinsTextMedium>
                 </View>
                 <View style={{flexDirection:"row",alignItems:"center",justifyContent:"center",marginLeft:20}}>
                     <Image style={{height:20,width:20,resizeMode:"contain"}} source={require('../../../assets/images/wallet.png')}></Image>

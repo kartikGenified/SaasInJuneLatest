@@ -4,7 +4,7 @@ import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import ButtonNavigateArrow from '../../components/atoms/buttons/ButtonNavigateArrow';
 import { useSelector } from 'react-redux';
-
+import AnimatedDots from '../../components/animations/AnimatedDots';
 const DataNotFound = ({navigation}) => {
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
@@ -21,7 +21,9 @@ const DataNotFound = ({navigation}) => {
             <PoppinsTextMedium content="Data is empty" style={{color:'#676767',fontWeight:'500',fontSize:14}}></PoppinsTextMedium>
             <View style={{marginTop:40}}>
             <ButtonNavigateArrow style={{color:'white',fontSize:18}} backgroundColor={ternaryThemeColor} handleOperation={handleButton} content="Back to Dashboard"></ButtonNavigateArrow>
-
+            
+        <AnimatedDots color={ternaryThemeColor}></AnimatedDots>
+           
             </View>
         </View>
     );

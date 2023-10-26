@@ -86,7 +86,7 @@ const SelectUser = ({navigation}) => {
             style={{
               height: 200,
               width: 240,
-              resizeMode: 'stretch',
+              resizeMode: 'contain',
               top: 60,
             }}
             source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
