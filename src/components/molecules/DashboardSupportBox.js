@@ -30,7 +30,7 @@ const handleNavigation=()=>{
             <View style={{height:80,width:80,borderRadius:40,backgroundColor:"white",alignItems:"center",justifyContent:"center",marginBottom:10}}>
                 <Image style={{height:80,width:80,resizeMode:'contain'}} source={image}></Image>
             </View>
-            <PoppinsTextMedium style={{fontSize:fontSize,fontWeight:fontWeight}} content={text}></PoppinsTextMedium>
+            <PoppinsTextMedium style={{fontSize:fontSize,fontWeight:fontWeight,color:'black'}} content={text}></PoppinsTextMedium>
         </TouchableOpacity>
     );
 }

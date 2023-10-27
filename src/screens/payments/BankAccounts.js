@@ -160,7 +160,9 @@ const setSelectedPaymentMethod=(data)=>{
     const ifsc = props.ifsc
     const type=props.type
     const name=props.name
-    console.log("selected",props.unSelect)
+    const data = props.data
+    
+    console.log("selected",props.unSelect,data)
     useEffect(()=>{
         console.log(props.unSelect)
         if(props.unSelect==="account")
@@ -169,6 +171,17 @@ const setSelectedPaymentMethod=(data)=>{
         }
     },[props.unSelect])
     
+    useEffect(()=>{
+      if(data.length===1)
+      {
+        setSelected(true)
+        props.handleData({
+          accountNo:accountNo,
+          id:props.id,
+          type:type
+      })
+      }
+    },[])
 
     const handleSelection=()=>{
         setSelected(!selected)
@@ -227,7 +240,7 @@ const setSelectedPaymentMethod=(data)=>{
                         </TouchableOpacity> */}
                         <TouchableOpacity onPress={()=>{
                             console.log(props.id)
-                            // deleteData(String(props.id))
+                            deleteData(String(props.id))
                             setModalVisible(true)
 
                         }} style={{height:'50%',flexDirection:'row',alignItems:"center",justifyContent:'center'}}>
@@ -251,7 +264,8 @@ const setSelectedPaymentMethod=(data)=>{
     const [openDrawer, setOpenDrawer] = useState(false)
     const upi = props.upi
     const type=props.type
-
+    const data =props.data
+    console.log("data",data)
     useEffect(()=>{
         console.log(props.unSelect)
         if(props.unSelect==="upi")
@@ -259,7 +273,17 @@ const setSelectedPaymentMethod=(data)=>{
             setSelected(!selected)
         }
     },[props.unSelect])
-    
+    useEffect(()=>{
+      if(data.length===1)
+      {
+        setSelected(true)
+        props.handleData({
+          upi:upi,
+          id:props.id,
+          type:type
+      })
+      }
+    },[])
     const handleSelection=()=>{
         setSelected(!selected)
        
@@ -452,7 +476,7 @@ const setSelectedPaymentMethod=(data)=>{
                     {
                         console.log("true",item)
                         return(
-                            <BankComponentAccount unSelect={hasSelectedPaymentMethod} handleData={setSelectedPaymentMethod} key={index} type="account" id={item.id} bankName={item.bene_bank} accountNo={item.bene_details.bank_account} ifsc={item.bene_details.ifsc} name={item.bene_name}></BankComponentAccount>
+                            <BankComponentAccount data={listAccountData.body} unSelect={hasSelectedPaymentMethod} handleData={setSelectedPaymentMethod} key={index} type="account" id={item.id} bankName={item.bene_bank} accountNo={item.bene_details.bank_account} ifsc={item.bene_details.ifsc} name={item.bene_name}></BankComponentAccount>
 
                         )
 
@@ -461,7 +485,7 @@ const setSelectedPaymentMethod=(data)=>{
                     {
                         console.log("false",item)
                         return(
-                            <BankComponentUpi unSelect={hasSelectedPaymentMethod} handleData={setSelectedPaymentMethod} key={index} id={item.id}  type="upi" upi = {item.bene_details.upi_id} ></BankComponentUpi>
+                            <BankComponentUpi data={listAccountData.body} unSelect={hasSelectedPaymentMethod} handleData={setSelectedPaymentMethod} key={index} id={item.id}  type="upi" upi = {item.bene_details.upi_id} ></BankComponentUpi>
                   
                                       )
                     }

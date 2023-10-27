@@ -56,6 +56,7 @@ import WheelList from '../screens/wheel/WheelList';
 import SpinWheel from '../screens/wheel/SpinWheel';
 import DataNotFound from '../screens/data not found/DataNotFound';
 import Splash from '../screens/common/Splash';
+import ScanAndRedirectToWarranty from '../screens/waranty/ScanAndRedirectToWarranty';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -68,7 +69,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="Splash" component={Splash}></Stack.Screen>
-
+            <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="ScanAndRedirectToWarranty" component={ScanAndRedirectToWarranty}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

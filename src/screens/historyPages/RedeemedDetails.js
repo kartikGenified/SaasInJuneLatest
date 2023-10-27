@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -19,11 +19,13 @@ import ButtonNavigate from "../../components/atoms/buttons/ButtonNavigate";
 import { BaseUrlImages } from "../../utils/BaseUrlImages";
 import { useGetRedeemedGiftsStatusMutation } from "../../apiServices/gifts/RedeemGifts";
 import * as Keychain from 'react-native-keychain';
-
+import TrackDeliveryModal from "../../components/redeemDetails/TrackDeliveryModal";
 const RedeemedDetails = ({ navigation, route }) => {
   const height = Dimensions.get("window").height;
   const data = route.params.data;
 
+  const[trackModal, setTrackModal] = useState(false);
+    
   const [redeemedGiftStatusFunc,{
     data:redeemedGiftStatusData,
     error:redeemedGiftStatusError,
@@ -33,11 +35,13 @@ const RedeemedDetails = ({ navigation, route }) => {
 
   useEffect(() => {
     if (redeemedGiftStatusData) {
-      console.log("redeemedGiftStatusData", redeemedGiftStatusData);
+      console.log("redeemedGiftStatusData", redeemedGiftStatusData,data);
     } else if (redeemedGiftStatusError) {
       console.log("redeemedGiftStatusError", redeemedGiftStatusError);
     }
   }, [redeemedGiftStatusData, redeemedGiftStatusError]);
+
+
   useEffect(()=>{
     const getToken=async()=>{
       const credentials = await Keychain.getGenericPassword();
@@ -76,6 +80,11 @@ const RedeemedDetails = ({ navigation, route }) => {
   const image = data.gift.gift[0].images[0];
   const deliveryAddress =
     "69/5, Gali no -2 Sainik Enclave Sector 2, Mohan Garden,Uttam Nagar, New Delhi - 110059";
+
+
+    const hideSuccessModal =() =>{
+        setTrackModal(false)
+    }
 
   const ClickToReport = () => {
     return (
@@ -325,12 +334,14 @@ const RedeemedDetails = ({ navigation, route }) => {
                 borderRadius: 4,
                 width: "44%",
               }}
+              onPress={()=>setTrackModal(true)}
             >
               <Location name="location" size={30} color="white" />
               <PoppinsTextMedium
                 style={{ color: "white", fontSize: 14, marginLeft: 4 }}
                 content="Track Delivery Status "
               ></PoppinsTextMedium>
+              
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -370,6 +381,7 @@ const RedeemedDetails = ({ navigation, route }) => {
 
           {/* click to report ------------------------------------------------------- */}
           {/* <ClickToReport></ClickToReport> */}
+          <TrackDeliveryModal isVisible={trackModal}  onClose={hideSuccessModal} trackdata={redeemedGiftStatusData} data={data} />
         </View>
       </ScrollView>
     </View>

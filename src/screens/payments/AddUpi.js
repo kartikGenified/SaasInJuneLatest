@@ -263,6 +263,7 @@ console.log("deleteBankError",deleteBankError)
           <TouchableOpacity
           onPress={()=>{
             setOpenBottomModal(false)
+            navigation.navigate("BankAccounts")
           }}
             style={{
               height: 50,

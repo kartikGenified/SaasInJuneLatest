@@ -231,7 +231,7 @@ else  if(props.title.toLowerCase()==="scheme" )
 }
 else  if(props.title.toLowerCase()==="store locator" )
 {
-    navigation.navigate('DataNotFound')
+    navigation.navigate('ScanAndRedirectToWarranty')
 }
 else  if(props.title.toLowerCase()==="scan list" )
 {

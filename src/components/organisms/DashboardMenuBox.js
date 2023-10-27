@@ -33,13 +33,13 @@ const DashboardMenuBox=(props)=>{
             if(data.toLowerCase().split(" ")[1]==="genuinity")
             navigation.navigate('QrCodeScanner')
             else if(data.toLowerCase().split(" ")[1]==="warranty")
-            navigation.navigate('QrCodeScanner')
+            navigation.navigate('ScanAndRedirectToWarranty')
         }
         else if(data.toLowerCase().substring(0,8) === "activate"){
             if(data.toLowerCase().split(" ")[1]==="genuinity")
             navigation.navigate('QrCodeScanner')
             else if(data.toLowerCase().split(" ")[1]==="warranty")
-            navigation.navigate('QrCodeScanner')
+            navigation.navigate('ScanAndRedirectToWarranty')
         }
         else if(data.toLowerCase() === "product catalogue"){
             navigation.navigate('ProductCatalogue')

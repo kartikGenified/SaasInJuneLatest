@@ -103,6 +103,7 @@ const AddBankDetails = ({navigation}) => {
     }
     const modalClose = () => {
         setError(false);
+       
       };
     const submitData=async()=>{
         const credentials = await Keychain.getGenericPassword();
@@ -172,6 +173,7 @@ const AddBankDetails = ({navigation}) => {
               modalClose={modalClose}
               title="Success"
               message={message}
+              navigateTo="BankAccounts"
               openModal={success}></MessageModal>
           )}
             <ScrollView style={{width:'100%',height:'100%'}}>
