@@ -44,7 +44,7 @@ const RewardBox=()=>{
     return(
         <View style={{padding:4,width:'90%',borderRadius:14,backgroundColor:"white",elevation:4,alignItems:'center',justifyContent:"center"}}>
            
-            <ScrollView style={{ borderRadius:20,width:'100%',padding:10}} showsHorizontalScrollIndicator={false} horizontal={true}>
+            <ScrollView style={{ borderRadius:20,width:'100%',padding:4}} showsHorizontalScrollIndicator={false} horizontal={true}>
                {
                 workflow.includes("Static Coupon") &&  <RewardSquare color="#FFE2E6" image ={require('../../../assets/images/voucher.png')} title="My Coupons"></RewardSquare>
                }
@@ -58,7 +58,12 @@ const RewardBox=()=>{
                 workflow.includes("Wheel") && <RewardSquare color="#FFE2E6" image ={require('../../../assets/images/cashback.png')} title="Spin Wheel"></RewardSquare>
 
                }
-
+               {
+                workflow.includes("Points On Product") && userPointData &&<RewardSquare amount={userPointData.body.point_balance}  color="#DCFCE7" image ={require('../../../assets/images/points.png')} title="Point Balance"></RewardSquare>
+               }
+ {
+                workflow.includes("Points On Product") && userPointData &&<RewardSquare amount={userPointData.body.point_redeemed}  color="#DCFCE7" image ={require('../../../assets/images/points.png')} title="Point Redeemed"></RewardSquare>
+               }
             </ScrollView>
            
         </View>

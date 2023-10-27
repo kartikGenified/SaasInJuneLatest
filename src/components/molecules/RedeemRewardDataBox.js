@@ -29,7 +29,7 @@ const RedeemRewardDataBox = (props) => {
     }
 
     return (
-        <TouchableOpacity onPress={()=>{handleNavigation()}} style={{height:70,flexDirection:"row",alignItems:"center",justifyContent:"center",padding:10,margin:10,borderWidth:1,borderColor:'#DDDDDD',width:150,borderRadius:14,elevation:2,backgroundColor:"white"}}>
+        <TouchableOpacity onPress={()=>{handleNavigation()}} style={{height:70,flexDirection:"row",alignItems:"center",justifyContent:"center",padding:10,margin:10,borderWidth:1,borderColor:'#DDDDDD',width:160,borderRadius:14,elevation:2,backgroundColor:"white"}}>
             <View style={{width:50,alignItems:"center",justifyContent:"center",height:50,borderRadius:25,borderWidth:1,borderColor:'#DDDDDD'}}>
             <Image source={image} style={{height:32,width:32,resizeMode:'contain'}}></Image>
             </View>

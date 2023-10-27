@@ -18,8 +18,6 @@ import InputDate from '../../components/atoms/input/InputDate';
 import ImageInput from '../../components/atoms/input/ImageInput';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 import ProductList from '../../components/molecules/ProductList';
-import Geolocation from '@react-native-community/geolocation';
-import axios from 'axios';
 import {useUploadImagesMutation} from '../../apiServices/imageApi/imageApi';
 import {useActivateWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import * as Keychain from 'react-native-keychain';
@@ -70,6 +68,8 @@ console.log("date console",date)
   const formTemplateId = useSelector(state => state.form.warrantyFormId);
   const userType = useSelector(state => state.appusersdata.userType);
   const userTypeId = useSelector(state => state.appusersdata.userId);
+  const location = useSelector(state=>state.userLocation.location)
+
   console.log(form);
   const workflowProgram = route.params.workflowProgram;
 
@@ -139,39 +139,7 @@ console.log("date console",date)
     }
   };
 
-  useEffect(() => {
-    let lat = '';
-    let lon = '';
-    Geolocation.getCurrentPosition(res => {
-      lat = res.coords.latitude;
-      lon = res.coords.longitude;
-      getLocation(JSON.stringify(lat), JSON.stringify(lon));
-    });
-    const getLocation = (lat, lon) => {
-      if (lat !== '' && lon !== '') {
-        console.log('latitude and longitude', lat, lon);
-        try {
-          axios
-            .get(
-              `https://nominatim.openstreetmap.org/reverse?lat=${lat}+&lon=${lon}&format=json`,
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              },
-            )
-            .then(res => {
-              console.log(res.data);
-              setAddressData(res);
-            });
-        } catch (e) {
-          console.log('Error in fetching location', e);
-        }
-      } else {
-        console.log('latitude and longitude', lat, lon);
-      }
-    };
-  }, []);
+  
 
   const warrantyForm = Object.values(form);
   // console.log(Object.keys(form))
@@ -358,6 +326,62 @@ console.log("date console",date)
                       {' '}
                     </TextInputRectangleMandatory>
                   );
+                }
+                else if((item.name).trim().toLowerCase()==="city" && location!==undefined)
+                {
+                  
+                    return(
+                      <PrefilledTextInput
+                       jsonData={item}
+                       key={index}
+                       handleData={handleChildComponentData}
+                       placeHolder={item.name}
+                       value={location.city}
+                       ></PrefilledTextInput>
+                     )
+                  
+                  
+                  
+                }
+                else if((item.name).trim().toLowerCase()==="pincode" && location!==undefined)
+                {
+                  return(
+                    <PrefilledTextInput
+                    jsonData={item}
+                    key={index}
+                    handleData={handleChildComponentData}
+                    placeHolder={item.name}
+                    value={location.postcode}
+                    ></PrefilledTextInput>
+                  )
+                }
+                else if((item.name).trim().toLowerCase()==="state" && location!==undefined)
+                {
+                  return(
+                    <PrefilledTextInput
+                    jsonData={item}
+                    key={index}
+                    handleData={handleChildComponentData}
+                    placeHolder={item.name}
+                    value={location.state}
+                    ></PrefilledTextInput>
+                  )
+                }
+                else if((item.name).trim().toLowerCase()==="district" && location!==undefined)
+                {
+                  
+                    return(
+                      <PrefilledTextInput
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={location.district}
+                      ></PrefilledTextInput>
+                    )
+                  
+                 
+                  
                 } else if (item.name === 'phone') {
                   return (
                     <TextInputNumericRectangle

@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Dimensions, Image, ScrollView,TouchableOpacity} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import {BaseUrl} from '../../utils/BaseUrl';
-import LinearGradient from 'react-native-linear-gradient';import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { BaseUrl } from '../../utils/BaseUrl';
+import LinearGradient from 'react-native-linear-gradient'; import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import CustomTextInput from '../../components/organisms/CustomTextInput';
 import { usePasswordLoginMutation } from '../../apiServices/login/passwordBased/PasswordLoginApi';
@@ -16,18 +16,23 @@ import { setUserData } from '../../../redux/slices/appUserDataSlice';
 import { setId } from '../../../redux/slices/appUserDataSlice';
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
-import ModalWithBorder from "../../components/modals/ModalWithBorder";
-import ButtonOval from "../../components/atoms/buttons/ButtonOval";
-import Icon from "react-native-vector-icons/Feather";
-import Close from "react-native-vector-icons/Ionicons";
+import MessageModal from '../../components/modals/MessageModal';
 
+import ModalWithBorder from '../../components/modals/ModalWithBorder';
+import Icon from 'react-native-vector-icons/Feather';
+import Close from 'react-native-vector-icons/Ionicons';
+import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 
-const PasswordLogin = ({navigation,route}) => {
-  const [username, setUsername] = useState("influencer_5")
+const PasswordLogin = ({ navigation, route }) => {
+  const [username, setUsername] = useState("influencer_2")
   const [passwords, setPasswords] = useState("123456")
+  const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
   const [message, setMessage] = useState("")
+
+  //modal
   const [openModalWithBorder, setModalWithBorder] = useState(false);
+
   const width = Dimensions.get('window').width;
 
 
@@ -56,253 +61,314 @@ const PasswordLogin = ({navigation,route}) => {
     : require('../../../assets/images/demoIcon.png');
 
   const buttonThemeColor = useSelector(
-      state => state.apptheme.ternaryThemeColor,
-    )
-      ? useSelector(state => state.apptheme.ternaryThemeColor)
-      : '#ef6110';
-    
-// ------------------------------------------
+    state => state.apptheme.ternaryThemeColor,
+  )
+    ? useSelector(state => state.apptheme.ternaryThemeColor)
+    : '#ef6110';
+
+  // ------------------------------------------
 
   // initializing mutations --------------------------------
 
 
-    const [passwordLoginfunc,{
-      data:passwordLoginData,
-      error:passwordLoginError,
-      isLoading:passwordIsLoading,
-      isError:passwordIsError
-    }] = usePasswordLoginMutation()
-    
- // ------------------------------------------
+  const [passwordLoginfunc, {
+    data: passwordLoginData,
+    error: passwordLoginError,
+    isLoading: passwordIsLoading,
+    isError: passwordIsError
+  }] = usePasswordLoginMutation()
 
-// retrieving data from api calls--------------------------
+  // ------------------------------------------
 
-    useEffect(()=>{
-      if(passwordLoginData)
-      {
-        console.log("Password Login Data",passwordLoginData)
-        if(passwordLoginData.success)
-        {
-          saveUserDetails(passwordLoginData.body)
-          saveToken(passwordLoginData.body.token)
-          setMessage(passwordLoginData.message)
-          setModalWithBorder(true)
-        }
+  // retrieving data from api calls--------------------------
+
+  useEffect(() => {
+    if (passwordLoginData) {
+      console.log("Password Login Data", passwordLoginData)
+      if (passwordLoginData.success) {
+        saveUserDetails(passwordLoginData.body)
+        saveToken(passwordLoginData.body.token)
+        setMessage(passwordLoginData.message)
+        setModalWithBorder(true)
       }
-      else if(passwordLoginError){
-        console.log("Password Login Error",passwordLoginError)
-        setError(true)
-        setMessage("Login Failed")
-      }
-    },[passwordLoginData,passwordLoginError])
-
- // ------------------------------------------
-
-
-    const userType = route.params.userType
-    const userId = route.params.userId
-    const needsApproval = route.params.needsApproval
-    console.log("Needs approval",needsApproval)
-    const height = Dimensions.get('window').height
-    const getUserId=(data)=>{
-        console.log(data)
-        setUsername(data)
     }
-    const getPassword=(data)=>{
-        console.log(data)
-        setPasswords(data)
-    }
-    const handleLogin=()=>{
-      console.log( username,passwords)
-      const user_id = username
-      const password = passwords
-      passwordLoginfunc({user_id,password})
+    else if (passwordLoginError) {
+      console.log("Password Login Error", passwordLoginError)
+      setError(true)
+      setMessage("Login Failed")
 
     }
-    const handleNavigationToRegister=()=>{
+  }, [passwordLoginData, passwordLoginError])
+
+  // ------------------------------------------
+
+
+  const userType = route.params.userType
+  const userId = route.params.userId
+  const needsApproval = route.params.needsApproval
+  console.log("Needs approval", needsApproval)
+  const getUserId = (data) => {
+    console.log(data)
+    setUsername(data)
+  }
+  const getPassword = (data) => {
+    console.log(data)
+    setPasswords(data)
+  }
+  const handleLogin = () => {
+    console.log(username, passwords)
+    const user_id = username
+    const password = passwords
+    passwordLoginfunc({ user_id, password })
+
+  }
+
+  //modal close
+  useEffect(() => {
+    console.log("running")
+    if (openModalWithBorder == true)
+      setTimeout(() => {
+        console.log("running2")
+        modalWithBorderClose()
+      }, 2000);
+  }, [success, openModalWithBorder]);
+
+  const handleNavigationToRegister = () => {
     // navigation.navigate('BasicInfo',{needsApproval:needsApproval, userType:userType, userId:userId})
 
-      // navigation.navigate('RegisterUser',{needsApproval:needsApproval, userType:userType, userId:userId})
-      navigation.navigate("BasicInfo",{needsApproval:needsApproval, userType:userType, userId:userId})
+    // navigation.navigate('RegisterUser',{needsApproval:needsApproval, userType:userType, userId:userId})
+    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId })
 
-    }
-    const saveUserDetails=(data)=>{
-    
-      try{
-    console.log("Saving user details",data)
-    dispatch(setAppUserId(data.user_type_id))
-    dispatch(setAppUserName(data.name))
-    dispatch(setAppUserType(data.user_type))
-    dispatch(setUserData(data))
-    dispatch(setId(data.id))
-        }
-  catch(e){
-    console.log("error",e)
   }
-  }
-  const saveToken=async(data)=>{
-    const token = data 
-    const password ='17dec1998'
-  
-      await Keychain.setGenericPassword(token,password);
+  const saveUserDetails = (data) => {
+
+    try {
+      console.log("Saving user details", data)
+      dispatch(setAppUserId(data.user_type_id))
+      dispatch(setAppUserName(data.name))
+      dispatch(setAppUserType(data.user_type))
+      dispatch(setUserData(data))
+      dispatch(setId(data.id))
     }
+    catch (e) {
+      console.log("error", e)
+    }
+  }
+  const saveToken = async (data) => {
+    const token = data
+    const password = '17dec1998'
 
-    const modalClose = () => {
-      setError(false);
-      setMessage('')
-      navigation.navigate('Dashboard')
+    await Keychain.setGenericPassword(token, password);
+  }
 
-    };
-    const modalWithBorderClose = () => {
-      setModalWithBorder(false);
-      navigation.navigate('Dashboard')
-    };
-    const ModalContent = () => {
-      return (
-        <View style={{width:'100%',alignItems:"center",justifyContent:"center",height:'40%'}}>
-          <View style={{ marginTop: 40, alignItems: 'center',width:'100%',height:'100%'}}>
-            <Icon  name="check-circle" size={53} color={ternaryThemeColor} />
-            <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
-  
-            <View style={{ marginTop: 10, marginBottom: 30 }}>
-              <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
-            </View>
-  
-            <View style={{ alignItems: 'center'}}>
-              <ButtonOval handleOperation={modalWithBorderClose} backgroundColor="#000000" content="OK" style={{ color: 'white', paddingVertical: 4 }} />
-            </View>
-  
+  const modalClose = () => {
+    setError(false);
+    setSuccess(false)
+    setMessage('')
+    navigation.navigate('Dashboard')
+
+  };
+
+  //function to handle Modal
+  const modalWithBorderClose = () => {
+    setModalWithBorder(false);
+    navigation.navigate("Dashboard")
+  };
+
+  const ModalContent = () => {
+    return (
+      <View style={{ width: '100%', alignItems: "center", justifyContent: "center" }}>
+        <View style={{ marginTop: 30, alignItems: 'center', maxWidth: '80%' }}>
+          <Icon name="check-circle" size={53} color={ternaryThemeColor} />
+          <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
+
+          <View style={{ marginTop: 10, marginBottom: 30 }}>
+            <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
           </View>
-  
-          <TouchableOpacity style={[{
-            backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10,right:-10,
-          }]} onPress={()=>{
-            setModalWithBorder(false)
-          }} >
-            <Close name="close" size={17} color="#ffffff" />
-          </TouchableOpacity>
-  
+
+          {/* <View style={{ alignItems: 'center', marginBottom: 30 }}>
+            <ButtonOval handleOperation={modalWithBorderClose} backgroundColor="#000000" content="OK" style={{ color: 'white', paddingVertical: 4 }} />
+          </View> */}
+
         </View>
-      )
-    };
+
+        <TouchableOpacity style={[{
+          backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
+        }]} onPress={modalClose} >
+          <Close name="close" size={17} color="#ffffff" />
+        </TouchableOpacity>
+
+      </View>
+    )
+  }
+
   return (
     <LinearGradient
       colors={["white", "white"]}
-      style={{...styles.container,height:height}}>
-      
-      <View style={{width:'100%',alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor:ternaryThemeColor,}}>
-      <View
+      style={styles.container}>
+      {/* <View
         style={{
-          height: 120,
+          height: 140,
           width: '100%',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor:ternaryThemeColor,
-          flexDirection:'row',
-          
         }}>
-        
+        <View
+          style={{
+            ...styles.semicircle,
+            width: width + 60,
+            borderRadius: (width + width) / 2,
+            height: width + 60,
+            top: -(width / 2),
+          }}>
           <TouchableOpacity
-          style={{height:50,alignItems:"center",justifyContent:'center',position:"absolute",left:10,top:30}}
             onPress={() => {
               navigation.goBack();
             }}>
             <Image
-              style={{height: 20, width: 20, resizeMode: 'contain'}}
+              style={{height: 20, width: 20, resizeMode: 'contain', right: 90}}
               source={require('../../../assets/images/blackBack.png')}></Image>
           </TouchableOpacity>
           <Image
             style={{
-              height: 80,
-              width: 120,
-              resizeMode: 'center',
-              top:10,
-              position:"absolute",
-              left:50,
+              height: 110,
+              width: 140,
+              resizeMode: 'contain',
+              top: width / 8,
             }}
-            source={require('../../../assets/images/ozoneWhiteLogo.png')}></Image>
+            source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
+        </View>
+      </View> */}
+      <View style={{
+        width: '100%', alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: ternaryThemeColor,
+      }}>
+        <View
+          style={{
+            height: 120,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: ternaryThemeColor,
+            flexDirection: 'row',
 
-             <View style={{alignItems:'center',justifyContent:"center",position:'absolute',right:10,top:14}}>
-        {/* <PoppinsTextMedium style={{fontSize:18}} content ="Don't have an account ?"></PoppinsTextMedium> */}
-        <ButtonNavigate
+          }}>
+
+          <TouchableOpacity
+            style={{ height: 50, alignItems: "center", justifyContent: 'center', position: "absolute", left: 10, top: 20 }}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Image
+              style={{ height: 20, width: 20, resizeMode: 'contain' }}
+              source={require('../../../assets/images/blackBack.png')}></Image>
+          </TouchableOpacity>
+          <Image
+            style={{
+              height: 50,
+              width: 100,
+              resizeMode: 'contain',
+              top: 20,
+              position: "absolute",
+              left: 50,
+              borderRadius: 10
+
+
+            }}
+            source={{ uri: `${BaseUrl}/api/images/${icon}` }}></Image>
+
+          <View style={{ alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10 }}>
+            {/* <PoppinsTextMedium style={{fontSize:18}} content ="Don't have an account ?"></PoppinsTextMedium> */}
+            <ButtonNavigate
               handleOperation={handleNavigationToRegister}
-              backgroundColor="white"
-              style={{color: 'black', fontSize: 16}}
+              backgroundColor="#353535"
+              style={{ color: 'white', fontSize: 16 }}
               content="Register"
-              >
-        </ButtonNavigate>
+            >
+            </ButtonNavigate>
+
+          </View>
+        </View>
+        <View
+          style={{
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            marginTop: 10,
+            width: '90%'
+          }}>
+          <PoppinsText
+            style={{ color: 'white', fontSize: 28 }}
+            content="Login To Your Account"></PoppinsText>
 
         </View>
-      </View>
-      <View
-            style={{
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              marginTop: 10,
-              width:'90%'
-            }}>
-            <PoppinsText
-              style={{color: 'white', fontSize: 28}}
-              content="Login To Your Account"></PoppinsText>
-            
-          </View>
       </View>
       {error && (
-            <ErrorModal
-              modalClose={modalClose}
-              message={message}
-              openModal={error}></ErrorModal>
-          )}
-          {openModalWithBorder && (
-            <ModalWithBorder
-              modalClose={modalWithBorderClose}
-              message={message}
-              openModal={openModalWithBorder}
-              comp={ModalContent}
-            ></ModalWithBorder>
-          )}
-      <ScrollView style={{width:'100%',height:height-140}}>
-       
-        
-        <View style={{width:"100%",alignItems:"center",justifyContent:"center",marginTop:30}}>
-            {/* <CustomTextInput sendData={getUserId} title="Username" image={require('../../../assets/images/whiteUser.png')}></CustomTextInput>
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}></ErrorModal>
+      )}
+
+
+      <View style={{ marginHorizontal: 100 }}>
+        {openModalWithBorder && <ModalWithBorder
+          modalClose={modalWithBorderClose}
+          message={message}
+          openModal={openModalWithBorder}
+          comp={ModalContent}></ModalWithBorder>}
+      </View>
+
+      <ScrollView contentContainerStyle={{ flex: 1 }} style={{ width: '100%', }}>
+
+
+        <View style={{ width: "100%", alignItems: "center", justifyContent: "center", marginTop: 30 }}>
+          {/* <CustomTextInput sendData={getUserId} title="Username" image={require('../../../assets/images/whiteUser.png')}></CustomTextInput>
             <CustomTextInput sendData={getPassword} title="Password" image={require('../../../assets/images/whitePassword.png')}></CustomTextInput> */}
 
+       
             <TextInputRectangularWithPlaceholder
-            placeHolder="UserName"
-            handleData={getUserId}
+              placeHolder="UserName"
+              handleData={getUserId}
             // maxLength={10}
-              ></TextInputRectangularWithPlaceholder>
-              <TextInputRectangularWithPlaceholder
-            placeHolder="Password"
-            handleData={getPassword}
-            // maxLength={10}
-              ></TextInputRectangularWithPlaceholder>
-        </View>
-        <View style={{flexDirection:"row",alignItems:"center",justifyContent:'center',width:'90%',marginTop:10,marginLeft:10}}>
-          <PoppinsTextMedium style={{color:"#727272",fontSize:16}} content = "Not remembering password? "></PoppinsTextMedium>
-          <TouchableOpacity >
-            <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:16}} content="Forget Password"></PoppinsTextMedium>
-          </TouchableOpacity>
-        </View>
-        <View style={{width:"100%",alignItems:'flex-start',justifyContent:"center",marginLeft:20,marginTop:300}}>
-        <ButtonNavigateArrow
-              handleOperation={handleLogin}
-              backgroundColor={buttonThemeColor}
-              style={{color: 'white', fontSize: 16}}
-              content="Login">
-        </ButtonNavigateArrow>
-
-        </View>
+            ></TextInputRectangularWithPlaceholder>
+      
 
        
-        
-        </ScrollView>
-      
-        
-      
+            <TextInputRectangularWithPlaceholder
+              placeHolder="Password"
+              handleData={getPassword}
+            // maxLength={10}
+            ></TextInputRectangularWithPlaceholder>
+         
+
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'center', width: '90%' }}>
+          <PoppinsTextMedium style={{ color: "#727272", fontSize: 14 }} content="Not remembering password? "></PoppinsTextMedium>
+          <TouchableOpacity >
+            <PoppinsTextMedium style={{ color: ternaryThemeColor, fontSize: 14 }} content="Forget Password"></PoppinsTextMedium>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ width: "100%", flex: 1 }}>
+          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 'auto' }}>
+            <ButtonNavigateArrow
+              handleOperation={handleLogin}
+              backgroundColor={buttonThemeColor}
+              style={{ color: 'white', fontSize: 16 }}
+              content="Login">
+            </ButtonNavigateArrow>
+          </View>
+
+        </View>
+
+
+
+      </ScrollView>
+
+
+
     </LinearGradient>
   );
 };
@@ -310,6 +376,7 @@ const PasswordLogin = ({navigation,route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     width: '100%',
     alignItems: 'center'
   },
@@ -327,12 +394,12 @@ const styles = StyleSheet.create({
   },
   userListContainer: {
     width: '100%',
-    height:600,
+    height: 600,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop:20
+    marginTop: 20
   },
 });
 

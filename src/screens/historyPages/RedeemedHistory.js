@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import {View, StyleSheet,TouchableOpacity,Image,FlatList,Modal,Pressable,Text} from 'react-native';
+import {View, StyleSheet,TouchableOpacity,Image,FlatList,Modal,Pressable,Text, ScrollView} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ const RedeemedHistory = ({navigation}) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
+  const [redeemedListData, setRedeemedListData] = useState([])
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
       )
@@ -84,13 +85,39 @@ const RedeemedHistory = ({navigation}) => {
         if(fetchGiftsRedemptionsOfUserData)
         {
             console.log("fetchGiftsRedemptionsOfUserData",fetchGiftsRedemptionsOfUserData.body.userPointsRedemptionList)
+            fetchDates(fetchGiftsRedemptionsOfUserData.body.userPointsRedemptionList)
         }
         else if(fetchGiftsRedemptionsOfUserError)
         {
             console.log("fetchGiftsRedemptionsOfUserIsLoading",fetchGiftsRedemptionsOfUserError)
         }
       },[fetchGiftsRedemptionsOfUserData,fetchGiftsRedemptionsOfUserError])
-
+      const fetchDates = (data) => {
+        const dateArr = []
+        let tempArr =[]
+        let tempData=[]
+        data.map((item,index) => {
+          dateArr.push(moment(item.created_at).format("DD-MMM-YYYY"))
+        })
+        const distinctDates = Array.from(new Set(dateArr))
+        console.log("distinctDates",distinctDates)
+    
+        distinctDates.map((item1,index)=>{
+            tempData=[]
+           data.map((item2,index)=>{
+            if(moment(item2.created_at).format("DD-MMM-YYYY")===item1)
+            {
+                tempData.push(item2)
+            }
+           })
+           tempArr.push({
+            "date":item1,
+                "data":tempData
+            })
+        })
+        setRedeemedListData(tempArr)
+        console.log("tempArr",JSON.stringify(tempArr))
+      }
       const modalClose = () => {
         setError(false);
         setSuccess(false)
@@ -162,6 +189,7 @@ const RedeemedHistory = ({navigation}) => {
             </View>
         )
     }
+    
     const Header=()=>{
         return(
             <View style={{height:40,width:'100%',backgroundColor:'#DDDDDD',alignItems:"center",justifyContent:"center",flexDirection:"row",marginTop:20}}>
@@ -184,7 +212,7 @@ const RedeemedHistory = ({navigation}) => {
         return(
             <TouchableOpacity onPress={()=>{
                 navigation.navigate('RedeemedDetails',{data:data})
-            }} style={{flexDirection:"row",alignItems:"center",justifyContent:"center",marginTop:10,width:"100%",marginBottom:10}}>
+            }} style={{flexDirection:"row",alignItems:"center",justifyContent:"center",margin:8,width:"100%"}}>
                 <View style={{height:70,width:70,alignItems:"center",justifyContent:"center",borderRadius:10,borderWidth:1,borderColor:'#DDDDDD',right:10}}>
                     <Image style={{height:50,width:50,resizeMode:"contain"}} source={{uri:BaseUrlImages+image}}></Image>
                 </View>
@@ -209,7 +237,7 @@ const RedeemedHistory = ({navigation}) => {
         )
     }
     return (
-        <View style={{alignItems:"center",justifyContent:"flex-start",width:'100%',height:'100%',backgroundColor:"white"}}>
+        <View style={{alignItems:"center",justifyContent:"flex-start",width:'100%',height:'100%'}}>
           {error && (
             <ErrorModal
               modalClose={modalClose}
@@ -231,11 +259,13 @@ const RedeemedHistory = ({navigation}) => {
                 </TouchableOpacity>
             <PoppinsTextMedium content ="Redeemed History" style={{marginLeft:10,fontSize:16,fontWeight:'600',color:'#171717'}}></PoppinsTextMedium>
             <TouchableOpacity style={{marginLeft:160}}>
-            <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/notificationOn.png')}></Image>
+            {/* <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/notificationOn.png')}></Image> */}
             </TouchableOpacity>
             </View>
             <View style={{padding:14,alignItems:"flex-start",justifyContent:"flex-start",width:"100%"}}>
                 <PoppinsTextMedium style={{marginLeft:10,fontSize:20,fontWeight:'600',color:'#6E6E6E'}} content="You Have"></PoppinsTextMedium>
+        <Image style={{ position: 'absolute', right: 0, width: 117, height: 82, marginRight: 23, marginTop: 20 }} source={require('../../../assets/images/reedem2.png')}></Image>
+
                 {userPointData && 
                 <PoppinsText style={{marginLeft:10,fontSize:34,fontWeight:'600',color:'#373737'}} content={userPointData.body.point_balance}></PoppinsText>
                 
@@ -244,19 +274,32 @@ const RedeemedHistory = ({navigation}) => {
             </View>
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
-            {fetchGiftsRedemptionsOfUserData && <FlatList
-        data={fetchGiftsRedemptionsOfUserData.body.userPointsRedemptionList}
-        style={{width:'100%'}}
-        contentContainerStyle={{width:'100%'}}
-        renderItem={({item,index}) => {
-            console.log(index+1,item)
+           <ScrollView showsVerticalScrollIndicator={false}>
+                {
+        redeemedListData && redeemedListData.map((item,index)=>{
             return(
-                <ListItem data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')}/>
+                <View style={{ alignItems: "center", justifyContent: "center", width: '100%' }} key={index}>
+                    
+                <View style={{ alignItems: "flex-start", justifyContent: "center", paddingBottom: 10, marginTop: 20,marginLeft:20,width:'100%'}}>
+                  <PoppinsTextMedium style={{ color: 'black', fontSize: 16 }} content={(item.date)}></PoppinsTextMedium>
+                 
+                </View>
+                
+                {
+                    item.data.map((item,index)=>{
+                        return(
+                          <ListItem key={item.id} data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')}/>
+
+
+                        )
+                    })
+                }
+              </View>
             )
-        }}
-        keyExtractor={item => item.id}
-      />}
-                {/* <ListItem description="Product" productCode="PRO123" amount="100" time="10:20"/> */}
+            
+        })
+      }
+      </ScrollView>
 
         </View>
     );

@@ -22,7 +22,6 @@ const DataNotFound = ({navigation}) => {
             <View style={{marginTop:40}}>
             <ButtonNavigateArrow style={{color:'white',fontSize:18}} backgroundColor={ternaryThemeColor} handleOperation={handleButton} content="Back to Dashboard"></ButtonNavigateArrow>
             
-        <AnimatedDots color={ternaryThemeColor}></AnimatedDots>
            
             </View>
         </View>

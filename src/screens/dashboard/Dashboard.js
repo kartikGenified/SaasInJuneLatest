@@ -106,32 +106,35 @@ const Dashboard = ({navigation}) => {
       let lat=''
       let lon=''
       Geolocation.getCurrentPosition((res)=>{
+        console.log("res",res)
           lat = res.coords.latitude
           lon = res.coords.longitude
-          getLocation(JSON.stringify(lat),JSON.stringify(lon))
+          // getLocation(JSON.stringify(lat),JSON.stringify(lon))
+          console.log("latlong",lat,lon)
+          var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
+          &location_type=ROOFTOP&result_type=street_address&key=AIzaSyADljP1Bl-J4lW3GKv0HsiOW3Fd1WFGVQE`
+      
+      fetch(url).then(response => response.json()).then(json => {
+        console.log("location address=>", JSON.stringify(json));
+        const formattedAddress = json.results[0].formatted_address
+        const formattedAddressArray = formattedAddress.split(',')
+       
+       const locationJson = {
+        city:formattedAddressArray[1],
+        district:formattedAddressArray[2],
+        state:formattedAddressArray[3],
+        postcode:formattedAddressArray[4],
+        country:formattedAddressArray[5],
+        lat:json.results[0].geometry.location.lat,
+        lon:json.results[0].geometry.location.lng,
+        address:formattedAddress
+       
+       }
+       console.log("formattedAddressArray",locationJson)
+        dispatch(setLocation(locationJson))
+    })
       })
-      const getLocation=(lat,lon)=>{
-          if(lat!=='' && lon!=='')
-          {
-              console.log("latitude",lat," and longitude",lon)
-              try{
-                  axios.post(`https://nominatim.openstreetmap.org/reverse?lat=${lat}+&lon=${lon}&format=json`,{headers:{
-                      'Content-Type': 'application/json'
-                  }}).then((res)=>{console.log("Addres Data",res.data)
-                  dispatch(setLocation(res.data))
-                })
-              }
-              catch(e)
-              {
-                  console.log("Error in fetching location",e)
-              }
-          
-  
-          }
-          else{
-              console.log("latitude and longitude",lat,lon)
-          }
-      }
+      
     },[])
 
     useEffect(()=>{

@@ -43,6 +43,7 @@ const QrCodeScanner = ({navigation}) => {
   const userType = useSelector(state => state.appusersdata.userType);
   const userName = useSelector(state => state.appusersdata.name);
   const workflowProgram = useSelector(state => state.appWorkflow.program);
+  const location = useSelector(state=>state.userLocation.location)
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram);
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
@@ -404,6 +405,10 @@ const QrCodeScanner = ({navigation}) => {
           user_type: userType,
           platform_id: platform,
           scanned_by_name: userName,
+          address:location.address,
+          state:location.state,
+          district:location.district,
+          city:location.city,
         };
         token && addQrFunc({token, requestData});
       });
@@ -575,7 +580,7 @@ const QrCodeScanner = ({navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
-              <ScrollView>
+              <ScrollView contentContainerStyle={{alignItems:"center",justifyContent:'center',width:'80%'}}>
                 <Image
                   style={{height: 300, width: 300}}
                   source={require('../../../assets/images/qrHowTo.png')}></Image>

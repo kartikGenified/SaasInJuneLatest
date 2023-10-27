@@ -35,7 +35,7 @@ const ModalWithBorder = (props) => {
 
 
   return (
-    <View style={styles.centeredView}>
+    
       <Modal
         animationType="slide"
         transparent={true}
@@ -47,9 +47,10 @@ const ModalWithBorder = (props) => {
           <View style={[styles.modalView, { borderWidth: 3, borderColor: ternaryThemeColor, }]}>
             <Comp></Comp>
           </View>
-        </View>
+          </View>
+        
       </Modal>
-    </View>
+    
   );
 };
 

@@ -43,6 +43,7 @@ const CongratulateOnScan = ({navigation, route}) => {
 
   // getting location from redux state
   const location = useSelector(state => state.userLocation.location);
+  console.log("location",location)
   // console.log('Location', location, userData, productData, qrData);
   const height = Dimensions.get('window').height;
   // workflow for the given user
@@ -252,15 +253,15 @@ const CongratulateOnScan = ({navigation, route}) => {
       "product_id":productData.product_id,
       "product_code":productData.product_code,
       "platform_id":Number(platform),
-      "pincode":location.address.postcode,
+      "pincode":location.postcode,
       "platform":'mobile',
-      "state":location.address.state,
-      "district":location.address.state_district,
-      "city":location.address.county,
-      "area":location.address.county,
-      "known_name":location.address.county,
-      "lat":location.lat.substring(0, 10),
-      "log":location.lon.substring(0, 10),
+      "state":location.state,
+      "district":location.district,
+      "city":location.city,
+      "area":location.state,
+      "known_name":location.city,
+      "lat":String(location.lat),
+      "log":String(location.lon),
       "method_id":1,
       "method":'Cashback',
       "cashback":"10"
@@ -313,15 +314,15 @@ const CongratulateOnScan = ({navigation, route}) => {
               product_id: productData.product_id,
               product_code: productData.product_code,
               platform_id: Number(platform),
-              pincode: location.address.postcode===undefined ? "N/A" :location.address.postcode,
+              pincode: location.postcode===undefined ? "N/A" :location.postcode,
               platform: 'mobile',
-              state: location.address.state===undefined ? "N/A" :location.address.state,
-              district: location.address.state_district===undefined ? "N/A" : location.address.state_district,
-              city: location.address.county===undefined ? "N/A" :location.address.county,
-              area: location.address.county===undefined ? "N/A" :location.address.county,
-              known_name: location.address.county===undefined ? "N/A" :location.address.county,
-              lat: location.lat.substring(0, 10)===undefined ? "N/A" :location.lat.substring(0, 10),
-              log: location.lon.substring(0, 10)===undefined ? "N/A" :location.lon.substring(0, 10),
+              state: location.state===undefined ? "N/A" :location.state,
+              district: location.district===undefined ? "N/A" : location.district,
+              city: location.city===undefined ? "N/A" :location.city,
+              area: location.district===undefined ? "N/A" :location.district,
+              known_name: location.city===undefined ? "N/A" :location.city,
+              lat: location.lat===undefined ? "N/A" :String(location.lat),
+              log: location.lon===undefined ? "N/A" :String(location.lon),
               method_id: 1,
               method: 'point on product',
               points: productData[`${userData.user_type}_points`],
@@ -331,7 +332,7 @@ const CongratulateOnScan = ({navigation, route}) => {
             tenant_id: slug,
             token: token,
           };
-          console.log(body);
+          console.log("userPointEntryFunc",body);
           userPointEntryFunc(body);
         };
         submitPoints();

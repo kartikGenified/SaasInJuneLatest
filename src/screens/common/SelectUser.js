@@ -105,6 +105,7 @@ const SelectUser = ({navigation}) => {
             listUsers.map((item, index) => {
               return (
                 <SelectUserBox
+                style={{}}
                   navigation = {navigation}
                   otpLogin={otpLogin}
                   passwordLogin={passwordLogin}

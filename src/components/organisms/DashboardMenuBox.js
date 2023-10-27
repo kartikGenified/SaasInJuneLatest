@@ -27,7 +27,7 @@ const DashboardMenuBox=(props)=>{
             navigation.navigate('WarrantyHistory')
         }
         else if(data.toLowerCase() === "bank details" || data.toLowerCase() === "bank account"){
-            navigation.navigate('AddBankAccountAndUpi')
+            navigation.navigate('BankAccounts')
         }
         else if(data.toLowerCase().substring(0,5) === "check"){
             if(data.toLowerCase().split(" ")[1]==="genuinity")

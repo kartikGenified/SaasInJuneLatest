@@ -13,14 +13,12 @@ import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import {useSelector} from 'react-redux';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 import ErrorModal from '../../components/modals/ErrorModal';
-import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {useClaimGenuinityMutation,useCheckGenuinityMutation } from '../../apiServices/workflow/genuinity/GetGenuinityApi';
 import * as Keychain from'react-native-keychain'
 const GenuinityScratch = ({navigation,route}) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
-  const [addressData, setAddressData] = useState()
   const [token, setToken] = useState()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -31,7 +29,7 @@ const GenuinityScratch = ({navigation,route}) => {
   const qrData = useSelector(state=>state.qrData.qrData)
   const userData = useSelector(state=>state.appusersdata.userData)
   const workflowProgram = route.params.workflowProgram
-
+  const location = useSelector(state=>state.userLocation.location)
   const [claimGenuinityFunc,{
     data:claimGenuinityData,
     error:claimGenuinityError,
@@ -121,39 +119,6 @@ const GenuinityScratch = ({navigation,route}) => {
   
 
   useEffect(()=>{
-    let lat=''
-    let lon=''
-    Geolocation.getCurrentPosition((res)=>{
-        lat = res.coords.latitude
-        lon = res.coords.longitude
-        getLocation(JSON.stringify(lat),JSON.stringify(lon))
-    })
-    const getLocation=(lat,lon)=>{
-        if(lat!=='' && lon!=='')
-        {
-            console.log("latitude and longitude",lat,lon)
-            try{
-                axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}+&lon=${lon}&format=json`,{headers:{
-                    'Content-Type': 'application/json'
-                }}).then((res)=>{console.log("Addres Data",res.data)
-          setAddressData(res.data)})
-            }
-            catch(e)
-            {
-                console.log("Error in fetching location",e)
-            }
-        
-
-        }
-        else{
-            console.log("latitude and longitude",lat,lon)
-        }
-    }
-
-  
-
-      
-    
 
     const getDashboardData=async()=>{
       try {
@@ -192,15 +157,15 @@ const GenuinityScratch = ({navigation,route}) => {
         product_id: Number(qrData.id),
         product_code: qrData.product_code,
         platform_id: Number(platform),
-        pincode: addressData.address.postcode===undefined ? "N/A":addressData.address.postcode,
+        pincode: location.postcode===undefined ? "N/A":location.postcode,
         platform: 'mobile',
-        state: addressData.address.state===undefined ? "N/A":addressData.address.state,
-        district: addressData.address.state_district===undefined ? "N/A":addressData.address.state_district,
-        city: addressData.address.county===undefined ? "N/A":addressData.address.county,
-        area: addressData.address.county===undefined ? "N/A":addressData.address.county,
-        known_name: addressData.address.county===undefined ? "N/A":addressData.address.county,
-        lat: addressData.lat.slice(0,8)===undefined ? "N/A":addressData.lat.slice(0,8),
-        log: addressData.lon.slice(0,8)===undefined ? "N/A":addressData.lon.slice(0,8),
+        state: location.state===undefined ? "N/A":location.state,
+        district: location.district===undefined ? "N/A":location.district,
+        city: location.city===undefined ? "N/A":location.city,
+        area: location.city===undefined ? "N/A":location.city,
+        known_name: location.county===undefined ? "N/A":location.county,
+        lat: location.lat===undefined ? "N/A":String(location.lat),
+        log: location.lon===undefined ? "N/A":String(location.lon),
       };
       // const data = {
       //   scratch_code: qrData.scratch_code,
