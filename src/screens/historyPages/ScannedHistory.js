@@ -250,7 +250,7 @@ const [scannedListData, setScannedListData] = useState([])
                 {
                     item.data.map((item,index)=>{
                         return(
-                            <ListItem key={item.id}  data={item} description={item.product_name} productCode={item.product_code} time={moment(item.scanned_at).format('HH:MM')} amount={item.points_on_product}></ListItem>
+                            <ListItem key={item.id}  data={item} description={item.product_name} productCode={item.product_code} time={moment(item.scanned_at).format('hh:mm a')} amount={item.points_on_product}></ListItem>
 
                         )
                     })

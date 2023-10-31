@@ -39,7 +39,7 @@ const CongratulateOnScan = ({navigation, route}) => {
   const productData = useSelector(state => state.productData.productData);
 
   const userData = useSelector(state => state.appusersdata.userData);
-  console.log("userData",productData);
+  console.log("userData",`${userData.user_type}_points`);
 
   // getting location from redux state
   const location = useSelector(state => state.userLocation.location);
@@ -281,20 +281,20 @@ const CongratulateOnScan = ({navigation, route}) => {
       if (getCouponOnCategoryData.success) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 1000);
+        }, 3000);
       }
     } else if (getCouponOnCategoryError) {
       console.log('getCouponOnCategoryError', getCouponOnCategoryError);
       if (getCouponOnCategoryError.status === 409) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 1000);
+        }, 3000);
       }
       else if(getCouponOnCategoryError.data.message==="No Active Coupons Exist")
       {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 1000);
+        }, 3000);
       }
     }
   }, [getCouponOnCategoryData, getCouponOnCategoryError]);

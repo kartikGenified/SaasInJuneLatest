@@ -68,7 +68,10 @@ const SelectUserBox = (props) => {
         }} style={{...styles.container,backgroundColor:boxColor}}>
             
             {image && <View style={{height:90,width:90,borderRadius:45,backgroundColor:"white",alignItems:"center",justifyContent:'center'}}>
-            <Image source={{uri:image}} style={styles.image}></Image></View>}
+            <Image source={{uri:image}} style={styles.image}></Image>
+            {/* <SvgUri width={'100%'} height={'100%'} uri={image}></SvgUri> */}
+            
+            </View>}
 
             
             <PoppinsTextMedium style={{color:'#B0B0B0',marginTop:20,fontSize:18,fontWeight:'700'}} content ={(props.content).toUpperCase()}></PoppinsTextMedium>

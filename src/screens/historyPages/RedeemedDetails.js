@@ -20,6 +20,7 @@ import { BaseUrlImages } from "../../utils/BaseUrlImages";
 import { useGetRedeemedGiftsStatusMutation } from "../../apiServices/gifts/RedeemGifts";
 import * as Keychain from 'react-native-keychain';
 import TrackDeliveryModal from "../../components/redeemDetails/TrackDeliveryModal";
+
 const RedeemedDetails = ({ navigation, route }) => {
   const height = Dimensions.get("window").height;
   const data = route.params.data;

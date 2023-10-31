@@ -119,19 +119,62 @@ const Dashboard = ({navigation}) => {
         const formattedAddress = json.results[0].formatted_address
         const formattedAddressArray = formattedAddress.split(',')
        
-       const locationJson = {
-        city:formattedAddressArray[1],
-        district:formattedAddressArray[2],
-        state:formattedAddressArray[3],
-        postcode:formattedAddressArray[4],
-        country:formattedAddressArray[5],
-        lat:json.results[0].geometry.location.lat,
-        lon:json.results[0].geometry.location.lng,
-        address:formattedAddress
+        let locationJson = {
+          
+          lat:json.results[0].geometry.location.lat ===undefined ? "N/A":json.results[0].geometry.location.lat,
+          lon:json.results[0].geometry.location.lng===undefined ? "N/A":json.results[0].geometry.location.lng,
+          address:formattedAddress===undefined ? "N/A" :formattedAddress
+         
+         }
+
+         const addressComponent = json.results[0].address_components
+         console.log("addressComponent",addressComponent)
+         for(let i=0;i<=addressComponent.length;i++)
+         {
+          if(i===addressComponent.length)
+          {
+            dispatch(setLocation(locationJson))
+
+          }
+          else{
+            if(addressComponent[i].types.includes("postal_code"))
+            {
+            console.log("inside if")
+
+              console.log(addressComponent[i].long_name)
+              locationJson["postcode"]=addressComponent[i].long_name
+            }
+            else if(addressComponent[i].types.includes("country"))
+            {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["country"]=addressComponent[i].long_name
+            }
+            else if(addressComponent[i].types.includes("administrative_area_level_1"))
+            {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["state"]=addressComponent[i].long_name
+            }
+            else if(addressComponent[i].types.includes("administrative_area_level_2"))
+            {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["district"]=addressComponent[i].long_name
+            }
+            else if(addressComponent[i].types.includes("locality"))
+            {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["city"]=addressComponent[i].long_name
+            }
+          }
+          
+         }
        
-       }
+       
        console.log("formattedAddressArray",locationJson)
-        dispatch(setLocation(locationJson))
+       
     })
       })
       

@@ -137,7 +137,7 @@ const PasswordLogin = ({ navigation, route }) => {
     // navigation.navigate('BasicInfo',{needsApproval:needsApproval, userType:userType, userId:userId})
 
     // navigation.navigate('RegisterUser',{needsApproval:needsApproval, userType:userType, userId:userId})
-    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId })
+    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId,navigatingFrom:"PasswordLogin" })
 
   }
   const saveUserDetails = (data) => {
@@ -165,7 +165,6 @@ const PasswordLogin = ({ navigation, route }) => {
     setError(false);
     setSuccess(false)
     setMessage('')
-    navigation.navigate('Dashboard')
 
   };
 

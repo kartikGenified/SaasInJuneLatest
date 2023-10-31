@@ -1,14 +1,15 @@
 import React,{useRef,useEffect} from 'react';
 import {View, StyleSheet,Animated} from 'react-native';
-const ZoomViewAnimations = (props) => {
+const ZoomImageAnimation = (props) => {
     
-    const zoomAnimations = useRef(new Animated.Value(0)).current;
+    const zoomAnimations = useRef(new Animated.Value(50)).current;
     const duration = props.duration
     const zoom = props.zoom
+    const image  = props.image
     useEffect(() => {
        Animated.sequence([
         Animated.timing(zoomAnimations, { toValue: zoom, duration: duration,useNativeDriver:false }).start(),
-        Animated.timing(zoomAnimations, { toValue: 100, duration: duration,useNativeDriver:false }).start()
+        // Animated.timing(zoomAnimations, { toValue: 100, duration: duration,useNativeDriver:false }).start()
 
 
        ])
@@ -16,12 +17,12 @@ const ZoomViewAnimations = (props) => {
       }, [zoomAnimations]);
 
     return (
-        <Animated.View style={{height:zoomAnimations,width:zoomAnimations, ...props.style}}>
-            {<props.comp></props.comp>}
-        </Animated.View>
+        <Animated.Image source={image} style={{height:zoomAnimations,width:zoomAnimations, ...props.style}}>
+            
+        </Animated.Image>
     );
 }
 
 const styles = StyleSheet.create({})
 
-export default ZoomViewAnimations;
+export default ZoomImageAnimation;

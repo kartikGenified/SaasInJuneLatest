@@ -16,6 +16,7 @@ const RedeemedHistory = ({navigation}) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
+  const [kycStatus, setKycStatus] = useState()
   const [redeemedListData, setRedeemedListData] = useState([])
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
@@ -25,7 +26,9 @@ const RedeemedHistory = ({navigation}) => {
   const userData = useSelector(state=>state.appusersdata.userData)
   const userId = useSelector(state => state.appusersdata.userId);
   const id = useSelector(state => state.appusersdata.id);
-      const focused = useIsFocused()
+  const kycData = useSelector(state=>state.kycDataSlice.kycData)
+
+  const focused = useIsFocused()
   const fetchPoints=async()=>{
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
@@ -92,6 +95,17 @@ const RedeemedHistory = ({navigation}) => {
             console.log("fetchGiftsRedemptionsOfUserIsLoading",fetchGiftsRedemptionsOfUserError)
         }
       },[fetchGiftsRedemptionsOfUserData,fetchGiftsRedemptionsOfUserError])
+
+      useEffect(()=>{
+        if(Object.values(kycData).includes(false))
+        {
+          setKycStatus(false)
+        }
+        else{
+          setKycStatus(true)
+        }
+      },[])
+
       const fetchDates = (data) => {
         const dateArr = []
         let tempArr =[]
@@ -126,7 +140,9 @@ const RedeemedHistory = ({navigation}) => {
     const DisplayEarnings=()=>{
         const [modalVisible, setModalVisible] = useState(false);
         const handleRedeemButtonPress=()=>{
-          if(Number(userPointData.body.point_balance)<=0)
+          if(kycStatus)
+          {
+            if(Number(userPointData.body.point_balance)<=0)
           {
             setError(true)
             setMessage("You dont have enough points !")
@@ -134,6 +150,12 @@ const RedeemedHistory = ({navigation}) => {
           else{
           setModalVisible(true)
           }
+          }
+          else{
+            setError(true)
+            setMessage("Kyc Pending")
+          }
+          
   
         }
         return(
@@ -288,7 +310,7 @@ const RedeemedHistory = ({navigation}) => {
                 {
                     item.data.map((item,index)=>{
                         return(
-                          <ListItem key={item.id} data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')}/>
+                          <ListItem key={item.id} data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('hh:mm a')}/>
 
 
                         )

@@ -291,7 +291,7 @@ return (
         </Text>}
         {userData && <Text style={{color: 'white', margin: 0}}>{userData.user_type} Account</Text>}
         
-       {!Object.values(kycData).includes('false') ? <View style={{flexDirection: 'row',marginTop:4}}>
+       {!Object.values(kycData).includes(false) ? <View style={{flexDirection: 'row',marginTop:4}}>
            <View
             style={{
               height: 22,

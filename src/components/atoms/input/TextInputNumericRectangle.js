@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 const TextInputNumericRectangle = props => {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(props.value);
   const placeHolder = props.placeHolder;
   const maxLength = props.maxLength;
   const handleInput = text => {
@@ -36,7 +36,7 @@ const TextInputNumericRectangle = props => {
           left: 16,
         }}>
         <PoppinsTextMedium
-          style={{color: 'black', padding: 4}}
+          style={{color: '#919191', padding: 4}}
           content={placeHolder}></PoppinsTextMedium>
       </View>
       <TextInput
@@ -52,6 +52,7 @@ const TextInputNumericRectangle = props => {
           justifyContent: 'flex-start',
           fontWeight: '500',
           marginLeft: 20,
+          color:'black'
         }}
         placeholderTextColor="grey"
         onChangeText={text => {

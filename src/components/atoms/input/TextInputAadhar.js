@@ -3,6 +3,7 @@ import {View, StyleSheet,TextInput,Modal,Pressable,Text,Image} from 'react-nativ
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import { useSendAadharOtpMutation } from '../../../apiServices/verification/AadharVerificationApi';
 import { useVerifyAadharMutation } from '../../../apiServices/verification/AadharVerificationApi';
+import ZoomImageAnimation from '../../animations/ZoomImageAnimation';
 const TextInputAadhar = (props) => {
     const [value,setValue] = useState()
     const [otp, setOtp] = useState()
@@ -109,6 +110,7 @@ const TextInputAadhar = (props) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Aadhar Verified Succesfully</Text>
+            <ZoomImageAnimation style={{marginBottom:20}} zoom={100} duration={1000}  image={require('../../../../assets/images/greenTick.png')}></ZoomImageAnimation>
             {/* <Image style={{height:60,width:60,margin:20}} source={require('../../../../assets/images/greenTick.png')}></Image> */}
             <Pressable
               style={[styles.button, styles.buttonClose]}
@@ -121,16 +123,16 @@ const TextInputAadhar = (props) => {
             <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
             
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
-                <PoppinsTextMedium style={{color:"black",padding:4}} content = {placeHolder}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:"#919191",padding:4}} content = {placeHolder}></PoppinsTextMedium>
             </View>
-            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={`${placeHolder} *`}></TextInput>
+            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black'}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={`${placeHolder} *`}></TextInput>
         </View>
        {sendAadharOtpData  && <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
         
         <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
-            <PoppinsTextMedium style={{color:"black",padding:4}} content = "OTP"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{color:"#919191",padding:4}} content = "OTP"></PoppinsTextMedium>
         </View>
-        <TextInput maxLength={6}  style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24}} placeholderTextColor="grey" onChangeText={(text)=>{setOtp(text)}} value={otp} placeholder={`OTP`}></TextInput>
+        <TextInput maxLength={6}  style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black'}} placeholderTextColor="grey" onChangeText={(text)=>{setOtp(text)}} value={otp} placeholder={`OTP`}></TextInput>
     </View>}
         </View>
         
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     button: {
-      borderRadius: 20,
+      borderRadius:4,
       padding: 10,
       elevation: 2,
     },

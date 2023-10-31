@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import {Alert, Modal, StyleSheet, Text, Pressable, View,Image} from 'react-native';
 import { useSelector } from 'react-redux';
 import  Icon  from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -25,8 +25,11 @@ const ErrorModal = (props) => {
   const closeModal=()=>{
     setModalVisible(!modalVisible)
     props.modalClose()
-    navigateTo && navigation.navigate(navigateTo)
+   if(navigateTo!==undefined)
+   {
+    navigation.navigate(navigateTo)
   }
+}
    
 
 
@@ -41,15 +44,15 @@ const ErrorModal = (props) => {
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-          <Text style={{color:'black',fontSize:24,fontWeight:'600'}}>SORRY</Text>
-          <Icon name="disabled-by-default" size={100} color="red"></Icon>
-
+          <View style={{...styles.modalView,borderWidth:2,borderColor:ternaryThemeColor}}>
+            <Image style={{width:80,height:80,resizeMode:'contain'}} source={require('../../../assets/images/failed.png')}></Image>
+          <Text style={{color:'#FF5D5D',fontSize:24,fontWeight:'700'}}>SORRY</Text>
+         
             <Text style={{...styles.modalText,fontSize:20,fontWeight:'600'}}>{props.message}</Text>
             <Pressable
-              style={{...styles.button,backgroundColor:ternaryThemeColor,width:100}}
+              style={{...styles.button,backgroundColor:'#FF5D5D',width:100}}
               onPress={() => closeModal()}>
-              <Text style={styles.textStyle}>Hide</Text>
+              <Text style={styles.textStyle}>Close</Text>
             </Pressable>
           </View>
         </View>
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(52, 52, 52, 0.8)'
+    backgroundColor: 'white'
   },
   modalView: {
    
@@ -79,11 +82,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    
   },
   button: {
-    borderRadius: 10,
+    borderRadius: 4,
     padding: 10,
     elevation: 2,
+    marginTop:10
   },
   buttonOpen: {
     backgroundColor: '#F194FF',

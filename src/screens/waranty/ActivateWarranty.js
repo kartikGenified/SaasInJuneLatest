@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,9 +8,9 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import TextInputRectangleMandatory from '../../components/atoms/input/TextInputRectangleMandatory';
 import TextInputRectangle from '../../components/atoms/input/TextInputRectangle';
 import TextInputNumericRectangle from '../../components/atoms/input/TextInputNumericRectangle';
@@ -18,18 +18,26 @@ import InputDate from '../../components/atoms/input/InputDate';
 import ImageInput from '../../components/atoms/input/ImageInput';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 import ProductList from '../../components/molecules/ProductList';
-import {useUploadImagesMutation} from '../../apiServices/imageApi/imageApi';
-import {useActivateWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
+import { useUploadImagesMutation } from '../../apiServices/imageApi/imageApi';
+import { useActivateWarrantyMutation } from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import * as Keychain from 'react-native-keychain';
 import moment from 'moment';
+import ModalWithBorder from '../../components/modals/ModalWithBorder';
+import Icon from 'react-native-vector-icons/Feather';
+import Close from 'react-native-vector-icons/Ionicons';
 
-const ActivateWarranty = ({navigation, route}) => {
+
+const ActivateWarranty = ({ navigation, route }) => {
   const [responseArray, setResponseArray] = useState([]);
   const [addressData, setAddressData] = useState();
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
   const [invoice, setInvoice] = useState();
   const [date, setDate] = useState();
+  const[message, setMessage] = useState();
+
+  //modal
+  const [openModalWithBorder, setModalWithBorder] = useState(false);
   const [
     uploadImageFunc,
     {
@@ -55,7 +63,7 @@ const ActivateWarranty = ({navigation, route}) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : '#ef6110';
-console.log("date console",date)
+  console.log("date console", date)
   const qrData = useSelector(state => state.qrData.qrData);
   const productData = useSelector(state => state.productData.productData);
   console.log('QR data', productData);
@@ -68,17 +76,23 @@ console.log("date console",date)
   const formTemplateId = useSelector(state => state.form.warrantyFormId);
   const userType = useSelector(state => state.appusersdata.userType);
   const userTypeId = useSelector(state => state.appusersdata.userId);
-  const location = useSelector(state=>state.userLocation.location)
+  const location = useSelector(state => state.userLocation.location)
 
   console.log(form);
   const workflowProgram = route.params.workflowProgram;
 
   useEffect(() => {
     if (uploadImageData) {
-      console.log("uploadImageData",uploadImageData);
-      const uploadArray=[]
+      console.log("uploadImageData", uploadImageData);
+      const uploadArray = []
       uploadArray.push(uploadImageData.body[0].filename)
       submitDataWithToken(uploadArray);
+
+      if (uploadImageData.success) {
+        setModalWithBorder(true);
+        setMessage(uploadImageData?.message)
+      }
+
     } else {
       console.log(uploadImageError);
     }
@@ -87,19 +101,19 @@ console.log("date console",date)
   useEffect(() => {
     if (activateWarrantyData) {
       console.log('activate warranty data is', activateWarrantyData);
-      if(activateWarrantyData.success)
-      {
+      if (activateWarrantyData.success) {
         handleWorkflowNavigation()
+        setModalWithBorder(true);
+        setMessage(activateWarrantyData?.message)
       }
-      else{
+      else {
         alert("Warranty status false")
       }
-    } else if(activateWarrantyError) {
-      if(activateWarrantyError.status===409)
-      {
+    } else if (activateWarrantyError) {
+      if (activateWarrantyError.status === 409) {
         handleWorkflowNavigation()
       }
-      console.log("activateWarrantyError",activateWarrantyError);
+      console.log("activateWarrantyError", activateWarrantyError);
     }
   }, [activateWarrantyData, activateWarrantyError]);
 
@@ -107,20 +121,20 @@ console.log("date console",date)
     console.log('image data is', data);
 
     try {
-        const body= {
-          name: name,
-          phone: phone,
-          warranty_start_date: date,
-          warranty_image: data,
-          user_type_id:  userTypeId,
-          user_type: userType,
-          product_id: productData.product_id,
-          form_template_id: JSON.stringify(formTemplateId),
-          platform_id: platform,
-          secondary_data: responseArray,
-          qr_id:qrData.id
+      const body = {
+        name: name,
+        phone: phone,
+        warranty_start_date: date,
+        warranty_image: data,
+        user_type_id: userTypeId,
+        user_type: userType,
+        product_id: productData.product_id,
+        form_template_id: JSON.stringify(formTemplateId),
+        platform_id: platform,
+        secondary_data: responseArray,
+        qr_id: qrData.id
       }
-     
+
       console.log('body is', JSON.stringify(body));
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
@@ -130,7 +144,7 @@ console.log("date console",date)
 
         const token = credentials.username;
 
-        activateWarrantyFunc({token, body});
+        activateWarrantyFunc({ token, body });
       } else {
         console.log('No credentials stored');
       }
@@ -139,7 +153,36 @@ console.log("date console",date)
     }
   };
 
-  
+  const ModalContent = () => {
+    return (
+      <View style={{ width: '100%', alignItems: "center", justifyContent: "center" }}>
+        <View style={{ marginTop: 30, alignItems: 'center', maxWidth: '80%' }}>
+          <Icon name="check-circle" size={53} color={buttonThemeColor} />
+          <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: buttonThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
+
+          <View style={{ marginTop: 10, marginBottom: 30 }}>
+            <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
+          </View>
+
+          {/* <View style={{ alignItems: 'center', marginBottom: 30 }}>
+            <ButtonOval handleOperation={modalWithBorderClose} backgroundColor="#000000" content="OK" style={{ color: 'white', paddingVertical: 4 }} />
+          </View> */}
+
+        </View>
+
+        <TouchableOpacity style={[{
+          backgroundColor: buttonThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
+        }]} onPress={()=>{
+          setModalWithBorder(false)
+        }} >
+          <Close name="close" size={17} color="#ffffff" />
+        </TouchableOpacity>
+
+      </View>
+    )
+  }
+
+
 
   const warrantyForm = Object.values(form);
   // console.log(Object.keys(form))
@@ -154,7 +197,7 @@ console.log("date console",date)
   //     const result = await launchImageLibrary();
   // };
   const handleChildComponentData = data => {
-    console.log("data",data);
+    console.log("data", data);
 
     // Update the responseArray state with the new data
     setResponseArray(prevArray => {
@@ -194,8 +237,8 @@ console.log("date console",date)
           };
           const uploadFile = new FormData();
           uploadFile.append('images', imageData);
-          uploadImageFunc({body: uploadFile});
-        } else if (item.name === 'dop' || item.name ==="Date Of Purchase") {
+          uploadImageFunc({ body: uploadFile });
+        } else if (item.name === 'dop' || item.name === "Date Of Purchase") {
           setDate(item.value);
         }
       });
@@ -208,37 +251,40 @@ console.log("date console",date)
     if (workflowProgram[0] === 'Static Coupon') {
       navigation.navigate('CongratulateOnScan', {
         workflowProgram: workflowProgram.slice(1),
-        rewardType:"Static Coupon"
+        rewardType: "Static Coupon"
       });
     } else if (workflowProgram[0] === 'Warranty') {
       navigation.navigate('ActivateWarranty', {
         workflowProgram: workflowProgram.slice(1),
-        
+
       });
     } else if (workflowProgram[0] === 'Points On Product') {
       console.log(workflowProgram.slice(1));
       navigation.navigate('CongratulateOnScan', {
         workflowProgram: workflowProgram.slice(1),
-        rewardType:"Points On Product"
+        rewardType: "Points On Product"
       });
     } else if (workflowProgram[0] === 'Cashback') {
       console.log(workflowProgram.slice(1));
       navigation.navigate('CongratulateOnScan', {
         workflowProgram: workflowProgram.slice(1),
-        rewardType:'Cashback'
+        rewardType: 'Cashback'
       });
     } else if (workflowProgram[0] === 'Wheel') {
       console.log(workflowProgram.slice(1));
       navigation.navigate('CongratulateOnScan', {
         workflowProgram: workflowProgram.slice(1),
-        rewardType:"Wheel"
+        rewardType: "Wheel"
       });
     } else if (workflowProgram[0] === 'Genuinity') {
       navigation.navigate('Genuinity', {
         workflowProgram: workflowProgram.slice(1),
       });
     } else {
-      navigation.navigate('Dashboard');
+      setTimeout(()=>{
+        navigation.navigate('Dashboard');
+
+      },1000)
     }
   };
 
@@ -251,7 +297,7 @@ console.log("date console",date)
         justifyContent: 'center',
         backgroundColor: buttonThemeColor,
       }}>
-        {/* {error && (
+      {/* {error && (
             <ErrorModal
               modalClose={modalClose}
               
@@ -265,6 +311,11 @@ console.log("date console",date)
               message={message}
               openModal={success}></MessageModal>)
            } */}
+          {openModalWithBorder && <ModalWithBorder
+          modalClose={() => setModalWithBorder(false)}
+          message={message}
+          openModal={openModalWithBorder}
+          comp={ModalContent}></ModalWithBorder>}
       <View
         style={{
           height: '10%',
@@ -275,12 +326,12 @@ console.log("date console",date)
           top: 0,
         }}>
         <TouchableOpacity
-          style={{height: 20, width: 20, position: 'absolute', left: 10}}
+          style={{ height: 20, width: 20, position: 'absolute', left: 10 }}
           onPress={() => {
             navigation.goBack();
           }}>
           <Image
-            style={{height: 20, width: 20, resizeMode: 'contain'}}
+            style={{ height: 20, width: 20, resizeMode: 'contain' }}
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
@@ -327,61 +378,57 @@ console.log("date console",date)
                     </TextInputRectangleMandatory>
                   );
                 }
-                else if((item.name).trim().toLowerCase()==="city" && location!==undefined)
-                {
-                  
-                    return(
-                      <PrefilledTextInput
-                       jsonData={item}
-                       key={index}
-                       handleData={handleChildComponentData}
-                       placeHolder={item.name}
-                       value={location.city}
-                       ></PrefilledTextInput>
-                     )
-                  
-                  
-                  
-                }
-                else if((item.name).trim().toLowerCase()==="pincode" && location!==undefined)
-                {
-                  return(
+                else if ((item.name).trim().toLowerCase() === "city" && location !== undefined) {
+
+                  return (
                     <PrefilledTextInput
-                    jsonData={item}
-                    key={index}
-                    handleData={handleChildComponentData}
-                    placeHolder={item.name}
-                    value={location.postcode}
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={location.city}
+                    ></PrefilledTextInput>
+                  )
+
+
+
+                }
+                else if ((item.name).trim().toLowerCase() === "pincode" && location !== undefined) {
+                  return (
+                    <PrefilledTextInput
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={location.postcode}
                     ></PrefilledTextInput>
                   )
                 }
-                else if((item.name).trim().toLowerCase()==="state" && location!==undefined)
-                {
-                  return(
+                else if ((item.name).trim().toLowerCase() === "state" && location !== undefined) {
+                  return (
                     <PrefilledTextInput
-                    jsonData={item}
-                    key={index}
-                    handleData={handleChildComponentData}
-                    placeHolder={item.name}
-                    value={location.state}
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={location.state}
                     ></PrefilledTextInput>
                   )
                 }
-                else if((item.name).trim().toLowerCase()==="district" && location!==undefined)
-                {
-                  
-                    return(
-                      <PrefilledTextInput
+                else if ((item.name).trim().toLowerCase() === "district" && location !== undefined) {
+
+                  return (
+                    <PrefilledTextInput
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       value={location.district}
-                      ></PrefilledTextInput>
-                    )
-                  
-                 
-                  
+                    ></PrefilledTextInput>
+                  )
+
+
+
                 } else if (item.name === 'phone') {
                   return (
                     <TextInputNumericRectangle
@@ -435,6 +482,7 @@ console.log("date console",date)
               fontSize: 16,
             }}></ButtonOval>
         </View>
+        
       </ScrollView>
     </View>
   );

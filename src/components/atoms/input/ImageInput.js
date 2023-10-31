@@ -23,10 +23,10 @@ const ImageInput = (props) => {
             handleOpenImageGallery()
         }} style={{flexDirection:'row',width:'86%',alignItems:"center",justifyContent:"center",borderWidth:1,height:50,borderColor:'#DDDDDD',marginTop:20}}>
             <View style={{width:'60%',height:50,alignItems:'center',justifyContent:"center"}}>
-               {image ? <PoppinsTextMedium content ={image.fileName.slice(0,20)}></PoppinsTextMedium> : <PoppinsTextMedium content ={data}></PoppinsTextMedium>}
+               {image ? <PoppinsTextMedium style={{color:'black'}} content ={image.fileName.slice(0,20)}></PoppinsTextMedium> : <PoppinsTextMedium style={{color:'black'}} content ={data}></PoppinsTextMedium>}
             </View>
             <View style={{width:'40%',height:50,backgroundColor:'#D6D6D6',alignItems:"center",justifyContent:"center"}}>
-                <PoppinsTextMedium content ={action}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:'black'}} content ={action}></PoppinsTextMedium>
             </View>
         </TouchableOpacity>
         </View>

@@ -347,27 +347,24 @@ const VerifyOtp = ({ navigation, route }) => {
         </View>
 
       </View>
+      <View style={{ marginHorizontal: 100 }}>
       {error && (
         <ErrorModal
           modalClose={modalClose}
           message={message}
-          openModal={error}></ErrorModal>
+          openModal={error}
+          
+          ></ErrorModal>
       )}
-
-      {/* {success && (
-        <MessageModal
-          modalClose={modalClose}
-          message={message}
-          navigateTo="Dashboard"
-          openModal={success}></MessageModal>
-      )} */}
+  </View>
+      
 
       <View style={{ marginHorizontal: 100 }}>
         {success &&
           <ModalWithBorder
             modalClose={modalWithBorderClose}
             message={message}
-            openModal={true}
+            openModal={success}
             comp={ModalContent}>
           </ModalWithBorder>}
       </View>

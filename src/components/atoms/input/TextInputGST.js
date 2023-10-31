@@ -2,6 +2,8 @@ import React,{useState,useEffect} from 'react';
 import {View, StyleSheet,TextInput,Modal,Pressable,Text,Image} from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import { useVerifyGstMutation } from '../../../apiServices/verification/GstinVerificationApi';
+import ZoomImageAnimation from '../../animations/ZoomImageAnimation';
+
 const TextInputGST = (props) => {
     const [value,setValue] = useState()
     const [modalVisible, setModalVisible] = useState(false);
@@ -70,7 +72,8 @@ const TextInputGST = (props) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Pan Verified Succesfully</Text>
-            {/* <Image style={{height:60,width:60,margin:20}} source={require('../../../../assets/images/greenTick.png')}></Image> */}
+            <ZoomImageAnimation style={{marginBottom:20}} zoom={100} duration={1000}  image={require('../../../../assets/images/greenTick.png')}></ZoomImageAnimation>
+
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}>
@@ -80,9 +83,9 @@ const TextInputGST = (props) => {
         </View>
       </Modal>
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
-                <PoppinsTextMedium style={{color:"black",padding:4}} content = {placeHolder}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:"#919191",padding:4}} content = {placeHolder}></PoppinsTextMedium>
             </View>
-            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={`${placeHolder} *`}></TextInput>
+            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black'}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={`${placeHolder} *`}></TextInput>
         </View>
     );
 }
@@ -110,7 +113,7 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     button: {
-      borderRadius: 20,
+      borderRadius:4,
       padding: 10,
       elevation: 2,
     },

@@ -25,7 +25,7 @@ const InputDate = (props) => {
             setOpen(true)
         }} style={{height:54,width:'86%',backgroundColor:'#0000000D',borderRadius:2,borderColor:'#DDDDDD',alignItems:'center',justifyContent:"center",flexDirection:'row',margin:20}}>
            
-           {selected ? (<PoppinsText style={{position:'absolute',left:20}} content={moment(date).format('DD/MM/YYYY')}></PoppinsText>) : (<PoppinsText style={{position:'absolute',left:20}} content={data===null ? "N/A":data}></PoppinsText>)
+           {selected ? (<PoppinsText style={{position:'absolute',left:20,color:'black'}} content={moment(date).format('DD/MM/YYYY')}></PoppinsText>) : (<PoppinsText style={{position:'absolute',left:20}} content={data===null ? "N/A":data}></PoppinsText>)
             
            }
             <View style={{position:"absolute",right:10}}>

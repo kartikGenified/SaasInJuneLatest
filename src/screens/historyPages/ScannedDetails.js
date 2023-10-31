@@ -10,7 +10,7 @@ const ScannedDetails = ({navigation,route}) => {
     const data = route.params.data
     console.log(data)
     const points = data.points_on_product
-    const image = data.images[0]
+    const image = data.images!==null ? data.images[0] : null
     const date = data.scanned_at
 
 
@@ -76,7 +76,7 @@ const ScannedDetails = ({navigation,route}) => {
                 <View style={{width:2,height:'100%',backgroundColor:"grey",marginLeft:20}}></View>
                 <View style={{flexDirection:"row",alignItems:"center",justifyContent:"center",marginLeft:10}}>
                     <Image style={{height:16,width:16,resizeMode:'contain'}} source={require('../../../assets/images/clock.png')}></Image>
-                    <PoppinsTextMedium style={{fontSize:16,fontWeight:'800',color:'black',marginLeft:4}} content={moment(date).format("HH:MM A")}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{fontSize:16,fontWeight:'800',color:'black',marginLeft:4}} content={moment(date).format("HH:mm A")}></PoppinsTextMedium>
                 </View>
             </View>
             <ScannedDetailsProductBox></ScannedDetailsProductBox>

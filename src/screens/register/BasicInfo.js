@@ -60,9 +60,10 @@ const BasicInfo = ({navigation,route}) => {
   const userType = route.params.userType
   const userTypeId = route.params.userId
   const needsApproval = route.params.needsApproval
+  const navigatingFrom = route.params.navigatingFrom
   const name = route.params?.name
   const mobile = route.params?.mobile
-  console.log("appUsers",userType,userTypeId,isManuallyApproved)
+  console.log("appUsers",userType,userTypeId,isManuallyApproved,name,mobile)
     const width = Dimensions.get('window').width
     const height = Dimensions.get('window').height
 
@@ -82,20 +83,9 @@ const BasicInfo = ({navigation,route}) => {
   }] = useRegisterUserByBodyMutation()
 
   useEffect(()=>{
-    const getData=async()=>{
-      const credentials = await Keychain.getGenericPassword();
-                if (credentials) {
-                  console.log(
-                    'Credentials successfully loaded for user ' + credentials.username
-                  );
-                  const token = credentials.username
-                  const AppUserType = userType
-                  
-                  token && getFormFunc({AppUserType})
-                }
-
-    }
-    getData()
+    
+    const AppUserType = userType
+    getFormFunc({AppUserType})
     if(manualApproval.includes(userType))
     {
       setIsManuallyApproved(true)
@@ -123,20 +113,62 @@ const BasicInfo = ({navigation,route}) => {
       const formattedAddress = json.results[0].formatted_address
       const formattedAddressArray = formattedAddress.split(',')
      
-     const locationJson = {
-      city:formattedAddressArray[1],
-      district:formattedAddressArray[2],
-      state:formattedAddressArray[3],
-      postcode:formattedAddressArray[4],
-      country:formattedAddressArray[5],
-      lat:json.results[0].geometry.location.lat,
-      lon:json.results[0].geometry.location.lng,
-      address:formattedAddress
+      let locationJson = {
+        
+        lat:json.results[0].geometry.location.lat ===undefined ? "N/A":json.results[0].geometry.location.lat,
+        lon:json.results[0].geometry.location.lng===undefined ? "N/A":json.results[0].geometry.location.lng,
+        address:formattedAddress===undefined ? "N/A" :formattedAddress
+       
+       }
 
-     }
+       const addressComponent = json.results[0].address_components
+       console.log("addressComponent",addressComponent)
+       for(let i=0;i<=addressComponent.length;i++)
+       {
+        if(i===addressComponent.length)
+        {
+          dispatch(setLocation(locationJson))
+          setLocation(locationJson)
+        }
+        else{
+          if(addressComponent[i].types.includes("postal_code"))
+          {
+          console.log("inside if")
+
+            console.log(addressComponent[i].long_name)
+            locationJson["postcode"]=addressComponent[i].long_name
+          }
+          else if(addressComponent[i].types.includes("country"))
+          {
+            console.log(addressComponent[i].long_name)
+
+            locationJson["country"]=addressComponent[i].long_name
+          }
+          else if(addressComponent[i].types.includes("administrative_area_level_1"))
+          {
+            console.log(addressComponent[i].long_name)
+
+            locationJson["state"]=addressComponent[i].long_name
+          }
+          else if(addressComponent[i].types.includes("administrative_area_level_2"))
+          {
+            console.log(addressComponent[i].long_name)
+
+            locationJson["district"]=addressComponent[i].long_name
+          }
+          else if(addressComponent[i].types.includes("locality"))
+          {
+            console.log(addressComponent[i].long_name)
+
+            locationJson["city"]=addressComponent[i].long_name
+          }
+        }
+        
+       }
+     
+     
      console.log("formattedAddressArray",locationJson)
-     setLocation(locationJson)
-      dispatch(setLocation(locationJson))
+     
   })
     })
     
@@ -244,7 +276,7 @@ const handleRegistrationFormSubmission=()=>{
               title={modalTitle}
               message={message}
               openModal={success}
-              navigateTo="PasswordLogin"
+              navigateTo={navigatingFrom==="PasswordLogin"? "PasswordLogin":"OtpLogin"}
               params={{needsApproval:needsApproval, userType:userType, userId:userTypeId}}></MessageModal>
           )}
           
@@ -307,12 +339,31 @@ const handleRegistrationFormSubmission=()=>{
                         key={index}
                         maxLength={10}
                         handleData={handleChildComponentData}
-                        placeHolder={item.name}>
+                        placeHolder={item.name}
+                        value={mobile}
+                        
+                        >
                         {' '}
                       </TextInputNumericRectangle>
                     );
                   
                 } 
+                else if((item.name).trim().toLowerCase()==="name")
+                {
+                  
+                    return(
+                      <PrefilledTextInput
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={name}
+                      ></PrefilledTextInput>
+                    )
+                  
+                 
+                  
+                }
                 // } 
                 else if (item.name === 'aadhaar' || item.name==="aadhar") {
                   console.log("aadhar")
