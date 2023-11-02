@@ -348,13 +348,13 @@ const CongratulateOnScan = ({navigation, route}) => {
       if (userPointEntryData.success) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 1000);
+        }, 5000);
       }
     } else if (userPointEntryError) {
       if (userPointEntryError.status === 409) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 1000);
+        }, 5000);
       }
       console.log('userPointEntryError', userPointEntryError);
     }

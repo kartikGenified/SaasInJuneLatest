@@ -19,7 +19,7 @@ const EditProfile = ({navigation,route}) => {
   const [pressedSubmit, setPressedSubmit] = useState(false)
   const [modalVisible, setModalVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(route.params?.savedImage )
-  const [filename, setFilename] = useState()
+  const [filename, setFilename] = useState(route.params?.savedImage)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -67,6 +67,8 @@ console.log("saved image",profileImage)
       else if(updateProfileError)
       {
         console.log("updateProfileError",updateProfileError)
+        setMessage(updateProfileError.data.message)
+        setError(true)
       }
     },[updateProfileData,updateProfileError])
 
@@ -88,8 +90,8 @@ console.log("saved image",profileImage)
         {
        setFilename(uploadImageData.body[0].filename)
        setModalVisible(false)
-       setMessage(uploadImageData.message)
-       setSuccess(true)
+      //  setMessage(uploadImageData.message)
+      //  setSuccess(true)
 
         }
       } else {
@@ -111,7 +113,7 @@ console.log("saved image",profileImage)
               "name":title
             })
             setChangedFormValues(removedValues)
-            console.log(removedValues)
+            console.log("removedValues",removedValues)
             
           
         
@@ -148,6 +150,7 @@ console.log("saved image",profileImage)
                   );
                   const token = credentials.username
                   const params={token:token,data:profileData}
+                  console.log("params",params)
                   updateProfileFunc(params)
                 }
         
@@ -223,13 +226,12 @@ console.log("saved image",profileImage)
       {error && (
             <ErrorModal
               modalClose={modalClose}
-              title="Error"
               message={message}
               openModal={error}></ErrorModal>
           )}
            {success && (
             <MessageModal
-              navigateTo = "EditProfile"
+              navigateTo = "Profile"
               modalClose={modalClose}
               title="Success"
               message={message}

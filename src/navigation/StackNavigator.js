@@ -57,6 +57,8 @@ import SpinWheel from '../screens/wheel/SpinWheel';
 import DataNotFound from '../screens/data not found/DataNotFound';
 import Splash from '../screens/common/Splash';
 import ScanAndRedirectToWarranty from '../screens/waranty/ScanAndRedirectToWarranty';
+import ScanAndRedirectToGenuinity from '../screens/genuinity/ScanAndRedirectToGenuinity';
+import GiftCatalogue from '../screens/giftCatalogue/GiftCatalogue';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -69,6 +71,16 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="Splash" component={Splash}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="GiftCatalogue" component={GiftCatalogue}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="ScanAndRedirectToGenuinity" component={ScanAndRedirectToGenuinity}></Stack.Screen>
             <Stack.Screen options={
                     {
                         headerShown: false

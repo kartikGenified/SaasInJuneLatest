@@ -42,7 +42,7 @@ const MessageModal = (props) => {
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <View style={{...styles.modalView,borderWidth:2,borderColor:ternaryThemeColor}}>
           <Text style={{color:'black',fontSize:24,fontWeight:'600'}}>{props.title}</Text>
           <Icon name="cloud-done" size={100} color="green"></Icon>
 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   modalView: {
-   
+  
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 60,
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+    color:'black'
   },
 });
 

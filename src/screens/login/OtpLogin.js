@@ -434,15 +434,20 @@ const focused = useIsFocused()
   useEffect(()=>{
     setName('')
     setMobile('')
+    
   },[focused])
 
   const getMobile = data => {
     // console.log(data)
     setMobile(data)
-    if(data.length===10)
+    if(data!==undefined)
+    {
+      if(data.length===10 )
     {
       getNameFunc({mobile:data})
     }
+    } 
+    
   };
 
   const getName = data => {
@@ -513,11 +518,11 @@ const focused = useIsFocused()
               top:20,
             position:"absolute",
             left:50,
-              borderRadius:10
+              
               
               
             }}
-            source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
+            source={require('../../../assets/images/ozoneWhiteLogo.png')}></Image>
       </View>
       <View
             style={{

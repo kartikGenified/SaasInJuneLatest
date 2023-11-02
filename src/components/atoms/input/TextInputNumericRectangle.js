@@ -5,6 +5,15 @@ const TextInputNumericRectangle = props => {
   const [value, setValue] = useState(props.value);
   const placeHolder = props.placeHolder;
   const maxLength = props.maxLength;
+  const label = props.label
+  console.log("label",label)
+
+  useEffect(()=>{
+    let tempJsonData = {...props.jsonData, value: value};
+    console.log(tempJsonData);
+    props.handleData(tempJsonData);
+  },[props.value])
+
   const handleInput = text => {
     setValue(text);
   };
@@ -36,8 +45,8 @@ const TextInputNumericRectangle = props => {
           left: 16,
         }}>
         <PoppinsTextMedium
-          style={{color: '#919191', padding: 4}}
-          content={placeHolder}></PoppinsTextMedium>
+          style={{color: '#919191', padding: 4,fontSize:18}}
+          content={label}></PoppinsTextMedium>
       </View>
       <TextInput
         maxLength={maxLength}
@@ -52,7 +61,7 @@ const TextInputNumericRectangle = props => {
           justifyContent: 'flex-start',
           fontWeight: '500',
           marginLeft: 20,
-          color:'black'
+          color:'black',fontSize:16
         }}
         placeholderTextColor="grey"
         onChangeText={text => {

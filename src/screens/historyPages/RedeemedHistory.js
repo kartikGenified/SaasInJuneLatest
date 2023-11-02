@@ -11,12 +11,12 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import { useIsFocused } from '@react-navigation/native';
 import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
+import FastImage from 'react-native-fast-image';
 
 const RedeemedHistory = ({navigation}) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
-  const [kycStatus, setKycStatus] = useState()
   const [redeemedListData, setRedeemedListData] = useState([])
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
@@ -26,9 +26,7 @@ const RedeemedHistory = ({navigation}) => {
   const userData = useSelector(state=>state.appusersdata.userData)
   const userId = useSelector(state => state.appusersdata.userId);
   const id = useSelector(state => state.appusersdata.id);
-  const kycData = useSelector(state=>state.kycDataSlice.kycData)
-
-  const focused = useIsFocused()
+      const focused = useIsFocused()
   const fetchPoints=async()=>{
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
@@ -37,6 +35,9 @@ const RedeemedHistory = ({navigation}) => {
       userPointFunc(params)
 
   }
+
+  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+
   useEffect(()=>{
     fetchPoints()
   },[focused])
@@ -95,17 +96,6 @@ const RedeemedHistory = ({navigation}) => {
             console.log("fetchGiftsRedemptionsOfUserIsLoading",fetchGiftsRedemptionsOfUserError)
         }
       },[fetchGiftsRedemptionsOfUserData,fetchGiftsRedemptionsOfUserError])
-
-      useEffect(()=>{
-        if(Object.values(kycData).includes(false))
-        {
-          setKycStatus(false)
-        }
-        else{
-          setKycStatus(true)
-        }
-      },[])
-
       const fetchDates = (data) => {
         const dateArr = []
         let tempArr =[]
@@ -140,9 +130,7 @@ const RedeemedHistory = ({navigation}) => {
     const DisplayEarnings=()=>{
         const [modalVisible, setModalVisible] = useState(false);
         const handleRedeemButtonPress=()=>{
-          if(kycStatus)
-          {
-            if(Number(userPointData.body.point_balance)<=0)
+          if(Number(userPointData.body.point_balance)<=0)
           {
             setError(true)
             setMessage("You dont have enough points !")
@@ -150,12 +138,6 @@ const RedeemedHistory = ({navigation}) => {
           else{
           setModalVisible(true)
           }
-          }
-          else{
-            setError(true)
-            setMessage("Kyc Pending")
-          }
-          
   
         }
         return(
@@ -272,6 +254,7 @@ const RedeemedHistory = ({navigation}) => {
               message={message}
               openModal={success}></MessageModal>
           )}
+
             <View style={{alignItems:"center",justifyContent:"flex-start",flexDirection:"row",width:'100%',marginTop:10,height:40,marginLeft:20}}>
                 <TouchableOpacity onPress={()=>{
                     navigation.goBack()
@@ -296,11 +279,11 @@ const RedeemedHistory = ({navigation}) => {
             </View>
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
-           <ScrollView showsVerticalScrollIndicator={false}>
+           <ScrollView>
                 {
         redeemedListData && redeemedListData.map((item,index)=>{
             return(
-                <View style={{ alignItems: "center", justifyContent: "center", width: '100%' }} key={index}>
+                <View key={index} style={{ alignItems: "center", justifyContent: "center", width: '100%' }} >
                     
                 <View style={{ alignItems: "flex-start", justifyContent: "center", paddingBottom: 10, marginTop: 20,marginLeft:20,width:'100%'}}>
                   <PoppinsTextMedium style={{ color: 'black', fontSize: 16 }} content={(item.date)}></PoppinsTextMedium>
@@ -310,7 +293,10 @@ const RedeemedHistory = ({navigation}) => {
                 {
                     item.data.map((item,index)=>{
                         return(
-                          <ListItem key={item.id} data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('hh:mm a')}/>
+                          <View key={index}>
+                          <ListItem data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')}/>
+
+                          </View>
 
 
                         )
@@ -322,6 +308,18 @@ const RedeemedHistory = ({navigation}) => {
         })
       }
       </ScrollView>
+
+      {
+                fetchGiftsRedemptionsOfUserIsLoading &&
+                <FastImage
+                    style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+                    source={{
+                        uri: gifUri, // Update the path to your GIF
+                        priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+            }
 
         </View>
     );

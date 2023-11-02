@@ -351,7 +351,7 @@ const PasswordLogin = ({ navigation, route }) => {
         </View>
 
         <View style={{ width: "100%", flex: 1 }}>
-          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 'auto' }}>
+          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 20 }}>
             <ButtonNavigateArrow
               handleOperation={handleLogin}
               backgroundColor={buttonThemeColor}

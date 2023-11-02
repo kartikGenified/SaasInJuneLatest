@@ -406,7 +406,7 @@ const Profile = ({ navigation }) => {
               return (
                 <DisplayOnlyTextInput
                   key={index}
-                  data={formValues[index] === null ? 'N/A' : formValues[index]}
+                  data={formValues[index] === null ? 'No data available' : formValues[index]}
                   title={item.label}
                   photo={require('../../../assets/images/eye.png')}>
                     

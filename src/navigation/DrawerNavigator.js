@@ -195,7 +195,7 @@ const DrawerItems = (props) => {
                 navigation.navigate('RedeemRewardHistory')
             }
             else if(props.title.toLowerCase()==="gift catalogue"){
-              navigation.navigate('RedeemGifts')
+              navigation.navigate('GiftCatalogue')
           }
             else if(props.title.toLowerCase() === "bank details" || props.title.toLowerCase() === "bank account"){
               navigation.navigate('BankAccounts')
@@ -225,7 +225,7 @@ else  if(props.title.substring(0,4).toLowerCase()==="scan" && (props.title).toLo
 {
     navigation.navigate('QrCodeScanner')
 }
-else  if(props.title.toLowerCase()==="scheme" )
+else  if(props.title.toLowerCase()==="scheme")
 {
     navigation.navigate('Scheme')
 }

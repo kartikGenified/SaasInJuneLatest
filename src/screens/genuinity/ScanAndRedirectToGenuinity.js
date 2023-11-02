@@ -28,7 +28,7 @@ import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/Acti
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
 import {setProductData} from '../../../redux/slices/getProductSlice';
 
-const QrCodeScanner = ({navigation}) => {
+const ScanAndRedirectToGenuinity = ({navigation}) => {
   const [zoom, setZoom] = useState(0);
   const [zoomText, setZoomText] = useState('1');
   const [flash, setFlash] = useState(false);
@@ -78,12 +78,7 @@ const QrCodeScanner = ({navigation}) => {
     },
   ] = useCheckGenuinityMutation();
 
-  const [checkWarrantyFunc,{
-    data:checkWarrantyData,
-    error:checkWarrantyError,
-    isLoading:checkWarrantyIsLoading,
-    isError:checkWarrantyIsError
-  }] = useCheckWarrantyMutation()
+  
 
   const [
     productDataFunc,
@@ -108,13 +103,7 @@ const QrCodeScanner = ({navigation}) => {
     }
   }, [checkGenuinityData, checkGenuinityError]);
 
-  useEffect(() => {
-    if (checkWarrantyData) {
-      console.log('warranty check', checkWarrantyData);
-    } else if (checkWarrantyError) {
-      console.log('warranty Error', checkWarrantyError);
-    }
-  }, [checkWarrantyData, checkWarrantyError]);
+  
 
   useEffect(() => {
     if (productDataData) {
@@ -126,7 +115,7 @@ const QrCodeScanner = ({navigation}) => {
       dispatch(setProductData(productDataData.body.products[0]));
       setProductId(productDataData.body.product_id);
       
-      checkWarrantyFunc({form_type, token, body})
+    //   checkWarrantyFunc({form_type, token, body})
 
     } else if (productDataError) {
       console.log('Error', productDataError);
@@ -208,49 +197,13 @@ const QrCodeScanner = ({navigation}) => {
   // --------------------------------------------------------
 
   // function to handle workflow navigation-----------------------
-  const handleWorkflowNavigation = (item1, item2, item3) => {
-    console.log('success');
-    console.log("Items are",item1, item2, item3);
-
-    const itemsToRemove = [item1, item2, item3];
-    const updatedWorkflowProgram = workflowProgram.filter(item => !itemsToRemove.includes(item));
-
-    if (updatedWorkflowProgram[0] === 'Static Coupon') {
-        console.log(updatedWorkflowProgram.slice(1));
-        navigation.navigate('CongratulateOnScan', {
-            workflowProgram: updatedWorkflowProgram.slice(1),
-            rewardType:updatedWorkflowProgram[0]
-        });
-    } else if (updatedWorkflowProgram[0] === 'Warranty') {
-        console.log(updatedWorkflowProgram.slice(1));
-        navigation.navigate('ActivateWarranty', {
-            workflowProgram: updatedWorkflowProgram.slice(1),
-            rewardType:updatedWorkflowProgram[0]
-
-        });
-    } else if (updatedWorkflowProgram[0] === 'Points On Product' || updatedWorkflowProgram[0] === 'Cashback' || updatedWorkflowProgram[0] === 'Wheel') {
-        console.log(updatedWorkflowProgram.slice(1));
-        navigation.navigate('CongratulateOnScan', {
-            workflowProgram: updatedWorkflowProgram.slice(1),
-            rewardType:updatedWorkflowProgram[0]
-            
-        });
-    } else if (updatedWorkflowProgram[0] === 'Genuinity+') {
-        console.log(updatedWorkflowProgram.slice(1));
-        navigation.navigate('GenuinityScratch', {
-            workflowProgram: updatedWorkflowProgram.slice(1),
-            rewardType:updatedWorkflowProgram[0]
-        });
-    } else if (updatedWorkflowProgram[0] === 'Genuinity'){
-        console.log(updatedWorkflowProgram.slice(1));
+  const handleWorkflowNavigation = () => {
+    
         navigation.navigate('Genuinity', {
-            workflowProgram: updatedWorkflowProgram.slice(1),
-            rewardType:updatedWorkflowProgram[0]
+            workflowProgram: [],
+            rewardType:''
         });
-    }
-    else{
-      console.log("You have completed the workflow")
-    }
+  
 };
 
   // --------------------------------------------------------
@@ -269,17 +222,16 @@ const QrCodeScanner = ({navigation}) => {
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData.body);
-      if(verifyQrData.body.qr_status==="1" )
+      if(verifyQrData.body.qr_status==="1" || verifyQrData.body.qr_status==="2")
       {
       addQrDataToList(verifyQrData.body);
       }
-      else if(verifyQrData.body.qr_status==="2")
-      {
-        setError(true);
-        setMessage('Point for this Qr code is already claimed!!');
-      }
-    }
-     else {
+      // else if(verifyQrData.body.qr_status==="2")
+      // {
+      //   setError(true);
+      //   setMessage('This Qr is already Scanned');
+      // }
+    } else {
       console.log('Verify qr error', verifyQrError);
     }
   }, [verifyQrData, verifyQrError]);
@@ -291,79 +243,16 @@ const QrCodeScanner = ({navigation}) => {
       console.log('Add qr data', addQrData.body);
       if (addQrData.success) {
         dispatch(setQrData(addQrData.body));
-        console.log("check Genuinity and warranty",checkGenuinityData,checkWarrantyData)
+        console.log("check Genuinity and warranty",checkGenuinityData)
 
         if(checkGenuinityData){
           
-          if(checkGenuinityData.body){
-          console.log("check warranty data",checkWarrantyData)
-          if(checkWarrantyError)
-          {
-          if(checkWarrantyError.data.body)
-          {
-            handleWorkflowNavigation("Genuinity+","Warranty")
-          }
-          else{
-            handleWorkflowNavigation("Genuinity+")
-          }
-        }
-        else if(checkWarrantyData)
-        {
-          if(checkWarrantyData.body)
-        {
-          handleWorkflowNavigation("Genuinity+","Warranty")
-        }
-        else{
-          handleWorkflowNavigation("Genuinity+")
-        }
-        }
-        }
-        else
-        {
-          if(checkWarrantyError)
-          {
-          if(checkWarrantyError.data.body)
-          {
-            handleWorkflowNavigation("Warranty")
-          }
-          else{
+          if(!checkGenuinityData.body){
+          
             handleWorkflowNavigation()
           }
+          
         }
-        else if(checkWarrantyData)
-        {
-          if(checkWarrantyData.body)
-        {
-          handleWorkflowNavigation("Warranty")
-        }
-        else{
-          handleWorkflowNavigation()
-        }
-        }
-        else{
-          handleWorkflowNavigation()
-        }
-        }
-      }
-        else if(checkWarrantyError){
-          if(checkWarrantyError.data.body){
-            if(checkGenuinityData)
-          {
-          if(checkGenuinityData.body)
-          {
-            handleWorkflowNavigation("Genuinity+","Warranty")
-          }
-          else{
-            handleWorkflowNavigation("Warranty")
-          }
-        }
-        
-      }
-      }
-      else{
-        console.log("else")
-        handleWorkflowNavigation()
-      }
        
       }
     } else if(addQrError) {
@@ -654,4 +543,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QrCodeScanner;
+export default ScanAndRedirectToGenuinity;

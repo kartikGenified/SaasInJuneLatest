@@ -192,10 +192,10 @@ const VerifyOtp = ({ navigation, route }) => {
       if (verifyLoginOtpData.success) {
         verifyOtpFunc({ mobile, name, otp, user_type_id, user_type });
       }
-    } else {
+    } else if(verifyLoginOtpError) {
       console.log("verifyLoginOtpError", verifyLoginOtpError)
-      // setError(true)
-      setMessage("Wrong OTP")
+      setError(true)
+      setMessage("Please enter the correct OTP")
     }
   }, [verifyLoginOtpData, verifyLoginOtpError]);
 
@@ -206,6 +206,7 @@ const VerifyOtp = ({ navigation, route }) => {
   //function to handle Modal
   const modalWithBorderClose = () => {
     setModalWithBorder(false);
+    setMessage('')
     navigation.navigate("Dashboard")
   };
 
@@ -259,6 +260,7 @@ const VerifyOtp = ({ navigation, route }) => {
     setError(false);
     setSuccess(false)
     setMessage('')
+    setModalWithBorder(false)
   };
   const verifyOtp = () => {
     console.log("first")
@@ -360,11 +362,11 @@ const VerifyOtp = ({ navigation, route }) => {
       
 
       <View style={{ marginHorizontal: 100 }}>
-        {success &&
+        {openModalWithBorder &&
           <ModalWithBorder
             modalClose={modalWithBorderClose}
             message={message}
-            openModal={success}
+            openModal={openModalWithBorder}
             comp={ModalContent}>
           </ModalWithBorder>}
       </View>

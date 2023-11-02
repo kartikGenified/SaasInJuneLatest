@@ -9,7 +9,7 @@ const ImageInput = (props) => {
     const action = props.action
 
     const handleOpenImageGallery = async () => {
-        const result = await launchImageLibrary();2
+        const result = await launchImageLibrary();
         console.log(result.assets[0].uri)
         setImage(result.assets[0])
         let tempJsonData ={...props.jsonData,"value":result.assets[0].uri}

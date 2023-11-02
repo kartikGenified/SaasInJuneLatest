@@ -48,7 +48,7 @@ const ErrorModal = (props) => {
             <Image style={{width:80,height:80,resizeMode:'contain'}} source={require('../../../assets/images/failed.png')}></Image>
           <Text style={{color:'#FF5D5D',fontSize:24,fontWeight:'700'}}>SORRY</Text>
          
-            <Text style={{...styles.modalText,fontSize:20,fontWeight:'600'}}>{props.message}</Text>
+            <Text style={{...styles.modalText,fontSize:20,fontWeight:'600',color:'black'}}>{props.message}</Text>
             <Pressable
               style={{...styles.button,backgroundColor:'#FF5D5D',width:100}}
               onPress={() => closeModal()}>

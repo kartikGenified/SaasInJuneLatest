@@ -4,6 +4,7 @@ import DatePicker from 'react-native-date-picker'
 import DateIcon from 'react-native-vector-icons/MaterialIcons'
 import PoppinsText from '../../electrons/customFonts/PoppinsText';
 import moment from 'moment';
+import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 
 const InputDate = (props) => {
     const [date, setDate] = useState(new Date())
@@ -25,7 +26,7 @@ const InputDate = (props) => {
             setOpen(true)
         }} style={{height:54,width:'86%',backgroundColor:'#0000000D',borderRadius:2,borderColor:'#DDDDDD',alignItems:'center',justifyContent:"center",flexDirection:'row',margin:20}}>
            
-           {selected ? (<PoppinsText style={{position:'absolute',left:20,color:'black'}} content={moment(date).format('DD/MM/YYYY')}></PoppinsText>) : (<PoppinsText style={{position:'absolute',left:20}} content={data===null ? "N/A":data}></PoppinsText>)
+           {selected ? (<PoppinsTextMedium style={{position:'absolute',left:20,color:'black'}} content={moment(date).format('DD/MM/YYYY')}></PoppinsTextMedium>) : (<PoppinsTextMedium style={{position:'absolute',left:20,color:'black'}} content={data===null ? "N/A":data}></PoppinsTextMedium>)
             
            }
             <View style={{position:"absolute",right:10}}>

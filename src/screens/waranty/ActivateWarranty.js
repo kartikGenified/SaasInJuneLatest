@@ -25,6 +25,7 @@ import moment from 'moment';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Icon from 'react-native-vector-icons/Feather';
 import Close from 'react-native-vector-icons/Ionicons';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 
 const ActivateWarranty = ({ navigation, route }) => {
@@ -35,6 +36,7 @@ const ActivateWarranty = ({ navigation, route }) => {
   const [invoice, setInvoice] = useState();
   const [date, setDate] = useState();
   const[message, setMessage] = useState();
+  const [error, setError] = useState(false)
 
   //modal
   const [openModalWithBorder, setModalWithBorder] = useState(false);
@@ -76,9 +78,10 @@ const ActivateWarranty = ({ navigation, route }) => {
   const formTemplateId = useSelector(state => state.form.warrantyFormId);
   const userType = useSelector(state => state.appusersdata.userType);
   const userTypeId = useSelector(state => state.appusersdata.userId);
+  const userData = useSelector(state=>state.appusersdata.userData)
   const location = useSelector(state => state.userLocation.location)
 
-  console.log(form);
+  console.log("userData",userData);
   const workflowProgram = route.params.workflowProgram;
 
   useEffect(() => {
@@ -89,8 +92,7 @@ const ActivateWarranty = ({ navigation, route }) => {
       submitDataWithToken(uploadArray);
 
       if (uploadImageData.success) {
-        setModalWithBorder(true);
-        setMessage(uploadImageData?.message)
+       console.log(uploadImageData.success)
       }
 
     } else {
@@ -114,6 +116,8 @@ const ActivateWarranty = ({ navigation, route }) => {
         handleWorkflowNavigation()
       }
       console.log("activateWarrantyError", activateWarrantyError);
+      setError(true)
+      setMessage(activateWarrantyError.data.message)
     }
   }, [activateWarrantyData, activateWarrantyError]);
 
@@ -220,12 +224,14 @@ const ActivateWarranty = ({ navigation, route }) => {
     });
   };
   console.log('Response Array Is', JSON.stringify(responseArray));
+
+
   const handleWarrantyFormSubmission = () => {
     responseArray &&
       responseArray.map(item => {
         if (item.name === 'name' || item.name === 'Name') {
           setName(item.value);
-        } else if (item.name === 'phone' || item.name === 'Phone') {
+        } else if (item.name === 'phone' || item.name === 'Phone' || item.name === "mobile" || item.name ==="Mobile") {
           setPhone(item.value);
         } else if (item.name === 'invoice' || item.name === 'Invoice') {
           console.log('Inside file');
@@ -297,25 +303,30 @@ const ActivateWarranty = ({ navigation, route }) => {
         justifyContent: 'center',
         backgroundColor: buttonThemeColor,
       }}>
-      {/* {error && (
+      {error && (
             <ErrorModal
-              modalClose={modalClose}
+              modalClose={()=>{
+                setError(false)
+                setMessage('')
+              }}
               
               message={message}
               openModal={error}></ErrorModal>
           )}
-           {success && (
+           {/* {success && (
             <MessageModal
               modalClose={modalClose}
               title={modalTitle}
               message={message}
               openModal={success}></MessageModal>)
            } */}
-          {openModalWithBorder && <ModalWithBorder
+          {openModalWithBorder && 
+          <ModalWithBorder
           modalClose={() => setModalWithBorder(false)}
           message={message}
           openModal={openModalWithBorder}
-          comp={ModalContent}></ModalWithBorder>}
+          comp={ModalContent}></ModalWithBorder>
+          }
       <View
         style={{
           height: '10%',
@@ -367,12 +378,13 @@ const ActivateWarranty = ({ navigation, route }) => {
             warrantyForm.map((item, index) => {
               console.log(item);
               if (item.type === 'text') {
-                if (item.required === true && item.name !== 'phone') {
+                 if (item.name === 'name') {
                   return (
                     <TextInputRectangleMandatory
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
+                      value={userData.name}
                       placeHolder={item.name}>
                       {' '}
                     </TextInputRectangleMandatory>
@@ -429,22 +441,26 @@ const ActivateWarranty = ({ navigation, route }) => {
 
 
 
-                } else if (item.name === 'phone') {
+                } else if (item.name === 'phone' || item.name==="mobile") {
                   return (
                     <TextInputNumericRectangle
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
+                      value = {userData.mobile}
+                      label={item.label}
                       placeHolder={item.name}>
                       {' '}
                     </TextInputNumericRectangle>
                   );
-                } else {
+                } 
+                else {
                   return (
                     <TextInputRectangle
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
+                      label = {item.label}
                       placeHolder={item.name}>
                       {' '}
                     </TextInputRectangle>

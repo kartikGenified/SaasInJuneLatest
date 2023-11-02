@@ -86,12 +86,12 @@ const height = Dimensions.get('window').height
       }}
         style={{
           height: 180,
-          width: '46%',
+          width: '44%',
           backgroundColor: '#DDDDDD',
           borderRadius: 20,
           alignItems: 'center',
           justifyContent: 'flex-start',
-         margin:10,
+          margin:10,
           elevation: 10,
         }}>
             

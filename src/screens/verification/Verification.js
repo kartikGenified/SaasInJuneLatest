@@ -521,7 +521,7 @@ console.log(showAadhar,showPan,showGst)
             <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Aadhar Number" > </PoppinsTextMedium>
             </View>
             <View style={{alignItems:"center",justifyContent:'center',flexDirection:"row",width:'100%',height:40}}>
-            <TextInput ref={inpref} maxLength={12} value={aadhar ? aadhar :finalAadhar} onChangeText={(text)=>{setAadhar(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Enter Aadhar Number'></TextInput>
+            <TextInput ref={inpref} maxLength={12} value={aadhar ? aadhar :finalAadhar} onChangeText={(text)=>{setAadhar(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:"black"}} placeholderTextColor="black" placeholder='Enter Aadhar Number'></TextInput>
             <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
             <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>
             </View>
@@ -533,7 +533,7 @@ console.log(showAadhar,showPan,showGst)
             <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter OTP" > </PoppinsTextMedium>
             </View>
             <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-            <TextInput textContentType='oneTimeCode' value={otp} onChangeText={(text)=>{setOtp(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Enter OTP'></TextInput>
+            <TextInput textContentType='oneTimeCode' value={otp} onChangeText={(text)=>{setOtp(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholderTextColor="black" placeholder='Enter OTP'></TextInput>
             
             </View>
            
@@ -613,7 +613,7 @@ console.log(showAadhar,showPan,showGst)
               modalClose={modalClose}
               message={message}
               openModal={success}
-              navigateTo="RedeemedHistory"
+              navigateTo="Dashboard"
               ></MessageModal>
           )}
             <View style={{width:'100%',height:'90%',backgroundColor:'white',alignItems:'center',justifyContent:"center",marginTop:20}}>

@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import {View, StyleSheet,TouchableOpacity,Image,ScrollView,FlatList, ImageBackground} from 'react-native';
+import {View, StyleSheet,TouchableOpacity,Image,ScrollView,FlatList, ImageBackground, Text} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -361,9 +361,14 @@ const RedeemRewardHistory = ({navigation}) => {
             {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Earned Points"  data={userPointData.body.point_earned} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
            {showWheel &&  <RedeemRewardDataBox navigation = {navigation} header="Total Spins"  data="5000" image={require('../../../assets/images/wheel.png')} ></RedeemRewardDataBox>
            }
-    {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Points Balance"  data={userPointData.body.point_balance} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 
-{showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Redeemed Points"  data={userPointData.body.point_redeemed} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Points Balance"  data={userPointData.body.point_balance} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Redeem Points"  data={userPointData.body.point_redeemed} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Reserved Points"  data={userPointData.body.point_reserved} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+
+
             </ScrollView>
 
             </View>
@@ -376,6 +381,9 @@ const RedeemRewardHistory = ({navigation}) => {
             {/* <DreamGiftComponent></DreamGiftComponent> */}
             {showCashback && <CashbackProductList></CashbackProductList>}
         </View>
+
+        
+        
         </ScrollView>
     );
 }
