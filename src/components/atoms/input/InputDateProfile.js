@@ -6,7 +6,7 @@ import PoppinsText from '../../electrons/customFonts/PoppinsText';
 import moment from 'moment';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 
-const InputDate = (props) => {
+const InputDateProfile = (props) => {
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [selected, setSelected] = useState(false)
@@ -17,8 +17,8 @@ const InputDate = (props) => {
     const handleInputEnd=(date,title)=>{
       
       console.log(date,title)
-      let tempJsonData ={...props.jsonData,"value":moment(date).format("YYYY-MM-DD")}
-      props.handleData(tempJsonData)
+      
+      props.handleData(date,title)
   }
 
     return (
@@ -54,4 +54,4 @@ const InputDate = (props) => {
 
 const styles = StyleSheet.create({})
 
-export default InputDate;
+export default InputDateProfile;

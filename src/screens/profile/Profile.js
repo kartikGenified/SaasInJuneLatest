@@ -63,7 +63,7 @@ const Profile = ({ navigation }) => {
     {
       setShowProfileData(true)
     }
-  },[formFields,formValues])
+  },[formFields,formValues,focused])
 
   useEffect(() => {
     if (getActiveMembershipData) {

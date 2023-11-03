@@ -17,7 +17,7 @@ export const profileApi = baseApi.injectEndpoints({
     }),
     updateProfile: builder.mutation({
       query: params => {
-        console.log(JSON.stringify(params))
+        console.log("update profile params",JSON.stringify(params))
         return {
           method: 'PUT',
           url: `/api/app/profile`,

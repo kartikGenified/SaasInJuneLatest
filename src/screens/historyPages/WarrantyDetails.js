@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView,Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView, Platform } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -17,6 +17,11 @@ import ImageInput from '../../components/atoms/input/ImageInput';
 import ImageInputWithUpload from '../../components/atoms/input/ImageInputWithUpload';
 import ButtonRectangle from '../../components/atoms/buttons/ButtonRectangle';
 import { useUploadImagesMutation } from '../../apiServices/imageApi/imageApi';
+import Icon from 'react-native-vector-icons/Feather';
+import Close from 'react-native-vector-icons/Ionicons';
+import ErrorModal from '../../components/modals/ErrorModal';
+import ModalWithBorder from '../../components/modals/ModalWithBorder';
+
 
 const WarrantyDetails = ({ navigation, route }) => {
 
@@ -25,16 +30,22 @@ const WarrantyDetails = ({ navigation, route }) => {
     // const [claimText, setClaimText] = useState("");
     const [modal, setModal] = useState(false);
     const [imageData, setImageData] = useState(null);
+    const [token, setToken] = useState(null);
+    const [claimModal, setClaimModal] = useState(false);
+    const [message, setMessage] = useState(null);
+
+
+
 
     const [
         uploadImageFunc,
         {
-          data: uploadImageData,
-          error: uploadImageError,
-          isLoading: uploadImageIsLoading,
-          isError: uploadImageIsError,
+            data: uploadImageData,
+            error: uploadImageError,
+            isLoading: uploadImageIsLoading,
+            isError: uploadImageIsError,
         },
-      ] = useUploadImagesMutation();
+    ] = useUploadImagesMutation();
 
 
 
@@ -44,7 +55,14 @@ const WarrantyDetails = ({ navigation, route }) => {
     const warrantyEnd = route.params.data.end_date
     const warrantyId = route.params.data.id
     const data = route.params.data
-    console.log(data)
+    console.log("data form warranty details page", data)
+
+    const ternaryThemeColor = useSelector(
+        state => state.apptheme.ternaryThemeColor,
+    )
+        ? useSelector(state => state.apptheme.ternaryThemeColor)
+        : 'grey';
+
     const secondaryThemeColor = useSelector(
         state => state.apptheme.secondaryThemeColor,
     )
@@ -56,33 +74,77 @@ const WarrantyDetails = ({ navigation, route }) => {
         { data: warrantyClaimData, error: warantyClaimError },
     ] = useClaimWarrantyMutation();
 
-    useEffect(()=>{
-
-        if(uploadImageData){
-            console.log("upload image data", uploadImageData)
-            if(uploadImageData.success){
-                const data = {
-                    warranty_id: modalData.id,
-                    description: description,
-                    images: uploadImageData.uri,
-                    platform_id: Platform.OS == "Android" ? 2: 3 ,
-                    platform: Platform.OS,
-                  };
-                createWarrantyClaim()
-            }   
-        }
-    },[uploadImageData, uploadImageError])
 
     useEffect(() => {
 
-        if (warrantyClaimData?.success) {
-            setSuccess(true)
-        }
-        else {
-            setError(true)
-        }
+        const getDashboardData = async () => {
+            try {
+                // Retrieve the credentials
+                const credentials = await Keychain.getGenericPassword();
+                if (credentials) {
+                    console.log(
+                        'Credentials successfully loaded for user ' + credentials.username
+                    );
+                    const token = credentials.username
 
-    }, [warrantyClaimData, warantyClaimError])
+                    setToken(token)
+                    console.log(token)
+
+                } else {
+                    console.log('No credentials stored');
+                }
+            } catch (error) {
+                console.log("Keychain couldn't be accessed!", error);
+            }
+        }
+        getDashboardData()
+
+    }, [])
+
+    useEffect(() => {
+        if (uploadImageData) {
+            console.log("upload image data", uploadImageData)
+            if (uploadImageData.success) {
+
+                const tempData = {
+                    warranty_id: String(data.id),
+                    description: "claimText",
+                    images: [uploadImageData.body[0].filename],
+                    platform_id: Platform.OS == "Android" ? 2 : 3,
+                    platform: Platform.OS,
+                };
+                console.log(" claim warranty data", tempData)
+                createWarrantyClaim({ body: tempData, token: token })
+
+            }
+        }
+        else if (uploadImageError) {
+            console.log("uploadImageError", uploadImageError)
+        }
+    }, [uploadImageData, uploadImageError])
+
+    useEffect(() => {
+        if (warrantyClaimData) {
+            console.log("warrantyClaimData succsess", warrantyClaimData)
+            if (warrantyClaimData.success) {
+                setClaimModal(true)
+                setMessage(warrantyClaimData.message)
+
+                // setTimeout(()=>{
+                //     setClaimModal(false)
+                //     // navigation.navigate("WarrantyClaimDetails",{warrantyItemData:data, afterClaimData:warrantyClaimData})
+                // },[2000])
+            }
+        }
+        else if (warantyClaimError) {
+            console.log("warantyClaimError", warantyClaimError)
+            setError(true)
+            setMessage(warantyClaimError?.data.message)
+        }
+        
+    }, [,warrantyClaimData, warantyClaimError])
+
+
 
 
     console.log("data of item", data)
@@ -109,6 +171,9 @@ const WarrantyDetails = ({ navigation, route }) => {
         );
     };
 
+    const modalClose = () => {
+        setModal(!modal)
+    }
 
     const handleChildComponentData = data => {
 
@@ -121,9 +186,17 @@ const WarrantyDetails = ({ navigation, route }) => {
     };
 
     const onSubmit = () => {
-        if(claimText!=""){
-            uploadImageFunc(imageData);
-        }
+        const imageDataTemp = {
+            uri: imageData.uri,
+            name: imageData.uri.slice(0, 10),
+            type: 'jpg/png',
+        };
+        const uploadFile = new FormData();
+        uploadFile.append('images', imageDataTemp);
+        uploadImageFunc({ body: uploadFile });
+
+        // setModal(!modal)
+        // navigation.navigate("WarrantyClaimDetails")
     }
 
 
@@ -160,27 +233,62 @@ const WarrantyDetails = ({ navigation, route }) => {
         )
     }
 
+    const ModalSuccess = () => {
+
+        return (
+            <View style={{ width: '100%', alignItems: "center", justifyContent: "center" }}>
+                <View style={{ marginTop: 30, alignItems: 'center', maxWidth: '80%' }}>
+                    <Icon name="check-circle" size={53} color={ternaryThemeColor} />
+                    <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
+
+                    <View style={{ marginTop: 10, marginBottom: 30 }}>
+                        <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
+                    </View>
+
+                    {/* <View style={{ alignItems: 'center', marginBottom: 30 }}>
+                    <ButtonOval handleOperation={modalWithBorderClose} backgroundColor="#000000" content="OK" style={{ color: 'white', paddingVertical: 4 }} />
+                  </View> */}
+
+                </View>
+
+                <TouchableOpacity style={[{
+                    backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
+                }]} onPress={modalClose} >
+                    <Close name="close" size={17} color="#ffffff" />
+                </TouchableOpacity>
+
+            </View>
+        )
+
+
+    }
+
     const ModalContent = () => {
         console.log("the data item", data)
         return (
             <ScrollView style={{ height: 560, width: '100%', borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-                <View>
+                {/* <TouchableOpacity style={[styles.closeButton,]} onPress={()=>{setModal(!modal)}}>
+                    <Icon name="close" size={27} color="#ffffff" />
+                </TouchableOpacity> */}
+                {/* <View>
                     <View style={{ alignSelf: 'center', borderWidth: 1, marginTop: 20, width: 100 }}>
 
                     </View>
-                </View>
+                </View> */}
+
+
 
                 <View style={{ marginHorizontal: 20, marginTop: 30, borderRadius: 10, alignItems: 'flex-start', padding: 10, }}>
                     <View style={{ backgroundColor: '#EBF3FA', width: '100%', padding: 20, borderWidth: 1, borderColor: '#85BFF1', borderRadius: 10, borderStyle: 'dotted' }}>
                         <View style={{ flexDirection: 'row', marginLeft: 10, }}>
                             <PoppinsTextMedium content="Product Name :" style={{ color: 'black' }}></PoppinsTextMedium>
-                            <PoppinsTextMedium  content={`${data?.product_name}`} style={{ color: 'black' }}></PoppinsTextMedium>
+                            <PoppinsTextMedium content={`${data?.product_name}`} style={{ color: 'black' }}></PoppinsTextMedium>
                         </View>
 
                         <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
                             <PoppinsTextMedium content="Product Code :" style={{ color: 'black', fontWeight: '600' }}></PoppinsTextMedium>
                             <PoppinsTextMedium content={`${data?.product_code}`} style={{ color: 'black', fontWeight: '600' }}></PoppinsTextMedium>
-                        </View>
+                        </View> 
                     </View>
 
 
@@ -190,7 +298,8 @@ const WarrantyDetails = ({ navigation, route }) => {
 
 
                     <View style={{ backgroundColor: '#EBF3FA', marginTop: 30, width: '100%', }}>
-                        <View>
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            {imageData && <Image style={{ height: 150, width: 200, resizeMode: "contain", margin: 20 }} source={{ uri: imageData.uri }}></Image>}
                             <ImageInputWithUpload
                                 // jsonData={item}
                                 handleData={handleChildComponentData}
@@ -205,7 +314,6 @@ const WarrantyDetails = ({ navigation, route }) => {
 
                 <View style={{ marginHorizontal: 50, height: 70, marginTop: 20 }}>
                     <ButtonRectangle backgroundColor="#FB774F" content="Submit" style={{ fontSize: 18, }} handleOperation={onSubmit} />
-
                 </View>
 
             </ScrollView>
@@ -230,10 +338,28 @@ const WarrantyDetails = ({ navigation, route }) => {
             </View>
             {modal &&
                 <BottomModal
-                    modalClose={false}
+                    modalClose={modalClose}
                     // message={message}
                     openModal={true}
                     comp={ModalContent} ></BottomModal>}
+
+            {claimModal && <ModalWithBorder
+                modalClose={() => { setClaimModal(false) }}
+                message={message}
+                openModal={claimModal}
+                navigateTo="WarrantyClaimDetails"
+                parameters={{warrantyItemData:data, afterClaimData:warrantyClaimData}}
+                comp={ModalSuccess}></ModalWithBorder>
+                }
+
+            {error && (
+                <ErrorModal
+                    modalClose={()=>setError(false)}
+                    message={message}
+                    openModal={error}
+                ></ErrorModal>
+            )}
+
 
             <ScannedDetailsProductBox></ScannedDetailsProductBox>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -262,6 +388,20 @@ const styles = StyleSheet.create({
         // textAlignVertical: 'center',
         paddingBottom: 20,
         color: '#000000'
+    },
+    closeButton: {
+        padding: 10,
+        backgroundColor: 'red',
+        borderRadius: 30,
+        position: 'absolute',
+        top: -20,
+        right: -10,
+    },
+
+    closeButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 })
 

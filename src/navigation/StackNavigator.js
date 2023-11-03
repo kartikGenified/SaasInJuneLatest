@@ -59,6 +59,7 @@ import Splash from '../screens/common/Splash';
 import ScanAndRedirectToWarranty from '../screens/waranty/ScanAndRedirectToWarranty';
 import ScanAndRedirectToGenuinity from '../screens/genuinity/ScanAndRedirectToGenuinity';
 import GiftCatalogue from '../screens/giftCatalogue/GiftCatalogue';
+import GenunityDetails from '../screens/genuinity/GenunityDetails';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -71,6 +72,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="Splash" component={Splash}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="GenunityDetails" component={GenunityDetails}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

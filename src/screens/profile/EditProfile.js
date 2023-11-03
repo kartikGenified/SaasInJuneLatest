@@ -12,6 +12,9 @@ import * as Keychain from 'react-native-keychain';
 import MessageModal from '../../components/modals/MessageModal';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import ErrorModal from '../../components/modals/ErrorModal';
+import InputDateProfile from '../../components/atoms/input/InputDateProfile';
+import RectangularUnderlinedDropDown from '../../components/atoms/dropdown/RectangularUnderlinedDropDown';
+import ProfileDropDown from '../../components/atoms/dropdown/ProfileDropDown';
 
 const EditProfile = ({navigation,route}) => {
   const [changedFormValues, setChangedFormValues] = useState([])
@@ -35,7 +38,7 @@ console.log("saved image",profileImage)
     const formValues = route.params?.formValues
     const height = Dimensions.get('window').height
     // const manualkyc = ["fabricator","consumer","retailer","dealer"]
-    console.log("form fields and values",formFields,formValues)
+    console.log("form fields and values",JSON.stringify(formFields),formValues)
     const [
       uploadImageFunc,
       {
@@ -130,30 +133,36 @@ console.log("saved image",profileImage)
         setError(false);
         setSuccess(false)
       };
-      const updateProfile=async()=>{
+      const updateProfile=()=>{
         Keyboard.dismiss()
         setPressedSubmit(true)
         console.log("changedFormValues",changedFormValues)
         var profileData = {}
-        if(filename)
-        {
-          
+        
           profileData["profile_pic"] = filename
         changedFormValues.map((item)=>{
           profileData[item.name] = item.value
         })
+        if(Object.keys(profileData).length!==0)
+        {
+          console.log("profileData",profileData)
+          submitProfileData(profileData)
         }
-        const credentials = await Keychain.getGenericPassword();
-                if (credentials) {
-                  console.log(
-                    'Credentials successfully loaded for user ' + credentials.username
-                  );
-                  const token = credentials.username
-                  const params={token:token,data:profileData}
-                  console.log("params",params)
-                  updateProfileFunc(params)
-                }
         
+      }
+      const submitProfileData=async(tempData)=>{
+        const credentials = await Keychain.getGenericPassword();
+        if (credentials) {
+          console.log(
+            'Credentials successfully loaded for user ' + credentials.username
+          );
+          const token = credentials.username
+          const params={token:token,data:tempData}
+          console.log("params from submitProfile",params)
+          setTimeout(() => {
+            updateProfileFunc(params)
+          }, 2000);
+        }
       }
 
       const handleImageUpload=async()=>{
@@ -274,16 +283,24 @@ console.log("saved image",profileImage)
     if(item.type==="text")
   {
     return(
-      <RectanglarUnderlinedTextInput pressedSubmit={pressedSubmit} key ={index} handleData={handleData} title={item.name} value={formValues[index]}></RectanglarUnderlinedTextInput>
+      <RectanglarUnderlinedTextInput pressedSubmit={pressedSubmit} key ={index} handleData={handleData} label = {item.label} title={item.name} value={formValues[index]}></RectanglarUnderlinedTextInput>
           )
   }
    else if(item.type==="date")
   {
     return(
-    <InputDate key ={index} data={formValues[index]} title={item.name} handleData = {handleData}></InputDate>
+    <InputDateProfile key ={index} data={formValues[index]} title={item.name} handleData = {handleData}></InputDateProfile>
 
     )
-  }}}
+  }
+  else if(item.type==="select")
+  {
+    return(
+      <ProfileDropDown key={index} title={item.name} header={item.label} value={formValues[index]} data={item.options} handleData={handleData}></ProfileDropDown>
+
+    )
+  }
+}}
   keyExtractor={item => item.id}
 />
 }

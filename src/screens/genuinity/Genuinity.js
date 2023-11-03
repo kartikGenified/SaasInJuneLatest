@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 const Genuinity = ({navigation,route}) => {
     const zoomAnim = useRef(new Animated.Value(100)).current;
     const workflowProgram = route.params.workflowProgram
+    const productData = route.params?.productData
     const isGenuinityOnly = useSelector(state=>state.appWorkflow.isGenuinityOnly)
     const handleWorkflowNavigation=()=>{
       console.log("scccess")
@@ -57,8 +58,11 @@ const Genuinity = ({navigation,route}) => {
         workflowProgram:workflowProgram.slice(1)
       })
   
+      
   
-  
+      }
+      else if(productData!==undefined){
+        navigation.replace("GenunityDetails",{productData:productData})
       }
       else{
         
@@ -66,7 +70,7 @@ const Genuinity = ({navigation,route}) => {
       }
   
     }
-    const zoomIn = () => {
+    const zoomIn = () => {  
         // Will change fadeAnim value to 1 in 5 seconds
         Animated.timing(zoomAnim, {
           toValue: 200,
@@ -76,9 +80,11 @@ const Genuinity = ({navigation,route}) => {
       };
       useEffect(()=>{
         zoomIn()
-        setTimeout(() => {
+        setTimeout(() => { 
           if(isGenuinityOnly)
           {
+          console.log(GenuineProduct)
+
           navigation.navigate("GenuineProduct",{workflowProgram:workflowProgram})
           }
           else{
@@ -86,6 +92,7 @@ const Genuinity = ({navigation,route}) => {
           }
         }, 1000);
       },[])
+
     return (
         <View style={{alignItems:"center",justifyContent:'center',flex:1}}>
             <Animated.Image style={{height:zoomAnim,width:zoomAnim}} source={require('../../../assets/images/genuine.png')}></Animated.Image>

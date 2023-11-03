@@ -110,7 +110,7 @@ const ScanAndRedirectToGenuinity = ({navigation}) => {
     const form_type = '2';
     const token =savedToken
     const body = {product_id: productDataData.body.products[0].product_id, qr_id: qr_id};
-      console.log('Product Data is ',  productDataData.body.products[0].product_id);
+      console.log('Product Data is ',  productDataData.body);
       console.log("productdata", token,body)
       dispatch(setProductData(productDataData.body.products[0]));
       setProductId(productDataData.body.product_id);
@@ -198,10 +198,11 @@ const ScanAndRedirectToGenuinity = ({navigation}) => {
 
   // function to handle workflow navigation-----------------------
   const handleWorkflowNavigation = () => {
-    
+    // console.log("navigating toGenuinity")
         navigation.navigate('Genuinity', {
             workflowProgram: [],
-            rewardType:''
+            rewardType:'',
+            productData:productDataData.body
         });
   
 };
@@ -544,3 +545,5 @@ const styles = StyleSheet.create({
 });
 
 export default ScanAndRedirectToGenuinity;
+
+
