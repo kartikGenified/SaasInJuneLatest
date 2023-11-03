@@ -15,7 +15,20 @@ export const KycStatusApi = baseApi.injectEndpoints({
     };
     },
     }),
+    updateKycStatus: builder.mutation({
+        query: (params) => {
+          console.log("object-00988900--->",params);
+          return {
+            method: "PUT",
+            url: `/api/app/kycStatus/${params.id}`,
+            headers: {
+              slug : slug,
+            },
+            body : params.body
+          };
+        },
+      })
     }),
    });
    
-   export const { useGetkycStatusMutation} = KycStatusApi;
+   export const { useGetkycStatusMutation,useUpdateKycStatusMutation} = KycStatusApi;

@@ -21,7 +21,7 @@ import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import { useGetkycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
 import { setKycData } from '../../../redux/slices/userKycStatusSlice';
-
+import { useIsFocused } from '@react-navigation/native';
 const Dashboard = ({navigation}) => {
 
     const [dashboardItems, setDashboardItems] = useState()
@@ -101,7 +101,7 @@ const Dashboard = ({navigation}) => {
       isError:getFormIsError
   }] =useGetFormMutation()
 
-
+  const focused = useIsFocused()
     useEffect(()=>{
       let lat=''
       let lon=''
@@ -206,7 +206,7 @@ const Dashboard = ({navigation}) => {
         }
         getDashboardData()
         
-    },[])
+    },[focused])
 
     
     

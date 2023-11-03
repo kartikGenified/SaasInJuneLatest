@@ -15,6 +15,7 @@ import ErrorModal from '../../components/modals/ErrorModal';
 import InputDateProfile from '../../components/atoms/input/InputDateProfile';
 import RectangularUnderlinedDropDown from '../../components/atoms/dropdown/RectangularUnderlinedDropDown';
 import ProfileDropDown from '../../components/atoms/dropdown/ProfileDropDown';
+import moment from 'moment';
 
 const EditProfile = ({navigation,route}) => {
   const [changedFormValues, setChangedFormValues] = useState([])
@@ -27,18 +28,19 @@ const EditProfile = ({navigation,route}) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   // const userData = useSelector(state=>state.appusersdata.userData)
-console.log("saved image",profileImage)
+console.log("saved image",route.params?.savedImage)
   // console.log("route.params.savedImage",route.params.savedImage)
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
       )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
+    const isOnlineVerification = useSelector(state=>state.apptheme.isOnlineVerification)
     const formFields = route.params?.formFields
     const formValues = route.params?.formValues
     const height = Dimensions.get('window').height
     // const manualkyc = ["fabricator","consumer","retailer","dealer"]
-    console.log("form fields and values",JSON.stringify(formFields),formValues)
+    console.log("form fields and values",JSON.stringify(formFields),formValues,isOnlineVerification)
     const [
       uploadImageFunc,
       {
@@ -140,6 +142,7 @@ console.log("saved image",profileImage)
         var profileData = {}
         
           profileData["profile_pic"] = filename
+        profileData["isOnlineVerification"] = isOnlineVerification
         changedFormValues.map((item)=>{
           profileData[item.name] = item.value
         })
@@ -171,7 +174,7 @@ console.log("saved image",profileImage)
         setProfileImage(result.assets[0])
       }
       const uploadProfilePicture=()=>{
-        if(profileImage!==BaseUrlImages+route.params.savedImage)
+        if(profileImage!==BaseUrlImages+route.params.savedImage && profileImage!==null)
         {
           const imageData = {
             uri: profileImage.uri,
@@ -289,7 +292,7 @@ console.log("saved image",profileImage)
    else if(item.type==="date")
   {
     return(
-    <InputDateProfile key ={index} data={formValues[index]} title={item.name} handleData = {handleData}></InputDateProfile>
+    <InputDateProfile key ={index} data={moment(formValues[index]).format("DD-MMM-YYYY")} title={item.name} handleData = {handleData}></InputDateProfile>
 
     )
   }

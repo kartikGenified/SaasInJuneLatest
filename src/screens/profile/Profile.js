@@ -18,6 +18,9 @@ import { useGetActiveMembershipMutation } from '../../apiServices/membership/App
 import { useIsFocused } from '@react-navigation/native';
 import PlatinumModal from '../../components/platinum/PlatinumModal';
 import  Edit  from 'react-native-vector-icons/Entypo';
+import moment from 'moment';
+import FastImage from 'react-native-fast-image';
+
 
 const Profile = ({ navigation }) => {
   const [formFields, setFormFields] = useState();
@@ -31,6 +34,8 @@ const Profile = ({ navigation }) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
+const userData = useSelector(state=>state.appusersdata.userData)
+
   const focused = useIsFocused()
   const [
     fetchProfileFunc,
@@ -160,6 +165,7 @@ const Profile = ({ navigation }) => {
   const name = profileName ? fetchProfileData?.body.name : '';
   const membership = getActiveMembershipData && getActiveMembershipData.body?.tier.name
   const accountVerified = true;
+  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
   
 
   const ProfileBox=(props)=>{
@@ -226,7 +232,7 @@ const Profile = ({ navigation }) => {
     
 
     return (
-      <View style={{ width: '100%',marginBottom:20 }}>
+      <View style={{ width: '100%',marginBottom:10 }}>
         <View
           style={{
             
@@ -316,6 +322,11 @@ const Profile = ({ navigation }) => {
              
 
             )}
+            <View style={{alignItems:'center',justifyContent:'center',marginLeft:8}}>
+            <PoppinsTextMedium
+                  style={{ color: 'black' }}
+                  content={`${userData.user_type.substring(0,1).toUpperCase()+userData.user_type.substring(1,userData.user_type.length)} Account`}></PoppinsTextMedium>
+            </View>
           </View>
           <View
             style={{
@@ -389,7 +400,8 @@ const Profile = ({ navigation }) => {
         {fetchProfileData && <GreyBar></GreyBar>}
     <ScrollView>
 
-        <View
+       {formFields && formValues && <> 
+       <View
           style={{
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30,
@@ -403,15 +415,31 @@ const Profile = ({ navigation }) => {
           {showProfileData &&
             formFields.map((item, index) => {
               console.log(item, formValues[index]);
-              return (
-                <DisplayOnlyTextInput
+              if(item.type==="date" || item.type==="Date")
+              {
+                return (
+                  <DisplayOnlyTextInput
+                    key={index}
+                    data={formValues[index] === null ? 'No data available' : moment(formValues[index]).format("DD-MMM-YYYY")}
+                    title={item.label}
+                    photo={require('../../../assets/images/eye.png')}>
+                      
+                    </DisplayOnlyTextInput>
+                 
+                );
+              }
+              else {
+                return (
+                  <DisplayOnlyTextInput
                   key={index}
                   data={formValues[index] === null ? 'No data available' : formValues[index]}
                   title={item.label}
                   photo={require('../../../assets/images/eye.png')}>
                     
                   </DisplayOnlyTextInput>
-              );
+                );
+              }
+              
             })}
             
         
@@ -423,6 +451,17 @@ const Profile = ({ navigation }) => {
       <ProfileBox buttonTitle="View" title="Check Passbook" image={require('../../../assets/images/gift.png')}></ProfileBox>
         </View>
         </View>
+        </>}
+        { formFields===undefined && formValues===undefined &&
+          <FastImage
+          style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
+          source={{
+            uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+        }
         </ScrollView>
       </View>
    

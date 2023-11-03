@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
-import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions } from '../../../redux/slices/appThemeSlice';
+import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification } from '../../../redux/slices/appThemeSlice';
 import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
 import { useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -52,7 +52,14 @@ const Splash = ({ navigation }) => {
       dispatch(setRegistrationRequired(getAppThemeData.body.registration_options.Registration.users))
       dispatch(setColorShades(getAppThemeData.body.theme.color_shades))
       dispatch(setKycOptions(getAppThemeData.body.kyc_options))
-
+      if(getAppThemeData.body.addon_features.kyc_online_verification!==undefined)
+      {
+        if(getAppThemeData.body.addon_features.kyc_online_verification)
+        {
+          dispatch(setIsOnlineVeriification())
+        }
+      }
+      
       setTimeout(() => {
           navigation.navigate('Introduction')
       }, 2000);

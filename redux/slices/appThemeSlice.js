@@ -10,7 +10,8 @@ const initialState = {
   otpLogin:[],
   passwordLogin:[],
   colorShades:{},
-  kycOptions:{}
+  kycOptions:{},
+  isOnlineVerification:false
 
 }
 
@@ -48,12 +49,15 @@ export const appThemeSlice = createSlice({
   },
   setKycOptions:(state,action)=>{
     state.kycOptions = action.payload
+  },
+  setIsOnlineVeriification:(state,action)=>{
+    state.isOnlineVerification = true
   }
   
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setPrimaryThemeColor, setSecondaryThemeColor, setTernaryThemeColor ,setIcon,setIconDrawer,setOptLogin,setPasswordLogin,setButtonThemeColor,setColorShades, setKycOptions} = appThemeSlice.actions
+export const { setPrimaryThemeColor, setSecondaryThemeColor, setTernaryThemeColor ,setIcon,setIconDrawer,setOptLogin,setPasswordLogin,setButtonThemeColor,setColorShades, setKycOptions,setIsOnlineVeriification} = appThemeSlice.actions
 
 export default appThemeSlice.reducer
