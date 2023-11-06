@@ -1,4 +1,4 @@
-package com.genefiedsaas;
+package com.ozoneoverseas;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
