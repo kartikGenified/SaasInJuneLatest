@@ -1,3 +1,4 @@
+//import liraries
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';

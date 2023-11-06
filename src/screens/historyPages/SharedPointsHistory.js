@@ -6,26 +6,24 @@ import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrA
 import { useSelector } from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
-import { useAllUserPointsEntryMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import { useGetPointSharingDataMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import moment from 'moment';
 import BottomModal from '../../components/modals/BottomModal';
 import FastImage from 'react-native-fast-image';
 
-const ScannedHistory = ({ navigation }) => {
+const SharedPointsHistory = ({ navigation }) => {
   const [distinctDateArr, setDistinctDateArr] = useState()
   const [scannedListData, setScannedListData] = useState([])
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
-  const [
-    fetchAllQrScanedList,
-    {
-      data: fetchAllQrScanedListData,
-      isLoading: fetchAllQrScanedListIsLoading,
-      error: fetchAllQrScanedListError,
-      isError: fetchAllQrScanedListIsError,
-    },
-  ] = useFetchAllQrScanedListMutation();
+  const [getPointSharingFunc,{
+    data:getPointSharingData,
+    error:getPointSharingError,
+    isLoading:getPointSharingIsLoading,
+    isError:getPointSharingIsError
+  }] = useGetPointSharingDataMutation()
+  
 
   const [userPointFunc, {
     data: userPointData,
@@ -59,34 +57,25 @@ const ScannedHistory = ({ navigation }) => {
     (async () => {
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
-      let queryParams = `?user_type_id=${userData.user_type_id
-        }&app_user_id=${userData.id}`;
-      if (fromDate && toDate) {
-        queryParams += `&from_date=${moment(fromDate).format('YYYY-MM-DD')}&to_date=${moment(toDate).format('YYYY-MM-DD')}`;
-      } else if (fromDate) {
-        queryParams += `&from_date=${fromDate}`;
-      }
-
-      console.log("queryParams", queryParams);
-
-      fetchAllQrScanedList({
-        token: token,
-
-        query_params: queryParams,
-      });
+      const params = {token:token,
+    id,userId,
+    cause:"point_sharing"
+    }
+    getPointSharingFunc(params)
+     
     })();
   }, []);
 
 
   useEffect(() => {
-    if (fetchAllQrScanedListData) {
-      console.log("fetchAllQrScanedListData", fetchAllQrScanedListData.body.data)
-      fetchDates(fetchAllQrScanedListData.body.data)
+    if (getPointSharingData) {
+      console.log("getPointSharingData", getPointSharingData)
+     
     }
-    else if (fetchAllQrScanedListError) {
-      console.log("fetchAllQrScanedListError", fetchAllQrScanedListError)
+    else if (getPointSharingError) {
+      console.log("getPointSharingError", getPointSharingError)
     }
-  }, [fetchAllQrScanedListData, fetchAllQrScanedListError])
+  }, [getPointSharingData, getPointSharingError])
 
 
 
@@ -220,14 +209,14 @@ const ScannedHistory = ({ navigation }) => {
   }
   return (
     <View style={{ alignItems: "center", justifyContent: "flex-start", height: "100%", backgroundColor: '#ffffff' }}>
-      {fetchAllQrScanedListData && <><View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
+      {getPointSharingData && <><View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
         <TouchableOpacity onPress={() => {
           navigation.goBack()
         }}>
           <Image style={{ height: 24, width: 24, resizeMode: 'contain', marginLeft: 10 }} source={require('../../../assets/images/blackBack.png')}></Image>
 
         </TouchableOpacity>
-        <PoppinsTextMedium content="Scanned History" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
+        <PoppinsTextMedium content="Shared Points History" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
         <TouchableOpacity style={{ marginLeft: 160 }}>
           {/* <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/notificationOn.png')}></Image> */}
         </TouchableOpacity>
@@ -248,7 +237,7 @@ const ScannedHistory = ({ navigation }) => {
         </View>
         <Header></Header>
         <ScrollView contentContainerStyle={{ width: '100%' }}>
-          {
+          {/* {
             scannedListData && scannedListData.map((item, index) => {
               return (
                 <View style={{ alignItems: "flex-start", justifyContent: "center", width: '100%' }} key={index}>
@@ -270,23 +259,14 @@ const ScannedHistory = ({ navigation }) => {
               )
 
             })
-          }
-          {
-            scannedListData.length===0 && <FastImage
-            style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
-            source={{
-              uri: gifUri, // Update the path to your GIF
-              priority: FastImage.priority.normal,
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-          />
-          }
+          } */}
+         
         </ScrollView>
       </>
       }
 
       {
-        fetchAllQrScanedListIsLoading && <FastImage
+        getPointSharingIsLoading && <FastImage
           style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
           source={{
             uri: gifUri, // Update the path to your GIF
@@ -302,4 +282,4 @@ const ScannedHistory = ({ navigation }) => {
 
 const styles = StyleSheet.create({})
 
-export default ScannedHistory;
+export default SharedPointsHistory;

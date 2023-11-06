@@ -22,6 +22,9 @@ import axios from 'axios';
 import { useGetkycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
 import { setKycData } from '../../../redux/slices/userKycStatusSlice';
 import { useIsFocused } from '@react-navigation/native';
+import { setPercentagePoints, setShouldSharePoints } from '../../../redux/slices/pointSharingSlice';
+import { useExtraPointEnteriesMutation } from '../../apiServices/pointSharing/pointSharingApi';
+
 const Dashboard = ({navigation}) => {
 
     const [dashboardItems, setDashboardItems] = useState()
@@ -29,6 +32,9 @@ const Dashboard = ({navigation}) => {
     const [showKyc, setShowKyc] = useState(true)
     const dispatch = useDispatch()
     const userId = useSelector((state)=>state.appusersdata.userId)
+    const userData = useSelector(state => state.appusersdata.userData);
+    const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
+    console.log("pointSharingData",JSON.stringify(pointSharingData),userData)
     console.log("user id is from dashboard",userId)
     
     
@@ -46,6 +52,25 @@ const Dashboard = ({navigation}) => {
       isLoading:getKycStatusIsLoading,
       isError:getKycStatusIsError
     }] = useGetkycStatusMutation()
+
+    const [extraPointEntriesFunc,{
+      data:extraPointEntriesData,
+      error:extraPointEntriesError,
+      isError:extraPointEntriesIsError,
+      isLoading:extraPointEntriesIsLoading
+    }] = useExtraPointEnteriesMutation()
+
+    useEffect(()=>{
+      if(extraPointEntriesData)
+      {
+        console.log("extraPointEntriesData",extraPointEntriesData)
+      
+      }
+      else if(extraPointEntriesError)
+      {
+        console.log("extraPointEntriesError",extraPointEntriesError)
+      }
+    },[extraPointEntriesData,extraPointEntriesError])
 
     useEffect(()=>{
       if(getKycStatusData)
@@ -179,7 +204,32 @@ const Dashboard = ({navigation}) => {
       })
       
     },[])
+    useEffect(()=>{
+      const keys = Object.keys(pointSharingData.point_sharing_bw_user.user)
+      const values = Object.values(pointSharingData.point_sharing_bw_user.user)
+      const percentageKeys = Object.keys(pointSharingData.point_sharing_bw_user.percentage)
+      const percentageValues = Object.values(pointSharingData.point_sharing_bw_user.percentage)
+      
+      let eligibleUser=''
+      let percentage ;
+      let index ;
+      for(var i =0;i<values.length;i++)
+      {
+        if(values[i].includes(userData.user_type))
+        {
+          eligibleUser = keys[i]
+          index = percentageKeys.includes(eligibleUser) ? percentageKeys.indexOf(eligibleUser) : undefined
+          const pointSharingPercent = percentageValues[index]
+          // console.log(pointSharingPercent)
+      console.log("On",userData.user_type,"scan",pointSharingPercent,"% Points would be shared with",eligibleUser)
+          dispatch(setPercentagePoints(pointSharingPercent))
+          dispatch(setShouldSharePoints())
 
+        }
+      }
+      
+    
+      },[])
     useEffect(()=>{
         const getDashboardData=async()=>{
             try {

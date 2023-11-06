@@ -26,6 +26,8 @@ import { useCheckQrCodeAlreadyRedeemedMutation,useAddCashbackEnteriesMutation } 
 import * as Keychain from 'react-native-keychain';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import {slug} from '../../utils/Slug';
+import { useExtraPointEnteriesMutation } from '../../apiServices/pointSharing/pointSharingApi';
+
 const CongratulateOnScan = ({navigation, route}) => {
   const buttonThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -40,9 +42,11 @@ const CongratulateOnScan = ({navigation, route}) => {
 
   const userData = useSelector(state => state.appusersdata.userData);
   console.log("userData",`${userData.user_type}_points`);
-
+  const pointPercentage = useSelector(state=>state.pointSharing.percentagePoints)
+  const shouldSharePoints = useSelector(state=>state.pointSharing.shouldSharePoints)
   // getting location from redux state
   const location = useSelector(state => state.userLocation.location);
+ 
   console.log("location",location)
   // console.log('Location', location, userData, productData, qrData);
   const height = Dimensions.get('window').height;
@@ -81,7 +85,16 @@ const CongratulateOnScan = ({navigation, route}) => {
       isError: userPointEntryIsError,
     },
   ] = useUserPointsEntryMutation();
-
+  const [
+    extraPointEntryFunc,
+    {
+      data: extraPointEntryData,
+      error: extraPointEntryError,
+      isLoading: extraPointEntryIsLoading,
+      isError: extraPointEntryIsError,
+    },
+  ] = useExtraPointEnteriesMutation();
+  
   const [
     getAllWheelsByUserIdFunc,
     {
@@ -137,6 +150,38 @@ const CongratulateOnScan = ({navigation, route}) => {
           token: token,
           qr_code: qrData.id,
         };
+        console.log("shouldSharePoints",shouldSharePoints)
+        if(shouldSharePoints)
+        {
+          const body = {
+            data: {
+              // app_user_id: userData.id.toString(),
+              // user_type_id: userData.user_type_id,
+              // user_type: userData.user_type,
+              product_id: productData.product_id,
+              product_code: productData.product_code,
+              platform_id: Number(platform),
+              pincode: location.postcode===undefined ? "N/A" :location.postcode,
+              platform: 'mobile',
+              state: location.state===undefined ? "N/A" :location.state,
+              district: location.district===undefined ? "N/A" : location.district,
+              city: location.city===undefined ? "N/A" :location.city,
+              area: location.district===undefined ? "N/A" :location.district,
+              known_name: location.city===undefined ? "N/A" :location.city,
+              lat: location.lat===undefined ? "N/A" :String(location.lat),
+              log: location.lon===undefined ? "N/A" :String(location.lon),
+              method_id: 1,
+              method: "point on product",
+              points: (Number(productData[`${userData.user_type}_points`])*(Number(pointPercentage)/100)),
+              type: 'point_sharing',
+            },
+            qrId: Number(qrData.id),
+            tenant_id: slug,
+            token: token,
+          };
+          extraPointEntryFunc(body)
+        }
+       
         checkUserPointFunc(params);
       } else if (rewardType === 'Wheel') {
         const params = {
@@ -162,6 +207,7 @@ const CongratulateOnScan = ({navigation, route}) => {
     fetchRewardsAccToWorkflow();
   }, [rewardType]);
 
+ 
   useEffect(()=>{
     if(addCashbackEnteriesData)
     {
@@ -191,6 +237,14 @@ const CongratulateOnScan = ({navigation, route}) => {
     }
   }, [getAllWheelsByUserIdData, getAllWheelsByUserIdError]);
 
+  useEffect(()=>{
+  if(extraPointEntryData){
+    console.log("extraPointEntryData",extraPointEntryData)
+  }
+  else if(extraPointEntryError){
+    console.log("extraPointEntryError",extraPointEntryError)
+  }
+},[extraPointEntryError,extraPointEntryData])
   const createWheelHistory = async (data) => {
     console.log("wheel history data",data)
     const credentials = await Keychain.getGenericPassword();
@@ -359,6 +413,7 @@ const CongratulateOnScan = ({navigation, route}) => {
       console.log('userPointEntryError', userPointEntryError);
     }
   }, [userPointEntryData, userPointEntryError]);
+
   console.log('workflowProgram', workflowProgram);
   const handleWorkflowNavigation = () => {
     console.log("WorkflowProgram Left",workflowProgram)

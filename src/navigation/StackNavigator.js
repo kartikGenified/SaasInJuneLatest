@@ -60,6 +60,7 @@ import ScanAndRedirectToWarranty from '../screens/waranty/ScanAndRedirectToWarra
 import ScanAndRedirectToGenuinity from '../screens/genuinity/ScanAndRedirectToGenuinity';
 import GiftCatalogue from '../screens/giftCatalogue/GiftCatalogue';
 import GenunityDetails from '../screens/genuinity/GenunityDetails';
+import SharedPointsHistory from '../screens/historyPages/SharedPointsHistory';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -77,6 +78,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="GenunityDetails" component={GenunityDetails}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="SharedPointsHistory" component={SharedPointsHistory}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false
@@ -381,3 +387,4 @@ const StackNavigator = () => {
 }
 
 export default StackNavigator
+

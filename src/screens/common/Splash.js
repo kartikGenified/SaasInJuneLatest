@@ -6,6 +6,7 @@ import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeA
 import { useSelector, useDispatch } from 'react-redux'
 import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification } from '../../../redux/slices/appThemeSlice';
 import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
+import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
@@ -52,6 +53,8 @@ const Splash = ({ navigation }) => {
       dispatch(setRegistrationRequired(getAppThemeData.body.registration_options.Registration.users))
       dispatch(setColorShades(getAppThemeData.body.theme.color_shades))
       dispatch(setKycOptions(getAppThemeData.body.kyc_options))
+      dispatch(setPointSharing(getAppThemeData.body.points_sharing))
+      
       if(getAppThemeData.body.addon_features.kyc_online_verification!==undefined)
       {
         if(getAppThemeData.body.addon_features.kyc_online_verification)

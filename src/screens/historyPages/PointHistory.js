@@ -149,7 +149,7 @@ const PointHistory = ({ navigation }) => {
                 renderItem={({ item, index }) => {
                     // console.log(index+1,item)
                     return (
-                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')} />
+                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:mm a')} />
                     )
                 }}
                 keyExtractor={item => item.id}

@@ -11,7 +11,7 @@ const Passbook = ({navigation}) => {
     const [cashbackOptionEnabled, setCashbackOptionEnabled] = useState(false)
     const [wheelOptionEnabled, setWheelOptionEnabled] = useState(false)
     const [pointsOptionEnabled, setPointsOptionEnabled] = useState(false)
-
+    const [pointSharing, setPointSharing] = useState(false)
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
       )
@@ -19,8 +19,8 @@ const Passbook = ({navigation}) => {
         : 'grey';
     const userData = useSelector(state=>state.appusersdata.userData)
     const workflowProgram = useSelector(state => state.appWorkflow.program);
-
-        console.log(workflowProgram)
+    const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
+        console.log("pointSharingData",pointSharingData,userData)
     const name = userData.name
     const membership = "Platinum Member"
     
@@ -46,10 +46,20 @@ const Passbook = ({navigation}) => {
         {
             setWheelOptionEnabled(true)
         }
+        
+    }
+
+    const checkForPointSharing=()=>{
+        if(pointSharingData.is_point_sharing_bw_user)
+        {
+            setPointSharing(Object.keys(pointSharingData.point_sharing_bw_user.user).includes(userData.user_type))
+            console.log("pointSharingData list",pointSharingData.point_sharing_bw_user.user)
+        }
     }
 
     useEffect(()=>{
         getOptionsAccordingToWorkflow()
+        checkForPointSharing()
     },[])
 
     const NavigateTO=(props)=>{
@@ -91,7 +101,11 @@ const Passbook = ({navigation}) => {
                 navigation.navigate('WarrantyHistory')
 
             }
-            
+            else if(data==="Shared Point History")
+            {
+                navigation.navigate('SharedPointsHistory')
+
+            }
         }
         
 
@@ -174,6 +188,9 @@ const Passbook = ({navigation}) => {
                 wheelOptionEnabled &&
             <NavigateTO title="Wheel History" discription=" list of wheel spinned by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
 
+            }
+            {
+                pointSharing && <NavigateTO title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
             }
            
 

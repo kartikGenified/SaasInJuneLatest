@@ -41,7 +41,7 @@ const ButtonOval = props => {
         margin: 6,
         paddingLeft: 40,
         paddingRight: 40,
-        borderRadius:30,
+        borderRadius:10,
         marginTop:10
       }}>
       <PoppinsText style={style} content={content}></PoppinsText>

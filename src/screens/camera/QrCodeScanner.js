@@ -27,6 +27,8 @@ import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/Ge
 import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
 import {setProductData} from '../../../redux/slices/getProductSlice';
+import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
+
 
 const QrCodeScanner = ({navigation}) => {
   const [zoom, setZoom] = useState(0);
@@ -40,10 +42,12 @@ const QrCodeScanner = ({navigation}) => {
   const [productId, setProductId] = useState();
   const [qr_id, setQr_id] = useState();
   const userId = useSelector(state => state.appusersdata.userId);
+  const userData = useSelector(state=>state.appusersdata.userData)
   const userType = useSelector(state => state.appusersdata.userType);
   const userName = useSelector(state => state.appusersdata.name);
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state=>state.userLocation.location)
+  const shouldSharePoints = useSelector(state=>state.pointSharing.shouldSharePoints)
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram);
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
@@ -95,11 +99,64 @@ const QrCodeScanner = ({navigation}) => {
     },
   ] = useGetProductDataMutation();
 
+  const [
+    fetchAllQrScanedList,
+    {
+      data: fetchAllQrScanedListData,
+      isLoading: fetchAllQrScanedListIsLoading,
+      error: fetchAllQrScanedListError,
+      isError: fetchAllQrScanedListIsError,
+    },
+  ] = useFetchAllQrScanedListMutation();
+
   // ----------------------------------------------------
   const height = Dimensions.get('window').height;
   const platform = Platform.OS === 'ios' ? '1' : '2';
   const platformMargin = Platform.OS === 'ios' ? -60 : -160;
+  const toDate = undefined
+  var fromDate = undefined
+  useEffect(() => {
 
+    (async () => {
+      const credentials = await Keychain.getGenericPassword();
+      const token = credentials.username;
+      let queryParams = `?user_type_id=${userData.user_type_id
+        }&app_user_id=${userData.id}`;
+      if (fromDate && toDate) {
+        queryParams += `&from_date=${moment(fromDate).format('YYYY-MM-DD')}&to_date=${moment(toDate).format('YYYY-MM-DD')}`;
+      } else if (fromDate) {
+        queryParams += `&from_date=${fromDate}`;
+      }
+
+      console.log("queryParams", queryParams);
+      if(shouldSharePoints)
+      {
+        fetchAllQrScanedList({
+          token: token,
+  
+          query_params: queryParams,
+        });
+      }
+     
+    })();
+  }, [addQrData]);
+  const checkFirstScan=(data)=>{
+    if(data.length===1)
+    {
+      alert("This is your first scan")
+    }
+  }
+
+  useEffect(() => {
+    if (fetchAllQrScanedListData) {
+      console.log("fetchAllQrScanedListData", fetchAllQrScanedListData.body.data)
+      checkFirstScan(fetchAllQrScanedListData.body.data)
+      
+    }
+    else if (fetchAllQrScanedListError) {
+      console.log("fetchAllQrScanedListError", fetchAllQrScanedListError)
+    }
+  }, [fetchAllQrScanedListData, fetchAllQrScanedListError])
   useEffect(() => {
     if (checkGenuinityData) {
       console.log('genuinity check', checkGenuinityData);

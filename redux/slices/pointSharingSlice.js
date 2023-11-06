@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { act } from 'react-test-renderer'
 
 const initialState={
-pointSharing:{}
+pointSharing:{},
+percentagePoints:0,
+shouldSharePoints:false
 }
 
 export const pointSharingSlice = createSlice({
@@ -10,11 +13,17 @@ export const pointSharingSlice = createSlice({
     reducers : {
         setPointSharing : (state, action)=>{
             state.pointSharing = action.payload
+        },
+        setPercentagePoints:(state,action)=>{
+            state.percentagePoints = action.payload
+        },
+        setShouldSharePoints:(state,action)=>{
+            state.shouldSharePoints = true
         }
     }
 })
 
 
-export const {setPointSharing} = pointSharingSlice.actions
+export const {setPointSharing,setPercentagePoints,setShouldSharePoints} = pointSharingSlice.actions
 
 export default pointSharingSlice.reducer
