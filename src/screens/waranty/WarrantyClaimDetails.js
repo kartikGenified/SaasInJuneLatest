@@ -1,6 +1,5 @@
-//import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
@@ -24,6 +23,21 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
+            {/* header */}
+            <View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
+                <TouchableOpacity onPress={() => {
+                    navigation.goBack()
+                }}>
+                    <Image style={{ height: 24, width: 24, resizeMode: 'contain', marginLeft: 10 }} source={require('../../../assets/images/blackBack.png')}></Image>
+
+                </TouchableOpacity>
+                <PoppinsTextMedium content="Warranty Claim Details" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
+                <TouchableOpacity style={{ marginLeft: 180 }}>
+                    <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/notificationOn.png')}></Image>
+                </TouchableOpacity>
+            </View>
+            {/* header */}
+
             <View style={styles.imageView}>
                 <Image source={require('../../../assets/images/warrantyReport.png')} style={{ height: 82, width: 75 }} />
             </View>
@@ -36,7 +50,7 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
             </View>
 
             <View style={{ marginTop: 20 }}>
-                <PoppinsTextMedium content={`Claim Date : ${ moment(afterClaimData?.body?.claim_date).format('YYYY-MM-DD') }`} style={{ fontWeight: '700', fontSize: 20, color: ternaryThemeColor }} />
+                <PoppinsTextMedium content={`Claim Date : ${moment(afterClaimData?.body?.claim_date).format('YYYY-MM-DD')}`} style={{ fontWeight: '700', fontSize: 20, color: ternaryThemeColor }} />
             </View>
 
             <View style={{
@@ -45,7 +59,6 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
                 paddingBottom: 20,
                 width: '90%',
                 marginBottom: 10,
-
                 borderWidth: 1,
                 borderRadius: 10,
                 borderStyle: 'dashed',
@@ -53,31 +66,23 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
                 alignSelf: 'center'
             }}>
                 <View style={{ marginHorizontal: 20, marginTop: 10, flexDirection: 'row' }}>
-                    <PoppinsTextMedium content="Prdoduct Name : " style={{ fontWeight: '700', fontSize: 20, color: "#474747" }} />
+                    <PoppinsTextMedium content="Prdoduct Name : " style={{ fontWeight: '700', fontSize: 18, color: "#474747" }} />
                     <PoppinsTextMedium content={`${warrantyItemData?.product_name}`} style={{ fontWeight: '700', fontSize: 20, color: "#474747" }} />
                 </View>
 
                 <View style={{ marginHorizontal: 20, marginTop: 10, flexDirection: 'row' }}>
-                    <PoppinsTextMedium content="Prdoduct Code : " style={{ fontWeight: '700', fontSize: 20, color: "#474747" }} />
+                    <PoppinsTextMedium content="Prdoduct Code : " style={{ fontWeight: '700', fontSize: 18, color: "#474747" }} />
                     <PoppinsTextMedium content={`${warrantyItemData?.product_code}`} style={{ fontWeight: '700', fontSize: 20, color: "#474747" }} />
                 </View>
 
 
                 <View style={{ marginHorizontal: 20, marginTop: 10 }}>
-                    <PoppinsTextLeftMedium content="Product Damage : " style={{ fontWeight: '700', fontSize: 20, color: ternaryThemeColor, }} />
+                    <PoppinsTextLeftMedium content="Product Damage : " style={{ fontWeight: '700', fontSize: 18, color: ternaryThemeColor, }} />
                 </View>
                 <View style={{ marginHorizontal: 20, justifyContent: 'flex-start', }}>
                     <PoppinsTextLeftMedium style={{ fontWeight: '400', fontSize: 17, color: ternaryThemeColor, textAlign: 'left' }} content={`${warrantyItemData?.description}`} ></PoppinsTextLeftMedium>
                 </View>
-                <View style={{
-                    alignItems: 'left',
-                    justifyContent: 'left',
-                    marginTop: 20,
-                    marginLeft: 20
-                    // backgroundColor:'red'
-                }}>
-                    <Image style={{ height: 60, width: 63 }} source={require('../../../assets/images/giftSmall.png')} />
-                </View>
+             
 
             </View>
 
@@ -113,5 +118,3 @@ const styles = StyleSheet.create({
 
 //make this component available to the app
 export default WarrantyClaimDetails;
-
-

@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import {View, StyleSheet, Text,Image, TouchableOpacity} from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const Introduction = ({navigation}) => {
     const [imageIndex, setImageIndex] = useState(0)
     const [skipEnabled, setSkipEnabled] = useState(false)
+    // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null)
+
+
+    //asynch storage data saving
+    const storeData = async () => {
+        try {
+          await AsyncStorage.setItem('isAlreadyIntroduced', "Yes" );
+        //   console.log("saved")
+        } catch (e) {
+          // saving error
+          console.log("error",e)
+
+        }
+      };
+
 
     useEffect(()=>{
         setTimeout(() => {
@@ -15,7 +32,7 @@ const Introduction = ({navigation}) => {
     },[])
     // This is the array used to display images, add or remove image from the array to modify as per clients need----------------
     
-    const descriptionImages=[require('../../../assets/images/genuinemarkDescription.png'),require('../../../assets/images/rewardifyDescription.png'),require('../../../assets/images/dwamDescription.png'),require('../../../assets/images/scanAndWinDescription.png')]
+    const descriptionImages=[require('../../../assets/images/genuinemarkDescription.png'),require('../../../assets/images/rewardifyDescription.png')]
 
     
     
@@ -27,9 +44,8 @@ const Introduction = ({navigation}) => {
             
             if(imageIndex==descriptionImages.length-1)
             {
-                // navigation.navigate('SelectLanguage')
-        navigation.navigate('SelectUser')
-
+                storeData();
+                navigation.navigate('SelectLanguage');
             }
             else{
                 setImageIndex(imageIndex+1)
@@ -41,6 +57,7 @@ const Introduction = ({navigation}) => {
 
     const handleSkip=()=>{
         // navigation.navigate('SelectLanguage')
+        storeData();
         navigation.navigate('SelectUser')
 
     }

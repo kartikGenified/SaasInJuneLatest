@@ -6,12 +6,17 @@ const TextInputNumericRectangle = props => {
   const placeHolder = props.placeHolder;
   const maxLength = props.maxLength;
   const label = props.label
+  const required = props.required
   console.log("label",label)
 
   useEffect(()=>{
-    let tempJsonData = {...props.jsonData, value: value};
-    console.log(tempJsonData);
-    props.handleData(tempJsonData);
+    if(props.value!==undefined)
+    {
+      let tempJsonData = {...props.jsonData, value: value};
+      console.log(tempJsonData);
+      props.handleData(tempJsonData);
+    }
+
   },[props.value])
 
   const handleInput = text => {
@@ -68,7 +73,7 @@ const TextInputNumericRectangle = props => {
           handleInput(text);
         }}
         value={value}
-        placeholder={`${placeHolder} *`}></TextInput>
+        placeholder={required ? `${placeHolder} *` : `${placeHolder}`}></TextInput>
     </View>
   );
 };

@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView, Platform } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
@@ -31,27 +29,10 @@ const WarrantyDetails = ({ navigation, route }) => {
     const [success, setSuccess] = useState(false);
     // const [claimText, setClaimText] = useState("");
     const [modal, setModal] = useState(false);
-    const [imageData, setImageData] = useState(null);
     const [token, setToken] = useState(null);
     const [claimModal, setClaimModal] = useState(false);
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
-
-
-
-
-    const [
-        uploadImageFunc,
-        {
-            data: uploadImageData,
-            error: uploadImageError,
-            isLoading: uploadImageIsLoading,
-            isError: uploadImageIsError,
-        },
-    ] = useUploadImagesMutation();
-
-
 
     let claimText = "";
 
@@ -72,6 +53,16 @@ const WarrantyDetails = ({ navigation, route }) => {
     )
         ? useSelector(state => state.apptheme.secondaryThemeColor)
         : '#FFB533';
+
+    const [
+        uploadImageFunc,
+        {
+            data: uploadImageData,
+            error: uploadImageError,
+            isLoading: uploadImageIsLoading,
+            isError: uploadImageIsError,
+        },
+    ] = useUploadImagesMutation();
 
     const [
         createWarrantyClaim,
@@ -113,7 +104,7 @@ const WarrantyDetails = ({ navigation, route }) => {
                 const tempData = {
                     warranty_id: String(data.id),
                     description: "claimText",
-                    images: [uploadImageData.body[0].filename],
+                    images: [uploadImageData.body?.[0]?.filename],
                     platform_id: Platform.OS == "Android" ? 2 : 3,
                     platform: Platform.OS,
                 };
@@ -188,42 +179,7 @@ const WarrantyDetails = ({ navigation, route }) => {
     }
 
 
-    const handleChildComponentData = data => {
 
-        console.log("from image input", data);
-
-        setImageData(data)
-
-        // Update the responseArray state with the new data
-
-    };
-
-    const onSubmit = () => {
-
-        setIsLoading(true);
-
-
-        if (imageData?.uri && claimText != "") {
-            const imageDataTemp = {
-                uri: imageData.uri,
-                name: imageData.uri.slice(0, 10),
-                type: 'jpg/png',
-            };
-            const uploadFile = new FormData();
-            uploadFile.append('images', imageDataTemp);
-            uploadImageFunc({ body: uploadFile });
-            setModal(!modal);
-
-        }
-        else {
-            setError(true);
-            setMessage("Please fill all fields");
-        }
-
-
-
-        // navigation.navigate("WarrantyClaimDetails")
-    }
 
 
 
@@ -246,11 +202,11 @@ const WarrantyDetails = ({ navigation, route }) => {
         return (
             <View style={{ height: 200, width: '100%', backgroundColor: '#F7F7F7', alignItems: "center", justifyContent: 'center', padding: 16, marginTop: 90 }}>
                 <View style={{ height: 154, width: 154, borderRadius: 10, borderWidth: 1, backgroundColor: 'white', position: "absolute", top: -74, borderColor: '#DDDDDD', alignItems: "center", justifyContent: "center" }}>
-                                  <Image style={{ height: 100, width: 100 }} source={{uri:BaseUrlImages+data.product_images[0]}}></Image>
+                 {data.product_images?.[0] ?   <Image style={{ height: 100, width: 100 }} source={{ uri: BaseUrlImages + data.product_images?.[0] }}></Image> : <PoppinsTextMedium style={{color:'black', fontWeight:'800'}} content="NO IMAGE"></PoppinsTextMedium>} 
                 </View>
-                <View style={{ alignItems: "flex-start", justifyContent: "center", position: "absolute", bottom: 10, left: 20,color:'black' }}>
-                    <PoppinsTextMedium style={{ margin: 4, fontSize: 18, fontWeight: '700', color:'black' }} content={`Product Name : ${productName}`}></PoppinsTextMedium>
-                    <PoppinsTextMedium style={{ margin: 4, fontSize: 18, fontWeight: '700', color:'black' }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
+                <View style={{ alignItems: "flex-start", justifyContent: "center", position: "absolute", bottom: 10, left: 20, color: 'black' }}>
+                    <PoppinsTextMedium style={{ margin: 4, fontSize: 18, fontWeight: '700', color: 'black' }} content={`Product Name : ${productName}`}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ margin: 4, fontSize: 18, fontWeight: '700', color: 'black' }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
                     {/* <PoppinsTextMedium style={{margin:4,fontSize:18,fontWeight:'700'}} content={`Product S.No : ${productSerialNumber}`}></PoppinsTextMedium> */}
                 </View>
 
@@ -291,6 +247,41 @@ const WarrantyDetails = ({ navigation, route }) => {
 
     const ModalContent = () => {
         console.log("the data item", data)
+        const [imageData, setImageData] = useState(null);
+
+
+        const handleChildComponentData = data => {
+            console.log("from image input", data);
+            setImageData(data)
+            // Update the responseArray state with the new data
+
+        };
+
+        const onSubmit = () => {
+
+            if (imageData?.uri && claimText != "") {
+                console.log("image uri", imageData?.uri)
+                setIsLoading(true);
+                const imageDataTemp = {
+                    uri: imageData.uri,
+                    name: imageData.uri.slice(0, 10),
+                    type: 'jpg/png',
+                };
+                const uploadFile = new FormData();
+                uploadFile.append('images', imageDataTemp);
+                uploadImageFunc({ body: uploadFile });
+                setModal(!modal);
+
+            }
+            else {
+                setError(true);
+                setMessage("Please fill all fields");
+            }
+
+
+
+            // navigation.navigate("WarrantyClaimDetails")
+        }
         return (
             <ScrollView style={{ height: 560, width: '100%', borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
                 {/* <TouchableOpacity style={[styles.closeButton,]} onPress={()=>{setModal(!modal)}}>
@@ -318,9 +309,7 @@ const WarrantyDetails = ({ navigation, route }) => {
                     </View>
 
 
-                    <View style={{ marginTop: 20, width: '100%', }}>
-                        <CommentTextArea style={{ borderColor: '#808080', borderBottomWidth: 0.3, }} placeholder={"Write The Product Claim"} />
-                    </View>
+
 
 
                     <View style={{ backgroundColor: '#EBF3FA', marginTop: 30, width: '100%', }}>
@@ -333,6 +322,10 @@ const WarrantyDetails = ({ navigation, route }) => {
                                 data={"image"}
                                 action="Select File"></ImageInputWithUpload>
                         </View>
+                    </View>
+
+                    <View style={{ marginTop: 20, width: '100%', }}>
+                        <CommentTextArea style={{ borderColor: '#808080', borderBottomWidth: 0.3, }} placeholder={"Write The Product Claim"} />
                     </View>
 
 
@@ -366,7 +359,7 @@ const WarrantyDetails = ({ navigation, route }) => {
             <View style={{ alignItems: "center", justifyContent: "center" }}>
                 <PoppinsTextMedium style={{ color: 'black', fontSize: 18 }} content={`Warranty Start : ${moment(warrantyStart).format('DD MMM YYYY')}`}></PoppinsTextMedium>
                 <PoppinsTextMedium style={{ color: 'black', fontSize: 18, marginTop: 4 }} content={`Warranty End : ${moment(warrantyEnd).format('DD MMM YYYY')}`}></PoppinsTextMedium>
-                <View style={{ height: 40, width: 240, alignItems: "center", justifyContent: "center", borderWidth: 1, borderStyle: 'dashed', backgroundColor: secondaryThemeColor, borderRadius: 4, marginTop:50 }}>
+                <View style={{ height: 40, width: 240, alignItems: "center", justifyContent: "center", borderWidth: 1, borderStyle: 'dashed', backgroundColor: secondaryThemeColor, borderRadius: 4, marginTop: 50 }}>
                     <PoppinsTextMedium style={{ color: 'black', fontSize: 18, marginTop: 4 }} content={`Warranty Id : ${warrantyId}`}></PoppinsTextMedium>
                 </View>
             </View>
@@ -377,7 +370,7 @@ const WarrantyDetails = ({ navigation, route }) => {
                 <PoppinsTextMedium style={{ color: 'white', fontSize: 18, marginTop: 4 }} content={`Claim Warranty/View Claim`}></PoppinsTextMedium>
             </TouchableOpacity>
             {/* <ClickToReport></ClickToReport> */}
-            
+
             {modal &&
                 <BottomModal
                     modalClose={modalClose}

@@ -1,36 +1,47 @@
-import React, {useState,useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View,Image} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, View, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-import  Icon  from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+
 const ErrorModal = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const productData = props.productData;
   const navigation = useNavigation()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
-    const navigateTo = props.navigateTo
-    
-  useEffect(()=>{
-    if(props.openModal===true)
-    {
-        setModalVisible(true)
+  const navigateTo = props.navigateTo
+
+  console.log("product data in report an issue", productData)
+
+  useEffect(() => {
+    if (props.openModal === true) {
+      setModalVisible(true)
     }
-    else{
-        setModalVisible(false)
+    else {
+      setModalVisible(false)
     }
-  },[])
-  const closeModal=()=>{
+  }, [])
+  const closeModal = () => {
     setModalVisible(!modalVisible)
     props.modalClose()
-   if(navigateTo!==undefined)
-   {
-    navigation.navigate(navigateTo)
+    if (navigateTo !== undefined) {
+      navigation.navigate(navigateTo)
+    }
   }
-}
-   
+
+  const reportAndNavigate= () => {
+    setModalVisible(!modalVisible)
+    // props.modalClose()
+
+   productData && navigation.navigate("ReportAndIssue", { productData: productData })
+
+  }
+
+
 
 
   return (
@@ -40,20 +51,29 @@ const ErrorModal = (props) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-            props.modalClose()
+          props.modalClose()
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
-          <View style={{...styles.modalView,borderWidth:2,borderColor:ternaryThemeColor}}>
-            <Image style={{width:80,height:80,resizeMode:'contain'}} source={require('../../../assets/images/failed.png')}></Image>
-          <Text style={{color:'#FF5D5D',fontSize:24,fontWeight:'700'}}>SORRY</Text>
-         
-            <Text style={{...styles.modalText,fontSize:20,fontWeight:'600',color:'black'}}>{props.message}</Text>
+          <View style={{ ...styles.modalView, borderWidth: 2, borderColor: ternaryThemeColor }}>
+            <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={require('../../../assets/images/failed.png')}></Image>
+            <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>SORRY</Text>
+
+            <Text style={{ ...styles.modalText, fontSize: 20, fontWeight: '600', color: 'black' }}>{props.message}</Text>
             <Pressable
-              style={{...styles.button,backgroundColor:'#FF5D5D',width:100}}
+              style={{ ...styles.button, backgroundColor: '#FF5D5D', width: 100 }}
               onPress={() => closeModal()}>
               <Text style={styles.textStyle}>Close</Text>
             </Pressable>
+
+            {props.isReportable &&
+              <Pressable
+                style={{ ...styles.button, backgroundColor: '#FF5D5D', width: 100, marginTop: 10 }}
+                onPress={() => reportAndNavigate()}>
+                <Text style={styles.textStyle}>Report</Text>
+              </Pressable>
+            }
+
           </View>
         </View>
       </Modal>
@@ -69,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   modalView: {
-   
+
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 60,
@@ -82,18 +102,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    
+
   },
   button: {
     borderRadius: 4,
     padding: 10,
     elevation: 2,
-    marginTop:10
+    marginTop: 10
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
   },
-  
+
   textStyle: {
     color: 'white',
     fontWeight: 'bold',

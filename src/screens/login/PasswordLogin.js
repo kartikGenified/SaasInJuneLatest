@@ -22,6 +22,10 @@ import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Icon from 'react-native-vector-icons/Feather';
 import Close from 'react-native-vector-icons/Ionicons';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
+import Checkbox from '../../components/atoms/checkbox/Checkbox';
+import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalApi';
+// import * as Keychain from 'react-native-keychain';  
 
 const PasswordLogin = ({ navigation, route }) => {
   const [username, setUsername] = useState("influencer_2")
@@ -29,6 +33,7 @@ const PasswordLogin = ({ navigation, route }) => {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
   const [message, setMessage] = useState("")
+  const [isChecked, setIsChecked] = useState("")
 
   //modal
   const [openModalWithBorder, setModalWithBorder] = useState(false);
@@ -78,6 +83,13 @@ const PasswordLogin = ({ navigation, route }) => {
     isError: passwordIsError
   }] = usePasswordLoginMutation()
 
+  const [getTermsAndCondition, {
+    data: getTermsData,
+    error: getTermsError,
+    isLoading: termsLoading,
+    isError: termsIsError
+  }] = useFetchLegalsMutation()
+
   // ------------------------------------------
 
   // retrieving data from api calls--------------------------
@@ -119,8 +131,9 @@ const PasswordLogin = ({ navigation, route }) => {
     console.log(username, passwords)
     const user_id = username
     const password = passwords
-    passwordLoginfunc({ user_id, password })
-
+    if(user_id !== "" && password !== "" && isChecked){
+      passwordLoginfunc({ user_id, password })
+    }
   }
 
   //modal close
@@ -133,13 +146,41 @@ const PasswordLogin = ({ navigation, route }) => {
       }, 2000);
   }, [success, openModalWithBorder]);
 
+  useEffect(()=>{
+    fetchTerms();
+  },[])
+
+
+  useEffect(() => {
+    if (getTermsData) {
+      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+    }
+    else if (getTermsError) {
+      console.log("gettermserror", getTermsError)
+    }
+  }, [getTermsData, getTermsError])
+
+
+
   const handleNavigationToRegister = () => {
     // navigation.navigate('BasicInfo',{needsApproval:needsApproval, userType:userType, userId:userId})
 
     // navigation.navigate('RegisterUser',{needsApproval:needsApproval, userType:userType, userId:userId})
-    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId,navigatingFrom:"PasswordLogin" })
+    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId })
 
   }
+
+  const fetchTerms = async () => {
+    const credentials = await Keychain.getGenericPassword();
+    const token = credentials.username;
+    console.log("token",token)
+    const params = {
+      token: token
+    }
+    getTermsAndCondition(params)
+  }
+
+
   const saveUserDetails = (data) => {
 
     try {
@@ -154,6 +195,12 @@ const PasswordLogin = ({ navigation, route }) => {
       console.log("error", e)
     }
   }
+
+  const getCheckBoxData = (data) => {
+    setIsChecked(data)
+    console.log("Checkbox data", data)
+  }
+
   const saveToken = async (data) => {
     const token = data
     const password = '17dec1998'
@@ -161,10 +208,13 @@ const PasswordLogin = ({ navigation, route }) => {
     await Keychain.setGenericPassword(token, password);
   }
 
+
+
   const modalClose = () => {
     setError(false);
     setSuccess(false)
     setMessage('')
+    // navigation.navigate('Dashboard')
 
   };
 
@@ -179,7 +229,7 @@ const PasswordLogin = ({ navigation, route }) => {
       <View style={{ width: '100%', alignItems: "center", justifyContent: "center" }}>
         <View style={{ marginTop: 30, alignItems: 'center', maxWidth: '80%' }}>
           <Icon name="check-circle" size={53} color={ternaryThemeColor} />
-          <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success!"}></PoppinsTextMedium>
 
           <View style={{ marginTop: 10, marginBottom: 30 }}>
             <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
@@ -325,23 +375,32 @@ const PasswordLogin = ({ navigation, route }) => {
           {/* <CustomTextInput sendData={getUserId} title="Username" image={require('../../../assets/images/whiteUser.png')}></CustomTextInput>
             <CustomTextInput sendData={getPassword} title="Password" image={require('../../../assets/images/whitePassword.png')}></CustomTextInput> */}
 
-       
-            <TextInputRectangularWithPlaceholder
-              placeHolder="UserName"
-              handleData={getUserId}
-            // maxLength={10}
-            ></TextInputRectangularWithPlaceholder>
-      
 
-       
-            <TextInputRectangularWithPlaceholder
-              placeHolder="Password"
-              handleData={getPassword}
-            // maxLength={10}
-            ></TextInputRectangularWithPlaceholder>
-         
+          <TextInputRectangularWithPlaceholder
+            placeHolder="UserName"
+            handleData={getUserId}
+          // maxLength={10}
+          ></TextInputRectangularWithPlaceholder>
+
+
+
+          <TextInputRectangularWithPlaceholder
+            placeHolder="Password"
+            handleData={getPassword}
+          // maxLength={10}
+          ></TextInputRectangularWithPlaceholder>
+
 
         </View>
+
+        <View style={{ flexDirection: 'row', marginHorizontal: 24,marginLeft:32, marginBottom:8  }}>
+            <Checkbox CheckBoxData={getCheckBoxData} />
+            <TouchableOpacity onPress={() => {
+              // navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })s
+            }}>
+              <PoppinsTextLeftMedium content={"I agree to the Terms & Conditions"} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
+            </TouchableOpacity>
+          </View>
 
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'center', width: '90%' }}>
           <PoppinsTextMedium style={{ color: "#727272", fontSize: 14 }} content="Not remembering password? "></PoppinsTextMedium>
@@ -351,11 +410,12 @@ const PasswordLogin = ({ navigation, route }) => {
         </View>
 
         <View style={{ width: "100%", flex: 1 }}>
-          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 20 }}>
+          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 'auto' }}>
             <ButtonNavigateArrow
               handleOperation={handleLogin}
               backgroundColor={buttonThemeColor}
               style={{ color: 'white', fontSize: 16 }}
+              isChecked={isChecked}
               content="Login">
             </ButtonNavigateArrow>
           </View>

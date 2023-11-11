@@ -32,6 +32,7 @@ import PrefilledTextInput from '../../components/atoms/input/PrefilledTextInput'
 import { useGetLocationFromPinMutation } from '../../apiServices/location/getLocationFromPincode';
 import PincodeTextInput from '../../components/atoms/input/PincodeTextInput';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegistration';
 
 const BasicInfo = ({navigation,route}) => {
     const [message, setMessage] = useState();
@@ -427,6 +428,7 @@ const handleRegistrationFormSubmission=()=>{
                         placeHolder={item.name}
                         value={mobile}
                         label = {item.label}
+                        required = {item.required}
                         
                         >
                         {' '}
@@ -444,6 +446,7 @@ const handleRegistrationFormSubmission=()=>{
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       value={name}
+                      required = {item.required}
                       label = {item.label}
                       ></PrefilledTextInput>
                     )
@@ -461,6 +464,7 @@ const handleRegistrationFormSubmission=()=>{
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       label = {item.label}
+                      required = {item.required}
                       >
                       {' '}
                     </TextInputAadhar>
@@ -475,6 +479,7 @@ const handleRegistrationFormSubmission=()=>{
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       label = {item.label}
+                      required = {item.required}
                       >
                       {' '}
                     </TextInputPan>
@@ -488,6 +493,7 @@ const handleRegistrationFormSubmission=()=>{
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
+                      required = {item.required}
                       label = {item.label}>
                       {' '}
                     </TextInputGST>
@@ -504,6 +510,7 @@ const handleRegistrationFormSubmission=()=>{
                        placeHolder={item.name}
                        value={location.city}
                        label = {item.label}
+                       required = {item.required}
                        ></PrefilledTextInput>
                      )
                   
@@ -521,6 +528,7 @@ const handleRegistrationFormSubmission=()=>{
                     placeHolder={item.name}
                     value={location.postcode}
                     label = {item.label}
+                    required = {item.required}
                     maxLength={6}
                     ></PincodeTextInput>
                   )
@@ -535,6 +543,7 @@ const handleRegistrationFormSubmission=()=>{
                     placeHolder={item.name}
                     value={location.state}
                     label = {item.label}
+                    required = {item.required}
                     ></PrefilledTextInput>
                   )
                 }
@@ -549,6 +558,7 @@ const handleRegistrationFormSubmission=()=>{
                       placeHolder={item.name}
                       value={location.district}
                       label = {item.label}
+                      required = {item.required}
                       ></PrefilledTextInput>
                     )
                   
@@ -562,6 +572,7 @@ const handleRegistrationFormSubmission=()=>{
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
+                      required = {item.required}
                       label = {item.label}>
                       {' '}
                     </TextInputRectangle>
@@ -575,6 +586,7 @@ const handleRegistrationFormSubmission=()=>{
                     key={index}
                     data={item.name}
                     label = {item.label}
+                    required = {item.required}
                     action="Select File"></ImageInput>
                 );
               } else if (item.type === 'date') {
@@ -583,7 +595,20 @@ const handleRegistrationFormSubmission=()=>{
                     jsonData={item}
                     handleData={handleChildComponentData}
                     data={item.label}
+                    required = {item.required}
                     key={index}></InputDate>
+                );
+              }
+              else if (item.type === "select") {
+                return (
+                  <DropDownRegistration
+                    key={index}
+                    title={item.name}
+                    header={item.label}
+                    jsonData={item}
+                    data={item.options}
+                    handleData={handleChildComponentData}
+                  ></DropDownRegistration>
                 );
               }
             })}

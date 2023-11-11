@@ -99,9 +99,9 @@ const height = Dimensions.get('window').height
           <Image
             style={{height: 140, width: '100%',borderTopRightRadius:20,borderTopLeftRadius:20,resizeMode:'contain'}}
             source={{uri:BaseUrlImages+image}}></Image>
-            <View style={{backgroundColor:'white',width:'100%',height:40,alignItems:'center',justifyContent:'center',position:'absolute',bottom:0,elevation:8,borderBottomRightRadius:20,borderBottomLeftRadius:20}}>
+            <View style={{backgroundColor:'white',width:'100%',minHeight:40,alignItems:'center',justifyContent:'center',position:'absolute',bottom:0,elevation:8,borderBottomRightRadius:20,borderBottomLeftRadius:20}}>
             <PoppinsTextMedium
-          style={{color: 'black', fontSize: 20}}
+          style={{color: 'black', fontSize: 16}}
           content={title}></PoppinsTextMedium>
             </View>
        

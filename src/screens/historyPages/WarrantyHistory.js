@@ -8,6 +8,7 @@ import { useGetWarrantyByAppUserIdMutation } from '../../apiServices/workflow/wa
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import FilterModal from '../../components/modals/FilterModal';
 
 const WarrantyHistory = ({ navigation }) => {
     const ternaryThemeColor = useSelector(
@@ -25,6 +26,8 @@ const WarrantyHistory = ({ navigation }) => {
     ] = useGetWarrantyByAppUserIdMutation()
 
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+  const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
+
 
 
 
@@ -53,17 +56,91 @@ const WarrantyHistory = ({ navigation }) => {
     }, [getWarrantylistData, getWarrantylistError])
 
     const Header = () => {
+        const [openBottomModal, setOpenBottomModal] = useState(false)
+        const [message, setMessage] = useState()
+        const modalClose = () => {
+            setOpenBottomModal(false);
+        };
+  
+        const onFilter =(data,type) =>{
+            console.log("submitted",data,type)
+            
+            if(type==="start")
+            {
+              startDate = data
+            }
+            if(type==="end")
+            {
+              endDate =data
+            }
+          }
+  
+        const ModalContent = (props) => {
+            const [startDate, setStartDate] = useState("")
+            const [openBottomModal, setOpenBottomModal] = useState(false)
+            const [endDate, setEndDate] = useState("")
+  
+            
+            
+  
+  
+            const handleStartDate = (startdate) => {
+                // console.log("start date", startdate)
+                setStartDate(startdate?.value)
+                props.handleFilter(startdate?.value, "start")
+            }
+  
+            const handleEndDate = (enddate) => {
+                // console.log("end date", enddate?.value)
+                setEndDate(enddate?.value)
+                props.handleFilter(enddate?.value, "end")
+            }
+            return (
+                <View style={{ height: 320, backgroundColor: 'white', width: '100%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
+  
+                    {openBottomModal && <FilterModal
+                        modalClose={modalClose}
+                        message={message}
+                        openModal={openBottomModal}
+                        handleFilter={onFilter}
+                        comp={ModalContent}></FilterModal>}
+  
+                    <PoppinsTextMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, marginLeft: '35%', fontWeight: 'bold' }}></PoppinsTextMedium>
+                    <View>
+                        <InputDate data="Start Date" handleData={handleStartDate} />
+  
+                    </View>
+                    <View>
+                        <InputDate data="End Date" handleData={handleEndDate} />
+                    </View>
+                    <TouchableOpacity onPress={() => { fetchDataAccToFilter() }} style={{ backgroundColor: ternaryThemeColor, marginHorizontal: 50, height: 40, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: 10 }}>
+                        <PoppinsTextMedium content="SUBMIT" style={{ color: 'white', fontSize: 20, borderRadius: 10, }}></PoppinsTextMedium>
+                    </TouchableOpacity>
+  
+                </View>
+            )
+        }
+  
         return (
-            <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", justifyContent: "center", flexDirection: "row", marginTop: 20 }}>
-                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10 }} content="Warranty Ladger"></PoppinsTextMedium>
-                <TouchableOpacity style={{ position: "absolute", right: 20 }}>
+            <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", flexDirection: "row", marginTop: 20 }}>
+  
+                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10 }} content="Redeemed Ladger"></PoppinsTextMedium>
+  
+                <TouchableOpacity onPress={() => { setOpenBottomModal(!openBottomModal), setMessage("BOTTOM MODAL") }} style={{ position: "absolute", right: 20 }}>
                     <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>
-
                 </TouchableOpacity>
+  
+                {openBottomModal && <FilterModal
+                    modalClose={modalClose}
+                    message={message}
+                    openModal={openBottomModal}
+                    handleFilter={onFilter}
+                    comp={ModalContent}></FilterModal>}
+  
             </View>
         )
     }
-
+  
 
     const DisplayEarnings = () => {
         var activated = 0
@@ -127,7 +204,7 @@ const WarrantyHistory = ({ navigation }) => {
                     </View>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('WarrantyDetails', { data: props.data })
-                    }} style={{ backgroundColor: '#3B6CE9', height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", padding: 10, flexDirection: 'row', marginLeft: 30 }}>
+                    }} style={{ backgroundColor: '#3B6CE9', height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center", padding: 10, flexDirection: 'row', marginLeft: 30 }}>
                         <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/eye.png')}></Image>
                         <PoppinsTextMedium style={{ marginLeft: 4, color: "white", fontWeight: "700", fontSize: 12 }} content="View Details"></PoppinsTextMedium>
                         <View style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: "white", alignItems: "center", justifyContent: "center", marginLeft: 4 }}>
@@ -156,12 +233,23 @@ const WarrantyHistory = ({ navigation }) => {
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
 
-            
-      {
-        getWarrantylistIsLoading && <FastImage
+            {
+        getWarrantylistData && getWarrantylistData.length == 0 && <FastImage
           style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
           source={{
             uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      }
+
+            
+      {
+        getWarrantylistData && getWarrantylistData.length == 0 &&<FastImage
+          style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
+          source={{
+            uri: noData, // Update the path to your GIF
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.contain}
@@ -181,6 +269,8 @@ const WarrantyHistory = ({ navigation }) => {
                 }}
                 keyExtractor={item => item.id}
             />}
+
+            
 
             
 

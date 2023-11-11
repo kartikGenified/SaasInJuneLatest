@@ -1,6 +1,5 @@
-//import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, Linking, ToastAndroid } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import { useSelector } from 'react-redux';
@@ -12,9 +11,19 @@ const height = Dimensions.get('window').height
 const GenunityDetails = ({ navigation, route }) => {
     const productData = route.params?.productData
 
-    console.log("product data gdetails", productData.products?.[0]?.images[0])
+    // console.log("product data gdetails", productData.products?.[0]?.images[0]);
 
-    const uriImage = BaseUrlImages + productData.products?.[0]?.images[0];
+    const uriImage = BaseUrlImages + productData.products?.[0]?.images?.[0];
+    // console.log("uriImage",uriImage)
+    const website = "";
+
+    const productVideo = "";
+
+    const facebook = "";
+    const twitter = "";
+    const insta = "";
+    const youtube = "";
+
 
 
     const ternaryThemeColor = useSelector(
@@ -22,6 +31,11 @@ const GenunityDetails = ({ navigation, route }) => {
     )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
+
+
+        const showToast = () => {
+            ToastAndroid.show(`Video Not Available : ${productData.products?.[0]?.product_id}`, ToastAndroid.LONG);
+          };
 
 
 
@@ -101,10 +115,16 @@ const GenunityDetails = ({ navigation, route }) => {
                             <View style={styles.card}>
                                 {/* Image in the center */}
                                 <View style={styles.centeredImage}>
-                                    <Image
-                                        source={{ uri: uriImage }} // Replace with your image source
-                                        style={styles.centeredImage}
-                                    />
+                                    {
+                                    productData.products?.[0]?.images?.[0]!==undefined ? 
+                                      <Image
+                                      source={{ uri: uriImage }} // Replace with your image source
+                                      style={styles.centeredImage}
+                                  />
+                                  :
+                                  <Text style={{color:"black", alignSelf:'center',fontWeight:'800'}}>NO IMAGE</Text>
+                                    }
+                                  
                                 </View>
 
                                 {/* Image at the top-right corner */}
@@ -119,8 +139,8 @@ const GenunityDetails = ({ navigation, route }) => {
 
                             {/* Product Details */}
                             <View style={{ marginTop: 20, marginLeft: 16 }}>
-                                <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '600', }} content={`Product Name : ${productData.products?.[0]?.name}`}></PoppinsTextLeftMedium>
-                                <PoppinsTextLeftMedium style={{ color: '#353535', fontSize: 12, fontWeight: '600', marginTop: 5 }} content={`Code : ${productData.products?.[0]?.product_code}`}></PoppinsTextLeftMedium>
+                                <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800', }} content={`Product Name : ${productData.products?.[0]?.name}`}></PoppinsTextLeftMedium>
+                                <PoppinsTextLeftMedium style={{ color: '#353535', fontSize: 14, fontWeight: '600', marginTop: 5 }} content={`Code : ${productData.products?.[0]?.product_code}`}></PoppinsTextLeftMedium>
                                 <PoppinsTextLeftMedium style={{ color: '#353535', fontSize: 12, fontWeight: '600', marginTop: 10 }} content={`${productData.products?.[0]?.description}`}></PoppinsTextLeftMedium>
 
                             </View>
@@ -137,23 +157,27 @@ const GenunityDetails = ({ navigation, route }) => {
                                 overflow: 'hidden', // Clip contents to the card's boundaries
                                 padding: 10, // Adjust padding as needed
                             }}>
-                                <TouchableOpacity>
+                                {/* <TouchableOpacity>
                                     <Image
                                         source={require('../../../assets/images/brochure.png')} // Replace with your image source
                                         style={styles.middleLogo}
                                     />
                                     <PoppinsTextMedium style={{ color: '#353535', fontSize: 12, fontWeight: '800', marginTop: 5 }} content={`BROCHURE`}></PoppinsTextMedium>
 
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={()=>{
+                                   productData.products?.[0]?.video ? Linking.openURL(productData.products?.[0]?.video) : showToast()
+                                }}>
                                     <Image
                                         source={require('../../../assets/images/productVideo.png')} // Replace with your image source
                                         style={styles.middleLogo}
                                     />
-                                    <PoppinsTextMedium style={{ color: '#353535', fontSize: 12, fontWeight: '800', marginTop: 5 }} content={`PRODUCT VIDEO`}></PoppinsTextMedium>
+                                    <PoppinsTextMedium style={{ color: '#353535', fontSize: 12, fontWeight: '800', marginTop: 5, marginLeft:-5 }} content={`PRODUCT VIDEO`}></PoppinsTextMedium>
 
                                 </TouchableOpacity>
+
+                                
 
                                 <TouchableOpacity>
                                     <Image

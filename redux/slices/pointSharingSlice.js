@@ -4,7 +4,8 @@ import { act } from 'react-test-renderer'
 const initialState={
 pointSharing:{},
 percentagePoints:0,
-shouldSharePoints:false
+shouldSharePoints:false,
+
 }
 
 export const pointSharingSlice = createSlice({

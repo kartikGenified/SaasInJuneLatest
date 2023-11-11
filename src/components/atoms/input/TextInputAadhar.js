@@ -9,6 +9,7 @@ const TextInputAadhar = (props) => {
     const [otp, setOtp] = useState()
     const [modalVisible, setModalVisible] = useState(false);
     const placeHolder = props.placeHolder
+    const required = props.required
   const label = props.label
     const [sendAadharOtpFunc,{
         data:sendAadharOtpData,
@@ -125,14 +126,14 @@ const TextInputAadhar = (props) => {
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
                 <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = {label}></PoppinsTextMedium>
             </View>
-            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={`${placeHolder} *`}></TextInput>
+            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ?  `${placeHolder} *` : `${placeHolder}`}></TextInput>
         </View>
        {sendAadharOtpData  && <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
         
         <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
             <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = "OTP"></PoppinsTextMedium>
         </View>
-        <TextInput maxLength={6}  style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{setOtp(text)}} value={otp} placeholder={`OTP`}></TextInput>
+        <TextInput maxLength={6} keyboardType='numeric'  style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{setOtp(text)}} value={otp} placeholder={`One time password *`}></TextInput>
     </View>}
         </View>
         

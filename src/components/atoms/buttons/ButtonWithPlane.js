@@ -10,7 +10,7 @@ const ButtonWithPlane = (props) => {
     const title = props.title
     const type = props.type
     const params = props.params
-    
+    console.log("------------->", props)
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
     )

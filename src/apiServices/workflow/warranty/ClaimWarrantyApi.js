@@ -6,7 +6,7 @@ export const ClaimWarrantyApi = baseApi.injectEndpoints({
         query: (params) => {
           return {
             method: "POST",
-            url: `/app/warrantyclaim/add`,
+            url: `/api/app/warrantyclaim/add`,
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + params.token,
@@ -21,7 +21,7 @@ export const ClaimWarrantyApi = baseApi.injectEndpoints({
         query: (params) => {
           return {
             method: "GET",
-            url: `/app/warrantyclaim/${params.id}`,
+            url: `/api/app/warrantyclaim/${params.id}`,
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + params.token,

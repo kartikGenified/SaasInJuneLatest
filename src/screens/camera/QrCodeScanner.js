@@ -28,6 +28,9 @@ import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/Acti
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
 import {setProductData} from '../../../redux/slices/getProductSlice';
 import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
+import { useAddRegistrationBonusMutation } from '../../apiServices/pointSharing/pointSharingApi';
+import { slug } from '../../utils/Slug';
+import MessageModal from '../../components/modals/MessageModal';
 
 
 const QrCodeScanner = ({navigation}) => {
@@ -41,6 +44,7 @@ const QrCodeScanner = ({navigation}) => {
   const [savedToken, setSavedToken] = useState();
   const [productId, setProductId] = useState();
   const [qr_id, setQr_id] = useState();
+  const [registrationBonus, setRegistrationBonus] = useState()
   const userId = useSelector(state => state.appusersdata.userId);
   const userData = useSelector(state=>state.appusersdata.userData)
   const userType = useSelector(state => state.appusersdata.userType);
@@ -48,6 +52,7 @@ const QrCodeScanner = ({navigation}) => {
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state=>state.userLocation.location)
   const shouldSharePoints = useSelector(state=>state.pointSharing.shouldSharePoints)
+  const appUserData = useSelector(state=>state.appusers.value)
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram);
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
@@ -98,6 +103,16 @@ const QrCodeScanner = ({navigation}) => {
       isError: productDataIsError,
     },
   ] = useGetProductDataMutation();
+  
+  const [
+    addRegistrationBonusFunc,
+    {
+      data: addRegistrationBonusData,
+      isLoading: addRegistrationBonusIsLoading,
+      error: addRegistrationBonusError ,
+      isError: addRegistrationBonusIsError,
+    },
+  ] = useAddRegistrationBonusMutation();
 
   const [
     fetchAllQrScanedList,
@@ -115,6 +130,18 @@ const QrCodeScanner = ({navigation}) => {
   const platformMargin = Platform.OS === 'ios' ? -60 : -160;
   const toDate = undefined
   var fromDate = undefined
+
+  useEffect(()=>{
+    console.log("appUserData",appUserData)
+    for(var i = 0;i<appUserData.length;i++)
+    {
+      if(appUserData[i].name === userType)
+      {
+        setRegistrationBonus(appUserData[i].registration_bonus)
+      }
+    }
+  },[appUserData])
+
   useEffect(() => {
 
     (async () => {
@@ -140,12 +167,60 @@ const QrCodeScanner = ({navigation}) => {
      
     })();
   }, [addQrData]);
-  const checkFirstScan=(data)=>{
+  const checkFirstScan=async(data)=>{
     if(data.length===1)
     {
-      alert("This is your first scan")
+    const credentials = await Keychain.getGenericPassword();
+  if (credentials) {
+    console.log(
+      'Credentials successfully loaded for user ' + credentials.username
+    );
+    console.log("third scan")
+    const token = credentials.username
+    const body = {
+      tenant_id:slug,
+      token: token,
+      data: {
+              point_earned_through_type: "registration_bonus",
+              points: registrationBonus,
+              platform_id: Number(platform),
+              pincode: location.postcode===undefined ? "N/A" :location.postcode,
+              platform: 'mobile',
+              state: location.state===undefined ? "N/A" :location.state,
+              district: location.district===undefined ? "N/A" : location.district,
+              city: location.city===undefined ? "N/A" :location.city,
+              area: location.district===undefined ? "N/A" :location.district,
+              known_name: location.city===undefined ? "N/A" :location.city,
+              lat: location.lat===undefined ? "N/A" :(String(location.lat)).substring(0,10),
+              log: location.lon===undefined ? "N/A" :(String(location.lon)).substring(0,10),
+              method_id: "1",
+              method: "registration bonus",
+      },
+      
+    }
+    console.log("Registration Bouns",body)
+      addRegistrationBonusFunc(body)
     }
   }
+  else{
+    console.log("data length is greater than two")
+  }
+}
+
+
+  useEffect(() => {
+    if (addRegistrationBonusData) {
+      console.log("addRegistrationBonusData", addRegistrationBonusData)
+      if(addRegistrationBonusData.success)
+      {
+        setSuccess(true)
+        setMessage(addRegistrationBonusData.message)
+      }
+    }
+    else if (addRegistrationBonusError) {
+      console.log("addRegistrationBonusError", addRegistrationBonusError)
+    }
+  }, [addRegistrationBonusData, addRegistrationBonusError])
 
   useEffect(() => {
     if (fetchAllQrScanedListData) {
@@ -178,7 +253,7 @@ const QrCodeScanner = ({navigation}) => {
     const form_type = '2';
     const token =savedToken
     const body = {product_id: productDataData.body.products[0].product_id, qr_id: qr_id};
-      console.log('Product Data is ',  productDataData.body.products[0].product_id);
+      console.log('Product Data is ',  productDataData.body);
       console.log("productdata", token,body)
       dispatch(setProductData(productDataData.body.products[0]));
       setProductId(productDataData.body.product_id);
@@ -186,12 +261,13 @@ const QrCodeScanner = ({navigation}) => {
       checkWarrantyFunc({form_type, token, body})
 
     } else if (productDataError) {
-      console.log('Error', productDataError);
+      console.log('pr Error', productDataError);
     }
   }, [productDataData, productDataError]);
 
   const modalClose = () => {
     setError(false);
+    setSuccess(false)
   };
 
   // function called on successfull scan --------------------------------------
@@ -623,13 +699,23 @@ const QrCodeScanner = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          {error && (
+          {error && verifyQrData && (
             <ErrorModal
               modalClose={modalClose}
+              productData = {verifyQrData.body}
               message={message}
+              isReportable = {true}
               openModal={error}></ErrorModal>
           )}
-
+  {
+    success && (
+      <MessageModal
+              modalClose={modalClose}
+              title="Success"
+              message={message}
+              openModal={success}></MessageModal>
+    )
+  }
           {addedQrList.length === 0 ? (
             <View
               style={{

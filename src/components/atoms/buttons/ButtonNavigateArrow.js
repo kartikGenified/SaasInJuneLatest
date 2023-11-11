@@ -8,6 +8,7 @@ const ButtonNavigateArrow = props => {
   const backgroundColor = props.backgroundColor;
   // prop to manipulate background color of button
   const style = props.style;
+  const isChecked = props.isChecked;
   
   // prop to navigate to another page
   const content = props.content;
@@ -32,7 +33,7 @@ const ButtonNavigateArrow = props => {
         borderRadius: 4,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: backgroundColor,
+        backgroundColor: isChecked ? backgroundColor : "#808080",
         margin: 10,
         paddingLeft: 20,
         paddingRight: 20,

@@ -7,6 +7,7 @@ const TextInputRectangularWithPlaceholder = (props) => {
     console.log("value",props.value)
     const placeHolder = props.placeHolder
     const maxLength = props.maxLength
+    const required = props.required
     useEffect(()=>{
         setValue(props.value)
         
@@ -31,7 +32,7 @@ const TextInputRectangularWithPlaceholder = (props) => {
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
                 <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = {placeHolder}></PoppinsTextMedium>
             </View>
-            <TextInput keyboardType={keyboardType} maxLength={maxLength} onEndEditing={()=>{handleInputEnd(value)}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:32,letterSpacing:1,fontSize:16,color:'black'}} placeholderTextColor="#DDDDDD" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={placeHolder}></TextInput>
+            <TextInput keyboardType={keyboardType} maxLength={maxLength} onEndEditing={()=>{handleInputEnd(value)}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:32,letterSpacing:1,fontSize:16,color:'black'}} placeholderTextColor="#DDDDDD" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ? `${placeHolder} *` : `${placeHolder}`}></TextInput>
         </View>
     );
 }

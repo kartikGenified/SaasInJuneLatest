@@ -1,4 +1,4 @@
-import React, { useEffect, useId } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
@@ -7,6 +7,8 @@ import * as Keychain from 'react-native-keychain';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import FilterModal from '../../components/modals/FilterModal';
 const PointHistory = ({ navigation }) => {
     const points = 100
     const [userPointFunc, {
@@ -26,6 +28,8 @@ const PointHistory = ({ navigation }) => {
 
 
     const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+    const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
+
 
 
     useEffect(() => {
@@ -54,6 +58,7 @@ const PointHistory = ({ navigation }) => {
         }
 
     }, [userPointData, userPointError])
+
     useEffect(() => {
         if (fetchUserPointsHistoryData) {
             console.log("fetchUserPointsHistoryData", fetchUserPointsHistoryData.body)
@@ -63,6 +68,91 @@ const PointHistory = ({ navigation }) => {
         }
 
     }, [fetchUserPointsHistoryData, fetchUserPointsHistoryError])
+
+    //header
+    const Header = () => {
+        const [openBottomModal, setOpenBottomModal] = useState(false)
+        const [message, setMessage] = useState()
+        const modalClose = () => {
+            setOpenBottomModal(false);
+        };
+
+        const onFilter = (data, type) => {
+            console.log("submitted", data, type)
+
+            if (type === "start") {
+                startDate = data
+            }
+            if (type === "end") {
+                endDate = data
+            }
+        }
+
+        const ModalContent = (props) => {
+            const [startDate, setStartDate] = useState("")
+            const [openBottomModal, setOpenBottomModal] = useState(false)
+            const [endDate, setEndDate] = useState("")
+
+
+
+
+
+            const handleStartDate = (startdate) => {
+                // console.log("start date", startdate)
+                setStartDate(startdate?.value)
+                props.handleFilter(startdate?.value, "start")
+            }
+
+            const handleEndDate = (enddate) => {
+                // console.log("end date", enddate?.value)
+                setEndDate(enddate?.value)
+                props.handleFilter(enddate?.value, "end")
+            }
+            return (
+                <View style={{ height: 320, backgroundColor: 'white', width: '100%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
+
+                    {openBottomModal && <FilterModal
+                        modalClose={modalClose}
+                        message={message}
+                        openModal={openBottomModal}
+                        handleFilter={onFilter}
+                        comp={ModalContent}></FilterModal>}
+
+                    <PoppinsTextLeftMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, marginLeft: '35%', fontWeight: 'bold' }}></PoppinsTextLeftMedium>
+                    <View>
+                        <InputDate data="Start Date" handleData={handleStartDate} />
+
+                    </View>
+                    <View>
+                        <InputDate data="End Date" handleData={handleEndDate} />
+                    </View>
+                    <TouchableOpacity onPress={() => { fetchDataAccToFilter() }} style={{ backgroundColor: ternaryThemeColor, marginHorizontal: 50, height: 40, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: 10 }}>
+                        <PoppinsTextMedium content="SUBMIT" style={{ color: 'white', fontSize: 20, borderRadius: 10, }}></PoppinsTextMedium>
+                    </TouchableOpacity>
+
+                </View>
+            )
+        }
+
+        return (
+            <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", flexDirection: "row", marginTop: 20 }}>
+
+                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10 }} content="Redeemed Ladger"></PoppinsTextMedium>
+
+                <TouchableOpacity onPress={() => { setOpenBottomModal(!openBottomModal), setMessage("BOTTOM MODAL") }} style={{ position: "absolute", right: 20 }}>
+                    <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>
+                </TouchableOpacity>
+
+                {openBottomModal && <FilterModal
+                    modalClose={modalClose}
+                    message={message}
+                    openModal={openBottomModal}
+                    handleFilter={onFilter}
+                    comp={ModalContent}></FilterModal>}
+
+            </View>
+        )
+    }
 
     const DisplayEarnings = () => {
         return (
@@ -82,23 +172,15 @@ const PointHistory = ({ navigation }) => {
         )
     }
 
-    const Header = () => {
-        return (
-            <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", justifyContent: "center", flexDirection: "row", marginTop: 20 }}>
-                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10, color: 'black' }} content="Redeemed Ladger"></PoppinsTextMedium>
-                <TouchableOpacity style={{ position: "absolute", right: 20 }}>
-                    <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>
 
-                </TouchableOpacity>
-            </View>
-        )
-    }
 
     const ListItem = (props) => {
         const description = props.description
         const productCode = props.productCode
         const time = props.time
         const amount = props.amount
+        const status = props.status
+        console.log("point props", props)
         return (
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 8, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10 }}>
                 <View style={{ height: 60, width: 60, alignItems: "center", justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: '#DDDDDD' }}>
@@ -111,13 +193,13 @@ const PointHistory = ({ navigation }) => {
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 20 }}>
                     <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/wallet.png')}></Image>
-                    <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={` + ${amount}`}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={`${status == "1" ? " +" : status == "2" ? ' -' : ""} ${amount}`}></PoppinsTextMedium>
                 </View>
             </View>
         )
     }
     return (
-        <View style={{ alignItems: 'center', justifyContent: "center" }}>
+        <View style={{ alignItems: 'center', justifyContent: "center", backgroundColor: 'white' }}>
             <View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
                 <TouchableOpacity onPress={() => {
                     navigation.goBack()
@@ -132,9 +214,9 @@ const PointHistory = ({ navigation }) => {
             </View>
             <View style={{ padding: 14, alignItems: "center", justifyContent: "flex-start", width: "100%", flexDirection: "row" }}>
                 <View style={{ width: 100 }}>
-                    <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="You Have"></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E', }} content="You Have"></PoppinsTextMedium>
                     {userPointData &&
-                        <PoppinsText style={{ marginLeft: 14, fontSize: 34, fontWeight: '600', color: '#373737',width:100 }} content={userPointData.body.point_balance}></PoppinsText>
+                        <PoppinsText style={{ marginLeft: 14, fontSize: 34, fontWeight: '600', color: '#373737', width: 100, width: 150 }} content={userPointData.body.point_balance}></PoppinsText>
 
                     }
                     <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Points"></PoppinsTextMedium>
@@ -143,34 +225,30 @@ const PointHistory = ({ navigation }) => {
             </View>
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
-            {fetchUserPointsHistoryData && <FlatList
-                data={fetchUserPointsHistoryData.body.data}
-                contentContainerStyle={{ paddingBottom: 200 }}
-                renderItem={({ item, index }) => {
-                    // console.log(index+1,item)
-                    return (
-                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:mm a')} />
-                    )
-                }}
-                keyExtractor={item => item.id}
-            />}
-
-
-
             {
-                fetchUserPointsHistoryLoading &&
+               fetchUserPointsHistoryData && fetchUserPointsHistoryData.body.data.length == 0 &&
                 <FastImage
-                    style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+                    style={{ width: 180, height: 180, alignSelf: 'center', marginTop: '30%' }}
                     source={{
-                        uri: gifUri, // Update the path to your GIF
+                        uri: noData, // Update the path to your GIF
                         priority: FastImage.priority.normal,
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                 />
             }
-
-
-
+            {console.log("fetch fetch", fetchUserPointsHistoryData)}
+            {fetchUserPointsHistoryData && <FlatList
+                data={fetchUserPointsHistoryData.body.data}
+                contentContainerStyle={{ paddingBottom: 200 }}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item, index }) => {
+                    console.log(index + 1, item)
+                    return (
+                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format('HH:MM')} />
+                    )
+                }}
+                keyExtractor={item => item.id}
+            />}
         </View>
     );
 }

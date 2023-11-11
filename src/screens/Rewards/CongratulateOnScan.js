@@ -39,14 +39,15 @@ const CongratulateOnScan = ({navigation, route}) => {
   const qrData = useSelector(state => state.qrData.qrData);
   // product data recieved from scanned product
   const productData = useSelector(state => state.productData.productData);
+  const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
 
   const userData = useSelector(state => state.appusersdata.userData);
-  console.log("userData",`${userData.user_type}_points`);
+  console.log("userData",`${userData.user_type}_points`,pointSharingData);
   const pointPercentage = useSelector(state=>state.pointSharing.percentagePoints)
   const shouldSharePoints = useSelector(state=>state.pointSharing.shouldSharePoints)
   // getting location from redux state
   const location = useSelector(state => state.userLocation.location);
- 
+ console.log("shouldSharePoints",shouldSharePoints,productData)
   console.log("location",location)
   // console.log('Location', location, userData, productData, qrData);
   const height = Dimensions.get('window').height;
@@ -150,8 +151,13 @@ const CongratulateOnScan = ({navigation, route}) => {
           token: token,
           qr_code: qrData.id,
         };
+
         console.log("shouldSharePoints",shouldSharePoints)
-        if(shouldSharePoints)
+        if(pointSharingData.flat_points)
+        {
+          const points = (Number(productData[`${userData.user_type}_points`])*(Number(pointPercentage)/100)) 
+          console.log(points)
+          if(shouldSharePoints)
         {
           const body = {
             data: {
@@ -172,8 +178,9 @@ const CongratulateOnScan = ({navigation, route}) => {
               log: location.lon===undefined ? "N/A" :String(location.lon),
               method_id: 1,
               method: "point on product",
-              points: (Number(productData[`${userData.user_type}_points`])*(Number(pointPercentage)/100)),
+              points: points,
               type: 'point_sharing',
+              point_earned_through_type : "points_sharing",
             },
             qrId: Number(qrData.id),
             tenant_id: slug,
@@ -181,6 +188,52 @@ const CongratulateOnScan = ({navigation, route}) => {
           };
           extraPointEntryFunc(body)
         }
+        else if(!shouldSharePoints)
+        {
+          alert("Points can't be shared for this tenant")
+        }
+        }
+        else if(!pointSharingData.flat_points)
+        {
+          const points = (Number(productData.mrp)*(Number(pointSharingData.percentage_points_value)/100)) 
+          console.log(points)
+          if(shouldSharePoints)
+        {
+          const body = {
+            data: {
+              // app_user_id: userData.id.toString(),
+              // user_type_id: userData.user_type_id,
+              // user_type: userData.user_type,
+              product_id: productData.product_id,
+              product_code: productData.product_code,
+              platform_id: Number(platform),
+              pincode: location.postcode===undefined ? "N/A" :location.postcode,
+              platform: 'mobile',
+              state: location.state===undefined ? "N/A" :location.state,
+              district: location.district===undefined ? "N/A" : location.district,
+              city: location.city===undefined ? "N/A" :location.city,
+              area: location.district===undefined ? "N/A" :location.district,
+              known_name: location.city===undefined ? "N/A" :location.city,
+              lat: location.lat===undefined ? "N/A" :String(location.lat),
+              log: location.lon===undefined ? "N/A" :String(location.lon),
+              method_id: 1,
+              method: "point on product",
+              points: points,
+              type: 'point_sharing',
+              point_earned_through_type : "points_sharing",
+            },
+            qrId: Number(qrData.id),
+            tenant_id: slug,
+            token: token,
+          };
+          extraPointEntryFunc(body)
+        }
+        else if(!shouldSharePoints)
+        {
+          alert("Points can't be shared for this tenant")
+        }
+        }
+        
        
         checkUserPointFunc(params);
       } else if (rewardType === 'Wheel') {

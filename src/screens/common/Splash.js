@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
@@ -9,11 +8,17 @@ import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../
 import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
+
+  const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+
+
 
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozonegif.gif')).uri;
   // generating functions and constants for API use cases---------------------
@@ -26,6 +31,10 @@ const Splash = ({ navigation }) => {
       isError: getAppThemeIsError,
     }
   ] = useGetAppThemeDataMutation();
+
+  useEffect(()=>{
+    getData();
+  },[])
 
   // calling API to fetch themes for the app
   useEffect(() => {
@@ -62,14 +71,27 @@ const Splash = ({ navigation }) => {
           dispatch(setIsOnlineVeriification())
         }
       }
+      console.log("isAlreadyIntro", isAlreadyIntroduced)
+      if(isAlreadyIntroduced == "Yes"){
+        // if(isLoggedIn == "Yes"){
+        //   navigation.navigate('Dashboard');
+          
+        // }
+        // else{
       
-      setTimeout(() => {
+        // }
+
+            setTimeout(()=>{
+            navigation.navigate('SelectUser');
+          }, 2000)
+  
+      }
+      else{
+        setTimeout(() => {
           navigation.navigate('Introduction')
       }, 2000);
 
-
-
-
+      }
     }
     else {
       getAppTheme("oopl")
@@ -77,8 +99,28 @@ const Splash = ({ navigation }) => {
       console.log("getAppThemeIsError", getAppThemeIsError)
       console.log("getAppThemeError", getAppThemeError)
     }
-  }, [getAppThemeData, getAppThemeError])
+  }, [getAppThemeData, getAppThemeError, isAlreadyIntroduced])
 
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('isAlreadyIntroduced');
+      const isLoggedValue = await AsyncStorage.getItem("isAlreadyVerifiedOTP");
+      if (value !== null) {
+        // value previously stored
+        console.log("asynch value",value)
+        setIsAlreadyIntroduced(value);
+
+        if(isLoggedValue!==null){
+          setIsLoggedIn(isLoggedValue);
+        }
+
+      }
+    } catch (e) {
+      console.log("error",e)
+      // error reading value
+    }
+  };
 
 
   return (
@@ -109,5 +151,3 @@ const Splash = ({ navigation }) => {
 const styles = StyleSheet.create({})
 
 export default Splash;
-
-

@@ -11,10 +11,15 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import moment from 'moment';
 import BottomModal from '../../components/modals/BottomModal';
 import FastImage from 'react-native-fast-image';
+import InputDate from '../../components/atoms/input/InputDate';
+import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import FilterModal from '../../components/modals/FilterModal';
 
 const ScannedHistory = ({ navigation }) => {
   const [distinctDateArr, setDistinctDateArr] = useState()
   const [scannedListData, setScannedListData] = useState([])
+
+
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
   const [
@@ -37,6 +42,9 @@ const ScannedHistory = ({ navigation }) => {
   const qrData = useSelector(state => state.qrData.qrData)
   const userId = useSelector(state => state.appusersdata.userId);
   const id = useSelector(state => state.appusersdata.id);
+
+  const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
+
 
   const userData = useSelector(state => state.appusersdata.userData)
   useEffect(() => {
@@ -77,7 +85,6 @@ const ScannedHistory = ({ navigation }) => {
     })();
   }, []);
 
-
   useEffect(() => {
     if (fetchAllQrScanedListData) {
       console.log("fetchAllQrScanedListData", fetchAllQrScanedListData.body.data)
@@ -100,6 +107,12 @@ const ScannedHistory = ({ navigation }) => {
     userPointFunc(params)
 
   }
+
+  const ternaryThemeColor = useSelector(
+    state => state.apptheme.ternaryThemeColor,
+  )
+    ? useSelector(state => state.apptheme.ternaryThemeColor)
+    : 'grey';
 
   const fetchDates = (data) => {
     const dateArr = []
@@ -127,6 +140,21 @@ const ScannedHistory = ({ navigation }) => {
     console.log("tempArr", JSON.stringify(tempArr))
   }
   var count = 0
+  let startDate, endDate;
+
+
+
+  const onFilter = (data, type) => {
+    console.log("submitted", data, type)
+
+    if (type === "start") {
+      startDate = data
+    }
+    if (type === "end") {
+      endDate = data
+    }
+  }
+
 
 
   const DisplayEarnings = () => {
@@ -167,23 +195,55 @@ const ScannedHistory = ({ navigation }) => {
     const modalClose = () => {
       setOpenBottomModal(false);
     };
-    const ModalContent = () => {
+
+    const ModalContent = (props) => {
+      const [startDate, setStartDate] = useState("")
+      const [endDate, setEndDate] = useState("")
+
+
+      const handleStartDate = (startdate) => {
+        // console.log("start date", startdate)
+        setStartDate(startdate?.value)
+        props.handleFilter(startdate?.value, "start")
+      }
+
+      const handleEndDate = (enddate) => {
+        // console.log("end date", enddate?.value)
+        setEndDate(enddate?.value)
+        props.handleFilter(enddate?.value, "end")
+      }
       return (
-        <View style={{ alignItems: "center", justifyContent: 'center', height: 100, width: 200, backgroundColor: 'red', margin: 20 }}></View>
+        <View style={{ height: 320, backgroundColor: 'white', width: '100%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
+          <PoppinsTextLeftMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, marginLeft: '35%', fontWeight: 'bold' }}></PoppinsTextLeftMedium>
+          <View>
+            <InputDate data="Start Date" handleData={handleStartDate} />
+
+          </View>
+          <View>
+            <InputDate data="End Date" handleData={handleEndDate} />
+          </View>
+          <TouchableOpacity onPress={() => { fetchDataAccToFilter() }} style={{ backgroundColor: ternaryThemeColor, marginHorizontal: 50, height: 40, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: 10 }}>
+            <PoppinsTextMedium content="SUBMIT" style={{ color: 'white', fontSize: 20, borderRadius: 10, }}></PoppinsTextMedium>
+          </TouchableOpacity>
+
+        </View>
       )
     }
+
     return (
-      <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", justifyContent: "center", flexDirection: "row", marginTop: 20 }}>
-        {openBottomModal && <BottomModal
+      <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", flexDirection: "row", marginTop: 20 }}>
+
+        {openBottomModal && <FilterModal
           modalClose={modalClose}
           message={message}
           openModal={openBottomModal}
-          comp={ModalContent}></BottomModal>}
+          handleFilter={onFilter}
+          comp={ModalContent}></FilterModal>}
+
         <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10 }} content="Redeemed Ladger"></PoppinsTextMedium>
 
         <TouchableOpacity onPress={() => { setOpenBottomModal(!openBottomModal), setMessage("BOTTOM MODAL") }} style={{ position: "absolute", right: 20 }}>
           <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>
-
         </TouchableOpacity>
       </View>
     )
@@ -205,16 +265,20 @@ const ScannedHistory = ({ navigation }) => {
         </View>
         <View style={{ alignItems: "flex-start", justifyContent: "center", marginLeft: 10, width: 200 }}>
           <PoppinsTextMedium style={{ fontWeight: '600', fontSize: 14, textAlign: 'auto', color: 'black' }} content={description}></PoppinsTextMedium>
-          <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12 }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", color: 'black' }}>
             <Image style={{ height: 14, width: 14, resizeMode: "contain" }} source={require('..s/../../assets/images/clock.png')}></Image>
             <PoppinsTextMedium style={{ fontWeight: '200', fontSize: 12, marginLeft: 4, color: 'black' }} content={time}></PoppinsTextMedium>
           </View>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}>
-          <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/wallet.png')}></Image>
-          <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={` + ${amount}`}></PoppinsTextMedium>
-        </View>
+        {amount ?
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}>
+            <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/wallet.png')}></Image>
+            <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={` + ${amount}`}></PoppinsTextMedium>
+          </View> : <View style={{ width: 100 }}></View>
+
+        }
+
       </TouchableOpacity>
     )
   }
@@ -247,55 +311,70 @@ const ScannedHistory = ({ navigation }) => {
 
         </View>
         <Header></Header>
-        <ScrollView contentContainerStyle={{ width: '100%' }}>
-          {
-            scannedListData && scannedListData.map((item, index) => {
-              return (
-                <View style={{ alignItems: "flex-start", justifyContent: "center", width: '100%' }} key={index}>
-
-                  <View style={{ alignItems: "center", justifyContent: "center", paddingBottom: 10, marginTop: 20, marginLeft: 20, width: '100%' }}>
-                    <PoppinsTextMedium style={{ color: 'black', fontSize: 16 }} content={(item.date)}></PoppinsTextMedium>
-
-                  </View>
-
-                  {
-                    item.data.map((item, index) => {
-                      return (
-                        <ListItem key={item.id} data={item} description={item.product_name} productCode={item.product_code} time={moment(item.scanned_at).format('HH:mm a')} amount={item.points_on_product}></ListItem>
-
-                      )
-                    })
-                  }
-                </View>
-              )
-
-            })
-          }
-          {
-            scannedListData.length===0 && <FastImage
-            style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
+        {
+          scannedListData.length == 0 &&
+          <FastImage
+            style={{ width: 180, height: 180, alignSelf: 'center', marginTop: '30%' }}
             source={{
-              uri: gifUri, // Update the path to your GIF
+              uri: noData, // Update the path to your GIF
               priority: FastImage.priority.normal,
             }}
             resizeMode={FastImage.resizeMode.contain}
           />
-          }
-        </ScrollView>
+        }
+
+        {
+          <ScrollView contentContainerStyle={{ width: '100%' }}>
+            {
+              scannedListData && scannedListData.map((item, index) => {
+                return (
+                  <View style={{ alignItems: "flex-start", justifyContent: "center", width: '100%' }} key={index}>
+
+                    <View style={{ alignItems: "center", justifyContent: "center", paddingBottom: 10, marginTop: 20, marginLeft: 20, width: '100%' }}>
+                      <PoppinsTextMedium style={{ color: 'black', fontSize: 16 }} content={(item.date)}></PoppinsTextMedium>
+
+                    </View>
+
+                    {
+                      item.data.map((item, index) => {
+                        return (
+                          <ListItem key={item.id} data={item} description={item.product_name} productCode={item.product_code} time={moment(item.scanned_at).format('HH:mm a')}></ListItem>
+
+                        )
+                      })
+                    }
+                  </View>
+                )
+
+              })
+            }
+            {/* {
+             scannedListData.length === 0 && <FastImage
+               style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+               source={{
+                 uri: gifUri, // Update the path to your GIF
+                 priority: FastImage.priority.normal,
+               }}
+               resizeMode={FastImage.resizeMode.contain}
+             />
+           } */}
+          </ScrollView>
+        }
+
       </>
       }
 
-      {
+      {/* {
         fetchAllQrScanedListIsLoading && <FastImage
-          style={{ width: 100, height: 100, alignSelf: 'center',marginTop:'50%' }}
+          style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
           source={{
             uri: gifUri, // Update the path to your GIF
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.contain}
         />
-      }
-      
+      } */}
+
     </View>
   );
 }

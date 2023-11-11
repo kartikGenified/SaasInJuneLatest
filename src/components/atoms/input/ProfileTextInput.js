@@ -6,6 +6,7 @@ const ProfileTextInput = (props) => {
     const photo  = props.photo
     const title = props.title
     const data = props.data
+    
     console.log(photo)
     return (
         <View style={{width:"90%",alignItems:"flex-start",justifyContent:"center",borderBottomWidth:1,marginBottom:10,paddingBottom:20,borderColor:'#DDDDDD'}}>

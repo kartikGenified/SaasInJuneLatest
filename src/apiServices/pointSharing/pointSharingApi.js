@@ -8,7 +8,8 @@ export const pointSharingApi = baseApi.injectEndpoints({
         console.log("data point sharing",params);
         return {
           method: 'GET',
-          url: `/api/app/extraPoint/${params.id}?type=${params.cause}`,
+          url:`/api/app/extraPoint/${params.id}?limit=100&offset=0&type=${params.cause}`,
+         
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + params.token,
@@ -25,7 +26,7 @@ export const pointSharingApi = baseApi.injectEndpoints({
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + body.token,
-              slug: body.tenant_id,
+              slug: slug
             },
             body: JSON.stringify(body.data),
           };
@@ -34,13 +35,14 @@ export const pointSharingApi = baseApi.injectEndpoints({
     
       addRegistrationBonus: builder.mutation({
         query: (body) => {
+          console.log("addRegistrationBonus",body)
           return {
             method: "POST",
             url: `api/app/extraPoint/add-extra-points`,
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + body.token,
-              slug: body.tenant_id,
+              slug: slug,
             },
             body: JSON.stringify(body.data),
           };
