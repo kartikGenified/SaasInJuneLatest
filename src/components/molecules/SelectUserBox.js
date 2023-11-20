@@ -4,9 +4,12 @@ import PoppinsTextMedium from '../electrons/customFonts/PoppinsTextMedium';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import { SvgUri } from 'react-native-svg';
 import { useIsFocused } from '@react-navigation/native';
+import Dashboard from '../../screens/dashboard/Dashboard';
+
 const SelectUserBox = (props) => {
     const [boxColor, setBoxColor] = useState('white')
     const focused = useIsFocused()
+   
     const image = BaseUrlImages+props.image
     // const image = 'https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/atom.svg'
     // console.log(image)
@@ -20,7 +23,13 @@ const SelectUserBox = (props) => {
 
     useEffect(()=>{
         setBoxColor("white")
+        
     },[focused])
+   
+        
+          
+          
+   
     const checkRegistrationRequired=()=>{
         setBoxColor(color)
         setTimeout(() => {

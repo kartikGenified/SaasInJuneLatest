@@ -20,10 +20,9 @@ export const FetchLegalApi = baseApi.injectEndpoints({
       query: (params) => {
         return {
             method: "GET",
-            url: `/api/tenant/legal/?limit=10&&offset=0`,
+            url: `/api/app/legal?type=${params.type}`,
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + params.token,
               slug: slug,
             },
           };
@@ -33,7 +32,7 @@ export const FetchLegalApi = baseApi.injectEndpoints({
       query: (params) => {
         return {
             method: "GET",
-            url: `/api/tenant/legal/?id=${params.id}`,
+            url: `/api/tenant/legal?id=${params.id}`,
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + params.token,

@@ -7,6 +7,7 @@ import { useGetAppVideoMutation } from '../../apiServices/video/VideoApi';
 import * as Keychain from 'react-native-keychain';
 import Logo from 'react-native-vector-icons/AntDesign'
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 
 const VideoGallery = ({navigation}) => {
   const [videoData, setVideoData] = useState()
@@ -16,6 +17,9 @@ const VideoGallery = ({navigation}) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
     const height = Dimensions.get('window').height
+
+    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+
 
     const [appVideoFunc, {
       data:appVideoData, 
@@ -31,7 +35,10 @@ const VideoGallery = ({navigation}) => {
             'Credentials successfully loaded for user ' + credentials.username
           );
           const token = credentials.username
-          appVideoFunc(token)
+          let parmas = {
+            token:token,
+          }
+          appVideoFunc(parmas)
         }
       }
       getToken()
@@ -61,6 +68,7 @@ const VideoGallery = ({navigation}) => {
        <View style={{width:'100%',backgroundColor:"#DDDDDD",alignItems:"center",justifyContent:'center',height:'50%'}}>
         <Logo name="youtube" size={60} color="red"></Logo>
        </View>
+
         <View style={{backgroundColor:'black',width:'100%',alignItems:'flex-start',height:'50%',justifyContent:"center"}}>
         <PoppinsTextMedium style={{color:'white',fontSize:13,marginLeft:8}} content = {`Title : ${title.substring(0,16)}`}></PoppinsTextMedium>
         <PoppinsTextMedium style={{color:'white',fontSize:13,marginLeft:8}} content = {`Type : ${type}`}></PoppinsTextMedium>
@@ -137,6 +145,19 @@ const VideoGallery = ({navigation}) => {
                 <VideoComp key ={index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp>
               )
             })
+          }
+
+          {!videoData &&
+              <FastImage
+                   style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+                   source={{
+                       uri: gifUri, // Update the path to your GIF
+                       priority: FastImage.priority.normal,
+                   }}
+                   resizeMode={FastImage.resizeMode.contain}
+               />
+           
+
           }
             
             

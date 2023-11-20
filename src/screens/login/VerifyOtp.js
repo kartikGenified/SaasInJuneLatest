@@ -24,7 +24,7 @@ import * as Keychain from 'react-native-keychain';
 import { useGetNameMutation } from '../../apiServices/login/GetNameByMobile';
 import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Icon from 'react-native-vector-icons/Feather';
 import Close from 'react-native-vector-icons/Ionicons';
@@ -146,6 +146,14 @@ const VerifyOtp = ({ navigation, route }) => {
       }, 2000);
   },[success,openModalWithBorder]);
 
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('loginData', jsonValue);
+    } catch (e) {
+      console.log("Error while saving loginData", e)
+    }
+  };
   const saveUserDetails = (data) => {
 
     try {
@@ -169,6 +177,7 @@ const VerifyOtp = ({ navigation, route }) => {
 
         console.log("successfullyLoggedIn")
         saveToken(verifyOtpData.body.token)
+        storeData(verifyOtpData.body)
         saveUserDetails(verifyOtpData.body)
         setMessage("Successfully Loged In")
         setSuccess(true)

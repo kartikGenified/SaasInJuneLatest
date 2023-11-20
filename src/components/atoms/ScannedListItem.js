@@ -29,7 +29,7 @@ const ScannedListItem = props => {
       <View style={{width: '76%'}}>
         <PoppinsTextMedium
         style={{color:'black',fontSize:14,fontWeight:'600'}}
-          content={`Serial No : ${serialNo}, Product Name : ${productName}, Product Code : ${productCode}, Batch Code : ${batchCode}`}></PoppinsTextMedium>
+          content={`Serial No : ${serialNo}, Product Name : ${productName}, Product Code : ${productCode}`}></PoppinsTextMedium>
       </View>
       <View style={{width: '10%',marginLeft:4}}>
         <TouchableOpacity

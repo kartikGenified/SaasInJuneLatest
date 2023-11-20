@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import {View, StyleSheet,ScrollView,Platform} from 'react-native';
+import {View, StyleSheet,ScrollView,Platform,TouchableOpacity} from 'react-native';
 import MenuItems from '../../components/atoms/MenuItems';
 import { BaseUrl } from '../../utils/BaseUrl';
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
@@ -24,7 +24,10 @@ import { setKycData } from '../../../redux/slices/userKycStatusSlice';
 import { useIsFocused } from '@react-navigation/native';
 import { setPercentagePoints, setShouldSharePoints } from '../../../redux/slices/pointSharingSlice';
 import { useExtraPointEnteriesMutation } from '../../apiServices/pointSharing/pointSharingApi';
-
+import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
+import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import { setQrIdList } from '../../../redux/slices/qrCodeDataSlice';
 const Dashboard = ({navigation}) => {
 
     const [dashboardItems, setDashboardItems] = useState()
@@ -34,6 +37,11 @@ const Dashboard = ({navigation}) => {
     const userId = useSelector((state)=>state.appusersdata.userId)
     const userData = useSelector(state => state.appusersdata.userData);
     const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
+    const ternaryThemeColor = useSelector(
+      state => state.apptheme.ternaryThemeColor,
+    )
+      ? useSelector(state => state.apptheme.ternaryThemeColor)
+      : '#FFB533';
     console.log("pointSharingData",JSON.stringify(pointSharingData),userData)
     console.log("user id is from dashboard",userId)
     
@@ -53,13 +61,36 @@ const Dashboard = ({navigation}) => {
       isError:getKycStatusIsError
     }] = useGetkycStatusMutation()
 
+    const [userPointFunc, {
+      data: userPointData,
+      error: userPointError,
+      isLoading: userPointIsLoading,
+      isError: userPointIsError
+    }] = useFetchUserPointsMutation()
+
     const [extraPointEntriesFunc,{
       data:extraPointEntriesData,
       error:extraPointEntriesError,
       isError:extraPointEntriesIsError,
       isLoading:extraPointEntriesIsLoading
     }] = useExtraPointEnteriesMutation()
+const id = useSelector(state => state.appusersdata.id);
 
+  const fetchPoints = async () => {
+    const credentials = await Keychain.getGenericPassword();
+    const token = credentials.username;
+    const params = {
+      userId: id,
+      token: token
+    }
+    userPointFunc(params)
+
+  }
+
+  useEffect(() => {
+    fetchPoints()
+    dispatch(setQrIdList([]))
+  }, [focused])
     useEffect(()=>{
       if(extraPointEntriesData)
       {
@@ -319,6 +350,22 @@ const Dashboard = ({navigation}) => {
         {bannerArray && 
           <Banner images={bannerArray}></Banner>
 }
+          </View>
+          <View style={{ width: "90%", height: 50, backgroundColor: 'white', marginBottom: 20, flexDirection:'row', alignItems:'center', borderColor:'#808080', borderWidth:0.3, borderRadius:10}}>
+
+            <View style={{backgroundColor:'white', width:'42%',marginHorizontal:20 }}>
+            <PoppinsText content= {`Balance Points ${userPointData?.body?.point_balance ? userPointData?.body?.point_balance : "loading"}`} style={{color:'black', fontWeight:'bold'}}></PoppinsText>
+            </View>
+
+            <View style={{height:'100%', borderWidth:0.4, color:"#808080", opacity:0.3,width:0.2}}>
+            </View>
+
+            <View style={{backgroundColor:'white', paddingLeft:'8%' }}>
+              <TouchableOpacity style={{backgroundColor:ternaryThemeColor, padding:10,borderRadius:5, width:120, alignItems:'center'}} onPress={()=>{navigation.navigate("RedeemedHistory")}}>
+                <PoppinsTextLeftMedium style={{color:'white', fontWeight:'800'}} content="Reedem"  ></PoppinsTextLeftMedium>
+              </TouchableOpacity>
+            </View>
+
           </View>
           <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{paddingLeft:10,paddingRight:10,paddingBottom:4}}>
           {/* <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>

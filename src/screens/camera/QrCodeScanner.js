@@ -22,13 +22,14 @@ import ErrorModal from '../../components/modals/ErrorModal';
 import ButtonProceed from '../../components/atoms/buttons/ButtonProceed';
 import {useAddQrMutation} from '../../apiServices/qrScan/AddQrApi';
 import {useSelector, useDispatch} from 'react-redux';
-import {setQrData} from '../../../redux/slices/qrCodeDataSlice';
+import {setQrData, setQrIdList} from '../../../redux/slices/qrCodeDataSlice';
 import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/GetGenuinityApi';
 import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
 import {setProductData} from '../../../redux/slices/getProductSlice';
 import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
 import { useAddRegistrationBonusMutation } from '../../apiServices/pointSharing/pointSharingApi';
+import { useAddBulkQrMutation } from '../../apiServices/bulkScan/BulkScanApi';
 import { slug } from '../../utils/Slug';
 import MessageModal from '../../components/modals/MessageModal';
 
@@ -38,6 +39,7 @@ const QrCodeScanner = ({navigation}) => {
   const [zoomText, setZoomText] = useState('1');
   const [flash, setFlash] = useState(false);
   const [addedQrList, setAddedQrList] = useState([]);
+  const [addedQrProductId, setAddedQrProductId] = useState([])
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
@@ -54,7 +56,7 @@ const QrCodeScanner = ({navigation}) => {
   const shouldSharePoints = useSelector(state=>state.pointSharing.shouldSharePoints)
   const appUserData = useSelector(state=>state.appusers.value)
   const dispatch = useDispatch();
-  console.log('Workflow Program is ', workflowProgram);
+  console.log('Workflow Program is ', workflowProgram,shouldSharePoints);
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
 
   // mutations ----------------------------------------
@@ -124,6 +126,28 @@ const QrCodeScanner = ({navigation}) => {
     },
   ] = useFetchAllQrScanedListMutation();
 
+  const [addBulkQrFunc ,{
+    data:addBulkQrData,
+    error:addBulkQrError,
+    isLoading:addBulkQrIsLoading,
+    isError:addBulkQrIsError
+  }]= useAddBulkQrMutation()
+
+
+  useEffect(()=>{
+    if(addBulkQrData){
+      console.log("addBulkQrData",addBulkQrData)
+      if(addBulkQrData.success)
+      {
+        handleWorkflowNavigation("Genuinity","Warranty")
+      }
+    }
+
+    else if(addBulkQrError){
+      console.log("addBulkQrError",addBulkQrError)
+    }
+  },[addBulkQrData,addBulkQrError])
+
   // ----------------------------------------------------
   const height = Dimensions.get('window').height;
   const platform = Platform.OS === 'ios' ? '1' : '2';
@@ -143,7 +167,11 @@ const QrCodeScanner = ({navigation}) => {
   },[appUserData])
 
   useEffect(() => {
-
+if(addQrData)
+{
+  console.log("addQrData",addQrData)
+  if(addQrData.success)
+  {
     (async () => {
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
@@ -154,7 +182,7 @@ const QrCodeScanner = ({navigation}) => {
       } else if (fromDate) {
         queryParams += `&from_date=${fromDate}`;
       }
-
+  
       console.log("queryParams", queryParams);
       if(shouldSharePoints)
       {
@@ -166,7 +194,13 @@ const QrCodeScanner = ({navigation}) => {
       }
      
     })();
+  }
+ 
+}
+    
   }, [addQrData]);
+
+
   const checkFirstScan=async(data)=>{
     if(data.length===1)
     {
@@ -175,7 +209,7 @@ const QrCodeScanner = ({navigation}) => {
     console.log(
       'Credentials successfully loaded for user ' + credentials.username
     );
-    console.log("third scan")
+    console.log("First scan")
     const token = credentials.username
     const body = {
       tenant_id:slug,
@@ -200,7 +234,7 @@ const QrCodeScanner = ({navigation}) => {
     }
     console.log("Registration Bouns",body)
       addRegistrationBonusFunc(body)
-    }
+    } 
   }
   else{
     console.log("data length is greater than two")
@@ -531,7 +565,27 @@ const QrCodeScanner = ({navigation}) => {
 
   const handleAddQr = () => {
     const token = savedToken;
-    addedQrList.length !== 0 &&
+    if(addedQrList.length>1)
+    {
+
+      const addedQrID = addedQrList.map((item,index)=>{
+        return item.id
+      })
+      const params = {
+        token:token,
+        data:{
+          "qrs" : addedQrID,
+          "platform_id" : 1,
+          "name":userData.name
+      }
+      }
+      addBulkQrFunc(params)
+      dispatch(setQrIdList(addedQrID))
+      console.log(addedQrID,params)
+    }
+    else
+    {
+      addedQrList.length !== 0 &&
       addedQrList.map((item, index) => {
         const requestData = {
           qr_id: item.id,
@@ -546,6 +600,10 @@ const QrCodeScanner = ({navigation}) => {
         };
         token && addQrFunc({token, requestData});
       });
+    }
+
+
+    
   };
   // --------------------------------------------------------
 

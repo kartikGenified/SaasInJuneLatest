@@ -20,6 +20,7 @@ import {useSelector} from 'react-redux';
 import { useProductCatalogueMutation } from '../../apiServices/productCatalogue/productCatalogueApi';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import Pdf from 'react-native-pdf';
+import FastImage from 'react-native-fast-image';
 
 const ProductCatalogue = ({navigation}) => {
     const [catalogueData, setCatalogueData] = useState()
@@ -28,6 +29,9 @@ const ProductCatalogue = ({navigation}) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
+
+    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+
 
   const [
     productCatalogueFunc,
@@ -99,9 +103,9 @@ const height = Dimensions.get('window').height
           <Image
             style={{height: 140, width: '100%',borderTopRightRadius:20,borderTopLeftRadius:20,resizeMode:'contain'}}
             source={{uri:BaseUrlImages+image}}></Image>
-            <View style={{backgroundColor:'white',width:'100%',minHeight:40,alignItems:'center',justifyContent:'center',position:'absolute',bottom:0,elevation:8,borderBottomRightRadius:20,borderBottomLeftRadius:20}}>
+            <View style={{backgroundColor:'white',width:'100%',padding:8,alignItems:'center',justifyContent:'center',position:'absolute',bottom:0,elevation:8,borderBottomRightRadius:20,borderBottomLeftRadius:20}}>
             <PoppinsTextMedium
-          style={{color: 'black', fontSize: 16}}
+          style={{color: 'black', fontSize: 17}}
           content={title}></PoppinsTextMedium>
             </View>
        
@@ -182,6 +186,19 @@ const height = Dimensions.get('window').height
                     )
                 })
             }
+
+              {!catalogueData &&
+              <FastImage
+                   style={{ width: 100, height: 100, alignSelf: 'center',justifyContent:'center', marginTop: '50%', marginLeft:'40%' }}
+                   source={{
+                       uri: gifUri, // Update the path to your GIF
+                       priority: FastImage.priority.normal,
+                   }}
+                   resizeMode={FastImage.resizeMode.contain}
+               />
+               }
+           
+
           
         </View>
       </View>

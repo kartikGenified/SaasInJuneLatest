@@ -4,12 +4,12 @@ import { slug } from "../../utils/Slug";
 export const VideoApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
     getAppVideo: builder.mutation({
-    query: (token) => {
+    query: (params) => {
     return {
     method: "GET",
-    url: `/api/tenant/appVideo`,
+    url: `/api/tenant/appVideo${params.type?`?type=${params.type}`:""}`,
     headers: {
-    Authorization: "Bearer " + token,
+    Authorization: "Bearer " + params.token,
     slug: slug,
     },
     };
@@ -19,4 +19,3 @@ export const VideoApi = baseApi.injectEndpoints({
    });
    
    export const { useGetAppVideoMutation} = VideoApi;
-

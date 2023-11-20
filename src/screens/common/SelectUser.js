@@ -7,7 +7,9 @@ import {useGetAppUsersDataMutation} from '../../apiServices/appUsers/AppUsersApi
 import SelectUserBox from '../../components/molecules/SelectUserBox';
 import { setAppUsers } from '../../../redux/slices/appUserSlice';
 import { slug } from '../../utils/Slug';
+import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId} from '../../../redux/slices/appUserDataSlice';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectUser = ({navigation}) => {
   const [listUsers, setListUsers] = useState();
@@ -23,7 +25,7 @@ const SelectUser = ({navigation}) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    
+    getData()
     getUsers();
   }, []);
   useEffect(() => {
@@ -36,7 +38,40 @@ const SelectUser = ({navigation}) => {
     }
   }, [getUsersData, getUsersError]);
 
+  
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('loginData');
+      console.log("loginData",JSON.parse(jsonValue))
+      saveUserDetails(JSON.parse(jsonValue))
+      
+    } catch (e) {
+      console.log("Error is reading loginData",e)
+    }
+  };
+  const saveUserDetails = (data) => {
 
+    try {
+      console.log("Saving user details", data.name)
+      dispatch(setAppUserId(data.user_type_id))
+      dispatch(setAppUserName(data.name))
+      dispatch(setAppUserType(data.user_type))
+      dispatch(setUserData(data))
+      dispatch(setId(data.id))
+      handleNavigation()
+    }
+    catch (e) {
+      console.log("error", e)
+    }
+    
+  }   
+
+  const handleNavigation=()=>{
+    setTimeout(() => {
+    navigation.navigate('Dashboard')
+
+    }, 5000);
+  }
   const primaryThemeColor = useSelector(
     state => state.apptheme.primaryThemeColor,
   )

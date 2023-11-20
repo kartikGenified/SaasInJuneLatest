@@ -1,11 +1,13 @@
-import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import React, { Component, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import FeedbackTextArea from '../../components/feedback/FeedbackTextArea';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import ButtonWithPlane from '../../components/atoms/buttons/ButtonWithPlane';
 import StarRating from 'react-native-star-rating';
 import FeedbackModal from '../../components/feedback/FeedbackModal';
+import { useAddFeedbackMutation } from '../../apiServices/feedbackApi/FeedbackApi';
+import * as Keychain from 'react-native-keychain';
 
 
 const Feedback = ({ navigation }) => {
@@ -13,6 +15,11 @@ const Feedback = ({ navigation }) => {
     //states
     const [starCount, setStarCount] = useState(0);
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
+    const [error, setError] = useState(false);
+    const[message, setMessage] = useState("");
+
+    const userName = useSelector(state => state.appusersdata.name);
+
     const [feedback, setFeedback] = useState("")
 
 
@@ -23,25 +30,72 @@ const Feedback = ({ navigation }) => {
         : 'grey';
 
 
+    const [addFeedbackFunc, {
+        data: addFeedbackData,
+        error: addFeedbackError,
+        isError: addFeedbackIsError,
+        isLoading: addFeedbackIsLoading
+    }] = useAddFeedbackMutation()
+
     const onStarRatingPress = (rating) => {
         setStarCount(rating);
     };
 
     const showSuccessModal = () => {
-        if(feedback!=""){
-            setIsSuccessModalVisible(true); 
-        }
-        
+        onSubmit();
+
     };
 
     const hideSuccessModal = () => {
         setIsSuccessModalVisible(false);
+        navigation.navigate("Dashboard")
     };
 
     const handleFeedbackChange = (text) => {
         // console.log(feedback)
         setFeedback(text);
-      };
+    };
+
+
+    const onSubmit = async () => {
+        const credentials = await Keychain.getGenericPassword();
+
+        let obj = {
+            token: credentials.username,
+            body: {
+                "feedback": feedback,
+                "rating": starCount + "",
+                "platform_id": "1",
+                "platform": Platform.OS,
+                "name":userName
+                }
+        }
+        if(feedback != "" && starCount != 0){
+            setFeedback("")
+            addFeedbackFunc(obj)
+            
+        }
+        else{
+            setError(true);
+            setMessage("Please fill all fields")
+        }
+    }
+
+    useEffect(()=>{
+        if(addFeedbackData?.success){
+            console.log("addFeedbackData",addFeedbackData.success)
+            setFeedback(" ")
+            setStarCount(0)
+            setIsSuccessModalVisible(true)
+        }
+        if(addFeedbackError){
+            console.log("addFeedbackError",addFeedbackError)
+            setError(true)
+        }
+        
+    },[addFeedbackData, addFeedbackError])
+
+   
 
     return (
         <View style={[styles.container, { backgroundColor: ternaryThemeColor }]}>
@@ -74,7 +128,7 @@ const Feedback = ({ navigation }) => {
             </View>
             {/* navigator */}
 
-         
+
             <View style={{ backgroundColor: '#ffffff', flex: 1, borderTopRightRadius: 30, borderTopLeftRadius: 30 }}>
                 <View style={styles.marginTopTen}>
                     <Image
@@ -112,9 +166,9 @@ const Feedback = ({ navigation }) => {
                 >
 
                     <View>
-                        <FeedbackTextArea  onFeedbackChange={handleFeedbackChange}/>
+                        <FeedbackTextArea onFeedbackChange={handleFeedbackChange} />
                         <View style={{ marginHorizontal: '20%' }}>
-                            <ButtonWithPlane title="Submit" navigate="" parmas={{}} type={"feedback"} onModalPress = {showSuccessModal}></ButtonWithPlane>
+                            <ButtonWithPlane title="Submit" navigate="" parmas={{}} type={"feedback"} onModalPress={showSuccessModal}></ButtonWithPlane>
                         </View>
                     </View>
 
@@ -124,6 +178,7 @@ const Feedback = ({ navigation }) => {
 
             <FeedbackModal isVisible={isSuccessModalVisible} user={"Amit"} onClose={hideSuccessModal} />
 
+            {error && <ErrorModal modalClose={()=>{setError(false)}} message={message} openModal={error}></ErrorModal>}
 
         </View>
     );

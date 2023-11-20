@@ -8,7 +8,7 @@ const PrefilledTextInput = (props) => {
     const [keyboardShow, setKeyboardShow] = useState(false)
     const placeHolder = props.placeHolder
     const label = props.label
-    const required = props.required
+    const required = props.required ===undefined ? props.jsonData.required : props.required
    
    
     Keyboard.addListener('keyboardDidShow',()=>{

@@ -231,7 +231,7 @@ const AddUser = ({navigation}) => {
             registerUserFunc(body)
     }
     return (
-        <View style={{height:height,width:'100%',alignItems:"center",justifyContent:"center",backgroundColor:ternaryThemeColor}}>
+        <View style={{height:height,width:'100%',alignItems:"center",justifyContent:"center",backgroundColor:ternaryThemeColor,flex:1}}>
              {error && (
             <ErrorModal
               modalClose={modalClose}
@@ -480,7 +480,7 @@ const AddUser = ({navigation}) => {
            
             <TouchableOpacity onPress={()=>{
                 handleSubmission()
-            }}  style={{height:40,width:120,borderRadius:4,backgroundColor:ternaryThemeColor,alignItems:"center",justifyContent:"center",marginTop:20}}>
+            }}  style={{height:40,width:120,borderRadius:4,backgroundColor:ternaryThemeColor,alignItems:"center",justifyContent:"center",marginTop:20,marginBottom:20}}>
 
                 <PoppinsTextMedium content="Proceed" style={{color:'white',fontSize:20}}></PoppinsTextMedium>
             </TouchableOpacity>

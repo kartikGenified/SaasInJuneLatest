@@ -311,16 +311,21 @@ const ScannedHistory = ({ navigation }) => {
 
         </View>
         <Header></Header>
+       
         {
           scannedListData.length == 0 &&
-          <FastImage
-            style={{ width: 180, height: 180, alignSelf: 'center', marginTop: '30%' }}
-            source={{
-              uri: noData, // Update the path to your GIF
-              priority: FastImage.priority.normal,
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-          />
+          <View>
+            <FastImage
+              style={{ width: 180, height: 180, alignSelf: 'center', marginTop: '30%' }}
+              source={{
+                uri: noData, // Update the path to your GIF
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+            <PoppinsTextMedium style={{color:'#808080', marginTop:-20, fontWeight:'bold'}} content="NO DATA"></PoppinsTextMedium>
+
+          </View>
         }
 
         {
@@ -348,16 +353,7 @@ const ScannedHistory = ({ navigation }) => {
 
               })
             }
-            {/* {
-             scannedListData.length === 0 && <FastImage
-               style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
-               source={{
-                 uri: gifUri, // Update the path to your GIF
-                 priority: FastImage.priority.normal,
-               }}
-               resizeMode={FastImage.resizeMode.contain}
-             />
-           } */}
+
           </ScrollView>
         }
 

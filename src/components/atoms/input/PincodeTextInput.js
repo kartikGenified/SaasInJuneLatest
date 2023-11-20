@@ -7,7 +7,8 @@ const PincodeTextInput = (props) => {
     const [maxLength, setMaxLength] = useState(props.maxLength ? props.maxLength : 100)
     const [keyboardShow, setKeyboardShow] = useState(false)
    
-    const required = props.required
+    const required = props.required ===undefined ? props.jsonData.required : props.required
+
     const placeHolder = props.placeHolder
     const label = props.label
    

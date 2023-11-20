@@ -17,7 +17,7 @@ import { setId } from '../../../redux/slices/appUserDataSlice';
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Icon from 'react-native-vector-icons/Feather';
 import Close from 'react-native-vector-icons/Ionicons';
@@ -98,6 +98,7 @@ const PasswordLogin = ({ navigation, route }) => {
     if (passwordLoginData) {
       console.log("Password Login Data", passwordLoginData)
       if (passwordLoginData.success) {
+        storeData(passwordLoginData.body)
         saveUserDetails(passwordLoginData.body)
         saveToken(passwordLoginData.body.token)
         setMessage(passwordLoginData.message)
@@ -179,7 +180,14 @@ const PasswordLogin = ({ navigation, route }) => {
     }
     getTermsAndCondition(params)
   }
-
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('loginData', jsonValue);
+    } catch (e) {
+      console.log("Error while saving loginData", e)
+    }
+  };
 
   const saveUserDetails = (data) => {
 

@@ -19,13 +19,13 @@ export const AppMembershipApi = baseApi.injectEndpoints({
    
    
     getMembership: builder.mutation({
-    query: (params) => {
+    query: (token) => {
     return {
     method: "GET",
     url: `/api/app/membership`,
     headers: {
     "Content-Type": "application/json",
-    Authorization: "Bearer " + params.token,
+    Authorization: "Bearer " + token,
     slug: slug,
     },
     };

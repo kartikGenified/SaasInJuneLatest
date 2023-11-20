@@ -63,6 +63,12 @@ import GenunityDetails from '../screens/genuinity/GenunityDetails';
 import SharedPointsHistory from '../screens/historyPages/SharedPointsHistory';
 import AddUser from '../screens/addUser/AddUser';
 import WarrantyClaimDetails from '../screens/waranty/WarrantyClaimDetails';
+import ListUsers from '../screens/addUser/ListUsers';
+import ListAddress from '../screens/address/ListAddress';
+import AddAddress from '../screens/address/AddAddress';
+import ProductCategory from '../screens/productCategories/ProductCategory';
+import WhatsNew from '../screens/community/WhatsNew';
+import InstallationVideo from '../screens/knowledgeHub/InstallationVideo';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -79,7 +85,37 @@ const StackNavigator = () => {
                     {
                         headerShown: false
                     }
+                } name="WhatsNew" component={WhatsNew}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="InstallationVideo" component={InstallationVideo}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="ProductCategory" component={ProductCategory}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
                 } name="AddUser" component={AddUser}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="AddAddress" component={AddAddress}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="ListAddress" component={ListAddress}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="ListUsers" component={ListUsers}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false
@@ -122,11 +158,11 @@ const StackNavigator = () => {
                     }
                 } name="Feedback" component={Feedback}></Stack.Screen>
 
-                {/* <Stack.Screen options={
+                <Stack.Screen options={
                     {
                         headerShown: false
                     }
-                } name="WheelList" component={WheelList}></Stack.Screen> */}
+                } name="Profile" component={Profile}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

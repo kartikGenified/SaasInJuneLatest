@@ -116,7 +116,7 @@ const DashboardMenuBox=(props)=>{
             navigation.navigate('ProductCatalogue')
         }
         else if(data.toLowerCase() === "add user"){
-            navigation.navigate('AddUser')
+            navigation.navigate('ListUsers')
         }
         else if(data.toLowerCase() === "customer support" || data.toLowerCase() === "help and support"){
             navigation.navigate('HelpAndSupport')
