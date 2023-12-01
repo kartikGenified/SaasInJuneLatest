@@ -9,9 +9,9 @@ const RotateViewAnimation = (props) => {
     useEffect(() => {
         
           Animated.sequence([
-            Animated.timing(rotateAnimation, { toValue: 1, duration: 1000, useNativeDriver: true }),
-            Animated.timing(rotateAnimation, { toValue: 2, duration: 1000, useNativeDriver: true }),
-            Animated.timing(rotateAnimation, { toValue: 3, duration: 1000, useNativeDriver: true })
+            Animated.timing(rotateAnimation, { toValue: 1, duration: 3000, useNativeDriver: true }),
+            Animated.timing(rotateAnimation, { toValue: 2, duration: 3000, useNativeDriver: true }),
+            Animated.timing(rotateAnimation, { toValue: 3, duration: 3000, useNativeDriver: true })
         ]).start();
       }, [rotateAnimation]);
       const interpolateRotating = rotateAnimation.interpolate({

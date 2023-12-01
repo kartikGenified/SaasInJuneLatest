@@ -476,12 +476,20 @@ import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
 import FastImage from 'react-native-fast-image';
 import FilterModal from '../../components/modals/FilterModal';
+import { useCashPerPointMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import { useGetkycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
+
 
 const RedeemedHistory = ({ navigation }) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
+  const [redemptionStartData, setRedemptionStartDate]  = useState()
+  const [redemptionEndDate, setRedemptionEndDate] = useState()
+  const [showKyc, setShowKyc] = useState(true)
   const [redeemedListData, setRedeemedListData] = useState([])
+  const [redemptionWindowEligibility, setRedemptionWindowEligibility] = useState(true)
+  const [navigateTo, setNavigateTo] = useState()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -489,6 +497,8 @@ const RedeemedHistory = ({ navigation }) => {
     : 'grey';
   const userData = useSelector(state => state.appusersdata.userData)
   const userId = useSelector(state => state.appusersdata.userId);
+  
+  const appUserData = useSelector(state=>state.appusers.value)
   const id = useSelector(state => state.appusersdata.id);
   const focused = useIsFocused()
   const fetchPoints = async () => {
@@ -501,22 +511,9 @@ const RedeemedHistory = ({ navigation }) => {
     userPointFunc(params)
 
   }
-
+  console.log("appUserData",appUserData)
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
   const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
-
-  useEffect(() => {
-    fetchPoints()
-  }, [focused])
-  useEffect(() => {
-    if (userPointData) {
-      console.log("userPointData", userPointData)
-    }
-    else if (userPointError) {
-      console.log("userPointError", userPointError)
-    }
-
-  }, [userPointData, userPointError])
 
   const [
     FetchGiftsRedemptionsOfUser,
@@ -528,20 +525,100 @@ const RedeemedHistory = ({ navigation }) => {
     },
   ] = useFetchGiftsRedemptionsOfUserMutation();
 
+  const [getKycStatusFunc, {
+    data: getKycStatusData,
+    error: getKycStatusError,
+    isLoading: getKycStatusIsLoading,
+    isError: getKycStatusIsError
+  }] = useGetkycStatusMutation()
+
   const [userPointFunc, {
     data: userPointData,
     error: userPointError,
     isLoading: userPointIsLoading,
     isError: userPointIsError
   }] = useFetchUserPointsMutation()
+  const [cashPerPointFunc,{
+    data:cashPerPointData,
+    error:cashPerPointError,
+    isLoading:cashPerPointIsLoading,
+    isError:cashPerPointIsError
+  }] = useCashPerPointMutation()
 
+  useEffect(() => {
+    if (getKycStatusData) {
+      console.log("getKycStatusData", getKycStatusData)
+      if (getKycStatusData.success) {
+        const tempStatus = Object.values(getKycStatusData.body)
+        
+        setShowKyc(tempStatus.includes(false))
+
+       
+
+
+      }
+    }
+    else if (getKycStatusError) {
+      console.log("getKycStatusError", getKycStatusError)
+    }
+  }, [getKycStatusData, getKycStatusError])
+  useEffect(() => {
+    fetchPoints()
+    if(appUserData!==undefined)
+    {
+     const influencerRedemptionCategories =  appUserData.filter((item)=>{
+        return item.name===userData.user_type
+      })
+      console.log("influencerRedemptionCategories",influencerRedemptionCategories)
+      if(influencerRedemptionCategories.length!==0)
+      {
+        setRedemptionStartDate(influencerRedemptionCategories[0].redeem_start_date)
+        setRedemptionEndDate(influencerRedemptionCategories[0].redeem_end_date)
+      }
+      else{
+        setRedemptionWindowEligibility(false)
+      }
+     
+    }
+  }, [focused])
+
+  useEffect(()=>{
+    if(cashPerPointData)
+    {
+        console.log("cashPerPointData",cashPerPointData)
+        if(cashPerPointData.success)
+
+        {
+          const temp = cashPerPointData?.body
+          setRedemptionStartDate(temp.redeem_start_date)
+          setRedemptionEndDate(temp.redeem_end_date)
+        }
+    }
+    else if(cashPerPointError){
+        console.log("cashPerPointError",cashPerPointError)
+        
+    }
+  },[cashPerPointData,cashPerPointError])
+
+  useEffect(() => {
+    if (userPointData) {
+      console.log("userPointData", userPointData)
+    }
+    else if (userPointError) {
+      console.log("userPointError", userPointError)
+    }
+
+  }, [userPointData, userPointError])
+
+  
 
   useEffect(() => {
     (async () => {
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
       const userId = userData.id
-
+      cashPerPointFunc(token)
+      getKycStatusFunc(token)
       FetchGiftsRedemptionsOfUser({
         token: token,
         userId: userId,
@@ -561,6 +638,8 @@ const RedeemedHistory = ({ navigation }) => {
       console.log("fetchGiftsRedemptionsOfUserIsLoading", fetchGiftsRedemptionsOfUserError)
     }
   }, [fetchGiftsRedemptionsOfUserData, fetchGiftsRedemptionsOfUserError])
+
+  
 
   const fetchDates = (data) => {
     const dateArr = []
@@ -590,17 +669,37 @@ const RedeemedHistory = ({ navigation }) => {
   const modalClose = () => {
     setError(false);
     setSuccess(false)
+    
   };
 
   const DisplayEarnings = () => {
     const [modalVisible, setModalVisible] = useState(false);
+
     const handleRedeemButtonPress = () => {
-      if (Number(userPointData.body.point_balance) <= 0) {
+      if (Number(userPointData.body.point_balance) <= 0 ) {
         setError(true)
         setMessage("You dont have enough points !")
       }
       else {
-        setModalVisible(true)
+        
+        if(Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime()) )
+        {
+          
+          console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
+        if(!showKyc)
+        {
+          setModalVisible(true)
+        }
+        else{
+          setError(true)
+          setMessage("Kyc not completed yet")
+          setNavigateTo("Verification")
+        }
+        }
+        else{
+          setError(true)
+        setMessage("Redemption window starts from "+ moment(redemptionStartData).format("DD-MMM-YYYY") + " and ends on " +  moment(redemptionEndDate).format("DD-MMM-YYYY"))
+        }
       }
 
     }
@@ -780,11 +879,21 @@ const RedeemedHistory = ({ navigation }) => {
   }
   return (
     <View style={{ alignItems: "center", justifyContent: "flex-start", width: '100%', height: '100%', backgroundColor: "white" }}>
-      {error && (
+      {error  && (
         <ErrorModal
           modalClose={modalClose}
           message={message}
-          openModal={error}></ErrorModal>
+          openModal={error}
+          navigateTo={navigateTo}
+          ></ErrorModal>
+      )}
+      {error && navigateTo && (
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+          navigateTo={navigateTo}
+          ></ErrorModal>
       )}
       {success && (
         <MessageModal
@@ -817,10 +926,15 @@ const RedeemedHistory = ({ navigation }) => {
       </View>
       <DisplayEarnings></DisplayEarnings>
       <Header></Header>
-      <ScrollView>
-        {
-          redeemedListData && redeemedListData.map((item, index) => {
-            return (
+     
+        
+          <FlatList
+                  
+          data={redeemedListData}
+          maxToRenderPerBatch={10}
+          initialNumToRender={10}
+          renderItem={({ item,index }) => (
+            
               <View key={index} style={{ alignItems: "center", justifyContent: "center", width: '100%' }} >
 
                 <View style={{ alignItems: "flex-start", justifyContent: "center", paddingBottom: 10, marginTop: 20, marginLeft: 20, width: '100%' }}>
@@ -841,11 +955,36 @@ const RedeemedHistory = ({ navigation }) => {
                   })
                 }
               </View>
-            )
+            
+          )}
+          keyExtractor={(item, index) => index}
+        />
+          {/* // redeemedListData && redeemedListData.map((item, index) => {
+          //   return (
+          //     <View key={index} style={{ alignItems: "center", justifyContent: "center", width: '100%' }} >
 
-          })
-        }
-      </ScrollView>
+          //       <View style={{ alignItems: "flex-start", justifyContent: "center", paddingBottom: 10, marginTop: 20, marginLeft: 20, width: '100%' }}>
+          //         <PoppinsTextMedium style={{ color: 'black', fontSize: 16 }} content={(item.date)}></PoppinsTextMedium>
+
+          //       </View>
+
+          //       {
+          //         item.data.map((item, index) => {
+          //           return (
+          //             <View key={index}>
+          //               <ListItem data={item} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')} />
+
+          //             </View>
+
+
+          //           )
+          //         })
+          //       }
+          //     </View>
+          //   )
+
+          // }) */}
+     
 
       {
         fetchGiftsRedemptionsOfUserIsLoading &&

@@ -134,7 +134,7 @@ const Tutorial = ({navigation}) => {
           minHeight:height-100,
           marginTop: 10,
           alignItems: 'flex-start',
-          justifyContent: 'center',
+          // justifyContent: 'center',
           width: '100%',
           paddingBottom: 40,
           flexDirection:"row",

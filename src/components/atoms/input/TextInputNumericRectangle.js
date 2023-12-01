@@ -7,12 +7,13 @@ const TextInputNumericRectangle = props => {
   const maxLength = props.maxLength;
   const label = props.label
   const required = props.required
-  console.log("label",label)
+  const isEditable = props.isEditable
+  console.log("label",isEditable)
 
   useEffect(()=>{
     if(props.value!==undefined)
     {
-      let tempJsonData = {...props.jsonData, value: value};
+      let tempJsonData = {...props.jsonData, value: props.value};
       console.log(tempJsonData);
       props.handleData(tempJsonData);
     }
@@ -68,6 +69,7 @@ const TextInputNumericRectangle = props => {
           marginLeft: 20,
           color:'black',fontSize:16
         }}
+        editable = {isEditable ===false ? isEditable : true }
         placeholderTextColor="grey"
         onChangeText={text => {
           handleInput(text);

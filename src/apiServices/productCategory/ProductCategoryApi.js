@@ -8,7 +8,7 @@ export const ProductCategoryApi = baseApi.injectEndpoints({
                 console.log("getProductSubCategoryById",params)
               return {
                 method: "GET",
-                url: `/api/app/product/${params.subCategoryId}?limit=10&offset=0`,
+                url: `/api/app/product/${params.subCategoryId}?limit=${params.limit}&offset=${params.offset}`,
                 headers: {
                   Authorization: "Bearer " + params.token,
                   slug: slug,
@@ -30,9 +30,23 @@ export const ProductCategoryApi = baseApi.injectEndpoints({
               };
             },
           }),
+          getProductLevel: builder.mutation({
+            query: (params) => {
+              console.log("params",params)
+              return {
+                method: "GET",
+                url: `/api/tenant/heirarchy/level/?level=${params.level}`,
+                headers: {
+                  Authorization: "Bearer " + params.token,
+                  slug: slug,
+                },
+                
+              };
+            },
+          }),
           
         }),
         
    });
    
-   export const {useGetProductCategoryMutation,useGetProductSubCategoryByIdMutation} = ProductCategoryApi;
+   export const {useGetProductCategoryMutation,useGetProductSubCategoryByIdMutation,useGetProductLevelMutation} = ProductCategoryApi;

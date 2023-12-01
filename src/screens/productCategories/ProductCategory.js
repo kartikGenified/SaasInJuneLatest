@@ -1,38 +1,45 @@
 import React, { useEffect,useState } from 'react';
-import {View, StyleSheet,TouchableOpacity,Image, ScrollView,FlatList} from 'react-native';
+import {View, StyleSheet,TouchableOpacity,Image, ScrollView,FlatList,Text} from 'react-native';
 import { useSelector } from 'react-redux';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useGetProductCategoryMutation,useGetProductSubCategoryByIdMutation } from '../../apiServices/productCategory/ProductCategoryApi';
 import * as Keychain from 'react-native-keychain';
 import ProductCategoryDropDown from '../../components/atoms/dropdown/ProductCategoryDropDown';
+import { useGetProductLevelMutation } from '../../apiServices/productCategory/ProductCategoryApi';
+import FastImage from "react-native-fast-image";
+
 
 const ProductCategory = ({navigation}) => {
+  const [productLevel, setProductLevel] = useState([])
     const [productCategory, setProductCategory] = useState([])
     const [subCategory, setSubCategory] = useState([])
     const [token, setToken] = useState()
+    const [loading , setLoading] = useState(true)
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
       )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
 
-    const [getProductCategoryFunc,{
-        data:getProductCategoryData,
-        error:getProductCategoryError,
-        isLoading:getProductCategoryIsLoading,
-        isError:getProductCategoryIsError
-    }] = useGetProductCategoryMutation()
+   
+    
+    const [getProductLevelFunc,{
+      data:getProductLevelData,
+      error:getProductLevelError,
+      isLoading:getProductLevelIsLoading,
+      isError:getProductLevelIsError
+  }] = useGetProductLevelMutation()
 
-
-    const [getProductSubCategoryByIdFunc,{
-        data:getProductSubCategoryByIdData,
-        error:getProductSubCategoryByIdError,
-        isLoading:getProductSubCategoryByIdIsLoading,
-        isError:getProductSubCategoryByIdIsError
-    }] = useGetProductSubCategoryByIdMutation()
+    const gifUri = Image.resolveAssetSource(
+      require("../../../assets/gif/loader.gif")
+    ).uri;
 
     useEffect(()=>{
         getToken()
+      setTimeout(() => {
+        setLoading(false)
+      }, 3000);
+       
     },[])
 
     const getToken=async()=>{
@@ -43,76 +50,85 @@ const ProductCategory = ({navigation}) => {
     );
     const token = credentials.username
     setToken(token)
-    getProductCategoryFunc(token)
+    const params={level:"1",token:token}
+    getProductLevelFunc(params)
     }
 }
-   useEffect(()=>{
-    if(getProductCategoryData){
-        console.log("getProductCategoryData",getProductCategoryData)
-        if(getProductCategoryData.success)
-        {
-            const productNameArray = getProductCategoryData.body.map((item,index)=>{
-            return {
-                name:item.name,
-                id:item.id
-            }
-            })
-            const set = new Set(productNameArray)
-            console.log(set)
+   
 
-            setProductCategory(Array.from(set))
+  
+
+   useEffect(()=>{
+    if(getProductLevelData){
+        console.log("getProductLevelData",JSON.stringify(getProductLevelData.body))
+        // setSubCategory(getProductLevelData.body.data)
+        if(getProductLevelData.success)
+        {
+          const length = getProductLevelData.body.length
+          const lastId = getProductLevelData.body[length-1].id
+          setProductLevel(getProductLevelData.body)
         }
     }
-    else if(getProductCategoryError){
-        console.log("getProductCategoryError",getProductCategoryError)
+    else if(getProductLevelError){
+        console.log("getProductLevelError",getProductLevelError)
     }
-   },[getProductCategoryData,getProductCategoryError])
+   },[getProductLevelData,getProductLevelError])
 
-   useEffect(()=>{
-    if(getProductSubCategoryByIdData){
-        console.log("getProductSubCategoryByIdData",getProductSubCategoryByIdData)
-        setSubCategory(getProductSubCategoryByIdData.body.data)
-    }
-    else if(getProductSubCategoryByIdError){
-        console.log("getProductSubCategoryByIdError",getProductSubCategoryByIdError)
-    }
-   },[getProductSubCategoryByIdData,getProductSubCategoryByIdError])
+   const Node = ({ node, handleShowModal }) => {
+    const [showChild, setShowChild] = useState(false)
+    return (
+      <View style={{marginLeft:10,marginTop:20,zIndex:2,width:'100%'}}  >
+        <ScrollView >
+        <TouchableOpacity onPress={()=>{
+          setShowChild(!showChild)
+        }} style={{padding:10,width:'90%',justifyContent:'center',alignItems:'flex-start',borderLeftWidth:1,borderColor:'black',backgroundColor:node.is_master!==0 && ternaryThemeColor,borderRadius:node.is_master!==0 ? 10 : 0}} >
+          <Text style={{marginLeft:20,color:node.is_master===0 ? 'black' : "white"}} >{node.name} </Text>
+        </TouchableOpacity>
+  
+        {showChild && node.children && node.children.length > 0 && (
+         
+          <View style={{width:'100%',height:'100%',marginBottom:20,marginLeft:20}}>
+            {node.children.map((childNode) => (
+              
+                <Node
+                key={childNode.id}
+                  node={childNode}
+                  handleShowModal={handleShowModal}
+                />
+             
+            ))}
+          </View>
+          
+        )}
+        </ScrollView>
+      </View>
+    );
+  };
+  
 
+  //  const DisplaySubCategoryDetails=(props)=>{
+  //   const name = props.name
+  //   const category = props.category
+  //   const mrp = props.mrp
+  //   const productCode = props.productCode
+  //   const index = props.index
+  //   return(
+  //       <View style={{alignItems:"center",justifyContent:"center",padding:4,marginLeft:10,borderWidth:1,borderColor:'#DDDDDD',borderRadius:4,flexDirection:'row',width:'100%',marginTop:10}}>
+  //           <View style={{width:'10%',alignItems:"flex-start",justifyContent:'center'}}>
+  //               <View style={{height:30,width:30,alignItems:"center",justifyContent:"center",borderWidth:1,borderColor:'#DDDDDD',borderRadius:15}}>
+  //                   <PoppinsTextMedium content={index} style={{colo:'black'}}></PoppinsTextMedium>
+  //               </View>
+  //           </View>
+  //           <View style={{width:'80%',alignItems:"flex-start",justifyContent:"center"}}>
+  //           <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Product Name : ${name}`}></PoppinsTextMedium>
+  //           <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Category Name : ${category}`}></PoppinsTextMedium>
+  //           <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Mrp : ₹${mrp}`}></PoppinsTextMedium>
+  //           <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Product Code: ${productCode}`}></PoppinsTextMedium>
+  //           </View>
 
-   const getProduct=(data,id)=>{
-
-    console.log(data,id)
-    const params = {
-        token:token,
-        subCategoryId:String(id)
-    }
-
-    getProductSubCategoryByIdFunc(params)
-   }
-
-   const DisplaySubCategoryDetails=(props)=>{
-    const name = props.name
-    const category = props.category
-    const mrp = props.mrp
-    const productCode = props.productCode
-    const index = props.index
-    return(
-        <View style={{alignItems:"center",justifyContent:"center",padding:4,marginLeft:10,borderWidth:1,borderColor:'#DDDDDD',borderRadius:4,flexDirection:'row',width:'100%',marginTop:10}}>
-            <View style={{width:'10%',alignItems:"flex-start",justifyContent:'center'}}>
-                <View style={{height:30,width:30,alignItems:"center",justifyContent:"center",borderWidth:1,borderColor:'#DDDDDD',borderRadius:15}}>
-                    <PoppinsTextMedium content={index} style={{colo:'black'}}></PoppinsTextMedium>
-                </View>
-            </View>
-            <View style={{width:'80%',alignItems:"flex-start",justifyContent:"center"}}>
-            <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Product Name : ${name}`}></PoppinsTextMedium>
-            <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Category Name : ${category}`}></PoppinsTextMedium>
-            <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Mrp : ₹${mrp}`}></PoppinsTextMedium>
-            <PoppinsTextMedium style={{color:'black',fontSize:14,margin:4}} content={`Product Code: ${productCode}`}></PoppinsTextMedium>
-            </View>
-
-        </View>
-    )
-   }
+  //       </View>
+  //   )
+  //  }
 
     return (
         <View style={{alignItems:"center",justifyContent:'flex-start',height:'100%',width:'100%',backgroundColor:ternaryThemeColor,flex:1}}>
@@ -150,20 +166,46 @@ const ProductCategory = ({navigation}) => {
       </View>       
 
       <View style={{height:'90%',width:'100%',alignItems:"center",justifyContent:'flex-start',backgroundColor:"white",paddingTop:30}}>
-        <View style={{width:"100%",alignItems:"flex-start",justifyContent:'center'}}>
-        <PoppinsTextMedium style={{color:'black',marginLeft:30,fontSize:16,fontWeight:'700'}}  content="Please Select The Product"></PoppinsTextMedium>
+        <View style={{width:"100%",alignItems:"center",justifyContent:'center'}}>
+        <PoppinsTextMedium style={{color:'black',marginLeft:30,fontSize:16,fontWeight:'700'}}  content="Product Heirarchy"></PoppinsTextMedium>
         </View>
+      {/* {productLevel && <ProductCategoryDropDown header="Select Level" data={productLevel} handleData={getLevel}></ProductCategoryDropDown>}
+
       {productCategory && <ProductCategoryDropDown header="Select Product" data={productCategory} handleData={getProduct}></ProductCategoryDropDown>}
-        
-        {subCategory && <FlatList
+         */}
+        {/* {subCategory && <FlatList
         
         style={{width:'100%',marginBottom:20}}
         contentContainerStyle={{alignItems:"center",justifyContent:'center'}}
         data={subCategory}
         renderItem={({item,index}) => <DisplaySubCategoryDetails index ={index+1} name={item.name} category = {item.category_name} mrp ={item.mrp} productCode={item.product_code} />}
-        keyExtractor={(item,index) => index}
-      />}
+        keyExtractor={(item,index) => item.id}
+      />} */}
+    
+       {productLevel && productLevel.length > 0 ? (
        
+          
+              <Node
+            node={productLevel[0]}
+            // onDelete={handleDeleteWrapper}
+            // onAddNode={handleAddNode}
+            // handleShowModal={handleShowModal}
+          />
+          
+       
+          
+        ) : (
+          loading && (
+            <FastImage
+          style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+          source={{
+            uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+          )
+        )}
         </View>
             
         </View>

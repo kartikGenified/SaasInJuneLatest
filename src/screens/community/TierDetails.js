@@ -62,16 +62,16 @@ const TierDetails = ({navigation}) => {
             {/* Navigator */}
             <View
                 style={{
-                    height: 50,
+                    height: '10%',
                     width: '100%',
                     backgroundColor: ternaryThemeColor,
-                    alignItems: 'flex-start',
-                    justifyContent: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
                     flexDirection: 'row',
                     // marginTop: 10,
                 }}>
                 <TouchableOpacity
-                    style={{ height: 20, width: 20, position: 'absolute', left: 20, marginTop: 13 }}
+                    style={{ height: 20, width: 20,marginLeft:10}}
                     onPress={() => {
                         navigation.goBack();
                     }}>
@@ -80,16 +80,16 @@ const TierDetails = ({navigation}) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 7, position: 'absolute', left: 50 }} content={"Tier Details"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff',marginLeft:10 }} content={"Tier Details"}></PoppinsTextMedium>
 
 
             </View>
             {/* navigator */}
             <ScrollView horizontal={true} style={styles.container}>
 
-                {getMembershipData?.body.map((itm) => {
+                {getMembershipData?.body.map((itm,index) => {
                     return (
-                        <View >
+                        <View key={itm.id} >
                             <View style={styles.modalContainer}>
                                 <View style={styles.modalContent}>
 

@@ -10,7 +10,7 @@ import { useFetchCashbackEnteriesOfUserMutation } from '../../apiServices/workfl
 const CashbackHistory = ({navigation}) => {
     const cashback =200
     const userId = useSelector(state => state.appusersdata.userId);
-
+    console.log(userId)
     const [fetchCashbackEnteriesFunc,{
         data:fetchCashbackEnteriesData,
         error:fetchCashbackEnteriesError,

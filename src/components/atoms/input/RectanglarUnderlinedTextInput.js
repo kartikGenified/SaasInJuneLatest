@@ -31,12 +31,17 @@ const RectanglarUnderlinedTextInput = (props) => {
   useEffect(() => {
     if (props.value !== undefined || props.value !== null) {
       props.handleData(input, title);
+      console.log("value textinput", input)
     }
   }, [props.value, keyboardShow]);
-
-  useEffect(() => {
-    props.handleData(input, title);
-  }, [props.pressedSubmit]);
+  // useEffect(() => {
+  //   if (props.value !== undefined || props.value !== null) {
+  //     props.handleData(props.value, title);
+  //   }
+  // }, [props.value]);
+  // useEffect(() => {
+  //   props.handleData(input, title);
+  // }, [props.pressedSubmit]);
 
   const handleTextInput = (data, title) => {
     setInput(data);
@@ -57,7 +62,7 @@ const RectanglarUnderlinedTextInput = (props) => {
       <PoppinsTextMedium
         content={label}
         style={{
-          color: "black",
+          color: "#919191",
           fontSize: 18,
           marginBottom: 4,
           fontWeight: "600",
@@ -80,7 +85,7 @@ const RectanglarUnderlinedTextInput = (props) => {
         placeholder={required ? `${placeHolder} *` : `${placeHolder}`}
         style={{
           width: "100%",
-          height: 40,
+          height: 50,
           fontWeight: "400",
           color: "black",
           marginLeft: 10,

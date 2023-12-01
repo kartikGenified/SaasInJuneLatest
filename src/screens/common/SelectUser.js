@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectUser = ({navigation}) => {
   const [listUsers, setListUsers] = useState();
+  const [showSplash, setShowSplash] = useState(true)
   const [
     getUsers,
     {
@@ -67,7 +68,9 @@ const SelectUser = ({navigation}) => {
   }   
 
   const handleNavigation=()=>{
+    
     setTimeout(() => {
+      setShowSplash(false)
     navigation.navigate('Dashboard')
 
     }, 5000);
@@ -127,7 +130,7 @@ const SelectUser = ({navigation}) => {
             source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
 
             <View style={{width:'80%',alignItems:"center",justifyContent:'center',borderColor:ternaryThemeColor,borderTopWidth:1,borderBottomWidth:1,height:40,marginTop:40}}>
-              <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} content="ARE YOU A"></PoppinsTextMedium>
+              <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} content="Chose your profile "></PoppinsTextMedium>
             </View>
         {/* </View> */}
       </View>

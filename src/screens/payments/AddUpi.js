@@ -63,8 +63,8 @@ const AddUpi = ({navigation}) => {
       console.log('addBankDetailsData', addBankDetailsData);
       if (addBankDetailsData.message === 'Bank Account Created') {
         addBankDetailsData.body.bene_name == null &&
-          getInitials('Nishank Phulera');
-        setName(addBankDetailsData.body.bene_name);
+          getInitials(addBankDetailsData.body.bene_details.bene_name);
+        setName(addBankDetailsData.body.bene_details.bene_name);
         setData(addBankDetailsData.body)
         setOpenBottomModal(true);
         setMessage('UPI Added Successfully');

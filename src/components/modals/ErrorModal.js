@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const ErrorModal = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const productData = props.productData;
+  const type = props.type
   const navigation = useNavigation()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -17,6 +18,7 @@ const ErrorModal = (props) => {
 
   console.log("product data in report an issue", productData)
 
+  
   useEffect(() => {
     if (props.openModal === true) {
       setModalVisible(true)
@@ -25,12 +27,17 @@ const ErrorModal = (props) => {
       setModalVisible(false)
     }
   }, [])
+  useEffect(()=>{
+    // navigation.navigate(navigateTo)
+  },[navigateTo])
   const closeModal = () => {
-    setModalVisible(!modalVisible)
-    props.modalClose()
+    console.log("navigateTo",navigateTo)
+   
     if (navigateTo !== undefined) {
       navigation.navigate(navigateTo)
     }
+    props.modalClose()
+    setModalVisible(!modalVisible)
   }
 
   const reportAndNavigate= () => {
@@ -56,7 +63,7 @@ const ErrorModal = (props) => {
         }}>
         <View style={styles.centeredView}>
           <View style={{ ...styles.modalView, borderWidth: 2, borderColor: ternaryThemeColor }}>
-            <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={require('../../../assets/images/failed.png')}></Image>
+            {/* <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={require('../../../assets/images/failed.png')}></Image> */}
             <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>SORRY</Text>
 
             <Text style={{ ...styles.modalText, fontSize: 20, fontWeight: '600', color: 'black' }}>{props.message}</Text>

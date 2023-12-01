@@ -595,6 +595,8 @@ const SharedPointsHistory = ({ navigation }) => {
     const description = props.description
     const productCode = props.productCode
     const time = props.time
+    const name =props.name
+    const mobile = props.mobile
     const amount = props.amount
     const data = props.data
     // console.log("data", data)
@@ -609,13 +611,18 @@ const SharedPointsHistory = ({ navigation }) => {
         <View style={{ alignItems: "flex-start", justifyContent: "center", marginLeft: 10, width: 200 }}>
           <PoppinsTextMedium style={{ fontWeight: '600', fontSize: 14, textAlign: 'auto', color: 'black' }} content={description}></PoppinsTextMedium>
           <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12 }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", color: 'black' }}>
+          
+          <PoppinsTextMedium style={{ color: "#91B406", fontSize: 12, color: 'grey' }} content={`Scanned By : ${name}`}></PoppinsTextMedium>
+        <PoppinsTextMedium style={{ color: "#91B406", fontSize: 12, color: 'grey' }} content={`Mobile Number : ${mobile}`}></PoppinsTextMedium>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", color: 'black' }}>
             <Image style={{ height: 14, width: 14, resizeMode: "contain" }} source={require('..s/../../assets/images/clock.png')}></Image>
             <PoppinsTextMedium style={{ fontWeight: '200', fontSize: 12, marginLeft: 4, color: 'black' }} content={time}></PoppinsTextMedium>
           </View>
         </View>
+        
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}>
           <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/wallet.png')}></Image>
+          
           <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={` + ${amount}`}></PoppinsTextMedium>
         </View>
       </TouchableOpacity>
@@ -655,7 +662,7 @@ const SharedPointsHistory = ({ navigation }) => {
             getPointSharingData.body.data && getPointSharingData.body.data.map((item, index) => {
 
               return (
-                <ListItem key={item.id} data={item} description={item.product_name} productCode={item.product_code} time={moment(item.created_at).format('HH:mm a')} amount={item.points}></ListItem>
+                <ListItem name={item.name} mobile = {item.mobile} key={item.id} data={item} description={item.product_name} productCode={item.product_code} time={moment(item.created_at).format('HH:mm a')} amount={item.points}></ListItem>
 
               )
             })

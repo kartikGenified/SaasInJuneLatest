@@ -12,6 +12,9 @@ import userLocationSlice from './slices/userLocationSlice'
 import rewardCartSlice from './slices/rewardCartSlice'
 import userKycStatusSlice from './slices/userKycStatusSlice'
 import pointSharingSlice from './slices/pointSharingSlice'
+import redemptionAddressSlice from './slices/redemptionAddressSlice'
+import redemptionDataSlice from './slices/redemptionDataSlice'
+import fcmTokenSlice from './slices/fcmTokenSlice'
 
 export const store = configureStore({
   reducer: {
@@ -26,7 +29,10 @@ export const store = configureStore({
     userLocation:userLocationSlice,
     cart:rewardCartSlice,
     kycDataSlice:userKycStatusSlice,
-    pointSharing:pointSharingSlice
+    pointSharing:pointSharingSlice,
+    address:redemptionAddressSlice,
+    redemptionData:redemptionDataSlice,
+    fcmToken:fcmTokenSlice
 
   },
   middleware: (getDefaultMiddleware) =>

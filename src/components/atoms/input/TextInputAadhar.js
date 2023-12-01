@@ -4,13 +4,27 @@ import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import { useSendAadharOtpMutation } from '../../../apiServices/verification/AadharVerificationApi';
 import { useVerifyAadharMutation } from '../../../apiServices/verification/AadharVerificationApi';
 import ZoomImageAnimation from '../../animations/ZoomImageAnimation';
+import { useSelector } from 'react-redux';
+import FastImage from 'react-native-fast-image';
+
 const TextInputAadhar = (props) => {
     const [value,setValue] = useState()
     const [otp, setOtp] = useState()
     const [modalVisible, setModalVisible] = useState(false);
+    const [otpSent, setOtpSent] = useState(false)
+    const [showOtp, setShowOtp] = useState(false)
+    const [aadharVerified, setAadharVerified] =  useState(false)
     const placeHolder = props.placeHolder
     const required = props.required
+
   const label = props.label
+  const ternaryThemeColor = useSelector(
+    state => state.apptheme.ternaryThemeColor,
+  )
+    ? useSelector(state => state.apptheme.ternaryThemeColor)
+    : 'grey';
+    const gifUri = Image.resolveAssetSource(require('../../../../assets/gif/loader.gif')).uri;
+
     const [sendAadharOtpFunc,{
         data:sendAadharOtpData,
         error:sendAadharOtpError,
@@ -32,13 +46,18 @@ const TextInputAadhar = (props) => {
       {
         if(value.length===12)
       {
+        setShowOtp(true)
         
         const data = {
-          "aadhaar_number":"655675523712"
+          "aadhaar_number":value
       }
       sendAadharOtpFunc(data)
         
        
+      }
+      else{
+        setShowOtp(false)
+        
       }
       }
       
@@ -49,6 +68,7 @@ const TextInputAadhar = (props) => {
         {
             if(otp.length===6)
             {
+              
                 const data={
                     "ref_id":sendAadharOtpData.body.ref_id,
                   "otp":otp
@@ -65,6 +85,7 @@ const TextInputAadhar = (props) => {
         if(sendAadharOtpData.success)
         {
           console.log("success")
+          setOtpSent(true)
         }
         }
         else if(sendAadharOtpError)
@@ -80,6 +101,7 @@ const TextInputAadhar = (props) => {
               if(verifyAadharData.success)
               {
               setModalVisible(true)
+              setAadharVerified(true)
               }
             }
             else if(verifyAadharError){
@@ -121,19 +143,41 @@ const TextInputAadhar = (props) => {
           </View>
         </View>
       </Modal>
-            <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
+            <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10,flexDirection:'row'}}>
+            
             
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
                 <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = {label}></PoppinsTextMedium>
             </View>
-            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ?  `${placeHolder} *` : `${placeHolder}`}></TextInput>
+            <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'80%',alignItems:"center",justifyContent:"center",fontWeight:'500',color:'black',fontSize:16,position:'absolute',left:14}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ?  `${placeHolder} *` : `${placeHolder}`}></TextInput>
+            {aadharVerified && <View style={{alignItems:'center',justifyContent:'center',width:'20%',position:'absolute',right:0}}>
+              <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../../assets/images/greenTick.png')}></Image>
+            </View>}
         </View>
-       {sendAadharOtpData  && <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
+        {
+          otpSent && 
+          
+          <View style={{width:'100%',alignItems:'flex-start',justifyContent:'center'}}>
+            <PoppinsTextMedium style={{color:ternaryThemeColor,padding:4,fontSize:14,marginLeft:24}} content = "OTP Sent"></PoppinsTextMedium>
+          </View>
+
+        }
+       {showOtp  && <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
         
         <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
             <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = "OTP"></PoppinsTextMedium>
         </View>
         <TextInput maxLength={6} keyboardType='numeric'  style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{setOtp(text)}} value={otp} placeholder={`One time password *`}></TextInput>
+    
+      {verifyAadharIsLoading && <FastImage
+          style={{ width: 30, height: 30, alignSelf: 'center',position:'absolute',right:10 }}
+          source={{
+            uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />}
+      
     </View>}
         </View>
         

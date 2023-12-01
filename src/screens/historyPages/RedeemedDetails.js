@@ -22,6 +22,7 @@ import * as Keychain from 'react-native-keychain';
 import TrackDeliveryModal from "../../components/redeemDetails/TrackDeliveryModal";
 
 const RedeemedDetails = ({ navigation, route }) => {
+  const [status, setStatus] = useState("")
   const height = Dimensions.get("window").height;
   const data = route.params.data;
 
@@ -37,6 +38,12 @@ const RedeemedDetails = ({ navigation, route }) => {
   useEffect(() => {
     if (redeemedGiftStatusData) {
       console.log("redeemedGiftStatusData", redeemedGiftStatusData,data);
+
+      const statArray = (redeemedGiftStatusData.body)
+     
+      const arr  = Array.from(statArray)
+      console.log("Statdata",statArray , arr[1],redeemedGiftStatusData.status)
+      setStatus(arr[Number(data.status)])
     } else if (redeemedGiftStatusError) {
       console.log("redeemedGiftStatusError", redeemedGiftStatusError);
     }
@@ -309,7 +316,7 @@ const RedeemedDetails = ({ navigation, route }) => {
                   color: "#171717",
                   marginLeft: 10,
                 }}
-                content={`Delivery Status : ${deliveryStatus}`}
+                content={`Delivery Status : ${status}`}
               ></PoppinsTextMedium>
             </View>
           </View>

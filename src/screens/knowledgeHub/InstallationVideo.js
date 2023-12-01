@@ -40,10 +40,10 @@ const InstallationVideo = ({navigation}) => {
 
     const fetchVideoFunc = async () => {
         const credentials = await Keychain.getGenericPassword();
-        let obj = {
-            token: credentials.username,
-        }
-        getVediofunc(obj)
+        
+          const token = credentials.username
+       
+        getVediofunc(token)
     }
 
 

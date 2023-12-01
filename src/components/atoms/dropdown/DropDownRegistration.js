@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, StyleSheet,Text,Image,TouchableOpacity,FlatList,ScrollView} from 'react-native';
+import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 
 const DropDownRegistration = (props) => {
     const [selected, setSelected] = useState(props.header)
@@ -33,8 +34,12 @@ const DropDownRegistration = (props) => {
     }
     return (
         <View style={{backgroundColor:"white",width:'90%',borderBottomWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:'center',marginTop:10,marginBottom:10,marginLeft:10}}>
+            {/* <View style={{width:'100%',alignItems:'flex-start',justifyContent:'center'}}>
+            <PoppinsTextMedium style={{color:'black',fontSize:16,marginLeft:10}} content={name}></PoppinsTextMedium>
+
+            </View> */}
             <TouchableOpacity onPress={()=>{handleOpenList()}} style={{flexDirection:"row",width:'100%',alignItems:"center",justifyContent:'center',height:40,borderBottomWidth:1,borderColor:'#DDDDDD'}}>
-                <Text style={{color:'black',fontSize:14,position:"absolute",left:10,top:10}}>{selected}</Text>
+                <Text style={{color:'black',fontSize:14,position:"absolute",left:10,top:10,color:'black'}}>{selected}</Text>
                 <Image style={{height:14,width:14,resizeMode:"contain",position:"absolute",right:10,top:10}} source={require('../../../../assets/images/arrowDown.png')}></Image>
             </TouchableOpacity>
             

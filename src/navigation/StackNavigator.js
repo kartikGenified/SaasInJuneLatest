@@ -69,6 +69,11 @@ import AddAddress from '../screens/address/AddAddress';
 import ProductCategory from '../screens/productCategories/ProductCategory';
 import WhatsNew from '../screens/community/WhatsNew';
 import InstallationVideo from '../screens/knowledgeHub/InstallationVideo';
+import TierDetails from '../screens/community/TierDetails';
+import OtpVerification from '../screens/verification/OtpVerification';
+import FAQ from '../screens/myProgram/FAQ';
+import Tutorial from '../screens/myProgram/Tutorial';
+import AddedUserScanList from '../screens/addUser/AddedUserScanList';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -86,6 +91,32 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="WhatsNew" component={WhatsNew}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="AddedUserScanList" component={AddedUserScanList}></Stack.Screen>
+                
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="FAQ" component={FAQ}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="Tutorial" component={Tutorial}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="TierDetails" component={TierDetails}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="OtpVerification" component={OtpVerification}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

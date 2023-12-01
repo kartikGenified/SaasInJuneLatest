@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 import PoppinsTextMedium from "../../components/electrons/customFonts/PoppinsTextMedium";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import Plus from "react-native-vector-icons/AntDesign";
 import PoppinsText from "../../components/electrons/customFonts/PoppinsText";
 import {
@@ -11,11 +11,13 @@ import {
 import * as Keychain from "react-native-keychain";
 import PoppinsTextLeftMedium from "../../components/electrons/customFonts/PoppinsTextLeftMedium";
 import { useIsFocused } from "@react-navigation/native";
+import { addAddress } from "../../../redux/slices/redemptionAddressSlice";
 const ListAddress = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState();
   const [addressList, setAddressList] = useState();
   const focused = useIsFocused()
+  const dispatch = useDispatch()
   const ternaryThemeColor = useSelector(
     (state) => state.apptheme.ternaryThemeColor
   )
@@ -35,6 +37,8 @@ const ListAddress = ({ navigation }) => {
     console.log("Selected", data);
     setSelectedIndex(data.index);
     // setSelectedAddress(data)
+    dispatch(addAddress(data))
+
   };
   useEffect(() => {
     const getToken = async () => {
@@ -119,13 +123,14 @@ const ListAddress = ({ navigation }) => {
       state: state,
       country: country,
       pincode: pincode,
+      data:data
     };
 
     useEffect(() => {
-      console.log("props.isSelected", props.isSelected);
+      console.log("props.isSelected", props.isSelected=="1");
       if (props.isSelected == "1") {
         setSelected(true);
-        props.setAddress(addressJson);
+        // props.setAddress(addressJson);
       }
     }, [props.isSelected]);
 
@@ -324,6 +329,7 @@ const ListAddress = ({ navigation }) => {
           addressList.map((item, index) => {
             return (
               <AddressComponent
+                key ={index}
                 data={item}
                 deleteAddress={deleteAddress}
                 isSelected={item.status}
@@ -351,6 +357,12 @@ const ListAddress = ({ navigation }) => {
           paddingTop: 30,
         }}
       >
+        <TouchableOpacity style={{height:40,width:120,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:4,position:'absolute',left:20}} onPress={()=>{
+          navigation.navigate('OtpVerification',{type:"Gift"})
+        }}>
+          <PoppinsTextMedium style={{fontSize:18,color:'white',fontWeight:'700'}} content="Select"></PoppinsTextMedium>
+
+        </TouchableOpacity>
         <View
           style={{
             flexDirection: "row",
@@ -362,7 +374,7 @@ const ListAddress = ({ navigation }) => {
         >
           <PoppinsText
             content="Add Address"
-            style={{ color: ternaryThemeColor, fontSize: 20 }}
+            style={{ color: ternaryThemeColor, fontSize: 16 }}
           ></PoppinsText>
           <TouchableOpacity
             onPress={() => {
@@ -370,15 +382,15 @@ const ListAddress = ({ navigation }) => {
             }}
             style={{
               backgroundColor: "#DDDDDD",
-              height: 60,
-              width: 60,
-              borderRadius: 30,
+              height: 40,
+              width: 40,
+              borderRadius: 20,
               alignItems: "center",
               justifyContent: "center",
               marginLeft: 10,
             }}
           >
-            <Plus name="pluscircle" size={50} color={ternaryThemeColor}></Plus>
+            <Plus name="pluscircle" size={30} color={ternaryThemeColor}></Plus>
           </TouchableOpacity>
         </View>
       </View>

@@ -135,13 +135,13 @@ export default function GiftCatalogue({ navigation }) {
             style={{ color: "black", fontSize: 14, fontWeight: "700" }}
             content={name}
           ></PoppinsTextMedium>
-          <PoppinsTextMedium
+          {/* <PoppinsTextMedium
             style={{ color: "grey", fontSize: 14, fontWeight: "700" }}
             content={`Worth Rs : ${worth} INR`}
-          ></PoppinsTextMedium>
+          ></PoppinsTextMedium> */}
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 14, fontWeight: "700" }}
-            content={`Coin : ${coin}`}
+            content={`Points : ${coin}`}
           ></PoppinsTextMedium>
         </View>
       </View>

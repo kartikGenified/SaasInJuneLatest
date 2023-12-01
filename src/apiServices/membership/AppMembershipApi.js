@@ -20,6 +20,7 @@ export const AppMembershipApi = baseApi.injectEndpoints({
    
     getMembership: builder.mutation({
     query: (token) => {
+        console.log(token)
     return {
     method: "GET",
     url: `/api/app/membership`,

@@ -1,4 +1,4 @@
-import React, {useEffect, useId, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,23 +11,28 @@ import {
 } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
-import {BaseUrlImages} from '../../utils/BaseUrlImages';
+import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import { useRedeemGiftsMutation } from '../../apiServices/gifts/RedeemGifts';
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
 import SuccessModal from '../../components/modals/SuccessModal';
 import MessageModal from '../../components/modals/MessageModal';
+import { useDispatch } from 'react-redux';
+import { additem } from '../../../redux/slices/rewardCartSlice';
 
-const CartList = ({navigation, route}) => {
+const CartList = ({ navigation, route }) => {
   const [cart, setCart] = useState(route.params.cart);
-    const [cartId, setCartId] = useState([])
+  const [cartId, setCartId] = useState([])
+
   const [showSubmitButtons, setShowSubmitButtons] = useState(false)
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
+
+  const dispatch = useDispatch();
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -40,85 +45,91 @@ const CartList = ({navigation, route}) => {
   )
     ? useSelector(state => state.apptheme.secondaryThemeColor)
     : '#FFB533';
-    const userData = useSelector(state => state.appusersdata.userData);
+  const userData = useSelector(state => state.appusersdata.userData);
 
-  console.log('userdata',route.params.cart);
-    const height = Dimensions.get('window').height
+  console.log('userdata', route.params.cart);
+  const height = Dimensions.get('window').height
 
-const [redeemGiftsFunc,{
-    data:redeemGiftsData,
-    error:redeemGiftsError,
-    isLoading:redeemGiftsIsLoading,
-    isError:redeemGiftsIsError
-}] = useRedeemGiftsMutation()
+  
 
-const modalClose = () => {
+  const modalClose = () => {
     setError(false);
     setSuccess(false)
   };
 
-const handleGiftRedemption=async()=>{
-    let tempID = []
-    cart && cart.map((item,index)=>{
+  const handleGiftRedemption = async () => {
+    if(cart.length===0)
+    {
+      setError(true)
+      setMessage("Cart cannot be empty")
+    }
+    else{
+      let tempID = []
+      cart && cart.map((item, index) => {
         tempID.push(((item.gift_id)))
-    })
+      })
+      console.log("tempID", tempID)
+      dispatch(additem(cart))
+  
+     
+        navigation.navigate("ListAddress", {
+          cart: cart
+        })
+    }
+       // const credentials = await Keychain.getGenericPassword();
+    // if (credentials) {
+    //   console.log(
+    //     'Credentials successfully loaded for user ' + credentials.username
+    //   );
+    //   const token = credentials.username
+    //   const data = {
+    //     "user_type_id": String(userData.user_type_id),
+    //     "user_type": userData.user_type,
+    //     "platform_id": 1,
+    //     "platform": "mobile",
+    //     "gift_ids": tempID,
+    //     "approved_by_id": "1",
+    //     "app_user_id": String(userData.id),
+    //     "remarks": "demo",
+    //     "type": "point"
+    //   }
+    //   const params = {
+    //     token: token,
+    //     data: data
+    //   }
+    //   redeemGiftsFunc(params)
     
-    console.log("tempID",tempID)
-    const credentials = await Keychain.getGenericPassword();
-                if (credentials) {
-                  console.log(
-                    'Credentials successfully loaded for user ' + credentials.username
-                  );
-                  const token = credentials.username
-                  const data = {
-                    "user_type_id":String(userData.user_type_id),
-                    "user_type":userData.user_type,
-                    "platform_id":1,
-                    "platform" :"mobile",
-                    "gift_ids":tempID,
-                    "approved_by_id":"1",
-                    "app_user_id" : String(userData.id),
-                    "remarks":"demo",
-                    "type":"point"
-                }
-                const params = {token:token,
-                data:data
-                }
-    redeemGiftsFunc(params)
-                  }
-}
+    // }
+  }
 
-useEffect(()=>{
-    if(redeemGiftsData){
-        console.log("redeemGiftsData",redeemGiftsData)
-        setSuccess(true)
-        setMessage(redeemGiftsData.message)
-    }
-    else if(redeemGiftsError){
-        console.log("redeemGiftsError",redeemGiftsError)
-        setMessage(redeemGiftsError.data.message)
-        setError(true)
-    }
-},[redeemGiftsError,redeemGiftsData])
+  
 
   const RedeemButton = () => {
     const [showLoading, setShowLoading] = useState(true)
     const [redeem, setRedeem] = useState(false);
-    
-    const handleTimeout=()=>{
-        setTimeout(()=>{
-            setShowLoading(false)
-            setShowSubmitButtons(true)
-        },2000)
+
+    const handleTimeout = () => {
+      setTimeout(() => {
+        setShowLoading(false)
+        setShowSubmitButtons(true)
+      }, 2000)
     }
-    console.log('Redeem',redeem,showLoading);
+    console.log('Redeem', redeem, showLoading);
 
     return (
       <TouchableOpacity
         onPress={() => {
-          setRedeem(true);
+          if(cart.length===0)
+          {
+            setError(true)
+            setMessage("Cart cannot be empty")
+          }
+          else{
+            setRedeem(true);
 
-          handleTimeout()
+            handleTimeout()
+          } 
+         
         }}
         style={{
           alignItems: 'center',
@@ -128,14 +139,14 @@ useEffect(()=>{
           width: '90%',
           borderRadius: 10,
           flexDirection: 'row',
-          
-          marginBottom:20
+
+          marginBottom: 20
         }}>
         {!redeem && (
           <>
             <PoppinsTextMedium
               content="Redeem"
-              style={{color: 'white', fontWeight: '700'}}></PoppinsTextMedium>
+              style={{ color: 'white', fontWeight: '700' }}></PoppinsTextMedium>
             <Image
               style={{
                 height: 20,
@@ -146,7 +157,7 @@ useEffect(()=>{
               source={require('../../../assets/images/whiteArrowRight.png')}></Image>
           </>
         )}
-        {showLoading && redeem &&(
+        {showLoading && redeem && (
           <View
             style={{
               flexDirection: 'row',
@@ -192,6 +203,7 @@ useEffect(()=>{
   };
 
   const ConfirmAndCancelButton = () => {
+    // navigation.navigate("ListAddress",{})
     return (
       <View
         style={{
@@ -203,6 +215,9 @@ useEffect(()=>{
           flexDirection: 'row',
         }}>
         <TouchableOpacity
+        onPress={()=>{
+          navigation.navigate("RedeemGifts")
+        }}
           style={{
             height: 50,
             width: '46%',
@@ -212,11 +227,11 @@ useEffect(()=>{
             borderRadius: 6,
           }}>
           <PoppinsTextMedium
-            style={{color: 'white', fontWeight: '700'}}
+            style={{ color: 'white', fontWeight: '700' }}
             content="Cancel"></PoppinsTextMedium>
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={()=>{handleGiftRedemption()}}
+          onPress={() => { handleGiftRedemption() }}
           style={{
             height: 50,
             width: '46%',
@@ -227,7 +242,7 @@ useEffect(()=>{
             borderRadius: 6,
           }}>
           <PoppinsTextMedium
-            style={{color: 'white', fontWeight: '700'}}
+            style={{ color: 'white', fontWeight: '700' }}
             content="Confirm"></PoppinsTextMedium>
         </TouchableOpacity>
       </View>
@@ -236,13 +251,13 @@ useEffect(()=>{
   const CoinsConsumed = () => {
     const [pointsConsumed, setPointsConsumed] = useState()
 
-    useEffect(()=>{
-        let temp = 0;
-        cart && cart.map((item)=>{
-            temp = Number(item.points)+temp;
-        })
-        setPointsConsumed(temp)
-    },[cart])
+    useEffect(() => {
+      let temp = 0;
+      cart && cart.map((item) => {
+        temp = Number(item.points) + temp;
+      })
+      setPointsConsumed(temp)
+    }, [cart])
     return (
       <View
         style={{
@@ -250,23 +265,23 @@ useEffect(()=>{
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',
-          height:40,
-          borderTopWidth:1,
-          borderColor:"#DDDDDD",
-          
+          height: 40,
+          borderTopWidth: 1,
+          borderColor: "#DDDDDD",
+
         }}>
-        <PoppinsTextMedium style={{color:'#292626',fontSize:16,fontWeight:'700'}} content="Total Points Consumed :"></PoppinsTextMedium>
+        <PoppinsTextMedium style={{ color: '#292626', fontSize: 16, fontWeight: '700' }} content="Total Points Consumed :"></PoppinsTextMedium>
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row',
-            
+
           }}>
           <Image
-            style={{height: 30, width: 30, resizeMode: 'contain'}}
+            style={{ height: 30, width: 30, resizeMode: 'contain' }}
             source={require('../../../assets/images/reward.png')}></Image>
-        <PoppinsTextMedium style={{color:'black',fontSize:16,fontWeight:'700'}} content={pointsConsumed}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: 'black', fontSize: 16, fontWeight: '700' }} content={pointsConsumed}></PoppinsTextMedium>
 
         </View>
       </View>
@@ -297,7 +312,7 @@ useEffect(()=>{
     return (
       <TouchableOpacity
         onPress={() => {
-        //   navigation.navigate('CartList');
+          //   navigation.navigate('CartList');
         }}
         style={{
           height: 120,
@@ -308,9 +323,9 @@ useEffect(()=>{
           borderColor: '#EEEEEE',
           backgroundColor: '#FFFFFF',
           margin: 10,
-          marginTop:10,
+          marginTop: 10,
           elevation: 4,
-          borderRadius:10
+          borderRadius: 10
         }}>
         <View
           style={{
@@ -334,8 +349,8 @@ useEffect(()=>{
               top: 14,
             }}>
             <Image
-              style={{height: 46, width: 56, resizeMode: 'center'}}
-              source={{uri: BaseUrlImages + image}}></Image>
+              style={{ height: 46, width: 56, resizeMode: 'center' }}
+              source={{ uri: BaseUrlImages + image }}></Image>
           </View>
           <LinearGradient
             style={{
@@ -350,7 +365,7 @@ useEffect(()=>{
             }}
             colors={['#FF9100', '#E4C52B']}>
             <Image
-              style={{height: 20, width: 20, resizeMode: 'contain'}}
+              style={{ height: 20, width: 20, resizeMode: 'contain' }}
               source={require('../../../assets/images/coin.png')}></Image>
             <PoppinsTextMedium
               style={{
@@ -376,7 +391,7 @@ useEffect(()=>{
               justifyContent: 'center',
             }}>
             <Image
-              style={{height: 28, width: 28, resizeMode: 'contain'}}
+              style={{ height: 28, width: 28, resizeMode: 'contain' }}
               source={require('../../../assets/images/delete.png')}></Image>
           </TouchableOpacity>
         </View>
@@ -389,7 +404,7 @@ useEffect(()=>{
             marginTop: 4,
           }}>
           <PoppinsTextMedium
-            style={{color: 'black', fontSize: 11, width: '90%', marginLeft: 4}}
+            style={{ color: 'black', fontSize: 11, width: '90%', marginLeft: 4 }}
             content={product}></PoppinsTextMedium>
           <View
             style={{
@@ -399,7 +414,7 @@ useEffect(()=>{
               marginLeft: 4,
             }}>
             <PoppinsTextMedium
-              style={{color: '#919191', fontSize: 11, width: '90%'}}
+              style={{ color: '#919191', fontSize: 11, width: '90%' }}
               content={category}></PoppinsTextMedium>
           </View>
         </View>
@@ -414,35 +429,35 @@ useEffect(()=>{
         width: '100%',
         backgroundColor: ternaryThemeColor,
         height: '100%',
-        
-        
+
+
       }}>
-        {error && (
-            <ErrorModal
-              modalClose={modalClose}
-              message={message}
-              openModal={error}
-              navigateTo="Verification"></ErrorModal>
-          )}
-          {success && (
-            <MessageModal
-              modalClose={modalClose}
-              message={message}
-              openModal={success}
-              navigateTo="RedeemedHistory"
-              ></MessageModal>
-          )}
+      {error && (
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+          ></ErrorModal>
+      )}
+      {success && (
+        <MessageModal
+          modalClose={modalClose}
+          message={message}
+          openModal={success}
+          
+        ></MessageModal>
+      )}
       <View
-        style={{  
+        style={{
           alignItems: 'center',
           justifyContent: 'flex-start',
           flexDirection: 'row',
           width: '100%',
-         
+
           height: '10%',
           marginLeft: 20,
-          
-       
+
+
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -458,7 +473,7 @@ useEffect(()=>{
             }}
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <PoppinsTextMedium
             content="Redeem Points"
             style={{
@@ -469,48 +484,50 @@ useEffect(()=>{
             }}></PoppinsTextMedium>
         </View>
       </View>
-      
+
       <View
         style={{
-          height:'90%',
+          height: '90%',
           width: '100%',
           borderTopRightRadius: 40,
           borderTopLeftRadius: 40,
           alignItems: 'center',
           justifyContent: 'flex-start',
           backgroundColor: 'white',
-         
+
         }}>
-             
+
         {cart && cart.length !== 0 &&
           <FlatList
-          data={cart}
-          style={{width: '100%',marginTop:20,marginBottom:20}}
-          contentContainerStyle={{width: '100%',marginLeft:10,marginBottom:20, borderTopRightRadius: 40,
-          borderTopLeftRadius: 40,}}
-          renderItem={({item, index}) => {
-            
-            return (
-              <RewardsBox
-              
-                data={item}
-                key={index}
-                product={item.name}
-                category={item.catalogue_name}
-                points={item.points}
-                image={item.images[0]}></RewardsBox>
-            );
-          }}
-          keyExtractor={(item,index) => index}
-        />
-          }
+            data={cart}
+            style={{ width: '100%', marginTop: 20, marginBottom: 20 }}
+            contentContainerStyle={{
+              width: '100%', marginLeft: 10, marginBottom: 20, borderTopRightRadius: 40,
+              borderTopLeftRadius: 40,
+            }}
+            renderItem={({ item, index }) => {
+
+              return (
+                <RewardsBox
+
+                  data={item}
+                  key={index}
+                  product={item.name}
+                  category={item.catalogue_name}
+                  points={item.points}
+                  image={item.images[0]}></RewardsBox>
+              );
+            }}
+            keyExtractor={(item, index) => index}
+          />
+        }
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-           
+
             width: '100%',
-            
+
           }}>
           {!showSubmitButtons && <RedeemButton></RedeemButton>}
           {showSubmitButtons && <CoinsConsumed></CoinsConsumed>}

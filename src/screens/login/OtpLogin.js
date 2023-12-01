@@ -523,11 +523,11 @@ const OtpLogin = ({ navigation, route }) => {
     }
   }, [getNameData, getNameError])
 
-  useEffect(() => {
-    setName('')
-    setMobile('')
+  // useEffect(() => {
+  //   setName('')
+  //   setMobile('')
 
-  }, [focused])
+  // }, [focused])
 
   const getMobile = data => {
     // console.log(data)
@@ -552,8 +552,15 @@ const OtpLogin = ({ navigation, route }) => {
 
 
   const getName = data => {
-    // console.log(data)
-    setName(data)
+    if(data!==undefined)
+    {
+    console.log("name data is",typeof data, data.length)
+     
+        setName(data)
+      
+    }
+   
+   
   };
 
   const getCheckBoxData = (data) => {
@@ -567,7 +574,9 @@ const OtpLogin = ({ navigation, route }) => {
   }
   const handleButtonPress = () => {
     // console.log("first",getNameData.message)
-    if (getNameData && isChecked) {
+    // console.log("mobile",mobile,name.length,name,isChecked,getNameData)
+    if (getNameData && isChecked && name!==undefined && mobile!==undefined && mobile.length!==0 && name.length!==0) {
+      // console.log("mobile",mobile,name.length)
       if (getNameData.message === "Not Found") {
         console.log("registrationRequired", registrationRequired)
         registrationRequired ? navigation.navigate('BasicInfo', { needsApproval: needsApproval, userType: user_type, userId: user_type_id, name: name, mobile: mobile, navigatingFrom: "OtpLogin" }) : navigateToOtp()

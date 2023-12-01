@@ -16,14 +16,16 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import ProgressBar from '../../components/miscellaneous/ProgressBar';
 import RedeemRewardDataBoxWithoutImage from '../../components/molecules/RedeemRewardDataBoxWithoutImage';
 import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import PlatinumModal from '../../components/platinum/PlatinumModal';
+import { useGetActiveMembershipMutation } from '../../apiServices/membership/AppMembershipApi';
 
 const RedeemRewardHistory = ({navigation}) => {
     const [showCoupons, setShowCoupons] = useState(false)
     const [showWheel, setShowWheel] = useState(false)
     const [showPoints, setShowPoints] = useState(false)
     const [showCashback, setShowCashback] = useState(false)
-
-
+    const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
+    const [membership, setMemberShip] = useState('')
 
     const userData = useSelector(state=>state.appusersdata.userData)
     const workflowProgram = useSelector(state => state.appWorkflow.program);
@@ -66,6 +68,12 @@ const RedeemRewardHistory = ({navigation}) => {
         isError:getAllRedeemedIsError
     }] = useGetAllRedeemedCouponsMutation()
 
+    const [getActiveMembershipFunc, {
+        data: getActiveMembershipData,
+        error: getActiveMembershipError,
+        isLoading: getActiveMembershipIsLoading,
+        isError: getActiveMembershipIsError
+      }] = useGetActiveMembershipMutation()
     const [fetchCashbackEnteriesFunc,{
         data:fetchCashbackEnteriesData,
         error:fetchCashbackEnteriesError,
@@ -101,6 +109,17 @@ const RedeemRewardHistory = ({navigation}) => {
         }
     
     },[userPointData,userPointError])
+
+    useEffect(() => {
+        if (getActiveMembershipData) {
+          console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
+          setMemberShip(getActiveMembershipData.body?.tier.name)
+        }
+        else if (getActiveMembershipError) {
+          console.log("getActiveMembershipError", getActiveMembershipError)
+        }
+      }, [getActiveMembershipData, getActiveMembershipError])
+
       useEffect(() => {
         (async () => {
             const credentials = await Keychain.getGenericPassword();
@@ -142,6 +161,7 @@ const RedeemRewardHistory = ({navigation}) => {
 },[getAllRedeemedError,getAllRedeemedData])
     useEffect(()=>{
         fetchPoints()
+        getMembership()
     },[])
   const userId = useSelector(state => state.appusersdata.id);
 
@@ -167,7 +187,7 @@ const RedeemRewardHistory = ({navigation}) => {
 
     },[fetchUserPointsHistoryData,fetchUserPointsHistoryError])
     const name = userData.name
-    const membership = "Platinum Membership"
+   
     console.log(showCashback,showCoupons,showPoints,showWheel)
     useEffect(()=>{
         if(fetchCashbackEnteriesData)
@@ -180,6 +200,25 @@ const RedeemRewardHistory = ({navigation}) => {
         }
     },[fetchCashbackEnteriesData,fetchCashbackEnteriesError])
 
+    const hideSuccessModal = () => {
+        setIsSuccessModalVisible(false);
+      };
+  
+      const showSuccessModal = () => {
+        setIsSuccessModalVisible(true);
+        console.log("hello")
+      };
+
+    const getMembership = async () => {
+        const credentials = await Keychain.getGenericPassword();
+        if (credentials) {
+          console.log(
+            'Credentials successfully loaded for user ' + credentials.username
+          );
+          const token = credentials.username
+          getActiveMembershipFunc(token)
+        }
+      }
     const DreamGiftComponent =()=>{
         const milestoneData = {"campaign": null, "data": ["https://paramount-dev.genefied.co/uploads/dashboard-banners/1692253456.3752-134428.jpg", "https://paramount-dev.genefied.co/uploads/dashboard-banners/1692170724.6659-716345.jpg", "https://paramount-dev.genefied.co/uploads/dashboard-banners/1692168073.1434-51908.jpg", "https://paramount-dev.genefied.co/uploads/dashboard-banners/1692167976.6234-134428.jpg", "https://paramount-dev.genefied.co/uploads/dashboard-banners/1691221267.6337-63217.jpg", "https://paramount-dev.genefied.co/uploads/dashboard-banners/banner-small.png"], "message": "Fetched banner successfully", "milestones": [{"achieved": "1", "image": "https://www.shreesaiholidays.in/wp-content/uploads/2018/01/Goa.png", "name": "Goa (Pkg for 1) (3N/4D)", "threshold": "1000"}, {"achieved": "0", "image": "https://www.shreesaiholidays.in/wp-content/uploads/2018/01/Goa.png", "name": "Goa (Pkg for 2) (3N/4D)", "threshold": "1500"}, {"achieved": "0", "image": "https://i.pinimg.com/originals/9d/54/91/9d5491d5c9b42b9f097af7bd014ac083.jpg", "name": "Bangkok (Pkg for 2) (3N/4D)", "threshold": "2200"}, {"achieved": "0", "image": "https://traveldivaishnavi.com/wp-content/uploads/2018/02/Dubai-5D4N-Package-1-675x460.jpg", "name": "Dubai (Pkg for 2) (3N/4D)", "threshold": "3000"}], "pointData": {"amount_redeemed": 0, "qr_count": 0}, "status": "200", "unread_notification_count": "2", "user": {"aadhaar": "393856466133", "aadhaar_image": null, "aadhaar_verified": "1", "address": "MCF 1753, Gali-43, Faridabad Sector 22, Faridabad Sector 22, Faridabad, Faridabad, Haryana, India, 121005", "address_2": null, "alt_mobile": null, "auth_token": "TdAbU4qyw7ZxJEgFkHfsc35WaVD0u1jSzOo2R8CXQKhvNrPnmp", "city": null, "code": "RT00001", "created_on": "2023-09-22 11:29:00", "district": null, "dob": null, "email": "mitesh.kumar@genuinemark.org", "est_date": null, "fcm_token": "fcmtokeforretailer", "gender": null, "gst_image": null, "gstin": "08AAACP0969Q1ZS", "id": "1", "is_mobile_verified": "1", "mobile": "9811732568", "mpin": null, "name": "Mitesh", "pancard": "", "pancard_image": null, "pancard_verified": "1", "password": "12345", "pincode": null, "platform": null, "profile_image": null, "remarks": null, "shop_image": null, "shop_name": "PARAMOUNT COMMUNICATIONS LIMITED", "state": null, "status": "4", "updated_on": "2023-09-22 12:04:34", "user_type": "2"}}
         return(
@@ -348,11 +387,30 @@ const RedeemRewardHistory = ({navigation}) => {
             {/* --------------------------- */}
             <View style={{flexDirection:"row",height:50,width:'100%',alignItems:"center",justifyContent:"flex-start"}}>
                 <PoppinsText content={name} style={{color:'white',fontSize:20,marginLeft:20}}></PoppinsText>
-                <View style={{height:20,width:2,backgroundColor:"white",marginLeft:10}}></View>
-                <Image style={{height:20,width:20,resizeMode:'contain',marginLeft:10}} source={require('../../../assets/images/reward.png')}></Image>
-                <PoppinsTextMedium style={{color:"white"}} content={membership}></PoppinsTextMedium>
+                {
+                getActiveMembershipData && <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft:4
+              }}>
+              <Image
+                style={{ height: 16, width: 16, resizeMode: 'contain' }}
+                source={require('../../../assets/images/reward.png')}></Image>
+              <TouchableOpacity onPress={
+                showSuccessModal
+              }>
+                <PoppinsTextMedium
+                  style={{ color: 'white', fontSize: 14 ,marginLeft:2}}
+                  content={membership}></PoppinsTextMedium>
+              </TouchableOpacity>
+
             </View>
-            
+            }
+                <PlatinumModal isVisible={isSuccessModalVisible} onClose={hideSuccessModal} getActiveMembershipData={getActiveMembershipData} />
+
+                </View>
             <View style={{alignItems:"flex-start",justifyContent:"center",width:'100%',top:10}}>
             <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
            {showCoupons &&
@@ -372,7 +430,7 @@ const RedeemRewardHistory = ({navigation}) => {
             </ScrollView>
 
             </View>
-
+            
             </View>
             {showPoints && <EarnedPointList></EarnedPointList>}
             

@@ -25,7 +25,7 @@ const FAQ = ({ navigation }) => {
     const tempArr = [
         {
             que: 'What is FAQ',
-            ans: 'FAQ is FAQ'
+            ans: 'FAQ is FAQ dnjf jdnf df dsnka dsc vk vnd  vjk fkn nvndkv jl vfjfvnv jv    jfs nk'
         },
 
         {
@@ -75,7 +75,8 @@ const FAQ = ({ navigation }) => {
 
         
 
-    const faqComp = (item) => {
+    const FaqComp = (props) => {
+        const item = props.item
         console.log("FAQ item", FAQ)
         const [queVisible, setQueVisible] = useState(false);
         return (
@@ -85,13 +86,13 @@ const FAQ = ({ navigation }) => {
                 }} style={{ flexDirection: 'row' }}>
                     <Image style={{ height: 14, width: 14, resizeMode: "contain", position: "absolute", right: 10, top: 10 }} source={require('../../../assets/images/arrowDown.png')}></Image>
                     <View >
-                        <PoppinsTextLeftMedium style={{ fontSize: 20, color: '#000000', fontWeight: '800' }} content={item?.que}></PoppinsTextLeftMedium>
+                        <PoppinsTextLeftMedium style={{ fontSize: 20, color: '#000000', fontWeight: '800' }} content={item?.question}></PoppinsTextLeftMedium>
                     </View>
                 </TouchableOpacity>
 
 
                 {queVisible && (
-                    <PoppinsTextLeftMedium content={item.ans} style={{ fontSize: 16, color: '#808080', fontWeight: '600', marginTop: 10 }}></PoppinsTextLeftMedium>
+                    <PoppinsTextLeftMedium content={item.answer?.[0]} style={{ fontSize: 14, color: '#808080', fontWeight: '600', marginTop: 10 }}></PoppinsTextLeftMedium>
                 )}
 
             </View>
@@ -124,13 +125,12 @@ const FAQ = ({ navigation }) => {
 
 
             </View>
-            {/* navigator */}
-            {console.log("faqData faq", faqData)}
+          
             {
-                faqData && faqData?.map((item) => {
+                faqData && faqData.map((item) => {
                     return (
-                        <View id={item.id}>
-                            {faqComp(item)}
+                        <View key={item.id}>
+                            <FaqComp item = {item}></FaqComp>
                         </View>
                     )
 

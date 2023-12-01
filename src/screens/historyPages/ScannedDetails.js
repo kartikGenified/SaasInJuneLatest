@@ -60,12 +60,12 @@ const ScannedDetails = ({navigation,route}) => {
             <StatusBox status={status}></StatusBox>
             {/* <Image style={{height:70,width:70,resizeMode:"contain",marginTop:20}} source={require('../../../assets/images/greenTick.png')}></Image> */}
             
-            <View style={{alignItems:"center",justifyContent:"center",flexDirection:"row",marginTop:20}}>
+            {/* <View style={{alignItems:"center",justifyContent:"center",flexDirection:"row",marginTop:20}}>
             <PoppinsTextMedium style={{fontSize:20,fontWeight:'800',color:'black'}} content="Points : "></PoppinsTextMedium>
             <View style={{backgroundColor:'#FFD11E',padding:10,borderRadius:24,paddingLeft:24,paddingRight:24}}>
             <PoppinsTextMedium style={{fontSize:20,fontWeight:'800',color:'black'}} content={points}></PoppinsTextMedium>
             </View>           
-            </View>
+            </View> */}
 
             <View style={{flexDirection:"row",alignItems:"center",justifyContent:"center",marginTop:10}}>
                 <View style={{flexDirection:"row",alignItems:"center",justifyContent:"center"}}>

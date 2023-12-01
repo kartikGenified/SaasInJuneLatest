@@ -1,4 +1,4 @@
-import React, {useEffect, useId, useState} from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
   Dimensions
 } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
-import {useSelector,useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import TextInputRectangleMandatory from '../../components/atoms/input/TextInputRectangleMandatory';
 import TextInputRectangle from '../../components/atoms/input/TextInputRectangle';
 import TextInputNumericRectangle from '../../components/atoms/input/TextInputNumericRectangle';
@@ -21,7 +21,7 @@ import MessageModal from '../../components/modals/MessageModal';
 import RegistrationProgress from '../../components/organisms/RegistrationProgress';
 import { useGetFormAccordingToAppUserTypeMutation } from '../../apiServices/workflow/GetForms';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
-import { useRegisterUserByBodyMutation } from '../../apiServices/register/UserRegisterApi';
+import { useRegisterUserByBodyMutation,useUpdateProfileAtRegistrationMutation } from '../../apiServices/register/UserRegisterApi';
 import TextInputAadhar from '../../components/atoms/input/TextInputAadhar';
 import TextInputPan from '../../components/atoms/input/TextInputPan';
 import TextInputGST from '../../components/atoms/input/TextInputGST';
@@ -31,12 +31,21 @@ import axios from 'axios';
 import PrefilledTextInput from '../../components/atoms/input/PrefilledTextInput';
 import { useGetLocationFromPinMutation } from '../../apiServices/location/getLocationFromPincode';
 import PincodeTextInput from '../../components/atoms/input/PincodeTextInput';
+import OtpInput from '../../components/organisms/OtpInput';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import { useGetLoginOtpMutation } from '../../apiServices/login/otpBased/SendOtpApi';
+import { useGetAppLoginMutation } from '../../apiServices/login/otpBased/OtpLoginApi';
+import { useVerifyOtpMutation } from '../../apiServices/login/otpBased/VerifyOtpApi';
+import { useGetLoginOtpForVerificationMutation } from '../../apiServices/otp/GetOtpApi';
+import { useVerifyOtpForNormalUseMutation } from '../../apiServices/otp/VerifyOtpForNormalUseApi';
 import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegistration';
 
-const BasicInfo = ({navigation,route}) => {
-    const [message, setMessage] = useState();
-    const [success, setSuccess] = useState(false);
+
+const BasicInfo = ({ navigation, route }) => {
+  const [userName, setUserName] = useState(route.params.name)
+  const [userMobile, setUserMobile] = useState(route.params.mobile)
+  const [message, setMessage] = useState();
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [registrationForm, setRegistrationForm] = useState([])
   const [responseArray, setResponseArray] = useState([]);
@@ -45,6 +54,14 @@ const BasicInfo = ({navigation,route}) => {
   const [needsAadharVerification, setNeedsAadharVerification] = useState(false)
   const [location, setLocation] = useState()
   const [formFound, setFormFound] = useState(true)
+  const [otp, setOtp] = useState("")
+  const [otpVerified, setOtpVerified] = useState(false)
+  const [otpModal, setOtpModal] = useState(false)
+  const [otpVisible, setOtpVisible] = useState(false)
+  
+
+
+
   const dispatch = useDispatch()
 
   const ternaryThemeColor = useSelector(
@@ -58,7 +75,7 @@ const BasicInfo = ({navigation,route}) => {
   )
     ? useSelector(state => state.apptheme.secondaryThemeColor)
     : '#FFB533';
-
+  const isOnlineVerification = useSelector(state=>state.apptheme.isOnlineVerification)
   const userData = useSelector(state => state.appusersdata.userData);
   const appUsers = useSelector(state => state.appusers.value)
   const manualApproval = useSelector(state => state.appusers.manualApproval)
@@ -68,318 +85,447 @@ const BasicInfo = ({navigation,route}) => {
   const navigatingFrom = route.params.navigatingFrom
   const name = route.params?.name
   const mobile = route.params?.mobile
-  console.log("appUsers",userType,userTypeId,isManuallyApproved,name,mobile)
-    const width = Dimensions.get('window').width
-    const height = Dimensions.get('window').height
+  console.log("appUsers", userType, userTypeId, isManuallyApproved, name, mobile)
+  const width = Dimensions.get('window').width
+  const height = Dimensions.get('window').height
 
-    const [getFormFunc,{
-      data:getFormData,
-      error:getFormError,
-      isLoading:getFormIsLoading,
-      isError:getFormIsError
-  }] =useGetFormAccordingToAppUserTypeMutation()
+  const [getFormFunc, {
+    data: getFormData,
+    error: getFormError,
+    isLoading: getFormIsLoading,
+    isError: getFormIsError
+  }] = useGetFormAccordingToAppUserTypeMutation()
 
   const [registerUserFunc,
-  {
-    data:registerUserData,
-    error:registerUserError,
-    isLoading:registerUserIsLoading,
-    isError:registerUserIsError
-  }] = useRegisterUserByBodyMutation()
+    {
+      data: registerUserData,
+      error: registerUserError,
+      isLoading: registerUserIsLoading,
+      isError: registerUserIsError
+    }] = useRegisterUserByBodyMutation()
 
-  const [getLocationFromPincodeFunc,{
-    data:getLocationFormPincodeData,
-    error:getLocationFormPincodeError,
-    isLoading:getLocationFormPincodeIsLoading,
-    isError:getLocationFromPincodeIsError
-  } ] = useGetLocationFromPinMutation()
+    const [
+      updateProfileAtRegistrationFunc,{
+        data:updateProfileAtRegistrationData,
+        error:updateProfileAtRegistrationError,
+        isLoading:updateProfileAtRegistrationIsLoading,
+        isError:updateProfileAtRegistrationIsError
+      }
+    ] = useUpdateProfileAtRegistrationMutation()
+
+  const [getLocationFromPincodeFunc, {
+    data: getLocationFormPincodeData,
+    error: getLocationFormPincodeError,
+    isLoading: getLocationFormPincodeIsLoading,
+    isError: getLocationFromPincodeIsError
+  }] = useGetLocationFromPinMutation()
+
+  // send otp for login--------------------------------
+  const [sendOtpFunc, {
+    data: sendOtpData,
+    error: sendOtpError,
+    isLoading: sendOtpIsLoading,
+    isError: sendOtpIsError
+  }] = useGetLoginOtpForVerificationMutation()
+
+  const [
+    verifyOtpFunc,
+    {
+      data: verifyOtpData,
+      error: verifyOtpError,
+      isLoading: verifyOtpIsLoading,
+      isError: verifyOtpIsError,
+    },
+  ] = useVerifyOtpForNormalUseMutation();
+
 
   useEffect(()=>{
-    
+    setUserName(route.params.name)
+  },[route.params.name])
+
+  useEffect(()=>{
+    console.log("mobile number from use effect", route.params.mobile,navigatingFrom)
+    setUserMobile(route.params.mobile)
+
+      },[route.params.mobile])
+
+  useEffect(() => {
+
     const AppUserType = userType
-    getFormFunc({AppUserType})
-    if(manualApproval.includes(userType))
-    {
+    getFormFunc({ AppUserType })
+    if (manualApproval.includes(userType)) {
       setIsManuallyApproved(true)
     }
-    else
-    {
+    else {
       setIsManuallyApproved(false)
     }
-    
-  },[])
-  useEffect(()=>{
-    let lat=''
-    let lon=''
-    Geolocation.getCurrentPosition((res)=>{
-      console.log("res",res)
-        lat = res.coords.latitude
-        lon = res.coords.longitude
-        // getLocation(JSON.stringify(lat),JSON.stringify(lon))
-        console.log("latlong",lat,lon)
-        var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
+
+  }, [])
+
+  useEffect(() => {
+    if (verifyOtpData?.success) {
+      setOtpVerified(true)
+      setOtpModal(true)
+      console.log("verifyOtp", verifyOtpData)
+      setMessage("OTP Verified")
+
+    }
+    else if (verifyOtpError) {
+      console.log("verifyOtpError", verifyOtpError)
+      setError(true)
+      setMessage("Please Enter Correct OTP")
+    }
+  }, [verifyOtpData, verifyOtpError])
+  useEffect(() => {
+    let lat = ''
+    let lon = ''
+    Geolocation.getCurrentPosition((res) => {
+      console.log("res", res)
+      lat = res.coords.latitude
+      lon = res.coords.longitude
+      // getLocation(JSON.stringify(lat),JSON.stringify(lon))
+      console.log("latlong", lat, lon)
+      var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
         &location_type=ROOFTOP&result_type=street_address&key=AIzaSyADljP1Bl-J4lW3GKv0HsiOW3Fd1WFGVQE`
-    
-    fetch(url).then(response => response.json()).then(json => {
-      console.log("location address=>", JSON.stringify(json));
-      const formattedAddress = json.results[0].formatted_address
-      const formattedAddressArray = formattedAddress.split(',')
-     
-      let locationJson = {
-        
-        lat:json.results[0].geometry.location.lat ===undefined ? "N/A":json.results[0].geometry.location.lat,
-        lon:json.results[0].geometry.location.lng===undefined ? "N/A":json.results[0].geometry.location.lng,
-        address:formattedAddress===undefined ? "N/A" :formattedAddress
-       
-       }
 
-       const addressComponent = json.results[0].address_components
-       console.log("addressComponent",addressComponent)
-       for(let i=0;i<=addressComponent.length;i++)
-       {
-        if(i===addressComponent.length)
-        {
-          dispatch(setLocation(locationJson))
-          setLocation(locationJson)
-        }
-        else{
-          if(addressComponent[i].types.includes("postal_code"))
-          {
-          console.log("inside if")
+      fetch(url).then(response => response.json()).then(json => {
+        console.log("location address=>", JSON.stringify(json));
+        const formattedAddress = json.results[0].formatted_address
+        const formattedAddressArray = formattedAddress.split(',')
 
-            console.log(addressComponent[i].long_name)
-            locationJson["postcode"]=addressComponent[i].long_name
-          }
-          else if(addressComponent[i].types.includes("country"))
-          {
-            console.log(addressComponent[i].long_name)
-
-            locationJson["country"]=addressComponent[i].long_name
-          }
-          else if(addressComponent[i].types.includes("administrative_area_level_1"))
-          {
-            console.log(addressComponent[i].long_name)
-
-            locationJson["state"]=addressComponent[i].long_name
-          }
-          else if(addressComponent[i].types.includes("administrative_area_level_2"))
-          {
-            console.log(addressComponent[i].long_name)
-
-            locationJson["district"]=addressComponent[i].long_name
-          }
-          else if(addressComponent[i].types.includes("locality"))
-          {
-            console.log(addressComponent[i].long_name)
-
-            locationJson["city"]=addressComponent[i].long_name
-          }
-        }
-        
-       }
-     
-     
-     console.log("formattedAddressArray",locationJson)
-     
-  })
-    })
-    
-  },[])
-  useEffect(()=>{
-    if(getLocationFormPincodeData)
-    {
-      console.log("getLocationFormPincodeData",getLocationFormPincodeData)
-      if(getLocationFormPincodeData.success  )
-      {
-        const address = getLocationFormPincodeData.body[0].office + ", " + getLocationFormPincodeData.body[0].district+ ", " + getLocationFormPincodeData.body[0].state+ ", " + getLocationFormPincodeData.body[0].pincode
         let locationJson = {
-        
-          lat:"N/A",
-          lon:"N/A",
-          address:address,
+
+          lat: json.results[0].geometry.location.lat === undefined ? "N/A" : json.results[0].geometry.location.lat,
+          lon: json.results[0].geometry.location.lng === undefined ? "N/A" : json.results[0].geometry.location.lng,
+          address: formattedAddress === undefined ? "N/A" : formattedAddress
+
+        }
+
+        const addressComponent = json.results[0].address_components
+        console.log("addressComponent", addressComponent)
+        for (let i = 0; i <= addressComponent.length; i++) {
+          if (i === addressComponent.length) {
+            dispatch(setLocation(locationJson))
+            setLocation(locationJson)
+          }
+          else {
+            if (addressComponent[i].types.includes("postal_code")) {
+              console.log("inside if")
+
+              console.log(addressComponent[i].long_name)
+              locationJson["postcode"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("country")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["country"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("administrative_area_level_1")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["state"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("administrative_area_level_2")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["district"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("locality")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["city"] = addressComponent[i].long_name
+            }
+          }
+
+        }
+
+
+        console.log("formattedAddressArray", locationJson)
+
+      })
+    })
+
+  }, [])
+  useEffect(() => {
+    if (getLocationFormPincodeData) {
+      console.log("getLocationFormPincodeData", getLocationFormPincodeData)
+      if (getLocationFormPincodeData.success) {
+        const address = getLocationFormPincodeData.body[0].office + ", " + getLocationFormPincodeData.body[0].district + ", " + getLocationFormPincodeData.body[0].state + ", " + getLocationFormPincodeData.body[0].pincode
+        let locationJson = {
+
+          lat: "N/A",
+          lon: "N/A",
+          address: address,
           city: getLocationFormPincodeData.body[0].district,
           district: getLocationFormPincodeData.body[0].division,
-          state:getLocationFormPincodeData.body[0].state,
-          country:"N/A",
-          postcode:getLocationFormPincodeData.body[0].pincode
+          state: getLocationFormPincodeData.body[0].state,
+          country: "N/A",
+          postcode: getLocationFormPincodeData.body[0].pincode
 
-         
-         }
-         console.log(locationJson)
-         setLocation(locationJson)
+
+        }
+        console.log(locationJson)
+        setLocation(locationJson)
       }
     }
-    else if(getLocationFormPincodeError)
-    {
-      console.log("getLocationFormPincodeError",getLocationFormPincodeError)
-      setError(true)
-      setMessage("Please enter a valid pincode")
+    else if (getLocationFormPincodeError) {
+      console.log("getLocationFormPincodeError", getLocationFormPincodeError)
     }
-  },[getLocationFormPincodeData,getLocationFormPincodeError])
+  }, [getLocationFormPincodeData, getLocationFormPincodeError])
 
-  useEffect(()=>{
-    if(getFormData)
-    {
-      if(getFormData.message!=="Not Found")
-      {
-        console.log("Form Fields",getFormData)
+  useEffect(() => {
+    if (getFormData) {
+      if (getFormData.message !== "Not Found") {
+        console.log("Form Fields", JSON.stringify(getFormData))
         const values = Object.values(getFormData.body.template)
         setRegistrationForm(values)
       }
-      else{
+      else {
         setError(true)
         setMessage("Form can't be fetched")
         setFormFound(false)
       }
-        
-    }
-    else if(getFormError){
-        console.log("Form Field Error",getFormError)
-    }
-},[getFormData,getFormError])
 
-useEffect(()=>{
-  if(registerUserData)
-  {
-      console.log("data after submitting form",registerUserData)
-      if(registerUserData.success)
-      {
-      setSuccess(true)
-      setMessage(registerUserData.message)
-      setModalTitle(`Dear ${name}`)
+    }
+    else if (getFormError) {
+      console.log("Form Field Error", getFormError)
+    }
+  }, [getFormData, getFormError])
+
+  useEffect(() => {
+    if (registerUserData) {
+      console.log("data after submitting form", registerUserData)
+      if (registerUserData.success) {
+        setSuccess(true)
+        setMessage(registerUserData.message)
+        setModalTitle("WOW")
       }
-      
+
       // const values = Object.values(registerUserData.body.template)
       // setRegistrationForm(values)
-  }
-  else if(registerUserError){
-      console.log("form submission error",registerUserError)
+    }
+    else if (registerUserError) {
+      console.log("form submission error", registerUserError)
       setError(true)
       setMessage(registerUserError.data.message)
-      
-  }
-},[registerUserData,registerUserError])
 
-
-const handleFetchPincode=(data)=>{
-console.log("pincode is",data)
-getLocationFromPinCode(data)
-
-}
-
-
-const handleChildComponentData = data => {
-  console.log("from text input",data);
-
-  // Update the responseArray state with the new data
-  setResponseArray(prevArray => {
-    const existingIndex = prevArray.findIndex(
-      item => item.name === data.name,
-    );
-
-    if (existingIndex !== -1) {
-      // If an entry for the field already exists, update the value
-      const updatedArray = [...prevArray];
-      updatedArray[existingIndex] = {
-        ...updatedArray[existingIndex],
-        value: data.value,
-      };
-      return updatedArray;
-    } else {
-      // If no entry exists for the field, add a new entry
-      return [...prevArray, data];
     }
-  });
-};
-console.log("responseArray",responseArray)
-  const modalClose = () => {
-    setError(false);
-    setSuccess(false)
+  }, [registerUserData, registerUserError])
+
+  useEffect(() => {
+    if (updateProfileAtRegistrationData) {
+      console.log("updateProfileAtRegistrationData", updateProfileAtRegistrationData)
+      if (updateProfileAtRegistrationData.success) {
+        setSuccess(true)
+        setMessage(updateProfileAtRegistrationData.message)
+        setModalTitle("WOW")
+      }
+
+      // const values = Object.values(updateProfileAtRegistrationData.body.template)
+      // setRegistrationForm(values)
+    }
+    else if (updateProfileAtRegistrationError) {
+      console.log("updateProfileAtRegistrationError", updateProfileAtRegistrationError)
+      setError(true)
+      // setMessage(updateProfileAtRegistrationError.data.message)
+
+    }
+  }, [updateProfileAtRegistrationData, updateProfileAtRegistrationError])
+  useEffect(() => {
+    if (sendOtpData) {
+      console.log("sendOtpData", sendOtpData);
+      setOtpVisible(true);
+    }
+    else {
+      console.log("sendOtpError", sendOtpError)
+    }
+  }, [sendOtpData, sendOtpError])
+
+
+  const handleFetchPincode = (data) => {
+    console.log("pincode is", data)
+    getLocationFromPinCode(data)
+
+  }
+
+
+  const handleChildComponentData = data => {
+    // setOtpVisible(true)
+    console.log("from text input", data);
+    if (data.name === "name") {
+      setUserName(data.value)
+    }
+
+    if (data.name === "mobile") {
+      setUserMobile(data.value)
+    }
+    // Update the responseArray state with the new data
+    setResponseArray(prevArray => {
+      const existingIndex = prevArray.findIndex(
+        item => item.name === data.name,
+      );
+
+      if (existingIndex !== -1) {
+        // If an entry for the field already exists, update the value
+        const updatedArray = [...prevArray];
+        updatedArray[existingIndex] = {
+          ...updatedArray[existingIndex],
+          value: data.value,
+        };
+        return updatedArray;
+      } else {
+        // If no entry exists for the field, add a new entry
+        return [...prevArray, data];
+      }
+    });
   };
 
-const getLocationFromPinCode=async(pin)=>{
-  const credentials = await Keychain.getGenericPassword();
-  if (credentials) {
-    console.log(
-      'Credentials successfully loaded for user ' + credentials.username
-    );
-    const token = credentials.username
-    const params = {
-      pincode:pin,
-      token:token
-      
+  console.log("responseArray", responseArray)
+  const modalClose = () => {
+    setError(false);
+  };
+
+  const getLocationFromPinCode = async (pin) => {
+    const credentials = await Keychain.getGenericPassword();
+    if (credentials) {
+      console.log(
+        'Credentials successfully loaded for user ' + credentials.username
+      );
+      const token = credentials.username
+      const params = {
+        pincode: pin,
+        token: token
+
+      }
+      getLocationFromPincodeFunc(params)
+      setLocation()
+
     }
-  getLocationFromPincodeFunc(params)
-  setLocation()
-
   }
-} 
+
+  const getOtpFromComponent = value => {
+    if (value.length === 6) {
+
+      setOtp(value);
 
 
-const handleRegistrationFormSubmission=()=>{
-  const inputFormData = {}
-  inputFormData["user_type"] = userType;
-  inputFormData["user_type_id"] = userTypeId;
-  inputFormData["is_approved_needed"] = isManuallyApproved;
-  inputFormData["name"] = name;
-  inputFormData["mobile"] = mobile;
+      const params = { mobile: userMobile, name: userName, otp: value, user_type_id: userTypeId, user_type: userType, }
 
-  for(var i =0;i<responseArray.length;i++)
-  {
-    console.log(responseArray[i])
-    inputFormData[responseArray[i].name] = responseArray[i].value
+      
+      verifyOtpFunc(params);
+
+    }
+  };
+
+  const getOTPfunc = () => {
+    console.log("get user data", userData)
+
+
+    console.log("ooooooo->>>>>>>>", { userName, userMobile, userTypeId, userType })
+    const params = { mobile: userMobile, name: userName, user_type_id: userTypeId, user_type: userType }
+    sendOtpFunc(params)
   }
-  const body=inputFormData
-  registerUserFunc(body)
-  console.log("responseArraybody",body)
-}
-  
-    return (
-        <View
+
+
+  const handleRegistrationFormSubmission = () => {
+    const inputFormData = {}
+    inputFormData["user_type"] = userType;
+    inputFormData["user_type_id"] = userTypeId;
+    inputFormData["is_approved_needed"] = isManuallyApproved;
+    inputFormData["name"] = name;
+    inputFormData["mobile"] = mobile;
+
+    for (var i = 0; i < responseArray.length; i++) {
+      console.log(responseArray[i])
+      inputFormData[responseArray[i].name] = responseArray[i].value
+    }
+    const body = inputFormData
+    
+    if(otpVerified)
+    {
+      registerUserFunc(body)
+
+
+      // make request according to the login type of user-----------------------
+
+      // if(navigatingFrom==="PasswordLogin")
+      // {
+      // registerUserFunc(body)
+      // }
+      // else{
+      //  inputFormData["is_online_verification"] = isOnlineVerification
+      //   const params = {id:,body:body}
+      //   updateProfileAtRegistrationFunc(params)
+      // }
+
+      // ---------------------------------------------------------------------
+
+
+    }
+    else{
+      setError(true)
+      setMessage("Otp isn't verified yet")
+    }
+    console.log("responseArraybody", body)
+  }
+
+  return (
+    <View
       style={{
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
         backgroundColor: ternaryThemeColor,
         height: '100%',
-        
-        
+
+
       }}>
-        {error && (
-            <ErrorModal
-              modalClose={modalClose}
-              
-              message={message}
-              openModal={error}></ErrorModal>
-          )}
-           {success && (
-            <MessageModal
-              modalClose={modalClose}
-              title={modalTitle}
-              message={message}
-              openModal={success}
-              navigateTo={navigatingFrom==="PasswordLogin"? "PasswordLogin":"OtpLogin"}
-              params={{needsApproval:needsApproval, userType:userType, userId:userTypeId}}></MessageModal>
-          )}
-          
+      {error && (
+        <ErrorModal
+          modalClose={modalClose}
+
+          message={message}
+          openModal={error}></ErrorModal>
+      )}
+      {success && (
+        <MessageModal
+          modalClose={modalClose}
+          title={modalTitle}
+          message={message}
+          openModal={success}
+          navigateTo={navigatingFrom === "PasswordLogin" ? "PasswordLogin" : "OtpLogin"}
+          params={{ needsApproval: needsApproval, userType: userType, userId: userTypeId }}></MessageModal>
+      )}
+
+      {otpModal && (
+        <MessageModal
+          modalClose={() => { setOtpModal(false) }}
+          title={modalTitle}
+          message={message}
+          openModal={otpModal}
+          // navigateTo={navigatingFrom === "PasswordLogin" ? "PasswordLogin" : "OtpLogin"}
+          params={{ needsApproval: needsApproval, userType: userType, userId: userTypeId }}></MessageModal>
+      )}
+
       <View
         style={{
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          height:150
-          
-         
-          
-          
-       
+          height: '10%',
+
+
+
+
+
         }}>
         <TouchableOpacity
-        style={{
-            height:24,width:24,
-            position:'absolute',
-        top:20,
-        left:10}}
+          style={{
+            height: 24, width: 24,
+            position: 'absolute',
+            top: 20,
+            left: 10
+          }}
           onPress={() => {
             navigation.goBack();
           }}>
@@ -392,7 +538,7 @@ const handleRegistrationFormSubmission=()=>{
             }}
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
-        <View style={{alignItems: 'center', justifyContent: 'center',position:"absolute",top:20,left:50}}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', position: "absolute", top: 20, left: 50 }}>
           <PoppinsTextMedium
             content="Registration"
             style={{
@@ -402,70 +548,104 @@ const handleRegistrationFormSubmission=()=>{
               color: 'white',
             }}></PoppinsTextMedium>
         </View>
-        <View style={{marginTop:10,alignItems:"center",justifyContent:"center",width:'96%',position:"absolute",top:60}}>
-        {formFound ? <PoppinsTextLeftMedium style={{color:'white',fontWeight:'700',fontSize:22,marginBottom:40}} content="Welcome to Ozone, fill the form to register with us."></PoppinsTextLeftMedium> : <PoppinsTextLeftMedium style={{color:'black',fontWeight:'700',fontSize:18,marginBottom:40}} content="No Form Available !!"></PoppinsTextLeftMedium>}
-
-        </View>
       </View>
-      <ScrollView style={{width:'100%'}}>
+      <ScrollView style={{ width: '100%' }}>
 
-      <View style={{width:width,backgroundColor:"white",alignItems:"center",justifyContent:'flex-start',paddingTop:20}}>
-        
-        {/* <RegistrationProgress data={["Basic Info","Business Info","Manage Address","Other Info"]}></RegistrationProgress> */}
-        {registrationForm &&
+        <View style={{ width: width, backgroundColor: "white", alignItems: "center", justifyContent: 'flex-start', paddingTop: 20 }}>
+          {formFound ? <PoppinsTextMedium style={{ color: 'black', fontWeight: '700', fontSize: 18, marginBottom: 40 }} content="Please Fill The Following Form To Register"></PoppinsTextMedium> : <PoppinsTextMedium style={{ color: 'black', fontWeight: '700', fontSize: 18, marginBottom: 40 }} content="No Form Available !!"></PoppinsTextMedium>}
+
+          {/* <RegistrationProgress data={["Basic Info","Business Info","Manage Address","Other Info"]}></RegistrationProgress> */}
+          {registrationForm &&
             registrationForm.map((item, index) => {
-              
-              
               if (item.type === 'text') {
-                
-                   if (item.name === 'phone' || item.name==="mobile") {
-                    return (
-                      <TextInputNumericRectangle
-                        jsonData={item}
-                        key={index}
-                        maxLength={10}
-                        handleData={handleChildComponentData}
-                        placeHolder={item.name}
-                        value={mobile}
-                        label = {item.label}
-                        required = {item.required}
-                        
-                        >
-                        {' '}
-                      </TextInputNumericRectangle>
-                    );
-                  
-                } 
-                else if((item.name).trim().toLowerCase()==="name")
-                {
-                  
-                    return(
-                      <PrefilledTextInput
+                console.log("the user name", userName)
+                if ((item.name === 'phone' || item.name === "mobile")) {
+                  return (
+                    <>
+                     
+                        <View style={{ flexDirection: 'row', flex: 1 }}>
+
+                          <View style={{ flex: 0.75 }}>
+                            {navigatingFrom==="OtpLogin"  && <TextInputNumericRectangle
+                              jsonData={item}
+                              key={index}
+                              maxLength={10}
+                              handleData={handleChildComponentData}
+                              placeHolder={item.name}
+                              value={userMobile}
+                              label={item.label}
+                              isEditable={!otpVerified}
+                            >
+                              {' '}
+                            </TextInputNumericRectangle>}
+                            {navigatingFrom==="PasswordLogin" && <TextInputNumericRectangle
+                              jsonData={item}
+                              key={index}
+                              maxLength={10}
+                              handleData={handleChildComponentData}
+                              placeHolder={item.name}
+                              label={item.label}
+                              
+                            >
+                              {' '}
+                            </TextInputNumericRectangle>}
+                          </View>
+
+                         {otpVerified ? <View style={{alignItems:'center',justifyContent:'center'}}>
+                          <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/greenTick.png')}></Image>
+                         </View> :  <TouchableOpacity style={{ flex: 0.15, marginTop: 6, backgroundColor: ternaryThemeColor, alignItems: 'center', justifyContent: 'center', height: 50, borderRadius: 5 }} onPress={getOTPfunc}>
+                            <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }} content="Get OTP"></PoppinsTextLeftMedium>
+                          </TouchableOpacity>}
+                        </View>
+
+                      
+
+
+                      {!otpVerified && otpVisible &&
+                        <>
+
+                          <PoppinsTextLeftMedium style={{ marginRight: '70%' }} content="OTP"></PoppinsTextLeftMedium>
+
+                          <OtpInput
+                            getOtpFromComponent={getOtpFromComponent}
+                            color={'white'}></OtpInput>
+                        </>
+                      }
+                    </>
+                  );
+
+
+                }
+
+
+                else if ((item.name).trim().toLowerCase() === "name") {
+
+                  return (
+                    <PrefilledTextInput
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      value={name}
-                      required = {item.required}
-                      label = {item.label}
-                      ></PrefilledTextInput>
-                    )
-                  
-                 
-                  
+                      value={userName}
+                      label={item.label}
+                    ></PrefilledTextInput>
+                  )
+
+
+
                 }
                 // } 
-                else if (item.name === 'aadhaar' || item.name==="aadhar") {
+                else if (item.name === 'aadhaar' || item.name === "aadhar") {
                   console.log("aadhar")
                   return (
                     <TextInputAadhar
+                    required={item.required}
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      label = {item.label}
-                      required = {item.required}
-                      >
+                      label={item.label}
+                    >
                       {' '}
                     </TextInputAadhar>
                   );
@@ -474,17 +654,17 @@ const handleRegistrationFormSubmission=()=>{
                   console.log("pan")
                   return (
                     <TextInputPan
+                    required = {item.required}
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      label = {item.label}
-                      required = {item.required}
-                      >
+                      label={item.label}
+                    >
                       {' '}
                     </TextInputPan>
                   );
-                } 
+                }
                 else if (item.name === 'gstin') {
                   console.log("gstin")
                   return (
@@ -493,77 +673,68 @@ const handleRegistrationFormSubmission=()=>{
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      required = {item.required}
-                      label = {item.label}>
+                      label={item.label}>
                       {' '}
                     </TextInputGST>
                   );
                 }
-                else if((item.name).trim().toLowerCase()==="city" && location!==undefined)
-                {
-                  
-                    return(
-                      <PrefilledTextInput
-                       jsonData={item}
-                       key={index}
-                       handleData={handleChildComponentData}
-                       placeHolder={item.name}
-                       value={location.city}
-                       label = {item.label}
-                       required = {item.required}
-                       ></PrefilledTextInput>
-                     )
-                  
-                  
-                  
+                else if ((item.name).trim().toLowerCase() === "city" && location !== undefined) {
+
+                  return (
+                    <PrefilledTextInput
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={location.city}
+                      label={item.label}
+                    ></PrefilledTextInput>
+                  )
+
+
+
                 }
-                else if((item.name).trim().toLowerCase()==="pincode" && location!==undefined)
-                {
-                  return(
+                else if ((item.name).trim().toLowerCase() === "pincode" && location !== undefined) {
+                  return (
                     <PincodeTextInput
-                    jsonData={item}
-                    key={index}
-                    handleData={handleChildComponentData}
-                    handleFetchPincode = {handleFetchPincode}
-                    placeHolder={item.name}
-                    value={location.postcode}
-                    label = {item.label}
-                    required = {item.required}
-                    maxLength={6}
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      handleFetchPincode={handleFetchPincode}
+                      placeHolder={item.name}
+                      value={location.postcode}
+                      label={item.label}
+                      maxLength={6}
                     ></PincodeTextInput>
                   )
                 }
-                else if((item.name).trim().toLowerCase()==="state" && location!==undefined)
-                {
-                  return(
+                else if ((item.name).trim().toLowerCase() === "state" && location !== undefined) {
+                  return (
                     <PrefilledTextInput
-                    jsonData={item}
-                    key={index}
-                    handleData={handleChildComponentData}
-                    placeHolder={item.name}
-                    value={location.state}
-                    label = {item.label}
-                    required = {item.required}
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                      value={location.state}
+                      label={item.label}
                     ></PrefilledTextInput>
                   )
                 }
-                else if((item.name).trim().toLowerCase()==="district" && location!==undefined)
-                {
-                  
-                    return(
-                      <PrefilledTextInput
+                else if ((item.name).trim().toLowerCase() === "district" && location !== undefined) {
+
+                  return (
+                    <PrefilledTextInput
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       value={location.district}
-                      label = {item.label}
-                      required = {item.required}
-                      ></PrefilledTextInput>
-                    )
-                  
-                 
-                  
+                      label={item.label}
+                    ></PrefilledTextInput>
+                  )
+
+
+
                 }
                 else {
                   return (
@@ -572,8 +743,7 @@ const handleRegistrationFormSubmission=()=>{
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      required = {item.required}
-                      label = {item.label}>
+                      label={item.label}>
                       {' '}
                     </TextInputRectangle>
                   );
@@ -585,35 +755,35 @@ const handleRegistrationFormSubmission=()=>{
                     handleData={handleChildComponentData}
                     key={index}
                     data={item.name}
-                    label = {item.label}
-                    required = {item.required}
+                    label={item.label}
                     action="Select File"></ImageInput>
                 );
-              } else if (item.type === 'date') {
+              }
+              else if(item.type==="select") 
+              {
+                return(
+                  <DropDownRegistration
+
+                  title={item.name}
+                  header={item.options[0]}
+                  jsonData={item}
+                  data={item.options}
+                  handleData={handleChildComponentData}
+                ></DropDownRegistration>
+                )
+              }
+              else if (item.type === 'date') {
                 return (
                   <InputDate
                     jsonData={item}
                     handleData={handleChildComponentData}
                     data={item.label}
-                    required = {item.required}
                     key={index}></InputDate>
-                );
-              }
-              else if (item.type === "select") {
-                return (
-                  <DropDownRegistration
-                    key={index}
-                    title={item.name}
-                    header={item.label}
-                    jsonData={item}
-                    data={item.options}
-                    handleData={handleChildComponentData}
-                  ></DropDownRegistration>
                 );
               }
             })}
 
-             {formFound && <ButtonOval
+          {formFound && <ButtonOval
             handleOperation={() => {
               handleRegistrationFormSubmission();
             }}
@@ -625,11 +795,11 @@ const handleRegistrationFormSubmission=()=>{
               color: 'white',
               fontSize: 16,
             }}></ButtonOval>}
-      </View>
-      </ScrollView>
-            
         </View>
-    );
+      </ScrollView>
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({})

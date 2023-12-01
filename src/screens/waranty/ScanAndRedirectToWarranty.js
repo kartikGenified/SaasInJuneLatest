@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,24 +11,27 @@ import {
   FlatList,
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RNCamera} from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ScannedListItem from '../../components/atoms/ScannedListItem';
 import * as Keychain from 'react-native-keychain';
-import {useVerifyQrMutation} from '../../apiServices/qrScan/VerifyQrApi';
+import { useVerifyQrMutation } from '../../apiServices/qrScan/VerifyQrApi';
 import ErrorModal from '../../components/modals/ErrorModal';
 import ButtonProceed from '../../components/atoms/buttons/ButtonProceed';
-import {useAddQrMutation} from '../../apiServices/qrScan/AddQrApi';
-import {useSelector, useDispatch} from 'react-redux';
-import {setQrData} from '../../../redux/slices/qrCodeDataSlice';
-import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/GetGenuinityApi';
-import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
-import {useGetProductDataMutation} from '../../apiServices/product/productApi';
-import {setProductData} from '../../../redux/slices/getProductSlice';
+import { useAddQrMutation } from '../../apiServices/qrScan/AddQrApi';
+import { useSelector, useDispatch } from 'react-redux';
+import { setQrData } from '../../../redux/slices/qrCodeDataSlice';
+import { useCheckGenuinityMutation } from '../../apiServices/workflow/genuinity/GetGenuinityApi';
+import { useCheckWarrantyMutation } from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
+import { useGetProductDataMutation } from '../../apiServices/product/productApi';
+import { setProductData } from '../../../redux/slices/getProductSlice';
+import ModalWithBorder from '../../components/modals/ModalWithBorder';
+import Close from 'react-native-vector-icons/Ionicons';
 
-const ScanAndRedirectToWarranty = ({navigation}) => {
+
+const ScanAndRedirectToWarranty = ({ navigation }) => {
   const [zoom, setZoom] = useState(0);
   const [zoomText, setZoomText] = useState('1');
   const [flash, setFlash] = useState(false);
@@ -39,13 +42,22 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
   const [savedToken, setSavedToken] = useState();
   const [productId, setProductId] = useState();
   const [qr_id, setQr_id] = useState();
+  const [helpModal, setHelpModal] = useState(false);
+
   const userId = useSelector(state => state.appusersdata.userId);
   const userType = useSelector(state => state.appusersdata.userType);
   const userName = useSelector(state => state.appusersdata.name);
   const workflowProgram = ["Warranty"];
-  const location = useSelector(state=>state.userLocation.location)
+  const location = useSelector(state => state.userLocation.location)
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram);
+  
+  const ternaryThemeColor = useSelector(
+    state => state.apptheme.ternaryThemeColor,
+  )
+    ? useSelector(state => state.apptheme.ternaryThemeColor)
+    : 'grey';
+
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
 
   // mutations ----------------------------------------
@@ -69,11 +81,11 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
   ] = useAddQrMutation();
 
 
-  const [checkWarrantyFunc,{
-    data:checkWarrantyData,
-    error:checkWarrantyError,
-    isLoading:checkWarrantyIsLoading,
-    isError:checkWarrantyIsError
+  const [checkWarrantyFunc, {
+    data: checkWarrantyData,
+    error: checkWarrantyError,
+    isLoading: checkWarrantyIsLoading,
+    isError: checkWarrantyIsError
   }] = useCheckWarrantyMutation()
 
   const [
@@ -91,7 +103,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
   const platform = Platform.OS === 'ios' ? '1' : '2';
   const platformMargin = Platform.OS === 'ios' ? -60 : -160;
 
- 
+
 
   useEffect(() => {
     if (checkWarrantyData) {
@@ -103,15 +115,15 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
 
   useEffect(() => {
     if (productDataData) {
-    const form_type = '2';
-    const token =savedToken
-    const body = {product_id: productDataData.body.products[0].product_id, qr_id: qr_id};
-      console.log('Product Data is ',  productDataData.body.products[0].product_id);
-      console.log("productdata", token,body)
+      const form_type = '2';
+      const token = savedToken
+      const body = { product_id: productDataData.body.products[0].product_id, qr_id: qr_id };
+      console.log('Product Data is ', productDataData.body.products[0].product_id);
+      console.log("productdata", token, body)
       dispatch(setProductData(productDataData.body.products[0]));
       setProductId(productDataData.body.product_id);
-      
-      checkWarrantyFunc({form_type, token, body})
+
+      checkWarrantyFunc({ form_type, token, body })
 
     } else if (productDataError) {
       console.log('Error', productDataError);
@@ -122,13 +134,29 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
     setError(false);
   };
 
+  // --------------------------------------------------------
+  const helpModalComp = () => {
+    return (
+      <View style={{ width: 340, height: 320, alignItems: "center", justifyContent: "center" }}>
+        <Image style={{ height: 370, width: 390, }} source={(require('../../../assets/images/scanhelp.png'))}></Image>
+        <TouchableOpacity style={[{
+          backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
+        }]} onPress={() => setHelpModal(false)} >
+          <Close name="close" size={17} color="#ffffff" />
+        </TouchableOpacity>
+
+      </View>
+    )
+  }
+
+
   // function called on successfull scan --------------------------------------
   const onSuccess = e => {
     console.log('Qr data is ------', JSON.stringify(e));
     const qrData = e.data.split('=')[1];
     // console.log(typeof qrData);
 
-    const requestData = {unique_code: qrData};
+    const requestData = { unique_code: qrData };
     const verifyQR = async data => {
       // console.log('qrData', data);
       try {
@@ -142,7 +170,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
           setSavedToken(credentials.username);
           const token = credentials.username;
 
-          data && verifyQrFunc({token, data});
+          data && verifyQrFunc({ token, data });
         } else {
           console.log('No credentials stored');
         }
@@ -160,12 +188,12 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
     setQr_id(qrId);
     const token = savedToken;
     const productCode = data.product_code;
-    
 
-   
-    
-    productDataFunc({productCode, userType, token});
-    console.log({productCode, userType, token})
+
+
+
+    productDataFunc({ productCode, userType, token });
+    console.log({ productCode, userType, token })
 
     if (addedQrList.length === 0) {
       setAddedQrList([...addedQrList, data]);
@@ -193,19 +221,19 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
   // --------------------------------------------------------
 
   // function to handle workflow navigation-----------------------
-  
-  
+
+
 
   const handleWorkflowNavigation = () => {
-   
-   
-        navigation.navigate('ActivateWarranty', {
-            workflowProgram: [],
-            rewardType:''
 
-        });
-   
-};
+
+    navigation.navigate('ActivateWarranty', {
+      workflowProgram: [],
+      rewardType: ''
+
+    });
+
+  };
 
   // --------------------------------------------------------
   //check if warranty is claimed
@@ -223,9 +251,8 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData.body);
-      if(verifyQrData.body.qr_status==="1" || verifyQrData.body.qr_status==="2")
-      {
-      addQrDataToList(verifyQrData.body);
+      if (verifyQrData.body.qr_status === "1" || verifyQrData.body.qr_status === "2") {
+        addQrDataToList(verifyQrData.body);
       }
       // else if(verifyQrData.body.qr_status==="2")
       // {
@@ -244,11 +271,11 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
       console.log('Add qr data', addQrData.body);
       if (addQrData.success) {
         dispatch(setQrData(addQrData.body));
-        console.log("check Genuinity and warranty",checkWarrantyData)
+        console.log("check Genuinity and warranty", checkWarrantyData)
         handleWorkflowNavigation()
       }
-    } else if(addQrError) {
-      console.log("addQrError",addQrError);
+    } else if (addQrError) {
+      console.log("addQrError", addQrError);
     }
   }, [addQrData, addQrError]);
   // --------------------------------------------------------
@@ -287,12 +314,12 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
           user_type: userType,
           platform_id: platform,
           scanned_by_name: userName,
-          address:location.address,
-          state:location.state,
-          district:location.district,
-          city:location.city,
+          address: location.address,
+          state: location.state,
+          district: location.district,
+          city: location.city,
         };
-        token && addQrFunc({token, requestData});
+        token && addQrFunc({ token, requestData });
       });
   };
   // --------------------------------------------------------
@@ -310,7 +337,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
           : RNCamera.Constants.FlashMode.torch
       }
       customMarker={
-        <View style={{height: '100%', width: '100%', flexDirection: 'row'}}>
+        <View style={{ height: '100%', width: '100%', flexDirection: 'row' }}>
           <View
             style={{
               height: '36%',
@@ -355,7 +382,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('Modal');
+                    setHelpModal(true)
                   }}
                   style={{
                     backgroundColor: 'black',
@@ -369,7 +396,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
                     justifyContent: 'center',
                   }}>
                   <Image
-                    style={{height: 16, width: 16, resizeMode: 'contain'}}
+                    style={{ height: 16, width: 16, resizeMode: 'contain' }}
                     source={require('../../../assets/images/qrQuestionMark.png')}></Image>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -387,7 +414,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text style={{fontSize: 14, color: '#FB774F'}}>
+                  <Text style={{ fontSize: 14, color: '#FB774F' }}>
                     {zoomText}X
                   </Text>
                 </TouchableOpacity>
@@ -407,35 +434,35 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
               onPress={() => {
                 navigation.navigate('Dashboard');
               }}
-              style={{height: 34, width: 34, margin: 10, left: 20}}>
+              style={{ height: 34, width: 34, margin: 10, left: 20 }}>
               <Image
-                style={{height: 34, width: 34, resizeMode: 'contain'}}
+                style={{ height: 34, width: 34, resizeMode: 'contain' }}
                 source={require('../../../assets/images/qrCancel.png')}></Image>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 handleFlash();
               }}
-              style={{height: 44, width: 44, margin: 20}}>
+              style={{ height: 44, width: 44, margin: 20 }}>
               <Image
-                style={{height: 44, width: 44, resizeMode: 'contain'}}
+                style={{ height: 44, width: 44, resizeMode: 'contain' }}
                 source={require('../../../assets/images/qrTorch.png')}></Image>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 handleOpenImageGallery();
               }}
-              style={{height: 44, width: 44, margin: 20}}>
+              style={{ height: 44, width: 44, margin: 20 }}>
               <Image
-                style={{height: 44, width: 44, resizeMode: 'contain'}}
+                style={{ height: 44, width: 44, resizeMode: 'contain' }}
                 source={require('../../../assets/images/qrGallery.png')}></Image>
             </TouchableOpacity>
           </View>
         </View>
       }
       showMarker={true}
-      cameraStyle={{height: '100%'}}
-      cameraProps={{zoom: zoom}}
+      cameraStyle={{ height: '100%' }}
+      cameraProps={{ zoom: zoom }}
       bottomContent={
         <View
           style={{
@@ -454,6 +481,15 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
               openModal={error}></ErrorModal>
           )}
 
+
+          {helpModal && <ModalWithBorder
+            modalClose={() => { setHelpModal(!helpModal) }}
+            // message={message}
+            openModal={helpModal}
+            // navigateTo="WarrantyClaimDetails"
+            // parameters={{ warrantyItemData: data, afterClaimData: warrantyClaimData }}
+            comp={helpModalComp}></ModalWithBorder>}
+
           {addedQrList.length === 0 ? (
             <View
               style={{
@@ -462,12 +498,12 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
-              <ScrollView contentContainerStyle={{alignItems:"center",justifyContent:'center',width:'80%'}}>
+              <ScrollView contentContainerStyle={{ alignItems: "center", justifyContent: 'center', width: '80%' }}>
                 <Image
-                  style={{height: 300, width: 300}}
+                  style={{ height: 300, width: 300 }}
                   source={require('../../../assets/images/qrHowTo.png')}></Image>
                 <PoppinsTextMedium
-                  style={{color: 'grey', fontWeight: '700', fontSize: 20}}
+                  style={{ color: 'grey', fontWeight: '700', fontSize: 20 }}
                   content="Please start scanning by pointing the camera towards QR code"></PoppinsTextMedium>
               </ScrollView>
             </View>
@@ -479,9 +515,9 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
                 justifyContent: 'center',
               }}>
               <FlatList
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 data={addedQrList}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <View
                     style={{
                       width: '100%',
@@ -506,7 +542,7 @@ const ScanAndRedirectToWarranty = ({navigation}) => {
           )}
           <ButtonProceed
             handleOperation={handleAddQr}
-            style={{color: 'white'}}
+            style={{ color: 'white' }}
             content="Proceed"
             navigateTo={'QrCodeScanner'}></ButtonProceed>
         </View>

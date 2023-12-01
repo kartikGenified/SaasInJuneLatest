@@ -44,7 +44,8 @@ const PasswordLogin = ({ navigation, route }) => {
 
   // fetching theme for the screen-----------------------
   const dispatch = useDispatch()
-
+  const userData = useSelector(state => state.appusersdata.userData)
+  console.log("userdata",userData)
   const primaryThemeColor = useSelector(
     state => state.apptheme.primaryThemeColor,
   )
@@ -70,6 +71,8 @@ const PasswordLogin = ({ navigation, route }) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : '#ef6110';
+
+  const fcmToken = useSelector(state=> state.fcmToken.fcmToken)
 
   // ------------------------------------------
 
@@ -132,8 +135,9 @@ const PasswordLogin = ({ navigation, route }) => {
     console.log(username, passwords)
     const user_id = username
     const password = passwords
-    if(user_id !== "" && password !== "" && isChecked){
-      passwordLoginfunc({ user_id, password })
+    const fcm_token = fcmToken
+    if (user_id !== "" && password !== "" && isChecked) {
+      passwordLoginfunc({ user_id, password, fcm_token })
     }
   }
 
@@ -147,9 +151,9 @@ const PasswordLogin = ({ navigation, route }) => {
       }, 2000);
   }, [success, openModalWithBorder]);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchTerms();
-  },[])
+  }, [])
 
 
   useEffect(() => {
@@ -167,19 +171,19 @@ const PasswordLogin = ({ navigation, route }) => {
     // navigation.navigate('BasicInfo',{needsApproval:needsApproval, userType:userType, userId:userId})
 
     // navigation.navigate('RegisterUser',{needsApproval:needsApproval, userType:userType, userId:userId})
-    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId })
+    navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId,navigatingFrom:"PasswordLogin" })
 
   }
 
   const fetchTerms = async () => {
     const credentials = await Keychain.getGenericPassword();
     const token = credentials.username;
-    console.log("token",token)
     const params = {
-      token: token
+      type: "term-and-condition"
     }
     getTermsAndCondition(params)
   }
+  
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -325,17 +329,17 @@ const PasswordLogin = ({ navigation, route }) => {
             style={{
               height: 50,
               width: 100,
-              resizeMode: 'contain',
+              resizeMode: 'center',
               top: 20,
               position: "absolute",
               left: 50,
-              borderRadius: 10
+
 
 
             }}
-            source={{ uri: `${BaseUrl}/api/images/${icon}` }}></Image>
-
-          <View style={{ alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10 }}>
+            source={require('../../../assets/images/ozoneWhiteLogo.png')}></Image>
+          {/* ozone change */}
+         {route.params.userType==="influencer" &&  <View style={{ alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10 }}>
             {/* <PoppinsTextMedium style={{fontSize:18}} content ="Don't have an account ?"></PoppinsTextMedium> */}
             <ButtonNavigate
               handleOperation={handleNavigationToRegister}
@@ -345,7 +349,7 @@ const PasswordLogin = ({ navigation, route }) => {
             >
             </ButtonNavigate>
 
-          </View>
+          </View>}
         </View>
         <View
           style={{
@@ -401,24 +405,24 @@ const PasswordLogin = ({ navigation, route }) => {
 
         </View>
 
-        <View style={{ flexDirection: 'row', marginHorizontal: 24,marginLeft:32, marginBottom:8  }}>
-            <Checkbox CheckBoxData={getCheckBoxData} />
-            <TouchableOpacity onPress={() => {
-              // navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })s
-            }}>
-              <PoppinsTextLeftMedium content={"I agree to the Terms & Conditions"} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
-            </TouchableOpacity>
-          </View>
+        <View style={{ flexDirection: 'row', marginHorizontal: 24, marginLeft: 32, marginBottom: 8 }}>
+          <Checkbox CheckBoxData={getCheckBoxData} />
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })
+          }}>
+            <PoppinsTextLeftMedium content={"I agree to the Terms & Conditions"} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
+          </TouchableOpacity>
+        </View>
 
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'center', width: '90%' }}>
           <PoppinsTextMedium style={{ color: "#727272", fontSize: 14 }} content="Not remembering password? "></PoppinsTextMedium>
           <TouchableOpacity >
-            <PoppinsTextMedium style={{ color: ternaryThemeColor, fontSize: 14 }} content="Forget Password"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{ color: ternaryThemeColor, fontSize: 14 }} content="Forgot Password"></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
 
-        <View style={{ width: "100%", flex: 1 }}>
-          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 'auto' }}>
+        {/* <View style={{ width: "100%", flex: 1 }}> */}
+          <View style={{ marginBottom: 27, marginLeft: 20 }}>
             <ButtonNavigateArrow
               handleOperation={handleLogin}
               backgroundColor={buttonThemeColor}
@@ -428,7 +432,7 @@ const PasswordLogin = ({ navigation, route }) => {
             </ButtonNavigateArrow>
           </View>
 
-        </View>
+        {/* </View> */}
 
 
 

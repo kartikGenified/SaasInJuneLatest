@@ -74,7 +74,7 @@ const HelpAndSupport = ({navigation}) => {
                 <Image style={{height:40,width:40,resizeMode:"contain"}} source={require('../../../assets/images/whitemail.png')}></Image>
               </View>
               <PoppinsTextMedium
-          content="Mail Us"
+          content="Mail us"
           style={{
             marginLeft: 10,
             fontSize: 16,
@@ -95,7 +95,7 @@ const HelpAndSupport = ({navigation}) => {
                 <Image style={{height:40,width:40,resizeMode:"contain"}} source={require('../../../assets/images/whitemobile.png')}></Image>
               </View>
               <PoppinsTextMedium
-          content="Call Us"
+          content="Call us"
           style={{
             marginLeft: 10,
             fontSize: 16,

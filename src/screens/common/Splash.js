@@ -9,18 +9,19 @@ import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId} from '../../../redux/slices/appUserDataSlice';
+import messaging from '@react-native-firebase/messaging';    
+import { setFcmToken } from '../../../redux/slices/fcmTokenSlice';
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
 
   const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [gotLoginData, setGotLoginData] = useState()
 
 
-
-  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozonegif.gif')).uri;
+  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
   // generating functions and constants for API use cases---------------------
   const [
     getAppTheme,
@@ -31,11 +32,79 @@ const Splash = ({ navigation }) => {
       isError: getAppThemeIsError,
     }
   ] = useGetAppThemeDataMutation();
-
+ 
   useEffect(()=>{
-    getData();
+    const checkToken = async () => {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+         console.log("fcmToken",fcmToken);
+        //  dispatch(setFcmToken(fcmToken))
+      } 
+     }
+     checkToken()
   },[])
+ 
+    const getData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('loginData');
+        console.log("loginData",JSON.parse(jsonValue))
+        const parsedJsonValue = JSON.parse(jsonValue)
+        const value = await AsyncStorage.getItem('isAlreadyIntroduced');
+      if (value !== null && jsonValue!==null ) {
+        // value previously stored
+        console.log("asynch value",value,jsonValue)
+        try{
+          console.log("Trying to dispatch",parsedJsonValue.user_type_id)
+          dispatch(setAppUserId(parsedJsonValue.user_type_id))
+          dispatch(setAppUserName(parsedJsonValue.name))
+          dispatch(setAppUserType(parsedJsonValue.user_type))
+          dispatch(setUserData(parsedJsonValue))
+          dispatch(setId(parsedJsonValue.id))
+          
+          navigation.navigate('Dashboard');
 
+         
+        }
+        catch(e)
+        {
+          console.log("Error in dispatch", e)
+        }
+
+          // console.log("isAlreadyIntroduced",isAlreadyIntroduced)
+        }
+        else 
+        {
+          if(value==="Yes")
+          {
+            navigation.navigate('SelectUser');
+
+          }
+          else{
+            navigation.navigate('Introduction')
+          }
+          // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
+    
+          
+           
+       
+    
+        }
+
+      }
+        
+       
+        
+        
+       catch (e) {
+        console.log("Error is reading loginData",e)
+      }
+    };
+   
+  
+  
+
+  
+  
   // calling API to fetch themes for the app
   useEffect(() => {
     getAppTheme("oopl")
@@ -53,7 +122,7 @@ const Splash = ({ navigation }) => {
       dispatch(setSecondaryThemeColor(getAppThemeData.body.theme.color_shades["400"]))
       dispatch(setTernaryThemeColor(getAppThemeData.body.theme.color_shades["700"]))
       dispatch(setIcon(getAppThemeData.body.logo[0]))
-      dispatch(setIconDrawer(getAppThemeData.body.logo[1]))
+      dispatch(setIconDrawer(getAppThemeData.body.logo[0]))
       dispatch(setOptLogin(getAppThemeData.body.login_options.Otp.users))
       dispatch(setPasswordLogin(getAppThemeData.body.login_options.Password.users))
       dispatch(setButtonThemeColor(getAppThemeData.body.theme.color_shades["700"]))
@@ -72,26 +141,7 @@ const Splash = ({ navigation }) => {
         }
       }
       console.log("isAlreadyIntro", isAlreadyIntroduced)
-      if(isAlreadyIntroduced == "Yes"){
-        // if(isLoggedIn == "Yes"){
-        //   navigation.navigate('Dashboard');
-          
-        // }
-        // else{
-      
-        // }
-
-            setTimeout(()=>{
-            navigation.navigate('SelectUser');
-          }, 2000)
-  
-      }
-      else{
-        setTimeout(() => {
-          navigation.navigate('Introduction')
-      }, 2000);
-
-      }
+      getData()
     }
     else {
       getAppTheme("oopl")
@@ -99,46 +149,26 @@ const Splash = ({ navigation }) => {
       console.log("getAppThemeIsError", getAppThemeIsError)
       console.log("getAppThemeError", getAppThemeError)
     }
+   
   }, [getAppThemeData, getAppThemeError, isAlreadyIntroduced])
 
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('isAlreadyIntroduced');
-      const isLoggedValue = await AsyncStorage.getItem("isAlreadyVerifiedOTP");
-      if (value !== null) {
-        // value previously stored
-        console.log("asynch value",value)
-        setIsAlreadyIntroduced(value);
-
-        if(isLoggedValue!==null){
-          setIsLoggedIn(isLoggedValue);
-        }
-
-      }
-    } catch (e) {
-      console.log("error",e)
-      // error reading value
-    }
-  };
+  
 
 
   return (
     <View style={{ flex: 1 }}>
-      <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash.png')}>
+      <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
 
         {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
-        <FastImage
-          style={{ width: 350, height: 350, marginTop:'auto',alignSelf:'center' }}
+        {/* <FastImage
+          style={{ width: 250, height: 250, marginTop:'auto',alignSelf:'center' }}
           source={{
             uri: gifUri, // Update the path to your GIF
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.contain}
-        />
-
-
-
+        /> */}
 
       </ImageBackground>
 

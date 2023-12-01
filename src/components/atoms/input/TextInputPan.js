@@ -3,9 +3,13 @@ import {View, StyleSheet,TextInput,Modal,Pressable,Text,Image} from 'react-nativ
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import { useVerifyPanMutation } from '../../../apiServices/verification/PanVerificationApi';
 import ZoomImageAnimation from '../../animations/ZoomImageAnimation';
+import ErrorModal from '../../modals/ErrorModal';
 const TextInputPan = (props) => {
     const [value,setValue] = useState()
     const [modalVisible, setModalVisible] = useState(false);
+    const [message, setMessage] = useState();
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
     const placeHolder = props.placeHolder
     const required = props.required
 const label = props.label
@@ -30,8 +34,8 @@ const label = props.label
         // }
         
         const data={
-          "name":"Test2",
-          "pan":"AMJCL2021N"
+          // "name":"Test2",
+          "pan":value
           }
         verifyPanFunc(data)
         console.log(value)
@@ -47,11 +51,14 @@ const label = props.label
         if(verifyPanData.success)
         {
         setModalVisible(true)
+        setSuccess(true)
         }
         }
         else if(verifyPanError)
         {
         console.log("verifyPanError",verifyPanError)
+        setError(true)
+        setMessage(verifyPanError.data.Error.message)
         }
         },[verifyPanData,verifyPanError])
         
@@ -60,7 +67,9 @@ const label = props.label
         // props.handleData(value)
        
     }
-    
+    const modalClose = () => {
+      setError(false);
+    };
     const handleInputEnd=()=>{
         let tempJsonData ={...props.jsonData,"value":value}
         console.log(tempJsonData)
@@ -69,6 +78,13 @@ const label = props.label
 
     return (
         <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
+            {error && (
+        <ErrorModal
+          modalClose={modalClose}
+
+          message={message}
+          openModal={error}></ErrorModal>
+      )}
             <Modal
         animationType="slide"
         transparent={true}
@@ -93,7 +109,11 @@ const label = props.label
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
                 <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = {label}></PoppinsTextMedium>
             </View>
+            <View style={{width:'80%',alignItems:'center',justifyContent:'center',position:'absolute',left:10}}></View>
             <TextInput maxLength={12} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ? `${placeHolder} *` : `${placeHolder}`}></TextInput>
+            {success && <View style={{alignItems:'center',justifyContent:'center',width:'20%',position:'absolute',right:0}}>
+              <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../../assets/images/greenTick.png')}></Image>
+            </View>}
         </View>
     );
 }

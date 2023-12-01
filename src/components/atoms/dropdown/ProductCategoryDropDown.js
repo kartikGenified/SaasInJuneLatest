@@ -16,11 +16,11 @@ const ProductCategoryDropDown = (props) => {
   const [topMargin, setTopMargin] = useState(0);
   const data = props.data;
   const width = Dimensions.get('window').width
-  const handleSelect = (data,id) => {
+  const handleSelect = (data) => {
     // console.log(data)
     setSelectedBank(data);
     setShowList(false);
-    props.handleData(data,id);
+    props.handleData(data);
   };
   const handleOpenList = () => {
     setShowList(!showList);

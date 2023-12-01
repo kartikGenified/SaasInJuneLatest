@@ -592,7 +592,15 @@ const RedeemGifts = ({navigation,route}) => {
           )}
         </View>
         <TouchableOpacity onPress={()=>{
-          navigation.navigate("CartList",{cart:cart})
+          if(cart.length!==0)
+          {
+            navigation.navigate("CartList",{cart:cart})
+          }
+          else (
+            setError(true),
+            setMessage("Cart cannot be empty")
+          )
+          
         }} style={{alignItems:"center",borderRadius:10,justifyContent:'center',height:50,width:'60%',backgroundColor:ternaryThemeColor,position:'absolute',bottom:20}}>
             <PoppinsTextMedium style={{color:'white',fontSize:16,fontWeight:'700'}} content = "Continue"></PoppinsTextMedium>
         </TouchableOpacity>

@@ -414,8 +414,8 @@ const PointHistory = ({ navigation }) => {
 
     const DisplayEarnings = () => {
         return (
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start",width:'100%' }}>
+                <View style={{ alignItems: "center", justifyContent: "center",marginLeft:20 }}>
                     {userPointData && <PoppinsText style={{ color: "black" }} content={userPointData.body.point_earned}></PoppinsText>}
                     <PoppinsTextMedium style={{ color: "black", fontSize: 14, color: 'black' }} content="Lifetime Earnings"></PoppinsTextMedium>
                 </View>
@@ -423,9 +423,9 @@ const PointHistory = ({ navigation }) => {
                     {userPointData && <PoppinsText style={{ color: "black" }} content={userPointData.body.point_redeemed}></PoppinsText>}
                     <PoppinsTextMedium style={{ color: "black", fontSize: 14, color: 'black' }} content="Lifetime Burns"></PoppinsTextMedium>
                 </View>
-                <TouchableOpacity style={{ borderRadius: 2, height: 40, width: 100, backgroundColor: "#FFD11E", alignItems: "center", justifyContent: "center", marginLeft: 20, color: 'black' }}>
+                {/* <TouchableOpacity style={{ borderRadius: 2, height: 40, width: 100, backgroundColor: "#FFD11E", alignItems: "center", justifyContent: "center", marginLeft: 20, color: 'black' }}>
                     <PoppinsTextMedium style={{ color: 'black' }} content="Redeem"></PoppinsTextMedium>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         )
     }
@@ -466,9 +466,9 @@ const PointHistory = ({ navigation }) => {
 
                 </TouchableOpacity>
                 <PoppinsTextMedium content="Point History" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
-                <TouchableOpacity style={{ marginLeft: 180 }}>
+                {/* <TouchableOpacity style={{ marginLeft: 180 }}>
                     <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/notificationOn.png')}></Image>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
             <View style={{ padding: 14, alignItems: "center", justifyContent: "flex-start", width: "100%", flexDirection: "row" }}>
                 <View style={{ width: 100 }}>
@@ -519,7 +519,7 @@ const PointHistory = ({ navigation }) => {
                 renderItem={({ item, index }) => {
                     console.log(index + 1, item)
                     return (
-                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format('HH:MM')} />
+                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format("HH:mm a")}/>
                     )
                 }}
                 keyExtractor={item => item.id}

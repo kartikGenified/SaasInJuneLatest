@@ -1198,6 +1198,9 @@ const CustomDrawer = () => {
               else if (props.title.toLowerCase() === "scan list") {
                 navigation.navigate('ScannedHistory')
               }
+              else if (props.title.toLowerCase() === "add user") {
+                navigation.navigate('ListUsers')
+              }
               else if (props.title.toLowerCase() === "share app") {
                 const options = {
                   title: "Share APP",
@@ -1496,7 +1499,7 @@ const CustomDrawer = () => {
               </TouchableOpacity>    
 
               <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{Linking.openURL("https://www.ozone-india.com/")}}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Jump to ozone website</Text> 
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Jump to Ozone website</Text> 
               </TouchableOpacity>   
 
               <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("ProductCategory")}}>
@@ -1566,9 +1569,15 @@ const CustomDrawer = () => {
                 <Text style={{  fontSize:15, color:ternaryThemeColor }}>What's New</Text> 
               </TouchableOpacity>    
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }}>
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                console.log(BaseUrlImages+"images-1700639007902-188225481.pdf")
+                navigation.navigate("PdfComponent",{pdf:"images-1700639007902-188225481.pdf"})
+                
+              //  getPolicyData && navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
+
+              }}>
                 <Text style={{  fontSize:15, color:ternaryThemeColor }}>Program Content</Text> 
-              </TouchableOpacity>    
+              </TouchableOpacity>
 
               <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("TierDetails")}}>
                 <Text style={{  fontSize:15, color:ternaryThemeColor }}>Tier Details</Text> 

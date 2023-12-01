@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  cart:[]
+  cart:{}
 }
 
 export const rewardCartSlice = createSlice({
@@ -10,7 +10,7 @@ export const rewardCartSlice = createSlice({
   reducers: {
     
     additem:(state,action)=>{
-        state.cart.push(action.payload)
+        state.cart= action.payload
     },
     
   },

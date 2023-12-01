@@ -39,7 +39,20 @@ export const UserRegisterApi = baseApi.injectEndpoints({
         };
       },
     }),
+    updateProfileAtRegistration: builder.mutation({
+      query: (params) => {
+        console.log("object-00988900--->",params);
+        return {
+          method: "PATCH",
+          url: `/api/app/registration/${params.id}`,
+          headers: {
+            slug : slug,
+          },
+          body : params.body
+        };
+      },
+    }),
   }),
 });
 
-export const {useRegisterUserMutation,useRegisterUserByBodyMutation} = UserRegisterApi;
+export const {useRegisterUserMutation,useRegisterUserByBodyMutation,useUpdateProfileAtRegistrationMutation} = UserRegisterApi;
