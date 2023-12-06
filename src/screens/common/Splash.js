@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
-import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification } from '../../../redux/slices/appThemeSlice';
+import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification,setSocials, setWebsite } from '../../../redux/slices/appThemeSlice';
 import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
 import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
@@ -107,7 +107,7 @@ const Splash = ({ navigation }) => {
   
   // calling API to fetch themes for the app
   useEffect(() => {
-    getAppTheme("oopl")
+    getAppTheme("ozone")
     //         VersionCheck.getLatestVersion()
     // .then(latestVersion => {
     //     console.log(latestVersion);   
@@ -132,7 +132,8 @@ const Splash = ({ navigation }) => {
       dispatch(setColorShades(getAppThemeData.body.theme.color_shades))
       dispatch(setKycOptions(getAppThemeData.body.kyc_options))
       dispatch(setPointSharing(getAppThemeData.body.points_sharing))
-      
+      dispatch(setSocials(getAppThemeData.body.socials))
+      dispatch(setWebsite(getAppThemeData.body.website))
       if(getAppThemeData.body.addon_features.kyc_online_verification!==undefined)
       {
         if(getAppThemeData.body.addon_features.kyc_online_verification)
@@ -144,7 +145,7 @@ const Splash = ({ navigation }) => {
       getData()
     }
     else {
-      getAppTheme("oopl")
+      getAppTheme("ozone")
 
       console.log("getAppThemeIsError", getAppThemeIsError)
       console.log("getAppThemeError", getAppThemeError)
