@@ -1,13 +1,14 @@
-import React,{useEffect, useId} from 'react';
+import React,{useEffect, useState} from 'react';
 import {View, StyleSheet,TouchableOpacity,Image} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 import { useFetchCashbackEnteriesOfUserMutation } from '../../apiServices/workflow/rewards/GetCashbackApi';
-
+import DataNotFound from '../data not found/DataNotFound';
 
 const CashbackHistory = ({navigation}) => {
+    const [showNoDataFound, setShowNoDataFound] = useState(false)
     const cashback =200
     const userId = useSelector(state => state.appusersdata.userId);
     console.log(userId)
@@ -39,6 +40,10 @@ const CashbackHistory = ({navigation}) => {
         if(fetchCashbackEnteriesData)
         {
             console.log("fetchCashbackEnteriesData",fetchCashbackEnteriesData)
+            if(fetchCashbackEnteriesData.body.data.length===0)
+            {
+                setShowNoDataFound(true)
+            }
         }
         else if(fetchCashbackEnteriesError)
         {
@@ -106,6 +111,7 @@ const CashbackHistory = ({navigation}) => {
             <CashbackListItem></CashbackListItem>
 
         </View>
+    
     );
 }
 

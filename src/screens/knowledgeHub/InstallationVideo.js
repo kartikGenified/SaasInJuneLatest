@@ -1,14 +1,19 @@
-//import liraries
+
 import React, { Component, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image,FlatList, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Linking } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 import { useProductInstallationVideoMutation } from '../../apiServices/installationVideo/InstallationVideoApi';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
+import DataNotFound from '../data not found/DataNotFound';
+import FastImage from 'react-native-fast-image';
 
 // create a component
-const InstallationVideo = ({navigation}) => {
+const InstallationVideo = ({ navigation }) => {
+
+    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+
 
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
@@ -40,9 +45,9 @@ const InstallationVideo = ({navigation}) => {
 
     const fetchVideoFunc = async () => {
         const credentials = await Keychain.getGenericPassword();
-        
-          const token = credentials.username
-       
+
+        const token = credentials.username
+
         getVediofunc(token)
     }
 
@@ -74,30 +79,47 @@ const InstallationVideo = ({navigation}) => {
 
             </View>
             {/* navigator */}
+            {videoIsLoading &&
+                <FastImage
+                    style={{ width: 50, height: "100%", alignItems:'center', marginLeft:'45%' }}
+                    source={{
+                        uri: gifUri, // Update the path to your GIF
+                        priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+            }
+
 
             {/* Screen */}
-            <View style={{ flex: 1, backgroundColor: 'white' }}>
-                <FlatList
-                    data={getVideoData?.body?.data}
-                    renderItem={({ item }) =>
-                        <TouchableOpacity onPress={()=>{
-                            Linking.openURL(item?.link)
-                        }} style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, height: 120, backgroundColor: "#80808010", borderRadius: 10,borderWidth:1,borderColor:'#80808030', marginHorizontal: 10, justifyContent:'space-between', padding:10,  }}>
-                            <View>
-                                <PoppinsTextLeftMedium style={{color:'black', fontWeight:'bold', padding:10}} content={`Title:   ${item.name}`}></PoppinsTextLeftMedium>
-                            </View>
-                            <TouchableOpacity onPress={()=>{
+            {getVideoData?.body?.data.length > 0 && 
+                <View style={{ flex: 1, backgroundColor: 'white' }}>
+                    <FlatList
+                        data={getVideoData?.body?.data}
+                        renderItem={({ item }) =>
+                            <TouchableOpacity onPress={() => {
                                 Linking.openURL(item?.link)
-                            }} style={{padding:20, borderWidth:1, borderColor:'red', width:200,alignItems:'center', borderRadius:10}}>
-                                <Image style={{height:50, width:50}} source={require('../../../assets/images/youtube.png')}/>
+                            }} style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, height: 120, backgroundColor: "#80808010", borderRadius: 10, borderWidth: 1, borderColor: '#80808030', marginHorizontal: 10, justifyContent: 'space-between', padding: 10, }}>
+                                <View>
+                                    <PoppinsTextLeftMedium style={{ color: 'black', fontWeight: 'bold', padding: 10 }} content={`Title:   ${item.name}`}></PoppinsTextLeftMedium>
+                                </View>
+                                <TouchableOpacity onPress={() => {
+                                    Linking.openURL(item?.link)
+                                }} style={{ padding: 20, borderWidth: 1, borderColor: 'red', width: 200, alignItems: 'center', borderRadius: 10 }}>
+                                    <Image style={{ height: 50, width: 50 }} source={require('../../../assets/images/youtube.png')} />
+                                </TouchableOpacity>
                             </TouchableOpacity>
-                        </TouchableOpacity>
-                    }
-                    keyExtractor={item => item.id}
-                />
-            </View>
+                        }
+                        keyExtractor={item => item.id}
+                    />
+                </View>
+               
+            }
+            {
+                getVideoData?.body?.data.length=== 0 && <DataNotFound></DataNotFound>
+            }
 
-
+            
         </View>
     );
 };

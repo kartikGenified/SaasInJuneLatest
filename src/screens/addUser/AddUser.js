@@ -32,6 +32,7 @@ const AddUser = ({ navigation }) => {
   const [error, setError] = useState(false);
   const [modalTitle, setModalTitle] = useState()
   const [keyboardShow, setKeyboardShow] = useState(false)
+  const [removedUser, setRemovedUser] = useState()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -39,7 +40,7 @@ const AddUser = ({ navigation }) => {
     : 'grey';
   const userData = useSelector(state => state.appusersdata.userData)
   const allUsers = useSelector(state => state.appusers.value)
-  console.log("userData", userData)
+  console.log("userData", userData,allUsers)
   const height = Dimensions.get('window').height
   const focused = useIsFocused()
   const [getFormFunc, {
@@ -83,7 +84,7 @@ const AddUser = ({ navigation }) => {
   var allUsersList = []
 
   useEffect(() => {
-
+    let temparr = allUsers
     allUsers.map((item, index) => {
       allUsersData.push({
         "userType": item.user_type,
@@ -96,7 +97,11 @@ const AddUser = ({ navigation }) => {
     setSelectUsers(allUsersList)
     setUserTypeList(allUsersData)
     console.log("allUsersData", allUsersData)
-
+    const index = temparr.indexOf(userData.user_type.charAt(0).toUpperCase() + userData.user_type.slice(1))
+    console.log("index",index,temparr,userData.user_type)
+    // setRemovedUser(temparr.splice(index,1))
+    // const arr = temparr.splice(index,1)
+    // console.log(arr)
   }, [])
 
   useEffect(() => {
@@ -506,13 +511,13 @@ const AddUser = ({ navigation }) => {
 
           }
           {
-            selectUsers &&
+            selectUsers && removedUser &&
             <DropDownRegistration
 
               title="user_type"
               header="UserType"
-              jsonData={{ "label": "UserType", "maxLength": "100", "name": "user_type", "options": ["influencer","sales"], "required": true, "type": "text" }}
-              data={["influencer","sales"]}
+              jsonData={{ "label": "UserType", "maxLength": "100", "name": "user_type", "options": [], "required": true, "type": "text" }}
+              data={removedUser}
               handleData={handleData}
             ></DropDownRegistration>
           }

@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
        
     },
     image:{
-        height:130,
-        width:130,
+        height:80,
+        width:80,
         marginBottom:8,resizeMode:'contain'
        
         

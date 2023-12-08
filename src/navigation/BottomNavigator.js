@@ -37,7 +37,7 @@ function BottomNavigator({navigation}) {
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Home"></PoppinsTextMedium>
     </TouchableOpacity>
     {/* ozone change */}
-    { userData.user_type==="influencer" ? <TouchableOpacity onPress={()=>{navigation.navigate('QrCodeScanner')}} style={{alignItems:"center",justifyContent:"center",}}>
+    { ((userData.user_type).toLowerCase()!=="dealer"  && (userData.user_type).toLowerCase()!=="sales") ? <TouchableOpacity onPress={()=>{navigation.navigate('QrCodeScanner')}} style={{alignItems:"center",justifyContent:"center",}}>
     <Qrcode name="qrcode" size={24} color={ternaryThemeColor}></Qrcode>
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Scan QR Code"></PoppinsTextMedium>
     </TouchableOpacity>

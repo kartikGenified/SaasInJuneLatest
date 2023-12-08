@@ -67,7 +67,7 @@ const QrCodeScanner = ({navigation}) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
   const dispatch = useDispatch();
-  console.log('Workflow Program is ', workflowProgram,shouldSharePoints,location);
+  console.log('Workflow Program is ', workflowProgram,shouldSharePoints,location,userData);
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
 
   // mutations ----------------------------------------
@@ -505,22 +505,37 @@ else{
   // getting verify qr data --------------------------
   useEffect(() => {
     if (verifyQrData) {
-      console.log('Verify qr data', verifyQrData.body);
-      if(verifyQrData.body.qr_status==="1" )
+      console.log('Verify qr data', verifyQrData);
+      if(verifyQrData.body?.qr_status==="1" )
       {
       addQrDataToList(verifyQrData.body);
       }
-      else if(verifyQrData.body.qr_status==="2")
+      if(verifyQrData.body?.qr?.qr_status==="2" && verifyQrData.status===201 )
       {
-        setIsReportable(true)
+       
         setError(true);
-        setMessage('Point for this Qr code is already claimed!!');
+        setMessage(verifyQrData.message);
+      }
+      if(verifyQrData.body?.qr?.qr_status==="2" && verifyQrData.status===202 )
+      {
+       setIsReportable(true)
+        setError(true);
+        setMessage(verifyQrData.message);
       }
     }
      else if(verifyQrError) {
-      console.log('Verify qr error', verifyQrError);
-      setError(true)
-      setMessage(verifyQrData?.data.message)
+      if(verifyQrError===undefined){
+        
+        setError(true)
+        setMessage("This QR is not activated yet")
+      }
+      else{
+        setError(true)
+        setMessage(verifyQrError.data?.message);
+
+      }
+      console.log('Verify qr error', verifyQrError.data.Error);
+     
     }
   }, [verifyQrData, verifyQrError]);
   // --------------------------------------------------------
@@ -914,7 +929,7 @@ else{
           {error && verifyQrData && (
             <ErrorModal
               modalClose={modalClose}
-              productData = {verifyQrData.body}
+              productData = {verifyQrData.body?.qr}
               message={message}
               isReportable = {isReportable}
               openModal={error}></ErrorModal>
@@ -922,7 +937,7 @@ else{
           {error  && (
             <ErrorModal
               modalClose={modalClose}
-             
+              isReportable = {isReportable}
               message={message}
               
               openModal={error}></ErrorModal>

@@ -34,7 +34,7 @@ export const GetForms = baseApi.injectEndpoints({
         console.log("point history",params)
         return {
           method: "GET",
-          url: `/api/app/userPointsEnteries?id=${params.userId}`,
+          url: `/api/app/userPointsEnteries?id=${params.userId}&limit=1000&offset=0`,
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + params.token,

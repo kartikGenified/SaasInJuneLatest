@@ -37,6 +37,7 @@ const InputDate = (props) => {
         open={open}
         date={date}
         mode='date'
+        maximumDate={new Date()}
         onConfirm={(date) => {
           setSelected(true)
           setOpen(false)

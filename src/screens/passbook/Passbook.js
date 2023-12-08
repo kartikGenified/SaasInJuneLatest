@@ -17,6 +17,7 @@ const Passbook = ({ navigation }) => {
     const [wheelOptionEnabled, setWheelOptionEnabled] = useState(false)
     const [pointsOptionEnabled, setPointsOptionEnabled] = useState(false)
     const [PlatinumModalOpen, setPlatinumModal] = useState(false)
+    const [listView, setListView] = useState(true)
 
     const shouldSharePoints = useSelector(state => state.pointSharing.shouldSharePoints)
 
@@ -38,7 +39,7 @@ const Passbook = ({ navigation }) => {
     }] = useGetActiveMembershipMutation();
 
     const [pointSharing, setPointSharing] = useState(false)
-  const colors= ["blue","red","green"]
+    const colors = ["blue", "red", "green"]
 
 
     const ternaryThemeColor = useSelector(
@@ -84,7 +85,7 @@ const Passbook = ({ navigation }) => {
             const credentials = await Keychain.getGenericPassword();
             const token = credentials.username;
             const params = {
-                token: token,   
+                token: token,
                 id: String(userData.id),
                 cause: "registration_bonus"
             }
@@ -93,16 +94,16 @@ const Passbook = ({ navigation }) => {
         })();
     }, []);
 
-    
-  useEffect(() => {
-    if (getPointSharingData) {
-      console.log("getPointSharingData", JSON.stringify(getPointSharingData))
 
-    }
-    else if (getPointSharingError) {
-      console.log("getPointSharingError", getPointSharingError)
-    }
-  }, [getPointSharingData, getPointSharingError])
+    useEffect(() => {
+        if (getPointSharingData) {
+            console.log("getPointSharingData", JSON.stringify(getPointSharingData))
+
+        }
+        else if (getPointSharingError) {
+            console.log("getPointSharingError", getPointSharingError)
+        }
+    }, [getPointSharingData, getPointSharingError])
 
 
     const checkForPointSharing = () => {
@@ -199,9 +200,69 @@ const Passbook = ({ navigation }) => {
             </TouchableOpacity>
         )
     }
+
+    const GridVIew = (props) => {
+        const title = props.title
+        const discription = props.discription
+        const image = props.image
+        const navigateToPages = (data) => {
+            if (data === "Scanned History") {
+                navigation.navigate('ScannedHistory')
+            }
+            else if (data === "Points History") {
+                navigation.navigate('PointHistory')
+
+            }
+            else if (data === "Redeemed History") {
+                navigation.navigate('RedeemedHistory')
+
+            }
+            else if (data === "Cashback History") {
+                navigation.navigate('CashbackHistory')
+
+            }
+            else if (data === "Coupon History") {
+                navigation.navigate('CouponHistory')
+
+            }
+            else if (data === "Wheel History") {
+                navigation.navigate('WheelHistory')
+
+            }
+            else if (data === "Warranty History") {
+                navigation.navigate('WarrantyHistory')
+
+            }
+            else if (data === "Shared Point History") {
+                navigation.navigate('SharedPointsHistory')
+
+            }
+        }
+
+
+        return (
+            <View>
+                <TouchableOpacity onPress={() => {
+                    navigateToPages(title)
+                }} style={{ flexDirection: "column", borderWidth: 2, width: 70, height: 70, borderColor: ternaryThemeColor, padding: 6, marginTop: 15, marginHorizontal: 22, alignItems: 'center' }}>
+                    <View style={{ height: 44, width: 44, alignItems: "center", justifyContent: "center", }}>
+                        <Image style={{ height: 40, width: 40, resizeMode: "contain", }} source={image}></Image>
+                    </View>
+                </TouchableOpacity>
+
+                <View style={{ width: 80, marginTop: 6, alignSelf: 'center' }}>
+                    <PoppinsTextMedium style={{ color: 'black', fontWeight: '800', fontSize: 14, textAlign: 'center' }} content={title}></PoppinsTextMedium>
+                </View>
+            </View>
+
+        )
+    }
+
+
+
     return (
         <ScrollView style={{ height: '100%', width: '100%', flex: 1 }}>
-            <View style={{ alignItems: "center", height: '100%', width: "100%", backgroundColor: "white", paddingBottom: 100 }}>
+            <View style={{ alignItems: "center", height: '100%', width: "100%", backgroundColor: "white", paddingBottom: 100, }}>
 
                 {/* coloured header */}
                 <View style={{ height: 200, width: '100%', backgroundColor: ternaryThemeColor, alignItems: "flex-start", justifyContent: 'flex-start' }}>
@@ -236,50 +297,142 @@ const Passbook = ({ navigation }) => {
                 </View>
 
 
+
+
                 {/* options----------------------------- */}
-                <View style={{ width: '90%', alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: '#EEEEEE', borderRadius: 20, marginTop: 100 }}>
-                    <View style={{ width: '100%', height: 50, flexDirection: "row", alignItems: "center", justifyContent: "center", borderBottomWidth: 1, borderColor: '#EEEEEE' }}>
-                    {(getPointSharingData?.body?.total !=="0") ? <PoppinsTextMedium style={{ color:ternaryThemeColor, fontWeight:'bold' }} content={`Registration Bonus : ${getPointSharingData?.body?.data?.[0]?.points  ? getPointSharingData?.body?.data?.[0]?.points +"Points" :"loading"} `}></PoppinsTextMedium >
-                    : <PoppinsTextMedium style={{  fontWeight:'bold' }} content="What do you want to do?"></PoppinsTextMedium>    
-                }  
-                    </View>
-                    {
-                        pointsOptionEnabled &&
-                        <NavigateTO  title="Points History" discription=" list of points redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
 
-                    }
-                    {/* ozone change */}
+                {
+                    listView &&
+                    <View style={{ width: '90%', alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: '#EEEEEE', borderRadius: 20, marginTop: 100 }}>
 
-                    {userData.user_type!=="dealer" && <NavigateTO title="Scanned History" discription=" list of products scan by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>}
-                    <NavigateTO title="Redeemed History" discription=" list of products redeemed by you" image={require('../../../assets/images/redeemedHistory.png')}></NavigateTO>
-                    <NavigateTO title="Cashback History" discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
-                    
-                    {/* {
-                warrantyOptionEnabled &&  */}
-                    <NavigateTO title="Warranty History" discription=" list of warranty redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
-                    {/* } */}
-                    {
-                        couponOptionEnabled &&
-                        <NavigateTO title="Coupon History" discription=" list of coupons redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
-                    }
-                    {
-                        cashbackOptionEnabled &&
+                        <View style={{ width: '100%', height: 50, flexDirection: "row", alignItems: "center", justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEEEEE' }}>
+                            {(getPointSharingData?.body?.total !== "0") ? <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: 'bold',position:'absolute',left:10 }} content={`Registration Bonus : ${getPointSharingData?.body?.data?.[0]?.points ? getPointSharingData?.body?.data?.[0]?.points + "Points" : "loading"} `}></PoppinsTextMedium >
+                                : <PoppinsTextMedium style={{ fontWeight: 'bold',position:'absolute',left:10}} content="What do you want to do?"></PoppinsTextMedium>
+                            }
+                            <View style={{ flexDirection: 'row',position:'absolute',right:20 }}>
+
+                                <TouchableOpacity style={{ backgroundColor: listView ? ternaryThemeColor : 'white', marginRight: 10, paddingHorizontal:7, paddingVertical:4 }} onPress={() => {
+                                    setListView(true)
+                                }}>
+                                    <Image style={{ height: 15, width: 15, resizeMode: 'contain', }} source={ require('../../../assets/images/listwhite.png') }></Image>
+
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={()=>{
+                                    setListView(!listView)
+                                }}>
+                                    <Image style={{ height: 20, width: 20, resizeMode: 'contain', }} source={require('../../../assets/images/grid.png') }></Image>
+
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+
+                        {
+                            pointsOptionEnabled &&
+                            <NavigateTO title="Points History" discription=" list of points redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+                        }
+
+                        {/* ozone change */}
+                        {userData.user_type !== "dealer" && <NavigateTO title="Scanned History" discription=" list of products scan by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>}
+                        <NavigateTO title="Redeemed History" discription=" list of products redeemed by you" image={require('../../../assets/images/redeemedHistory.png')}></NavigateTO>
                         <NavigateTO title="Cashback History" discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
 
-                    }
+                        {/* {
+                warrantyOptionEnabled &&  */}
+                        <NavigateTO title="Warranty History" discription=" list of warranty redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+                        {/* } */}
+                        {
+                            couponOptionEnabled &&
+                            <NavigateTO title="Coupon History" discription=" list of coupons redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+                        }
+                        {
+                            cashbackOptionEnabled &&
+                            <NavigateTO title="Cashback History" discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
 
-                    {
-                        wheelOptionEnabled &&
-                        <NavigateTO title="Wheel History" discription=" list of wheel spinned by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+                        }
 
-                    }
-                    {
-                        pointSharing && userData?.user_type != "influencer" && <NavigateTO title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
-                    }
+                        {
+                            wheelOptionEnabled &&
+                            <NavigateTO title="Wheel History" discription=" list of wheel spinned by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+
+                        }
+                        {
+                            pointSharing && userData?.user_type != "influencer" && <NavigateTO title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+                        }
+                    </View>
+                }
+
+                {/* GridVIew */}
+                {
+                    !listView &&
+
+                    <View style={{ width: '90%', borderWidth: 1, borderColor: '#EEEEEE', borderRadius: 20, marginTop: 100, alignItems: 'center' }}>
+
+                        <View style={{ width: '100%', height: 50, flexDirection: "row", alignItems: "center", justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEEEEE' }}>
+                            {(getPointSharingData?.body?.total !== "0") ? <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: 'bold',position:'absolute',left:20 }} content={`Registration Bonus : ${getPointSharingData?.body?.data?.[0]?.points ? getPointSharingData?.body?.data?.[0]?.points + "Points" : "loading"} `}></PoppinsTextMedium >
+                                : <PoppinsTextMedium style={{ fontWeight: 'bold',position:'absolute',left:20 }} content="What do you want to do?"></PoppinsTextMedium>
+                            }
+                            <View style={{ flexDirection: 'row',position:'absolute',right:20 }}>
+
+                                <TouchableOpacity style={{ backgroundColor: listView ? ternaryThemeColor : 'white', marginRight: 10 }} onPress={() => {
+                                    setListView(true)
+                                }}>
+                                    <Image style={{ height: 20, width: 20, resizeMode: 'contain', paddingHorizontal: 10 }} source={require('../../../assets/images/list.png')}></Image>
+
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, borderWidth: 1, borderColor: ternaryThemeColor }}>
+                                    <Image style={{ height: 20, width: 20, resizeMode: 'contain', }} source={listView ? require('../../../assets/images/grid.png') : require('../../../assets/images/gridwhite.png')}></Image>
+
+                                </TouchableOpacity>
 
 
 
-                </View>
+                            </View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', width: '100%', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+                            {
+                                pointsOptionEnabled &&
+                                <GridVIew title="Points History" discription=" list of points redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+
+                            }
+                            {/* ozone change */}
+
+                            {userData.user_type !== "dealer" && <GridVIew title="Scanned History" discription=" list of products scan by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>}
+                            <GridVIew title="Redeemed History" discription=" list of products redeemed by you" image={require('../../../assets/images/redeemedHistory.png')}></GridVIew>
+                            <GridVIew title="Cashback History" discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+
+                            {/* {
+                warrantyOptionEnabled &&  */}
+                            <GridVIew title="Warranty History" discription=" list of warranty redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+                            {/* } */}
+                            {
+                                couponOptionEnabled &&
+                                <GridVIew title="Coupon History" discription=" list of coupons redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+                            }
+                            {
+                                cashbackOptionEnabled &&
+                                <GridVIew title="Cashback History" discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+
+                            }
+
+                            {
+                                wheelOptionEnabled &&
+                                <GridVIew title="Wheel History" discription=" list of wheel spinned by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+
+                            }
+                            {
+                                pointSharing && userData?.user_type != "influencer" && <GridVIew title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+                            }
+                        </View>
+
+
+                    </View>
+                }
+
+
                 {/* ----------------------------------- */}
             </View>
             {/* modals */}

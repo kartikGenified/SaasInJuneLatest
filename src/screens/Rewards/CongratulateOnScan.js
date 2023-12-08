@@ -259,7 +259,7 @@ const getMembership = async () => {
                   method_id: 1,
                   method: "point on product",
                   points: points,
-                  type: "point_sharing",
+                  type: "points_sharing",
                   point_earned_through_type: "points_sharing",
                 },
                 qrId: Number(qrData.id),
@@ -303,7 +303,7 @@ const getMembership = async () => {
                   method_id: 1,
                   method: "point on product",
                   points: points,
-                  type: "point_sharing",
+                  type: "points_sharing",
                   point_earned_through_type: "points_sharing",
                 },
                 qrId: Number(qrData.id),
@@ -321,7 +321,7 @@ const getMembership = async () => {
           const params = {
             data: {
               qrs: qrIdList,
-              point_sharing: pointSharingData,
+              points_sharing: pointSharingData,
               platform_id: Number(platform),
               pincode:
                 location.postcode === undefined ? "N/A" : location.postcode,

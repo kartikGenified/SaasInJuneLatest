@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
+import { View, StyleSheet, Text, Image, ImageBackground,PermissionsAndroid } from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
-import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification,setSocials, setWebsite } from '../../../redux/slices/appThemeSlice';
+import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification,setSocials, setWebsite, setCustomerSupportMail, setCustomerSupportMobile } from '../../../redux/slices/appThemeSlice';
 import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
 import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId} from '../../../redux/slices/appUserDataSlice';
 import messaging from '@react-native-firebase/messaging';    
 import { setFcmToken } from '../../../redux/slices/fcmTokenSlice';
+import { setAppUsers } from '../../../redux/slices/appUserSlice';
+import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersApi';
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -32,16 +34,73 @@ const Splash = ({ navigation }) => {
       isError: getAppThemeIsError,
     }
   ] = useGetAppThemeDataMutation();
- 
+  const [
+    getUsers,
+    {
+      data: getUsersData,
+      error: getUsersError,
+      isLoading: getUsersDataIsLoading,
+      isError: getUsersDataIsError,
+    },
+  ] = useGetAppUsersDataMutation();
+
+  useEffect(() => {
+    
+    getUsers();
+  }, []);
+  useEffect(() => {
+    if (getUsersData) {
+      console.log("type of users",getUsersData.body);
+      const appUsers = getUsersData.body.map((item,index)=>{
+        return item.name
+      })
+      console.log("appUsers",appUsers)
+      dispatch(setAppUsers(appUsers))
+     
+    } else if(getUsersError) {
+      console.log("getUsersError",getUsersError);
+    }
+  }, [getUsersData, getUsersError]);
+  useEffect(()=>{
+    const requestLocationPermission = async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Geolocation Permission',
+            message: 'Can we access your location?',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        console.log('granted', granted);
+        if (granted === 'granted') {
+          console.log('You can use Geolocation');
+          return true;
+        } else {
+          console.log('You cannot use Geolocation');
+          return false;
+        }
+      } catch (err) {
+        return false;
+      }
+    };
+    requestLocationPermission()
+  },[])
   useEffect(()=>{
     const checkToken = async () => {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
          console.log("fcmToken",fcmToken);
-        //  dispatch(setFcmToken(fcmToken))
+         dispatch(setFcmToken(fcmToken))
       } 
      }
      checkToken()
+     
+      
+    
+      
   },[])
  
     const getData = async () => {
@@ -134,6 +193,8 @@ const Splash = ({ navigation }) => {
       dispatch(setPointSharing(getAppThemeData.body.points_sharing))
       dispatch(setSocials(getAppThemeData.body.socials))
       dispatch(setWebsite(getAppThemeData.body.website))
+      dispatch(setCustomerSupportMail(getAppThemeData.body.customer_support_email))
+      dispatch(setCustomerSupportMobile(getAppThemeData.body.customer_support_mobile))
       if(getAppThemeData.body.addon_features.kyc_online_verification!==undefined)
       {
         if(getAppThemeData.body.addon_features.kyc_online_verification)

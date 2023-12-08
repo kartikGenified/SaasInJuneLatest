@@ -6,13 +6,17 @@ import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTex
 import { useSelector } from 'react-redux';
 import { useFetchAllfaqsMutation } from '../../apiServices/faq/faqApi';
 import * as Keychain from 'react-native-keychain';
+import DataNotFound from '../data not found/DataNotFound';
+import FastImage from 'react-native-fast-image';
 
 
 // create a component
 const FAQ = ({ navigation }) => {
 
-    const[faqData, setFAQData] = useState([]);
+    const[faqData, setFAQData] = useState(null);
     const[error,setError] = useState(false);
+
+    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
     const [fetchFAQ, {
         data:fetchFAQData, 
@@ -68,6 +72,7 @@ const FAQ = ({ navigation }) => {
        }
        else{
         setError(true)
+        setFAQData([]);
        }
     },[fetchFAQData, FAQError])
 
@@ -125,9 +130,21 @@ const FAQ = ({ navigation }) => {
 
 
             </View>
+
+            {FAQIsLoading &&
+              <FastImage
+                   style={{ width: 50, height: "10%", marginTop:'70%', marginLeft:'40%' }}
+                   source={{
+                       uri: gifUri, // Update the path to your GIF
+                       priority: FastImage.priority.normal,
+                   }}
+                   resizeMode={FastImage.resizeMode.contain}
+               />
+          }
+
           
             {
-                faqData && faqData.map((item) => {
+                faqData?.length > 0 && faqData.map((item) => {
                     return (
                         <View key={item.id}>
                             <FaqComp item = {item}></FaqComp>
@@ -136,6 +153,8 @@ const FAQ = ({ navigation }) => {
 
                 })
             }
+
+          
         </View>
     );
 };

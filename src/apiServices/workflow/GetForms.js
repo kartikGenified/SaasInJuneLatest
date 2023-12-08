@@ -26,9 +26,20 @@ export const GetForms = baseApi.injectEndpoints({
                     },
                 }}
         }),
+        getFormAccordingToAppUserTypeFormId :builder.mutation({
+            query: (params) => {
+                console.log("getFormAccordingToAppUserTypeFormId",params)
+                return {
+                    method: 'GET',
+                    url: `api/admin/vendorTheme/form/${slug}/${params.AppUserType}/${params.formId}`,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }}
+        }),
     })
 });
 
 
-export const {useGetFormMutation,useGetFormAccordingToAppUserTypeMutation} = GetForms
+export const {useGetFormMutation,useGetFormAccordingToAppUserTypeMutation,useGetFormAccordingToAppUserTypeFormIdMutation} = GetForms
 

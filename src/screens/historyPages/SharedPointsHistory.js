@@ -417,6 +417,7 @@ const SharedPointsHistory = ({ navigation }) => {
         id: String(userData.id),
         cause: "points_sharing"
       }
+      console.log("params",params)
       getPointSharingFunc(params)
 
     })();

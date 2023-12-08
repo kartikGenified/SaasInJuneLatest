@@ -33,7 +33,7 @@ const Profile = ({ navigation }) => {
   const [showNoDataFoundMessage, setShowNoDataFoundMessage] = useState(false)
   const [showProfileData, setShowProfileData] = useState(false)
   const [openModalWithBorder, setModalBorder] = useState(false)
-
+  const [profileData, setProfileData] = useState()
 
 
   const ternaryThemeColor = useSelector(
@@ -71,24 +71,25 @@ const Profile = ({ navigation }) => {
   }] = useGetActiveMembershipMutation()
 
   useEffect(() => {
+    // console.log("Form data", formFields, formValues)
     if (formFields !== undefined && formValues !== undefined) {
       setShowProfileData(true)
-      console.log("Form data", formFields, formValues)
     }
-  }, [formFields, formValues, focused])
+  }, [formFields, formValues, focused,profileData])
 
   useEffect(() => {
     if (getActiveMembershipData) {
-      console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
+      // console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
     }
     else if (getActiveMembershipError) {
-      console.log("getActiveMembershipError", getActiveMembershipError)
+      // console.log("getActiveMembershipError", getActiveMembershipError)
     }
   }, [getActiveMembershipData, getActiveMembershipError])
+
   useEffect(() => {
     if (getFormData) {
       if (getFormData.body.length !== 0) {
-        console.log('Form Fields', JSON.stringify(getFormData));
+        // console.log('Form Fields', JSON.stringify(getFormData));
 
         const filteredData = Object.values(getFormData.body.template).filter(
           (item, index) => {
@@ -110,8 +111,19 @@ const Profile = ({ navigation }) => {
     } else if (getFormError) {
       console.log('Form Field Error', getFormError);
     }
-  }, [getFormData, getFormError, focused]);
+    else if (fetchProfileData) {
+      console.log('fetchProfileData', fetchProfileData);
+      if(fetchProfileData.success)
+      {
+      setProfileData(fetchProfileData)
+      }
+    } else if (fetchProfileError) {
+      console.log('fetchProfileError', fetchProfileError);
+    }
+  }, [getFormData, getFormError, focused,fetchProfileData, fetchProfileError,profileData]);
 
+
+ 
   useEffect(() => {
     const fetchData = async () => {
       const credentials = await Keychain.getGenericPassword();
@@ -129,6 +141,11 @@ const Profile = ({ navigation }) => {
     fetchData();
     getMembership()
   }, [focused]);
+
+  useEffect(() => {
+    
+  }, []);
+
   const getMembership = async () => {
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
@@ -139,35 +156,48 @@ const Profile = ({ navigation }) => {
       getActiveMembershipFunc(token)
     }
   }
-  useEffect(() => {
-    if (fetchProfileData) {
-      console.log('fetchProfileData', fetchProfileData.body);
-    } else if (fetchProfileError) {
-      console.log('fetchProfileError', fetchProfileError);
-    }
-  }, [fetchProfileData, fetchProfileError]);
+  
 
   const filterNameFromFormFields = data => {
-    console.log(data);
+   console.log("filterNameFromFormFields")
     const nameFromFormFields = data.map(item => {
       if (item.name === 'name') {
         setProfileName(true);
       }
       return item.name;
     });
-    console.log(nameFromFormFields);
+    // console.log(nameFromFormFields);
     filterProfileDataAccordingToForm(nameFromFormFields);
   };
+
   const filterProfileDataAccordingToForm = arrayNames => {
-    if (arrayNames && fetchProfileData) {
-      let temparr = [];
-      arrayNames.map(item => {
-        temparr.push(fetchProfileData.body[item]);
-      });
-      setFormValues(temparr);
-      console.log(temparr);
+    console.log("inside filterProfileDataAccordingToForm")
+    if(profileData)
+    {
+    console.log("filterProfileDataAccordingToForm",arrayNames,profileData)
+
+      if (arrayNames ) {
+
+        let temparr = [];
+        arrayNames.map(item => {
+          temparr.push(profileData.body[item]);
+        });
+        // console.log("Form Values",temparr)
+        setFormValues(temparr);
+        console.log(temparr);
+      }
     }
+    else{
+      console.log("filterProfileDataAccordingToForm profileData empty")
+      if(fetchProfileData)
+      {
+        setProfileData(fetchProfileData)
+      }
+    }
+   
   };
+
+  
 
   const name = profileName ? fetchProfileData?.body.name : '';
   const membership = getActiveMembershipData && getActiveMembershipData.body?.tier.name
@@ -210,12 +240,12 @@ const Profile = ({ navigation }) => {
       <View style={{ width: '100%', height: 50, flexDirection: "row", alignItems: 'center', justifyContent: 'space-evenly', backgroundColor: '#F9F9F9', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#DDDDDD' }}>
         <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center' }}>
           <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/mobileBlack.png')}></Image>
-          <PoppinsTextMedium style={{ color: 'black', marginLeft: 8 }} content={fetchProfileData.body.mobile}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: 'black', marginLeft: 8 }} content={fetchProfileData.body?.mobile}></PoppinsTextMedium>
         </View>
-        {fetchProfileData.body.gender !== null && <View style={{ width: 1, borderWidth: 0.8, borderColor: '#353535', height: '30%' }}></View>}
-        {fetchProfileData.body.gender !== null && <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center' }}>
+        {fetchProfileData.body?.gender !== null && <View style={{ width: 1, borderWidth: 0.8, borderColor: '#353535', height: '30%' }}></View>}
+        {fetchProfileData.body?.gender !== null && <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center' }}>
           <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/genderBlack.png')}></Image>
-          <PoppinsTextMedium style={{ color: 'black', marginLeft: 8 }} content={fetchProfileData.body.gender}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: 'black', marginLeft: 8 }} content={fetchProfileData.body?.gender}></PoppinsTextMedium>
         </View>}
 
 
@@ -265,10 +295,10 @@ const Profile = ({ navigation }) => {
               }}
                 onPress={()=>{setModalBorder(true)}}
               >
-              {fetchProfileData ? (
+              {fetchProfileData?.body?.profile_pic ? (
                 <Image
                   style={{ height: 98, width: 98, resizeMode: 'contain', borderRadius: 49 }}
-                  source={{ uri: BaseUrlImages + fetchProfileData.body.profile_pic }}></Image>
+                  source={{ uri: BaseUrlImages + fetchProfileData.body?.profile_pic }}></Image>
               ) : (
                 <Image
                   style={{ height: 60, width: 60, resizeMode: 'contain' }}
@@ -348,7 +378,7 @@ const Profile = ({ navigation }) => {
                 navigation.navigate('EditProfile', {
                   formFields: formFields,
                   formValues: formValues,
-                  savedImage: fetchProfileData.body.profile_pic
+                  savedImage: fetchProfileData.body?.profile_pic
                 });
               }}
               style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: "white", borderWidth: 1, borderColor: ternaryThemeColor, alignItems: "center", justifyContent: 'center' }}>
@@ -368,7 +398,7 @@ const Profile = ({ navigation }) => {
           {fetchProfileData ? (
             <Image
               style={{ height: 300, width: 300, resizeMode: 'contain', borderRadius: 200 }}
-              source={{ uri: BaseUrlImages + fetchProfileData.body.profile_pic }}></Image>
+              source={{ uri: BaseUrlImages + fetchProfileData.body?.profile_pic }}></Image>
           ) : (
             <Image
               style={{ height: 200, width: 180, resizeMode: 'contain' }}
@@ -379,7 +409,7 @@ const Profile = ({ navigation }) => {
         <TouchableOpacity style={[{
           backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
         }]} onPress={()=>setModalBorder(false)} >
-          <Close name="close" size={17} color="#ffffff" />
+          <Close name="close" size={25} color="#ffffff" />
         </TouchableOpacity>
 
       </View>
@@ -434,7 +464,7 @@ const Profile = ({ navigation }) => {
                   return (
                     <DisplayOnlyTextInput
                       key={index}
-                      data={formValues[index] === null ? 'No data available' : moment(formValues[index]).format("DD-MMM-YYYY")}
+                      data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : moment(formValues[index]).format("DD-MMM-YYYY")}
                       title={item.label}
                       photo={require('../../../assets/images/eye.png')}>
 
@@ -446,7 +476,7 @@ const Profile = ({ navigation }) => {
                   return (
                     <DisplayOnlyTextInput
                       key={index}
-                      data={formValues[index] === null ? 'No data available' : formValues[index]}
+                      data={formValues[index] === null || formValues[index] === undefined   ? 'No data available' : formValues[index]}
                       title={item.label}
                       photo={require('../../../assets/images/eye.png')}>
 

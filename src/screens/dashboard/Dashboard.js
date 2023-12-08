@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Platform, TouchableOpacity,Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform, TouchableOpacity,Image} from 'react-native';
 import MenuItems from '../../components/atoms/MenuItems';
 import { BaseUrl } from '../../utils/BaseUrl';
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
@@ -58,7 +58,7 @@ const Dashboard = ({ navigation }) => {
     const gifUri = Image.resolveAssetSource(
       require("../../../assets/gif/loader.gif")
     ).uri;
-  // console.log("pointSharingData", JSON.stringify(pointSharingData), userData)
+  console.log("pointSharingData", JSON.stringify(pointSharingData), userData)
   console.log("user id is from dashboard", userId)
     console.log(focused)
     let startDate,endDate
@@ -141,6 +141,7 @@ const Dashboard = ({ navigation }) => {
 
   }
 
+ 
   useEffect(() => {
     fetchPoints()
     dispatch(setQrIdList([]))
@@ -186,7 +187,11 @@ const Dashboard = ({ navigation }) => {
       console.log("fetchAllQrScanedListData",JSON.stringify(fetchAllQrScanedListData))
       if(fetchAllQrScanedListData.success)
       {
+        if(fetchAllQrScanedListData.body.total!==0)
+        {
         seScanningDetails(fetchAllQrScanedListData.body)
+
+        }
       }
     }
     else if(fetchAllQrScanedListError)
@@ -500,7 +505,7 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
           <View style={{ width: '100%', alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
             {showKyc && <KYCVerificationComponent buttonTitle="Complete Your KYC" title="Your KYC is not completed"></KYCVerificationComponent>}
           </View>
-          {userData.user_type==="influencer" &&<View style={{ flexDirection: "row", width: '100%', alignItems: "center", justifyContent: "center" }}>
+          {(userData.user_type).toLowerCase()!=="dealer" && (userData.user_type).toLowerCase()!=="sales" &&<View style={{ flexDirection: "row", width: '100%', alignItems: "center", justifyContent: "center" }}>
             <DashboardSupportBox text="Rewards" backgroundColor="#D9C7B6" borderColor="#FEE8D4" image={require('../../../assets/images/info.png')} ></DashboardSupportBox>
             <DashboardSupportBox text="Customer support" backgroundColor="#BCB5DC" borderColor="#E4E0FC" image={require('../../../assets/images/support.png')} ></DashboardSupportBox>
             <DashboardSupportBox text="Feedback" backgroundColor="#D8C8C8" borderColor="#FDDADA" image={require('../../../assets/images/feedback.png')} ></DashboardSupportBox>

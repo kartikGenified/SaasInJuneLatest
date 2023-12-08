@@ -7,12 +7,16 @@ import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTex
 import { useSelector } from 'react-redux';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
+import FastImage from 'react-native-fast-image';
+import DataNotFound from '../data not found/DataNotFound';
 
 // create a component
 const WhatsNew = ({ navigation }) => {
 
     const [categories, setCategories] = useState();
     const [media, setMedia] = useState();
+
+    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
@@ -43,8 +47,15 @@ const WhatsNew = ({ navigation }) => {
     useEffect(() => {
         if (getMediaData) {
             console.log("getMediaData", getMediaData);
-            getCategories(getMediaData.body)
-            setMedia(getMediaData.body);
+            if(getMediaData.success && getMediaData.body.length!==0)
+            {
+                getCategories(getMediaData.body)
+                setMedia(getMediaData.body);
+            }
+            else{
+                setMedia([])
+            }
+           
 
         }
         else {
@@ -62,12 +73,12 @@ const WhatsNew = ({ navigation }) => {
         getMediafunc(obj)
     }
 
-    const fetchCategoryMedia = async(item) =>{
+    const fetchCategoryMedia = async (item) => {
         const credentials = await Keychain.getGenericPassword();
         let obj = {
             token: credentials.username,
             isAll: false,
-            type:item
+            type: item
         }
         // getMediafunc(obj)
         getCategoryMediafunc(obj)
@@ -84,15 +95,15 @@ const WhatsNew = ({ navigation }) => {
         setCategories(tempArray);
     };
 
-    const handlePress = (itm) =>{
+    const handlePress = (itm) => {
         // console.log("item pressed", itm)
         // fetchCategoryMedia(itm)
 
     }
 
-    const handlePressAll=()=>{
+    const handlePressAll = () => {
         getMediaData && setMedia(getMediaData.body)
-      }
+    }
 
     const FilterComp = (props) => {
         const [color, setColor] = useState("#F0F0F0");
@@ -142,7 +153,7 @@ const WhatsNew = ({ navigation }) => {
                     minWidth: 60,
                     height: 40,
                     padding: 10,
-                    backgroundColor: selected ? ternaryThemeColor :'#80808030',
+                    backgroundColor: selected ? ternaryThemeColor : '#80808030',
                     // backgroundColor: ternaryThemeColor,
                     alignItems: "center",
                     justifyContent: "center",
@@ -180,7 +191,7 @@ const WhatsNew = ({ navigation }) => {
                         navigation.goBack();
                     }}>
                     <Image
-                        style={{ height: 20, width: 20, resizeMode: 'contain', marginTop:5 }}
+                        style={{ height: 20, width: 20, resizeMode: 'contain', marginTop: 5 }}
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
@@ -196,7 +207,7 @@ const WhatsNew = ({ navigation }) => {
                     // justifyContent: "center",
                     marginLeft: 20,
                     paddingRight: 20,
-                    marginTop:10,
+                    marginTop: 10,
                     flexDirection: "row",
                     // backgroundColor:'blue',
                 }}
@@ -215,7 +226,7 @@ const WhatsNew = ({ navigation }) => {
                     categories.map((item, index) => {
                         return (
                             <FilterComp
-                                handlePress={()=>handlePress(item)}
+                                handlePress={() => handlePress(item)}
                                 key={index}
                                 title={item}
                             ></FilterComp>
@@ -225,29 +236,60 @@ const WhatsNew = ({ navigation }) => {
 
             {/* Showing Data */}
             {console.log("the media", media)}
-            <View>
-                <FlatList
-                    data={media}
-                    renderItem={({ item }) =>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, height: 120, backgroundColor: "#80808020",  borderRadius: 10,marginHorizontal:10,  }}>
-                            {console.log("itm", item)}
-                            <View style={{ borderRadius: 100, borderColor: 'black', height: 40, borderWidth: 1, width: 40, marginLeft: 10, marginRight: 20 ,padding:2}}>
-                                <Image
-                                    style={{ height: '100%', width: '100%', resizeMode: 'contain'}}
-                                    source={{ uri: BaseUrlImages + item?.images[0] }}></Image>
-                            </View>
 
-                            <View style={{ flexDirection: 'column', width:'80%' }}>
-                                <PoppinsTextLeftMedium style={{ color: 'black', fontWeight: '600' }} content={`${item.title}`}></PoppinsTextLeftMedium>
 
-                                <PoppinsTextLeftMedium style={{ marginTop: 5, }} content={`${item.description}`}></PoppinsTextLeftMedium>
+            <View style={{ height: '100%' }}>
 
-                            </View>
+                {mediaIsLoading &&
+                    <View style={{height:'100%'}}>
+                        <FastImage
+                            style={{ width: 50, height: 50, alignItems: 'center', marginLeft: '45%', marginTop: '60%' }}
+                            source={{
+                                uri: gifUri, // Update the path to your GIF
+                                priority: FastImage.priority.normal,
+                            }}
+                            resizeMode={FastImage.resizeMode.contain}
+                        />
+                    </View>
 
-                        </View>
-                    }
-                    keyExtractor={item => item.id}
-                />
+                }
+                {
+                    media  &&
+                        <FlatList
+                            data={media}
+                            renderItem={({ item }) =>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, height: 120, backgroundColor: "#80808020", borderRadius: 10, marginHorizontal: 10, }}>
+                                    {console.log("itm", item)}
+                                    <View style={{ borderRadius: 100, borderColor: 'black', height: 40, borderWidth: 1, width: 40, marginLeft: 10, marginRight: 20, padding: 2 }}>
+                                        <Image
+                                            style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
+                                            source={{ uri: BaseUrlImages + item?.images[0] }}></Image>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'column', width: '80%' }}>
+                                        <PoppinsTextLeftMedium style={{ color: 'black', fontWeight: '600' }} content={`${item.title}`}></PoppinsTextLeftMedium>
+
+                                        <PoppinsTextLeftMedium style={{ marginTop: 5, color:'black' }} content={`${item.description}`}></PoppinsTextLeftMedium>
+
+                                    </View>
+
+                                </View>
+                            }
+                            keyExtractor={item => item.id}
+                        />
+
+                       
+
+                        
+
+
+                }
+                {
+                    media && media.length===0 && <DataNotFound />
+                }
+
+
+
             </View>
 
         </View>

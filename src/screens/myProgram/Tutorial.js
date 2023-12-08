@@ -149,9 +149,9 @@ const Tutorial = ({navigation}) => {
             })
           }
 
-          {!videoData &&
+{appVideoIsLoading &&
               <FastImage
-                   style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+                   style={{ width: 50, height: "10%", marginTop:'70%', marginLeft:'40%' }}
                    source={{
                        uri: gifUri, // Update the path to your GIF
                        priority: FastImage.priority.normal,
@@ -159,10 +159,13 @@ const Tutorial = ({navigation}) => {
                    resizeMode={FastImage.resizeMode.contain}
                />
           }
+
+          
             
             
         </View>
         </ScrollView>
+      
         </View>
 
     );

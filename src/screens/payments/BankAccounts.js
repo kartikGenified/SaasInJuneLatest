@@ -143,8 +143,8 @@ const BankAccounts = ({ navigation, route }) => {
 
 
   const setSelectedPaymentMethod = (data) => {
-    console.log(data)
-    setHasSelectedPaymentMethod(data.type)
+    console.log("Selected bank account",data)
+    setHasSelectedPaymentMethod(data.id)
   }
 
 
@@ -165,6 +165,7 @@ const BankAccounts = ({ navigation, route }) => {
       }
     }, [props.unSelect])
 
+    
 
     const handleSelection = () => {
       setSelected(!selected)
@@ -251,19 +252,24 @@ const BankAccounts = ({ navigation, route }) => {
 
     useEffect(() => {
       console.log(props.unSelect)
-      if (props.unSelect === "upi") {
+      if (props.unSelect === props.id) {
         setSelected(!selected)
       }
     }, [props.unSelect])
 
-    const handleSelection = () => {
-      setSelected(!selected)
-
-      props.handleData({
-        upi: upi,
-        id: props.id,
-        type: type
-      })
+    const handleSelection = (selection) => {
+      setSelected(!selection)
+      console.log("selection",selection)
+      if(!selection)
+      {
+        props.handleData({
+          upi: upi,
+          id: props.id,
+          type: type
+        })
+      }
+      
+      
 
 
 
@@ -320,7 +326,7 @@ const BankAccounts = ({ navigation, route }) => {
 
           <View style={{ height: 24, width: 24, borderRadius: 10, borderWidth: 1, borderColor: '#DDDDDD', alignItems: "center", justifyContent: "center" }}>
             <TouchableOpacity onPress={() => {
-              handleSelection()
+              handleSelection(selected)
             }}>
               <Icon name={"checkcircle"} color={selected ? ternaryThemeColor : "white"} size={20}></Icon>
             </TouchableOpacity>

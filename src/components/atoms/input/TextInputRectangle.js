@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TextInput, Keyboard } from "react-native";
 import PoppinsTextMedium from "../../electrons/customFonts/PoppinsTextMedium";
-const TextInputSquare = (props) => {
+const TextInputRectangle = (props) => {
   const [value, setValue] = useState();
   const [keyboardShow, setKeyboardShow] = useState(false);
   const placeHolder = props.placeHolder;
@@ -79,4 +79,4 @@ const TextInputSquare = (props) => {
 
 const styles = StyleSheet.create({});
 
-export default TextInputSquare;
+export default TextInputRectangle;

@@ -21,7 +21,7 @@ import MessageModal from '../../components/modals/MessageModal';
 import RegistrationProgress from '../../components/organisms/RegistrationProgress';
 import { useGetFormAccordingToAppUserTypeMutation } from '../../apiServices/workflow/GetForms';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
-import { useRegisterUserByBodyMutation,useUpdateProfileAtRegistrationMutation } from '../../apiServices/register/UserRegisterApi';
+import { useRegisterUserByBodyMutation, useUpdateProfileAtRegistrationMutation } from '../../apiServices/register/UserRegisterApi';
 import TextInputAadhar from '../../components/atoms/input/TextInputAadhar';
 import TextInputPan from '../../components/atoms/input/TextInputPan';
 import TextInputGST from '../../components/atoms/input/TextInputGST';
@@ -39,6 +39,8 @@ import { useVerifyOtpMutation } from '../../apiServices/login/otpBased/VerifyOtp
 import { useGetLoginOtpForVerificationMutation } from '../../apiServices/otp/GetOtpApi';
 import { useVerifyOtpForNormalUseMutation } from '../../apiServices/otp/VerifyOtpForNormalUseApi';
 import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegistration';
+import EmailTextInput from '../../components/atoms/input/EmailTextInput';
+import { validatePathConfig } from '@react-navigation/native';
 
 
 const BasicInfo = ({ navigation, route }) => {
@@ -58,7 +60,8 @@ const BasicInfo = ({ navigation, route }) => {
   const [otpVerified, setOtpVerified] = useState(false)
   const [otpModal, setOtpModal] = useState(false)
   const [otpVisible, setOtpVisible] = useState(false)
-  
+  const [isValid, setIsValid] = useState(true)
+
 
 
 
@@ -75,7 +78,7 @@ const BasicInfo = ({ navigation, route }) => {
   )
     ? useSelector(state => state.apptheme.secondaryThemeColor)
     : '#FFB533';
-  const isOnlineVerification = useSelector(state=>state.apptheme.isOnlineVerification)
+  const isOnlineVerification = useSelector(state => state.apptheme.isOnlineVerification)
   const userData = useSelector(state => state.appusersdata.userData);
   const appUsers = useSelector(state => state.appusers.value)
   const manualApproval = useSelector(state => state.appusers.manualApproval)
@@ -104,14 +107,14 @@ const BasicInfo = ({ navigation, route }) => {
       isError: registerUserIsError
     }] = useRegisterUserByBodyMutation()
 
-    const [
-      updateProfileAtRegistrationFunc,{
-        data:updateProfileAtRegistrationData,
-        error:updateProfileAtRegistrationError,
-        isLoading:updateProfileAtRegistrationIsLoading,
-        isError:updateProfileAtRegistrationIsError
-      }
-    ] = useUpdateProfileAtRegistrationMutation()
+  const [
+    updateProfileAtRegistrationFunc, {
+      data: updateProfileAtRegistrationData,
+      error: updateProfileAtRegistrationError,
+      isLoading: updateProfileAtRegistrationIsLoading,
+      isError: updateProfileAtRegistrationIsError
+    }
+  ] = useUpdateProfileAtRegistrationMutation()
 
   const [getLocationFromPincodeFunc, {
     data: getLocationFormPincodeData,
@@ -139,15 +142,15 @@ const BasicInfo = ({ navigation, route }) => {
   ] = useVerifyOtpForNormalUseMutation();
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setUserName(route.params.name)
-  },[route.params.name])
+  }, [route.params.name])
 
-  useEffect(()=>{
-    console.log("mobile number from use effect", route.params.mobile,navigatingFrom)
+  useEffect(() => {
+    console.log("mobile number from use effect", route.params.mobile, navigatingFrom)
     setUserMobile(route.params.mobile)
 
-      },[route.params.mobile])
+  }, [route.params.mobile])
 
   useEffect(() => {
 
@@ -341,6 +344,10 @@ const BasicInfo = ({ navigation, route }) => {
     }
   }, [sendOtpData, sendOtpError])
 
+  const isValidEmail = (text) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(text);
+  };
 
   const handleFetchPincode = (data) => {
     console.log("pincode is", data)
@@ -350,11 +357,23 @@ const BasicInfo = ({ navigation, route }) => {
 
 
   const handleChildComponentData = data => {
+   
     // setOtpVisible(true)
-    console.log("from text input", data);
     if (data.name === "name") {
       setUserName(data.value)
     }
+    // console.log("isValidEmail", isValidEmail(data.value))
+
+    if(data.name==="email")
+    {
+    console.log("from text input", data.name);
+
+      console.log("isValidEmail", isValidEmail(data.value),isValid)
+
+    }
+    
+
+    
 
     if (data.name === "mobile") {
       setUserMobile(data.value)
@@ -411,7 +430,7 @@ const BasicInfo = ({ navigation, route }) => {
 
       const params = { mobile: userMobile, name: userName, otp: value, user_type_id: userTypeId, user_type: userType, }
 
-      
+
       verifyOtpFunc(params);
 
     }
@@ -419,7 +438,6 @@ const BasicInfo = ({ navigation, route }) => {
 
   const getOTPfunc = () => {
     console.log("get user data", userData)
-
 
     console.log("ooooooo->>>>>>>>", { userName, userMobile, userTypeId, userType })
     const params = { mobile: userMobile, name: userName, user_type_id: userTypeId, user_type: userType }
@@ -435,16 +453,33 @@ const BasicInfo = ({ navigation, route }) => {
     inputFormData["name"] = name;
     inputFormData["mobile"] = mobile;
 
+   
+
     for (var i = 0; i < responseArray.length; i++) {
-      console.log(responseArray[i])
+      
       inputFormData[responseArray[i].name] = responseArray[i].value
     }
     const body = inputFormData
-    
-    if(otpVerified)
-    {
-      registerUserFunc(body)
 
+    if (otpVerified ) {
+      const keys = Object.keys(body)
+      const values = Object.values(body)
+
+      if(keys.includes('email'))
+      {
+        const index = keys.indexOf('email')
+        if(isValidEmail(values[index]))
+        {
+        registerUserFunc(body)
+        }
+        else{
+          setError(true)
+          setMessage("Email isn't verified")
+        }
+      }
+      else{
+        registerUserFunc(body)
+      }
 
       // make request according to the login type of user-----------------------
 
@@ -462,7 +497,7 @@ const BasicInfo = ({ navigation, route }) => {
 
 
     }
-    else{
+    else {
       setError(true)
       setMessage("Otp isn't verified yet")
     }
@@ -562,45 +597,45 @@ const BasicInfo = ({ navigation, route }) => {
                 if ((item.name === 'phone' || item.name === "mobile")) {
                   return (
                     <>
-                     
-                        <View style={{ flexDirection: 'row', flex: 1 }}>
 
-                          <View style={{ flex: 0.75 }}>
-                            {navigatingFrom==="OtpLogin"  && <TextInputNumericRectangle
-                              jsonData={item}
-                              key={index}
-                              maxLength={10}
-                              handleData={handleChildComponentData}
-                              placeHolder={item.name}
-                              value={userMobile}
-                              label={item.label}
-                              isEditable={!otpVerified}
-                            >
-                              {' '}
-                            </TextInputNumericRectangle>}
-                            {navigatingFrom==="PasswordLogin" && <TextInputNumericRectangle
-                              jsonData={item}
-                              key={index}
-                              maxLength={10}
-                              handleData={handleChildComponentData}
-                              placeHolder={item.name}
-                              label={item.label}
-                              
-                            >
-                              {' '}
-                            </TextInputNumericRectangle>}
-                          </View>
+                      <View style={{ flexDirection: 'row', flex: 1 }}>
 
-                         {otpVerified ? <View style={{alignItems:'center',justifyContent:'center'}}>
-                          <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/greenTick.png')}></Image>
-                         </View> :  <TouchableOpacity style={{ flex: 0.15, marginTop: 6, backgroundColor: ternaryThemeColor, alignItems: 'center', justifyContent: 'center', height: 50, borderRadius: 5 }} onPress={getOTPfunc}>
-                            <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }} content="Get OTP"></PoppinsTextLeftMedium>
-                          </TouchableOpacity>}
+                        <View style={{ flex: 0.75 }}>
+                          {navigatingFrom === "OtpLogin" && <TextInputNumericRectangle
+                            jsonData={item}
+                            key={index}
+                            maxLength={10}
+                            handleData={handleChildComponentData}
+                            placeHolder={item.name}
+                            value={userMobile}
+                            label={item.label}
+                            isEditable={!otpVerified}
+                          >
+                            {' '}
+                          </TextInputNumericRectangle>}
+                          {navigatingFrom === "PasswordLogin" && <TextInputNumericRectangle
+                            jsonData={item}
+                            key={index}
+                            maxLength={10}
+                            handleData={handleChildComponentData}
+                            placeHolder={item.name}
+                            label={item.label}
+
+                          >
+                            {' '}
+                          </TextInputNumericRectangle>}
                         </View>
 
-                      
+                        {otpVerified ? <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                          <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/greenTick.png')}></Image>
+                        </View> : <TouchableOpacity style={{ flex: 0.15, marginTop: 6, backgroundColor: ternaryThemeColor, alignItems: 'center', justifyContent: 'center', height: 50, borderRadius: 5 }} onPress={getOTPfunc}>
+                          <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }} content="Get OTP"></PoppinsTextLeftMedium>
+                        </TouchableOpacity>}
+                      </View>
 
 
+
+                    {console.log("conditions",otpVerified,otpVisible)}
                       {!otpVerified && otpVisible &&
                         <>
 
@@ -619,7 +654,6 @@ const BasicInfo = ({ navigation, route }) => {
 
 
                 else if ((item.name).trim().toLowerCase() === "name") {
-
                   return (
                     <PrefilledTextInput
                       jsonData={item}
@@ -630,16 +664,29 @@ const BasicInfo = ({ navigation, route }) => {
                       label={item.label}
                     ></PrefilledTextInput>
                   )
-
-
-
                 }
+
+
+                else if ((item.name).trim().toLowerCase() === "email") {
+                  return (
+                    <EmailTextInput
+                      jsonData={item}
+                      key={index}
+                      handleData={handleChildComponentData}
+                      placeHolder={item.name}
+                     
+                      label={item.label}
+                      // isValidEmail = {isValidEmail}
+                    ></EmailTextInput>
+                  )
+                }
+
                 // } 
                 else if (item.name === 'aadhaar' || item.name === "aadhar") {
                   console.log("aadhar")
                   return (
                     <TextInputAadhar
-                    required={item.required}
+                      required={item.required}
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
@@ -654,7 +701,7 @@ const BasicInfo = ({ navigation, route }) => {
                   console.log("pan")
                   return (
                     <TextInputPan
-                    required = {item.required}
+                      required={item.required}
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
@@ -759,17 +806,16 @@ const BasicInfo = ({ navigation, route }) => {
                     action="Select File"></ImageInput>
                 );
               }
-              else if(item.type==="select") 
-              {
-                return(
+              else if (item.type === "select") {
+                return (
                   <DropDownRegistration
 
-                  title={item.name}
-                  header={item.options[0]}
-                  jsonData={item}
-                  data={item.options}
-                  handleData={handleChildComponentData}
-                ></DropDownRegistration>
+                    title={item.name}
+                    header={item.options[0]}
+                    jsonData={item}
+                    data={item.options}
+                    handleData={handleChildComponentData}
+                  ></DropDownRegistration>
                 )
               }
               else if (item.type === 'date') {

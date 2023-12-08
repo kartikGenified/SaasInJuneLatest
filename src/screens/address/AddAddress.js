@@ -16,7 +16,7 @@ const AddAddress = ({ navigation }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [responseArray, setResponseArray] = useState([]);
-
+  const [fieldIsEmpty, setFieldIsEmpty] = useState(false)
   const [location, setLocation] = useState();
   const dispatch = useDispatch();
   const [
@@ -172,7 +172,8 @@ const AddAddress = ({ navigation }) => {
 
   const handleChildComponentData = (data) => {
     console.log("from text input", data);
-
+    
+      
     // Update the responseArray state with the new data
     setResponseArray((prevArray) => {
       const existingIndex = prevArray.findIndex(
@@ -219,6 +220,7 @@ const AddAddress = ({ navigation }) => {
     }
   };
   const addAddress = async () => {
+    let check =false
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
@@ -226,6 +228,7 @@ const AddAddress = ({ navigation }) => {
       );
       const token = credentials.username;
     if (responseArray.length !== 0) {
+      console.log("response array",responseArray)
       let address = "";
       let data = {}
       for (var i = 0; i < responseArray.length; i++) {
@@ -258,6 +261,20 @@ const AddAddress = ({ navigation }) => {
         {
           data["pincode"] = responseArray[i].value
         }
+        else if(responseArray[i].name==="houseNumber")
+        {
+          if(responseArray[i].value===undefined)
+{
+  check =true
+}
+        }
+        else if(responseArray[i].name==="street")
+        {
+          if(responseArray[i].value===undefined)
+{
+ check=true
+}
+        }
         
       }
       console.log(data)
@@ -265,7 +282,9 @@ const AddAddress = ({ navigation }) => {
         token:token,
         data:data
       }
-      addAddressFunc(params)
+     
+       !check && addAddressFunc(params)
+        check && alert("fields cant be empty")
      
     } else {
       console.log("response Array is empty");

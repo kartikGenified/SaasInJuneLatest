@@ -267,6 +267,7 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import FilterModal from '../../components/modals/FilterModal';
+import { BaseUrlImages } from '../../utils/BaseUrlImages';
 const PointHistory = ({ navigation }) => {
     const points = 100
     const [userPointFunc, {
@@ -319,7 +320,7 @@ const PointHistory = ({ navigation }) => {
 
     useEffect(() => {
         if (fetchUserPointsHistoryData) {
-            console.log("fetchUserPointsHistoryData", fetchUserPointsHistoryData.body)
+            console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData.body))
         }
         else if (fetchUserPointsHistoryError) {
             console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
@@ -438,26 +439,27 @@ const PointHistory = ({ navigation }) => {
         const time = props.time
         const amount = props.amount
         const status = props.status
+        const image = props.image
         console.log("point props", props)
         return (
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 8, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10 }}>
-                <View style={{ height: 60, width: 60, alignItems: "center", justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: '#DDDDDD' }}>
-                    <Image style={{ height: 40, width: 40, resizeMode: "contain" }} source={require('../../../assets/images/box.png')}></Image>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 8, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10,width:'100%',height:80,backgroundColor:'white' }}>
+                <View style={{ height: 60, width: '14%', alignItems: "center", justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: '#DDDDDD',position:'absolute',left:10,}}>
+                    <Image style={{ height: 40, width: 40, resizeMode: "contain" }} source={{uri:BaseUrlImages+image}}></Image>
                 </View>
-                <View style={{ alignItems: "flex-start", justifyContent: "center", marginLeft: 20 }}>
+                <View style={{ alignItems: "flex-start", justifyContent: "center",position:'absolute',left:80,width:'50%' }}>
                     <PoppinsTextMedium style={{ fontWeight: '700', fontSize: 14, color: 'black' }} content={description}></PoppinsTextMedium>
                     <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
                     <PoppinsTextMedium style={{ fontWeight: '200', fontSize: 12, color: 'black' }} content={time}></PoppinsTextMedium>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 20 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center",position:'absolute',right:10,width:'24%' }}>
                     <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/wallet.png')}></Image>
-                    <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={`${status == "1" ? " +" : status == "2" ? ' -' : ""} ${amount}`}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ color: "#91B406", fontSize: 14, color: 'black' }} content={`${status == "1" ? " +" : status == "2" ? ' -' : ""} ${amount}`}></PoppinsTextMedium>
                 </View>
             </View>
         )
     }
     return (
-        <View style={{ alignItems: 'center', justifyContent: "center", backgroundColor: 'white' }}>
+        <View style={{ alignItems: 'center', justifyContent: "center", backgroundColor: 'white',width:'100%' }}>
             <View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
                 <TouchableOpacity onPress={() => {
                     navigation.goBack()
@@ -484,16 +486,7 @@ const PointHistory = ({ navigation }) => {
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
 
-            {
-               !fetchUserPointsHistoryData && <FastImage
-                    style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
-                    source={{
-                        uri: gifUri, // Update the path to your GIF
-                        priority: FastImage.priority.normal,
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                />
-            }
+           
 
             {
                 fetchUserPointsHistoryData && fetchUserPointsHistoryData.body.data.length == 0 &&
@@ -512,14 +505,25 @@ const PointHistory = ({ navigation }) => {
             }
 
             {console.log("fetch fetch", fetchUserPointsHistoryData)}
+            {
+               !fetchUserPointsHistoryData && <FastImage
+                    style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+                    source={{
+                        uri: gifUri, // Update the path to your GIF
+                        priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+            }
             {fetchUserPointsHistoryData && <FlatList
+            style={{width:'100%',height:'70%'}}
                 data={fetchUserPointsHistoryData.body.data}
-                contentContainerStyle={{ paddingBottom: 200 }}
+                contentContainerStyle={{backgroundColor:"white"}}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
                     console.log(index + 1, item)
                     return (
-                        <ListItem description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format("HH:mm a")}/>
+                        <ListItem image={item.images[0]} description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format("HH:mm a")}/>
                     )
                 }}
                 keyExtractor={item => item.id}

@@ -251,16 +251,18 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData.body);
-      if (verifyQrData.body.qr_status === "1" || verifyQrData.body.qr_status === "2") {
-        addQrDataToList(verifyQrData.body);
+      if (verifyQrData.body?.qr?.qr_status === "1" || verifyQrData.body?.qr?.qr_status==="2") {
+        addQrDataToList(verifyQrData.body?.qr);
       }
-      // else if(verifyQrData.body.qr_status==="2")
+      // else if(verifyQrData.body?.qr?.qr_status==="2")
       // {
       //   setError(true);
       //   setMessage('This Qr is already Scanned');
       // }
-    } else {
+    } else if(verifyQrError) {
       console.log('Verify qr error', verifyQrError);
+      setError(true)
+      setMessage(verifyQrError?.data?.message)
     }
   }, [verifyQrData, verifyQrError]);
   // --------------------------------------------------------

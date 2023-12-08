@@ -15,7 +15,7 @@ const RectangularUnderlinedDropDown = (props) => {
   const [showList, setShowList] = useState(false);
   const [topMargin, setTopMargin] = useState(0);
   const data = props.data;
-  const width = Dimensions.get('window').width
+  
   const handleSelect = (data) => {
     // console.log(data)
     setSelectedBank(data);
@@ -36,7 +36,7 @@ const RectangularUnderlinedDropDown = (props) => {
         style={{
           alignItems: "flex-start",
           justifyContent: "center",
-          width: width-50,
+          width: '100%',
           height: 40,
           borderBottomWidth: 1,
           borderColor: "#DDDDDD",
