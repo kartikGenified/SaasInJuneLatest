@@ -7,6 +7,7 @@ const DropDownRegistration = (props) => {
     const [showList, setShowList] = useState(false)
     const [topMargin, setTopMargin] = useState(0)
     const data = props.data
+    console.log("datahgdfgasvdhas",data)
     const name = props.title
     console.log("Options",data)
     const handleSelect=(data)=>{
@@ -45,7 +46,7 @@ const DropDownRegistration = (props) => {
             
             {showList && <ScrollView style={{width:'100%',minHeight:100}}>
                 <View style={{alignItems:"center",justifyContent:"center",width:"100%"}}>
-            {
+            { data && 
                 data.map((item,index)=>{
                     // console.log(item)
                     return(

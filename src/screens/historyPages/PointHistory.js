@@ -268,8 +268,30 @@ import FastImage from 'react-native-fast-image';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import FilterModal from '../../components/modals/FilterModal';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
+import { useGetPointSharingDataMutation } from '../../apiServices/pointSharing/pointSharingApi';
+import { dispatchCommand } from 'react-native-reanimated';
+
 const PointHistory = ({ navigation }) => {
+    const [displayList, setDisplayList] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const points = 100
+    const ternaryThemeColor = useSelector(
+        state => state.apptheme.ternaryThemeColor,
+    )
+        ? useSelector(state => state.apptheme.ternaryThemeColor)
+        : 'grey';
+
+    const addonfeatures = useSelector(state=>state.apptheme.extraFeatures)
+    const registrationRequired = useSelector(state=>state.appusers.registrationRequired)
+  const userData = useSelector(state => state.appusersdata.userData)
+
+  const [getPointSharingFunc, {
+    data: getPointSharingData,
+    error: getPointSharingError,
+    isLoading: getPointSharingIsLoading,
+    isError: getPointSharingIsError
+}] = useGetPointSharingDataMutation()
+
     const [userPointFunc, {
         data: userPointData,
         error: userPointError,
@@ -308,6 +330,10 @@ const PointHistory = ({ navigation }) => {
         fetchUserPointsHistoryFunc(params)
 
     }
+    useEffect(()=>{
+        console.log("DisplayList",displayList)
+    },[displayList])
+
     useEffect(() => {
         if (userPointData) {
             console.log("userPointData", userPointData)
@@ -319,8 +345,31 @@ const PointHistory = ({ navigation }) => {
     }, [userPointData, userPointError])
 
     useEffect(() => {
+        if (getPointSharingData) {
+            
+            console.log("getPointSharingData", JSON.stringify(getPointSharingData))
+            if(getPointSharingData.success)
+            {
+                setIsLoading(false)
+
+            setDisplayList(getPointSharingData.body.data)
+            }
+        }
+        else if (getPointSharingError) {
+            console.log("getPointSharingError", getPointSharingError)
+        }
+    }, [getPointSharingData, getPointSharingError])
+
+    useEffect(() => {
         if (fetchUserPointsHistoryData) {
-            console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData.body))
+            console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
+            
+
+            if(fetchUserPointsHistoryData.success)
+            {
+                setIsLoading(false)
+            setDisplayList(fetchUserPointsHistoryData.body.data)
+            }
         }
         else if (fetchUserPointsHistoryError) {
             console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
@@ -328,6 +377,50 @@ const PointHistory = ({ navigation }) => {
 
     }, [fetchUserPointsHistoryData, fetchUserPointsHistoryError])
 
+   
+        const getRegistrationPoints = async(cause) => {
+            const credentials = await Keychain.getGenericPassword();
+            const token = credentials.username;
+            const params = {
+                token: token,
+                id: String(userData.id),
+                cause:cause
+            }
+            getPointSharingFunc(params)
+
+        }
+   
+    //Point category tab
+    const PointCategoryTab=()=>{
+        return(
+            <View style={{width:'100%',backgroundColor:'white',height:60,elevation:1,flexDirection:'row',opacity:0.8,alignItems:'center',justifyContent:'center'}}>
+                {registrationRequired.includes(userData.user_type) && 
+                <TouchableOpacity  onPress={()=>{
+                    fetchPoints()
+                }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',elevation:2}}>
+                    <PoppinsTextMedium content="Regular Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                </TouchableOpacity>
+                
+                }
+                 {registrationRequired.includes(userData.user_type) && 
+                <TouchableOpacity onPress={()=>{
+                    getRegistrationPoints("points_sharing")
+                }} style={{height:50,width:'33%',alignItems:"center",justifyContent:'center',borderLeftWidth:1,borderRightWidth:1,borderColor:'#DDDDDD'}}>
+                    <PoppinsTextMedium content="Extra Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                </TouchableOpacity>
+                
+                }
+                 {registrationRequired.includes(userData.user_type) && 
+                <TouchableOpacity onPress={()=>{
+                    getRegistrationPoints("registration_bonus")
+                }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center'}}>
+                    <PoppinsTextMedium content="Registration Bonus" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                </TouchableOpacity>
+                
+                }
+            </View>
+        )
+    }
     //header
     const Header = () => {
         const [openBottomModal, setOpenBottomModal] = useState(false)
@@ -396,7 +489,7 @@ const PointHistory = ({ navigation }) => {
         return (
             <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", flexDirection: "row", marginTop: 20 }}>
 
-                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10 }} content="Redeemed Ladger"></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10,color:'black' }} content="Redeemed Ledger"></PoppinsTextMedium>
 
                 <TouchableOpacity onPress={() => { setOpenBottomModal(!openBottomModal), setMessage("BOTTOM MODAL") }} style={{ position: "absolute", right: 20 }}>
                     <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>
@@ -444,7 +537,7 @@ const PointHistory = ({ navigation }) => {
         return (
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 8, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10,width:'100%',height:80,backgroundColor:'white' }}>
                 <View style={{ height: 60, width: '14%', alignItems: "center", justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: '#DDDDDD',position:'absolute',left:10,}}>
-                    <Image style={{ height: 40, width: 40, resizeMode: "contain" }} source={{uri:BaseUrlImages+image}}></Image>
+                    {image && <Image style={{ height: 40, width: 40, resizeMode: "contain" }} source={{uri:BaseUrlImages+image}}></Image>}
                 </View>
                 <View style={{ alignItems: "flex-start", justifyContent: "center",position:'absolute',left:80,width:'50%' }}>
                     <PoppinsTextMedium style={{ fontWeight: '700', fontSize: 14, color: 'black' }} content={description}></PoppinsTextMedium>
@@ -483,13 +576,13 @@ const PointHistory = ({ navigation }) => {
                 </View>
                 <Image style={{ height: 80, width: 80, resizeMode: 'contain', position: 'absolute', right: 20 }} source={require('../../../assets/images/points.png')}></Image>
             </View>
+           
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
-
-           
+            {/* <PointCategoryTab></PointCategoryTab> */}
 
             {
-                fetchUserPointsHistoryData && fetchUserPointsHistoryData.body.data.length == 0 &&
+                displayList.length==0 && !isLoading &&
                 <View>
                     <FastImage
                         style={{ width: 180, height: 180, alignSelf: 'center', marginTop: '30%' }}
@@ -504,9 +597,9 @@ const PointHistory = ({ navigation }) => {
                 </View>
             }
 
-            {console.log("fetch fetch", fetchUserPointsHistoryData)}
+           
             {
-               !fetchUserPointsHistoryData && <FastImage
+               isLoading && <FastImage
                     style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
                     source={{
                         uri: gifUri, // Update the path to your GIF
@@ -515,18 +608,18 @@ const PointHistory = ({ navigation }) => {
                     resizeMode={FastImage.resizeMode.contain}
                 />
             }
-            {fetchUserPointsHistoryData && <FlatList
-            style={{width:'100%',height:'70%'}}
-                data={fetchUserPointsHistoryData.body.data}
-                contentContainerStyle={{backgroundColor:"white"}}
+            {displayList && <FlatList
+            style={{width:'100%',height:'60%'}}
+                data={displayList}
+                contentContainerStyle={{backgroundColor:"white",paddingBottom:200}}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
                     console.log(index + 1, item)
                     return (
-                        <ListItem image={item.images[0]} description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format("HH:mm a")}/>
+                        <ListItem image={item.image ===undefined ? undefined : item.images[0]} description={item.product_name} productCode={item.product_code} amount={item.points} status={item.status} time={moment(item.created_at).format("HH:mm a")}/>
                     )
                 }}
-                keyExtractor={item => item.id}
+                keyExtractor={(item,index) => index}
             />}
         </View>
     );

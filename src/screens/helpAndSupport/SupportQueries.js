@@ -22,7 +22,7 @@ import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
 import { useGetQueriesTypeMutation } from '../../apiServices/supportQueries/supportQueriesApi';
 
-const SupportQueries = () => {
+const SupportQueries = ({navigation}) => {
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
     const [message, setMessage] = useState('')

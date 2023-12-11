@@ -125,51 +125,51 @@ const CustomDrawer = () => {
     fetchFaq()
   }, [])
 
-  useEffect(() => {
-    if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+  useEffect(()=>{
+    if(getTermsData){
+      console.log("getTermsData",getTermsData.body.data?.[0]?.files[0]);
     }
-    else if (getTermsError) {
+    else if(getTermsError){
       console.log("gettermserror", getTermsError)
     }
-  }, [getTermsData, getTermsError])
+  },[getTermsData,getTermsError])
 
-  useEffect(() => {
-    if (getPolicyData) {
-      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
+  useEffect(()=>{
+    if(getPolicyData){
+      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>",getPolicyData);
     }
-    else if (getPolicyError) {
+    else if(getPolicyError){
       console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
     }
-  }, [getPolicyData, getPolicyError])
+  },[getPolicyData,getPolicyError])
 
-  useEffect(() => {
-    if (getFAQData) {
-      console.log("getFAQData Here i am ", getFAQData.body.data?.[0]?.files[0]);
+  useEffect(()=>{
+    if(getFAQData){
+      console.log("getFAQData Here i am ",getFAQData.body.data?.[0]?.files[0]);
     }
-    else if (getFAQError) {
+    else if(getFAQError){
       console.log("getFAQError", getFAQError)
     }
-  }, [getFAQData, getFAQError]);
+  },[getFAQData,getFAQError]);
 
-  const handleLogout = async () => {
-
-    try {
-      await AsyncStorage.removeItem('loginData')
-      navigation.reset({ index: '0', routes: [{ name: 'SelectUser' }] })
-    } catch (e) {
-      console.log("error deleting loginData", e)
-    }
-
-    console.log('Done.')
-
+  const handleLogout=async()=>{
+    
+      try {
+        await AsyncStorage.removeItem('loginData')
+        navigation.reset({ index: '0', routes: [{ name: 'SelectUser' }] })
+      } catch(e) {
+        console.log("error deleting loginData",e)
+      }
+    
+      console.log('Done.')
+    
   }
 
   const fetchTerms = async () => {
     // const credentials = await Keychain.getGenericPassword();
     // const token = credentials.username;
     const params = {
-      type: "term-and-condition"
+      type:"term-and-condition"
     }
     getTermsAndCondition(params)
   }
@@ -178,17 +178,17 @@ const CustomDrawer = () => {
     // const credentials = await Keychain.getGenericPassword();
     // const token = credentials.username;
     const params = {
-      type: "privacy-policy"
+      type:"privacy-policy"
     }
     getPolicies(params)
   }
 
-
+  
   const fetchFaq = async () => {
     // const credentials = await Keychain.getGenericPassword();
     // const token = credentials.username;
     const params = {
-      type: "faq"
+      type:"faq"
     }
     getFAQ(params)
   }
@@ -206,7 +206,7 @@ const CustomDrawer = () => {
     }
   }
 
-
+  
 
 
   useEffect(() => {
@@ -245,14 +245,14 @@ const CustomDrawer = () => {
     // fetchTerms();
   }, [])
 
-  useEffect(() => {
-    if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+  useEffect(()=>{
+    if(getTermsData){
+      console.log("getTermsData",getTermsData.body.data?.[0]?.files[0]);
     }
-    else if (getTermsError) {
+    else if(getTermsError){
       console.log("gettermserror", getTermsError)
     }
-  }, [getTermsData, getTermsError]);
+  },[getTermsData,getTermsError]);
 
 
   useEffect(() => {
@@ -282,7 +282,7 @@ const CustomDrawer = () => {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: "white",
+          backgroundColor:"white",
           marginTop: 1,
           borderBottomWidth: 1,
           borderColor: '#DDDDDD',
@@ -375,7 +375,7 @@ const CustomDrawer = () => {
                   });
               }
             }}>
-            {console.log("props.title", props.title)}
+              {console.log("props.title", props.title)}
             <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{props.title == "Passbook" ? "My Loyalty" : props.title == "Profile" ? "My Profile" : props.title == "Rewards" ? "My Reward" : props.title}</Text>
           </TouchableOpacity>
         </View>
@@ -444,7 +444,7 @@ const CustomDrawer = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {profileImage ?
+      {profileImage ?
           <Image
             style={{
               height: 60,
@@ -480,7 +480,6 @@ const CustomDrawer = () => {
 
 
         }
-
         <View style={{ justifyContent: 'center', marginLeft: 50 }}>
           {userData && <Text
             style={{
@@ -530,7 +529,7 @@ const CustomDrawer = () => {
           }
         </View>
       </View>
-      <ScrollView contentContainerStyle={{ width: '100%', height: '100%', backgroundColor: 'white' }} style={{ marginBottom: 140 }} >
+      <ScrollView contentContainerStyle={{ width: '100%',}} style={{marginBottom:140}} >
 
         {
           drawerData !== undefined && drawerData.app_menu.map((item, index) => {
@@ -545,10 +544,313 @@ const CustomDrawer = () => {
           })
         }
 
+        {/* My Program Starting */}
+        <View
+          style={{
+            // height: 54,
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 1,
+            paddingBottom:10,
+            // zIndex:1,
+            borderBottomWidth: 1,
+            borderColor: '#DDDDDD',
+            backgroundColor:"white"
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setMyProgramVisibile(!myProgramVisible)
+            }}
+            style={{
+              width: '20%',
+              alignItems: 'center',
+              // justifyContent: 'center',
+              height: '100%',
+              marginTop:10
+            }}>
 
-        <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, height: 50, justifyContent: 'center', width: '100%', position: 'absolute', bottom: 10, }} onPress={() => {
+            {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
+            {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
+            {!myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
+          </TouchableOpacity>
+
+
+          <View
+            style={{
+              width: '80%',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              flexDirection: 'column',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setMyProgramVisibile(!myProgramVisible)
+              }}>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>My Program</Text>
+            </TouchableOpacity>
+
+            {myProgramVisible &&
+            <View style={{marginTop:5}}>
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("Tutorial")}}>
+                <Text onPress={()=>{
+                    navigation.navigate("Tutorial")
+                }} style={{  fontSize:15, color:ternaryThemeColor }}>Tutorial</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>[
+               getPolicyData && navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
+              ]}>
+                <Text  style={{  fontSize:15, color:ternaryThemeColor }}>Policies</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                getTermsData && navigation.navigate('PdfComponent',{pdf:getTermsData.body.data?.[0]?.files[0]})
+              }}>
+                <Text  style={{  fontSize:15, color:ternaryThemeColor }}>T&C</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                navigation.navigate('FAQ');
+              }}>
+                <Text  style={{  fontSize:15, color:ternaryThemeColor }}>F&Q</Text>
+              </TouchableOpacity>
+              
+              </View>
+              
+            }
+
+          </View>
+        </View>
+        {/* My Program ending*/}
+
+          {/* Ozone Products Starting */}
+          <View
+          style={{
+            // height: 54,
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 1,
+            paddingBottom:10,
+            // zIndex:1,
+            borderBottomWidth: 1,
+            borderColor: '#DDDDDD',
+            backgroundColor:"white"
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setOzoneProductVisible(!ozoneProductVisible)
+            }}
+            style={{
+              width: '20%',
+              alignItems: 'center',
+              // justifyContent: 'center',
+              height: '100%',
+              marginTop:10
+            }}>
+
+            {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
+            {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
+            {!ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
+          </TouchableOpacity>
+
+
+          <View
+            style={{
+              width: '80%',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              flexDirection: 'column',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setOzoneProductVisible(!ozoneProductVisible)
+              }}>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>Ozone Products</Text>
+            </TouchableOpacity>
+
+            {ozoneProductVisible &&
+            <View style={{marginTop:5}}>
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                navigation.navigate('ProductCatalogue')
+
+              }}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Product Catalogue</Text> 
+              </TouchableOpacity>    
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{Linking.openURL("https://www.ozone-india.com/")}}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Jump to ozone website</Text> 
+              </TouchableOpacity>   
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("ProductCategory")}}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Category wise product info</Text> 
+              </TouchableOpacity>   
+              </View>
+              
+            }
+
+          </View>
+        </View>
+        {/* Ozone Products ending*/}
+
+           {/* Community Starting */}
+           <View
+          style={{
+            // height: 54,
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 1,
+            paddingBottom:10,
+            // zIndex:1,
+            borderBottomWidth: 1,
+            borderColor: '#DDDDDD',
+            backgroundColor:"white"
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setCommunityVisible(!communityVisible)
+            }}
+            style={{
+              width: '20%',
+              alignItems: 'center',
+              // justifyContent: 'center',
+              height: '100%',
+              marginTop:10
+            }}>
+
+            {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
+            {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
+            {!communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
+          </TouchableOpacity>
+
+
+          <View
+            style={{
+              width: '80%',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              flexDirection: 'column',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setCommunityVisible(!communityVisible)
+              }}>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>Community</Text>
+            </TouchableOpacity>
+
+            {communityVisible &&
+            <View style={{marginTop:5}}>
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                navigation.navigate("WhatsNew")
+              }}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>What's New</Text> 
+              </TouchableOpacity>    
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                console.log(BaseUrlImages+"images-1700639007902-188225481.pdf")
+                navigation.navigate("PdfComponent",{pdf:"images-1700639007902-188225481.pdf"})
+                
+              //  getPolicyData && navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
+
+              }}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Program Content</Text> 
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("TierDetails")}}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Tier Details</Text> 
+              </TouchableOpacity>    
+              </View> 
+            }
+
+          </View>
+        </View>
+        {/* Community ending*/}
+
+          {/* Knowledge Hub */}
+          <View
+          style={{
+            // height: 54,
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 1,
+            paddingBottom:10,
+            // zIndex:1,
+            borderBottomWidth: 1,
+            borderColor: '#DDDDDD',
+            backgroundColor:'white'
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setKnowledgeHubVisible(!KnowledgeHubVisible)
+            }}
+            style={{
+              width: '20%',
+              alignItems: 'center',
+              // justifyContent: 'center',
+              height: '100%',
+              marginTop:10
+            }}>
+
+            {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
+            {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
+            {!KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
+          </TouchableOpacity>
+
+
+          <View
+            style={{
+              width: '80%',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              flexDirection: 'column',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setKnowledgeHubVisible(!KnowledgeHubVisible)
+              }}>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>Knowledge Hub</Text>
+            </TouchableOpacity>
+
+            {KnowledgeHubVisible &&
+            <View style={{marginTop:5}}>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate("InstallationVideo")
+              }} style={{ marginTop:5,marginBottom:5 }}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Installation Video</Text> 
+              </TouchableOpacity>    
+{/* 
+              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                navigation.navigate("ProductCatalogue")
+              }}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Product Guideline</Text> 
+              </TouchableOpacity>     */}
+
+                {/* <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("ListAddress")}}>
+                <Text style={{  fontSize:15, color:ternaryThemeColor }}>List Address</Text> 
+              </TouchableOpacity>     */}
+              </View> 
+            }
+
+          </View>
+        </View>
+        {/* Knowledge Hub*/}
+
+        <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, height: 50, justifyContent: 'center', width: '100%' }} onPress={() => {
+         
           handleLogout()
-
+          
+          
         }}>
           <PoppinsTextLeftMedium style={{ color: 'white', marginLeft: 90 }} content="LOG OUT -->"></PoppinsTextLeftMedium>
         </TouchableOpacity>

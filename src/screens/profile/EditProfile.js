@@ -16,6 +16,7 @@ import InputDateProfile from '../../components/atoms/input/InputDateProfile';
 import RectangularUnderlinedDropDown from '../../components/atoms/dropdown/RectangularUnderlinedDropDown';
 import ProfileDropDown from '../../components/atoms/dropdown/ProfileDropDown';
 import moment from 'moment';
+import TextInputRectangularWithPlaceholder from '../../components/atoms/input/TextInputRectangularWithPlaceholder';
 
 const EditProfile = ({ navigation, route }) => {
   const [changedFormValues, setChangedFormValues] = useState([])
@@ -294,7 +295,7 @@ const EditProfile = ({ navigation, route }) => {
               if (item.type === "text") {
                 return (
 
-                  <RectanglarUnderlinedTextInput pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : "data not available"}></RectanglarUnderlinedTextInput>
+                  <TextInputRectangularWithPlaceholder pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : "data not available"}></TextInputRectangularWithPlaceholder>
                 )
               }
               else if (item.type === "date") {

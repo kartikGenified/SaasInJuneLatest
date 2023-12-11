@@ -53,14 +53,14 @@ const TrackDeliveryModal = ({ isVisible, onClose, data, trackdata }) => {
 
                     <View style={{ width: '100%', flexDirection: 'row' }}>
                         <View style={{ width: '50%', backgroundColor: '#ECECEC', height: 53, alignItems: 'center' }}>
-                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 5 }} content={"Brand"}></PoppinsTextMedium>
-                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 2, }} content={data.gift.gift[0].brand}></PoppinsTextMedium>
+                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 5,color:'black' }} content={"Brand"}></PoppinsTextMedium>
+                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 2,color:'black' }} content={data.gift.gift[0].brand}></PoppinsTextMedium>
 
                         </View>
 
                         <View style={{ width: '50%', backgroundColor: '#DDDDDD', height: 53 }}>
-                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 5 }} content={"Order Number"}></PoppinsTextMedium>
-                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 2, }} content={data.gift.gift[0].id}></PoppinsTextMedium>
+                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 5 ,color:'black'}} content={"Order Number"}></PoppinsTextMedium>
+                            <PoppinsTextMedium style={{ fontSize: 15, fontWeight: '600', marginTop: 2,color:'black' }} content={data.gift.gift[0].id}></PoppinsTextMedium>
 
 
                         </View>

@@ -18,6 +18,7 @@ const ButtonNavigate = props => {
   const navigateTo = props.navigateTo;
   // prop to navigate to another page
   const content = props.content;
+  const properties  = props.properties
   // prop to display text inside the button
   
   const handleButtonPress=()=>{
@@ -28,7 +29,7 @@ const ButtonNavigate = props => {
   }
   else{
     console.log('buttonpressed');
-    navigateTo &&  navigation.navigate(navigateTo)
+    navigateTo &&  navigation.navigate(navigateTo,properties)
   }
   
   }

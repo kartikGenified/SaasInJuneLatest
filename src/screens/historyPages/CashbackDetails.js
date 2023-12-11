@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import ButtonNavigate from '../../components/atoms/buttons/ButtonNavigate';
 
 const CashbackDetails = ({navigation}) => {
-    const amount =50;
+    const amount =0;
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
       )

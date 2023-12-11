@@ -120,14 +120,14 @@ const DashboardMenuBox=(props)=>{
         else if(data.toLowerCase() === "customer support" || data.toLowerCase() === "help and support"){
             navigation.navigate('HelpAndSupport')
         }
-        // else if(data.toLowerCase() === "report an issue"){
-        //     navigation.navigate('ReportAndIssue')
-        // }
+        else if(data.toLowerCase() === "report an issue"){
+            navigation.navigate('SupportQueries')
+        }
     }
 
     return(
-        <View style={{borderColor:'#DDDDDD',borderRadius:20,borderWidth:1.2,width:'90%',alignItems:"center",justifyContent:"center",backgroundColor:'white',padding:10,marginBottom:30}}>
-        <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{width:width,flexWrap:"wrap",flexDirection:"row"}} horizontal={true}>
+        <View style={{borderColor:'#DDDDDD',borderRadius:20,borderWidth:1.2,width:width-20,alignItems:"center",justifyContent:"center",backgroundColor:'white',padding:10,marginBottom:30}}>
+        <View style={{width:'100%',flexWrap:"wrap",flexDirection:"row",alignItems:"center",justifyContent:'center'}}>
         {
             data.map((item,index)=>{
                 return(
@@ -137,7 +137,7 @@ const DashboardMenuBox=(props)=>{
                 )
             })
         }
-        </ScrollView>
+        </View>
         </View>
     )
 }

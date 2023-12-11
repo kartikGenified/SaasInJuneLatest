@@ -766,7 +766,7 @@ else{
   const helpModalComp = () => {
     return (
       <View style={{ width: 340, height: 320, alignItems: "center", justifyContent: "center" }}>
-        <Image style={{ height: 370, width: 390, }} source={(require('../../../assets/images/scanhelp.png'))}></Image>
+        <Image style={{ height: 370, width: 390, }} source={(require('../../../assets/images/howToScan.png'))}></Image>
         <TouchableOpacity style={[{
           backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
         }]} onPress={() => setHelpModal(false)} >

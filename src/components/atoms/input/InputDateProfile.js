@@ -38,6 +38,7 @@ const InputDateProfile = (props) => {
             </View>
             <DatePicker
         modal
+        maximumDate={new Date()}
         open={open}
         date={date}
         mode='date'

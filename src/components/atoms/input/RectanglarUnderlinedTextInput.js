@@ -71,7 +71,7 @@ const RectanglarUnderlinedTextInput = (props) => {
       ></PoppinsTextMedium>
       <TextInput
         maxLength={maxLength}
-        value={input}
+        value={input ===undefined ? "Data not available" : input}
         onChangeText={(inp) => {
           setInput(inp);
         }}

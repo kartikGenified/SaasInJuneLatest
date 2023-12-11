@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { View, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
 
-const FeedbackTextArea = ({ onFeedbackChange }) => {
+const FeedbackTextArea = ({ onFeedbackChange, placeholder }) => {
  
 
   const handleFeedbackChange = (text) => {
@@ -20,7 +20,8 @@ const FeedbackTextArea = ({ onFeedbackChange }) => {
     >
       <TextInput
         multiline
-        placeholder="Write your feedback here..."
+        placeholderTextColor='#808080'
+        placeholder={placeholder ? placeholder : "Write Here"}
         style={styles.textInput}
         onChangeText={handleFeedbackChange}
       />
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 114,
     fontSize: 16,
+    color:'#000000'
   },
 });
 

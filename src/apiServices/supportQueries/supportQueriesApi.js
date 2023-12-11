@@ -18,9 +18,27 @@ export const supportQueriesApi = baseApi.injectEndpoints({
                 };
             },
         }),
+
+        submitQueries :builder.mutation({
+            query: (params) => {
+                console.log(params)
+                return {
+                    method: "POST",
+                    url: `/api/tenant/supportQueries/add`,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + params.token,
+                        slug: slug,
+                    },
+                    body:params.body
+                    
+                };
+            },
+        }),
     }),
 });
 
 export const {
-    useGetQueriesTypeMutation
+    useGetQueriesTypeMutation,
+    useSubmitQueriesMutation
 } = supportQueriesApi;

@@ -575,7 +575,7 @@ const SharedPointsHistory = ({ navigation }) => {
     return (
       <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", flexDirection: "row", marginTop: 20 }}>
 
-        <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10 }} content="Redeemed Ladger"></PoppinsTextMedium>
+        <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10,color:'black' }} content="Redeemed Ledger"></PoppinsTextMedium>
 
         <TouchableOpacity onPress={() => { setOpenBottomModal(!openBottomModal), setMessage("BOTTOM MODAL") }} style={{ position: "absolute", right: 20 }}>
           <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>
@@ -600,16 +600,17 @@ const SharedPointsHistory = ({ navigation }) => {
     const mobile = props.mobile
     const amount = props.amount
     const data = props.data
+    const image = props.image
     // console.log("data", data)
     // const image = data.images !== null ? data.images[0] : null
     return (
       <TouchableOpacity onPress={() => {
         // navigation.navigate('ScannedDetails', { data: data })
-      }} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 4, width: '100%', backgroundColor: 'white', marginTop: 10, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10 }}>
-        {/* <View style={{ height: 70, width: 70, alignItems: "center", justifyContent: "center", borderRadius: 10, borderColor: '#DDDDDD' }}>
+      }} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: '100%', backgroundColor: 'white', marginTop: 10, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10 }}>
+        <View style={{ height: 70, width: '20%', alignItems: "center", justifyContent: "center", borderRadius: 10, borderColor: '#DDDDDD' }}>
           {image !== null && <Image style={{ height: 60, width: 60, resizeMode: "contain" }} source={{ uri: BaseUrlImages + image }}></Image>}
-        </View> */}
-        <View style={{ alignItems: "flex-start", justifyContent: "center", marginLeft: 10, width: 200 }}>
+        </View>
+        <View style={{ alignItems: "flex-start", justifyContent: "center", width: '50%' }}>
           <PoppinsTextMedium style={{ fontWeight: '600', fontSize: 14, textAlign: 'auto', color: 'black' }} content={description}></PoppinsTextMedium>
           <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12 }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>
           
@@ -621,7 +622,7 @@ const SharedPointsHistory = ({ navigation }) => {
           </View>
         </View>
         
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center",width:'30%' }}>
           <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/wallet.png')}></Image>
           
           <PoppinsTextMedium style={{ color: "#91B406", fontSize: 16, color: 'black' }} content={` + ${amount}`}></PoppinsTextMedium>
@@ -663,7 +664,7 @@ const SharedPointsHistory = ({ navigation }) => {
             getPointSharingData.body.data && getPointSharingData.body.data.map((item, index) => {
 
               return (
-                <ListItem name={item.name} mobile = {item.mobile} key={item.id} data={item} description={item.product_name} productCode={item.product_code} time={moment(item.created_at).format('HH:mm a')} amount={item.points}></ListItem>
+                <ListItem image = {item.images[0]} name={item.name} mobile = {item.mobile} key={item.id} data={item} description={item.product_name} productCode={item.product_code} time={moment(item.created_at).format('HH:mm a')} amount={item.points}></ListItem>
 
               )
             })

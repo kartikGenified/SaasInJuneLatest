@@ -492,7 +492,7 @@ const Profile = ({ navigation }) => {
             <View style={{ height: 100, width: '90%', backgroundColor: "white", alignItems: "flex-start", justifyContent: 'center', flexDirection: 'row', marginTop: 20 }}>
 
               <ProfileBox buttonTitle="+ Add" title="Payment Methods" image={require('../../../assets/images/money.png')}></ProfileBox>
-              <ProfileBox buttonTitle="View" title="Check Passbook" image={require('../../../assets/images/gift.png')}></ProfileBox>
+              <ProfileBox buttonTitle="View" title="Check Passbook" image={require('../../../assets/images/passbook_icon.png')}></ProfileBox>
             </View>
           </View>
         </>}
