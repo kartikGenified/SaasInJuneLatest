@@ -112,6 +112,7 @@ const SelectUser = ({navigation}) => {
     <LinearGradient
       colors={["white", "white"]}
       style={styles.container}>
+         <ScrollView showsVerticalScrollIndicator={false} style={{}}>
       <View
         style={{
           height: 140,
@@ -130,11 +131,11 @@ const SelectUser = ({navigation}) => {
             source={{uri: `${BaseUrl}/api/images/${icon}`}}></Image>
 
             <View style={{width:'80%',alignItems:"center",justifyContent:'center',borderColor:ternaryThemeColor,borderTopWidth:1,borderBottomWidth:1,height:40,marginTop:40}}>
-              <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} content="Chose your profile "></PoppinsTextMedium>
+              <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} content="Choose your profile "></PoppinsTextMedium>
             </View>
         {/* </View> */}
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+     
        
      
       

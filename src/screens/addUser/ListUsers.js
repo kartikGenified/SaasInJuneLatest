@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useListAddedUsersMutation } from '../../apiServices/listUsers/listAddedUsersApi';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as Keychain from 'react-native-keychain';
 import Plus from 'react-native-vector-icons/AntDesign';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
@@ -10,15 +10,19 @@ import { useFetchUserMappingByAppUserIdAndMappedUserTypeMutation } from '../../a
 import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegistration';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import FastImage from 'react-native-fast-image';
+import { setCanMapUsers } from '../../../redux/slices/userMappingSlice';
 const ListUsers = ({ navigation }) => {
 
-  const [selectedOption, setSelectedOption] = useState("influencer");
+  const [selectedOption, setSelectedOption] = useState([]);
   const [userList, setUserList] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [selectUsers, setSelectUsers] = useState()
   const [userTypeList, setUserTypeList] = useState()
   const [active, setActive] = useState()
   const [inactive, setInactive] = useState()
+const dispatch = useDispatch()
+
+  const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
 
 
   const userData = useSelector(state => state.appusersdata.userData)
@@ -37,7 +41,6 @@ const ListUsers = ({ navigation }) => {
 
 
 
-  let options = ["influencer", "dealer", "consumer", "sales"];
 
   const [listAddedUserFunc, {
     data: listAddedUserData,
@@ -55,7 +58,7 @@ const ListUsers = ({ navigation }) => {
         );
         const token = credentials.username
         const userId = userData.id
-        const type = selectedOption
+        const type = selectUsers
         const params = {
           token: token,
           app_user_id: userId,
@@ -67,21 +70,29 @@ const ListUsers = ({ navigation }) => {
     getData()
   }, [])
 
-  useEffect(() => {
-    allUsers.map((item, index) => {
-      allUsersData.push({
-        "userType": item.user_type,
-        "userTypeId": item.user_type_id
-      })
-      allUsersList.push(item.user_type)
-    })
+  useEffect(()=>{
+    const userType = userData?.user_type;
 
-    console.log("allUsersList", allUsersList)
-    setSelectUsers(allUsersList)
-    setUserTypeList(allUsersData)
-    console.log("allUsersData", allUsersData)
+    let options = ["influencer", "dealer", "consumer", "sales"];
+  
+    const keys = Object.keys(pointSharingData?.point_sharing_bw_user?.user)
+  
+    const values = Object.values(pointSharingData?.point_sharing_bw_user?.user)
+  
+    console.log("Keys values", keys, values)
+  
+    if (keys.includes(userData.user_type))
+    {
+        const index = keys.indexOf(userData.user_type)
+        const tempuser = values[index]
+        console.log("temp users", tempuser)
+        setSelectedOption(tempuser)
+        dispatch(setCanMapUsers(tempuser))
+    }
+  },[])
 
-  }, [])
+  
+
 
   useEffect(() => {
     const getData = async () => {
@@ -92,7 +103,7 @@ const ListUsers = ({ navigation }) => {
         );
         const token = credentials.username
         const userId = userData.id
-        const type = selectedOption
+        const type = selectUsers
         const params = {
           token: token,
           app_user_id: userId,
@@ -104,7 +115,7 @@ const ListUsers = ({ navigation }) => {
     getData()
 
 
-  }, [selectedOption])
+  }, [selectUsers])
 
   useEffect(() => {
     if (listAddedUserData) {
@@ -115,12 +126,12 @@ const ListUsers = ({ navigation }) => {
       setTotalCount(listAddedUserData?.body.length)
 
       let activeArr = listAddedUserData.body?.filter((itm) => {
-        return itm.status == "1"
+        return itm.user_status == "1"
 
       })
 
       let inactiveArr = listAddedUserData.body?.filter((itm) => {
-        return itm.status !== "1"
+        return itm.user_status !== "1"
 
       })
       // console.log("active", activeArr)
@@ -157,7 +168,7 @@ const ListUsers = ({ navigation }) => {
 
   const handleData = (data) => {
     console.log("handle data", data)
-    setSelectedOption(data?.value)
+    setSelectUsers(data?.value)
 
 
 
@@ -235,17 +246,17 @@ const ListUsers = ({ navigation }) => {
           }}></PoppinsTextMedium>
       </View>
 
-      <View style={{ height: '90%', width: '100%', justifyContent: 'flex-start', paddingTop: 30 }}>
+      <View style={{ height: '90%', width: '100%', justifyContent: 'flex-start', paddingTop: 10 }}>
+      {selectedOption.length===0 && <PoppinsTextMedium style={{color:'black',fontSize:16,margin:10}} content="There are no users to select"></PoppinsTextMedium>}
 
         <View style={{ width: '50%', justifyContent: 'flex-start', marginLeft: 10, flexDirection: 'row' }}>
           {
-            selectUsers && userData?.user_type != "dealer" &&
+            selectedOption.length!==0 &&
             <DropDownRegistration
-
-              title="influencer"
-              header="influencer"
+              title={selectedOption?.[0]}
+              header={selectedOption?.[0] ? selectedOption?.[0] :  selectUsers ? selectUsers : "Select Type"}
               jsonData={{ "label": "UserType", "maxLength": "100", "name": "user_type", "options": [], "required": true, "type": "text" }}
-              data={selectUsers}
+              data={selectedOption}
               handleData={handleData}
             ></DropDownRegistration>
           }
@@ -261,7 +272,7 @@ const ListUsers = ({ navigation }) => {
             <View style={{ alignItems: 'center' }}>
               <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 20, }} content={` ${totalCount}`} ></PoppinsTextLeftMedium>
 
-              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total ${selectedOption}`} ></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total ${selectUsers ? selectUsers : "Users"}`} ></PoppinsTextLeftMedium>
 
             </View>
           </View>
@@ -298,7 +309,7 @@ const ListUsers = ({ navigation }) => {
         <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'flex-start', paddingBottom: 30 }}>
           {userList && userList?.body?.map((item, index) => {
             return (
-              <UserListComponent userType={item.mapped_user_type} name={item.mapped_app_user_name} mobile={item.mapped_app_user_mobile} key={index} index={index} status={item.status} item={item}></UserListComponent>
+              <UserListComponent userType={item.mapped_user_type} name={item.mapped_app_user_name} mobile={item.mapped_app_user_mobile} key={index} index={index} status={item.user_status} item={item}></UserListComponent>
             )
           })}
         </ScrollView>

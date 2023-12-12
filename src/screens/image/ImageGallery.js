@@ -9,8 +9,9 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import Cancel from 'react-native-vector-icons/MaterialIcons'
 import Left from 'react-native-vector-icons/AntDesign'
 import Right from 'react-native-vector-icons/AntDesign'
+import DataNotFound from '../data not found/DataNotFound';
 const ImageGallery = ({navigation}) => {
-  const [imageData, setImageData] = useState()
+  const [imageData, setImageData] = useState({})
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -49,6 +50,8 @@ const ImageGallery = ({navigation}) => {
         {
             setImageData(Object.values(appGalleryData.body))
         }
+        console.log("appGalleryDataimage",imageData)
+
       }
       else if(appGalleryError)
       {
@@ -177,11 +180,15 @@ setIndexImage(indexImage +1)
         }}>
             <View style={{width:'100%',alignItems:"flex-start",justifyContent:'flex-start',flexDirection:'row',flexWrap:'wrap',marginTop:20}}>
             {
-            imageData && imageData.map((item,index)=>{
+            Object.keys(imageData).length > 0 ? imageData.map((item,index)=>{
               return(
                 <ImageComp key={index} title={item.title} type={item.type} image={item.images} date={item.updated_at}></ImageComp>
               )
             })
+            :
+         
+            <DataNotFound></DataNotFound>
+         
           }
           
             </View>

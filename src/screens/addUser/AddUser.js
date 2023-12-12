@@ -20,13 +20,17 @@ import { useIsFocused } from '@react-navigation/native';
 import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
 import { useCreateUserMappingMutation } from '../../apiServices/userMapping/userMappingApi';
+import { useGetFormAccordingToAppUserTypeFormIdMutation } from '../../apiServices/workflow/GetForms';
+import ListUsers from './ListUsers';
 
 const AddUser = ({ navigation }) => {
   const [addUserForm, setAddUserForm] = useState()
+  const [selectedOption, setSelectedOption] = useState([]);
   const [userResponse, setUserResponse] = useState([])
   const [location, setLocation] = useState()
   const [selectUsers, setSelectUsers] = useState()
   const [userTypeList, setUserTypeList] = useState()
+  const [selectedFromDropDown, setSelectedFromDropDown] = useState("")
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -39,8 +43,10 @@ const AddUser = ({ navigation }) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
   const userData = useSelector(state => state.appusersdata.userData)
-  const allUsers = useSelector(state => state.appusers.value)
-  console.log("userData", userData,allUsers)
+  const allUsers = useSelector(state => state.appusers.appUsersData)
+  
+  const usersList = useSelector(state=> state.userMapping.canMapUsers)
+  console.log("userData", userData,allUsers,usersList)
   const height = Dimensions.get('window').height
   const focused = useIsFocused()
   const [getFormFunc, {
@@ -57,6 +63,12 @@ const AddUser = ({ navigation }) => {
     isError: getLocationFromPincodeIsError
   }] = useGetLocationFromPinMutation()
 
+  const [getFormAccordingToAppUserTypeFormIdFunc,{
+    data:getFormAccordingToAppUserTypeFormIdData,
+    error:getFormAccordingToAppUserTypeFormIdError,
+    isLoading:getFormAccordingToAppUserTypeFormIdIsLoading,
+    isError:getFormAccordingToAppUserTypeFormIdIsError
+  }]= useGetFormAccordingToAppUserTypeFormIdMutation()
 
   const [createUserMapping, {
     data: getUserMappingPincodeData,
@@ -108,11 +120,12 @@ const AddUser = ({ navigation }) => {
     const getToken = async () => {
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
-      const form_type = "7"
-      getFormFunc({ form_type, token })
+      const formId = "7"
+      const AppUserType = selectedFromDropDown
+      getFormAccordingToAppUserTypeFormIdFunc({ formId,AppUserType })
     }
     getToken()
-  }, [focused])
+  }, [focused,selectedFromDropDown])
 
   useEffect(()=>{
     if(getUserMappingPincodeData){
@@ -163,23 +176,35 @@ const AddUser = ({ navigation }) => {
       }
     }
     else if (registerUserError) {
+      setError(true)
+      if(registerUserError.status===400)
+      {
+        setMessage("Kindly fill the form")
+
+      }
+      else if(registerUserError.status===401)
+      {
+        setMessage("Your session is not valid")
+
+      }
       console.log("registerUserError", registerUserError)
     }
   }, [registerUserData, registerUserError])
 
   useEffect(() => {
-    if (getFormData) {
-      console.log("getFormData", JSON.stringify(getFormData))
-      if (getFormData.success) {
-        const template = getFormData.body.template
+    if (getFormAccordingToAppUserTypeFormIdData) {
+      if (getFormAccordingToAppUserTypeFormIdData.success && Object.keys(getFormAccordingToAppUserTypeFormIdData.body).length>0) {
+        const template = getFormAccordingToAppUserTypeFormIdData.body.template
         const formTemplate = Object.values(template)
+      console.log("getFormAccordingToAppUserTypeFormIdData", formTemplate)
+
         setAddUserForm(formTemplate)
       }
     }
-    else if (getFormError) {
-      console.log("getFormError", getFormError)
+    else if (getFormAccordingToAppUserTypeFormIdError) {
+      console.log("getFormAccordingToAppUserTypeFormIdError", getFormAccordingToAppUserTypeFormIdError)
     }
-  }, [getFormData, getFormError])
+  }, [getFormAccordingToAppUserTypeFormIdData, getFormAccordingToAppUserTypeFormIdError])
 
 
   useEffect(() => {
@@ -261,19 +286,41 @@ const AddUser = ({ navigation }) => {
     getLocationFromPinCode(data)
 
   }
+  const handleDataFromDropDown = (data) => {
+    console.log("handle data", data)
+    setSelectedFromDropDown(data?.value)
+
+  }
   const modalClose = () => {
     setError(false);
     setSuccess(false)
   };
 
   const handleSubmission = () => {
+    let user_type_id;
+    if(selectedFromDropDown!=="")
+  {
+    for(var i =0;i<allUsers.length;i++)
+    {
+      const capitalizedUserType= selectedFromDropDown.charAt(0).toUpperCase() + selectedFromDropDown.slice(1)
+      if(allUsers[i].name===capitalizedUserType)
+      {
+        console.log("allUsers",allUsers)
+        user_type_id = allUsers[i].id
+      }
+    }
+  }
     const inputFormData = {}
     inputFormData["is_approved_needed"] = true;
     inputFormData["is_online_verification"] = false;
     inputFormData["added_through"] = "app";
     inputFormData["added_by_name"] = userData.name
     inputFormData["added_by_id"] = userData.user_type_id;
-    inputFormData["user_type_id"] = "10"
+    inputFormData["user_type_id"] = user_type_id
+    inputFormData["user_type"] = selectedFromDropDown
+
+   
+
 
     for (var i = 0; i < userResponse.length; i++) {
       console.log(userResponse[i])
@@ -316,10 +363,18 @@ const AddUser = ({ navigation }) => {
       <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', backgroundColor: 'white', height: '90%', borderTopRightRadius: 30, borderTopLeftRadius: 30, paddingTop: 40 }}>
         {/* <KeyboardAvoidingView style={{width:"100%"}}> */}
         <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: "center", justifyContent: "center", }}>
+          {usersList.length===0 && <PoppinsTextMedium content="There are no user to select" style={{color:'black',fontSize:16}}></PoppinsTextMedium>}
+       {usersList.length!==0 && <DropDownRegistration
+              title={selectedOption?.[0]}
+              header={selectedOption?.[0] ? selectedOption?.[0] :  selectUsers ? selectUsers : "Select Type"}
+              jsonData={{ "label": "UserType", "maxLength": "100", "name": "user_type", "options": [], "required": true, "type": "text" }}
+              data={usersList}
+              handleData={handleDataFromDropDown}
+            ></DropDownRegistration>}
 
           {addUserForm &&
             addUserForm.map((item, index) => {
-
+console.log("items in the list are",item)
 
               if (item.type === 'text') {
 
@@ -474,7 +529,43 @@ const AddUser = ({ navigation }) => {
                     </TextInputRectangle>
                   );
                 }
-              } else if (item.type === 'file') {
+              }
+              else  if (item.type === 'number') {
+
+                if (item.name === 'phone' || item.name === "mobile") {
+                  return (
+                    <TextInputNumericRectangle
+                      jsonData={item}
+                      key={index}
+                      maxLength={10}
+                      handleData={handleData}
+                      placeHolder={item.name}
+                      label={item.label}
+                      required={item.required}
+                    >
+                      {' '}
+                    </TextInputNumericRectangle>
+                  );
+
+                }
+                if (item.name === 'pincode' || item.name === "postcode") {
+                  return (
+                    <PincodeTextInput
+                      jsonData={item}
+                      key={index}
+                      handleData={handleData}
+                      handleFetchPincode={handleFetchPincode}
+                      placeHolder={item.name}
+                      label={item.label}
+                      required={item.required}
+                      maxLength={6}
+                    ></PincodeTextInput>
+                  );
+
+                }
+              }
+
+               else if (item.type === 'file') {
                 return (
                   <ImageInput
                     jsonData={item}
@@ -522,12 +613,13 @@ const AddUser = ({ navigation }) => {
             ></DropDownRegistration>
           }
 
-          <TouchableOpacity onPress={() => {
+{usersList.length!=0 &&   <TouchableOpacity onPress={() => {
             handleSubmission()
           }} style={{ height: 40, width: 120, borderRadius: 4, backgroundColor: ternaryThemeColor, alignItems: "center", justifyContent: "center", marginBottom: 30 }}>
 
             <PoppinsTextMedium content="Proceed" style={{ color: 'white', fontSize: 20, }}></PoppinsTextMedium>
           </TouchableOpacity>
+}
 
         </ScrollView>
         {/* </KeyboardAvoidingView> */}

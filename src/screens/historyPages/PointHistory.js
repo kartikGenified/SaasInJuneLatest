@@ -569,7 +569,7 @@ const PointHistory = ({ navigation }) => {
                 <View style={{ width: 100 }}>
                     <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E', }} content="You Have"></PoppinsTextMedium>
                     {userPointData &&
-                        <PoppinsText style={{ marginLeft: 14, fontSize: 34, fontWeight: '600', color: '#373737', width: 100, width: 150 }} content={userPointData.body.point_balance}></PoppinsText>
+                        <PoppinsText style={{ marginLeft: 14, fontSize: 24, fontWeight: '600', color: '#373737', width: 100, width: 150 }} content={userPointData.body.point_balance}></PoppinsText>
 
                     }
                     <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Points"></PoppinsTextMedium>
@@ -579,7 +579,7 @@ const PointHistory = ({ navigation }) => {
            
             <DisplayEarnings></DisplayEarnings>
             <Header></Header>
-            {/* <PointCategoryTab></PointCategoryTab> */}
+            <PointCategoryTab></PointCategoryTab>
 
             {
                 displayList.length==0 && !isLoading &&

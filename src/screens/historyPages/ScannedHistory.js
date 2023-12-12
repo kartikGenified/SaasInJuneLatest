@@ -393,8 +393,9 @@ const ScannedHistory = ({ navigation }) => {
             fontSize: 16,
             position: "absolute",
             left: 10,
+            color:'black'
           }}
-          content="Redeemed Ladger"
+          content="Redeemed Ledger"
         ></PoppinsTextMedium>
 
         <TouchableOpacity
@@ -417,6 +418,7 @@ const ScannedHistory = ({ navigation }) => {
     const time = props.time;
     const amount = props.amount;
     const data = props.data;
+    const visibleCode = props.data?.batch_running_code
 
     const image = data.images !== null ? data.images[0] : null;
     return (
@@ -470,6 +472,10 @@ const ScannedHistory = ({ navigation }) => {
           <PoppinsTextMedium
             style={{ fontWeight: "400", fontSize: 12, color: "black" }}
             content={`Product Code : ${productCode}`}
+          ></PoppinsTextMedium>
+          <PoppinsTextMedium
+            style={{ fontWeight: "400", fontSize: 12, color: "black" }}
+            content={`Visible Code : ${visibleCode}`}
           ></PoppinsTextMedium>
           <View
             style={{

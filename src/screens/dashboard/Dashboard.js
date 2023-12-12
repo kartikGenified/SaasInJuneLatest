@@ -43,12 +43,13 @@ const Dashboard = ({ navigation }) => {
   const [CampainVideoVisible, setCmpainVideoVisible] = useState(true);
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
   const [membership, setMembership] = useState()
+  const [scanningDetails, seScanningDetails] = useState()
+
   const focused = useIsFocused()
   const dispatch = useDispatch()
   const userId = useSelector((state) => state.appusersdata.userId)
   const userData = useSelector(state => state.appusersdata.userData);
   const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
-  const [scanningDetails, seScanningDetails] = useState()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -490,7 +491,7 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
 
             <View style={{ backgroundColor: 'white', paddingLeft: '8%' }}>
               <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
-                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content="Reedem"  ></PoppinsTextLeftMedium>
+                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content="Redeem"  ></PoppinsTextLeftMedium>
               </TouchableOpacity>
             </View>
 

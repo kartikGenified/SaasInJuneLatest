@@ -1,4 +1,4 @@
-import {baseApi} from '../baseApi';
+import { baseApi } from '../baseApi';
 import { slug } from '../../utils/Slug';
 
 export const supportQueriesApi = baseApi.injectEndpoints({
@@ -14,12 +14,12 @@ export const supportQueriesApi = baseApi.injectEndpoints({
                         Authorization: "Bearer " + params.token,
                         slug: slug,
                     },
-                    
+
                 };
             },
         }),
 
-        submitQueries :builder.mutation({
+        submitQueries: builder.mutation({
             query: (params) => {
                 console.log(params)
                 return {
@@ -30,15 +30,34 @@ export const supportQueriesApi = baseApi.injectEndpoints({
                         Authorization: "Bearer " + params.token,
                         slug: slug,
                     },
-                    body:params.body
-                    
+                    body: params.body
+
                 };
             },
         }),
+
+        getSupportQueriesById: builder.mutation({
+            query: (params) => {
+                console.log(params)
+                return {
+                    method: "POST",
+                    url: `/api/tenant/supportQueries`,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + params.token,
+                        slug: slug,
+                    },
+                    body: params.body
+                };
+            },
+        }),
+
+
     }),
 });
 
 export const {
     useGetQueriesTypeMutation,
-    useSubmitQueriesMutation
+    useSubmitQueriesMutation,
+    useGetSupportQueriesByIdMutation
 } = supportQueriesApi;

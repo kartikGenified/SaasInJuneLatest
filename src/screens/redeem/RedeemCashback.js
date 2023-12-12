@@ -347,27 +347,7 @@ else{
           style={{height: 24, width: 24, resizeMode: 'contain', marginLeft: 10}}
           source={require('../../../assets/images/whiteArrowRight.png')}></Image>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("BasicInfo",{
-            "userType":userData.user_type,
-            "userTypeId":userData.user_type_id
-          })
-        }}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '90%',
-          backgroundColor: ternaryThemeColor,
-          borderRadius: 6,
-          height: 50,
-          marginTop:20,
-          
-          flexDirection: 'row',
-        }}><PoppinsTextMedium
-        content="Complete Registration"
-        style={{color: 'white', fontWeight: '600'}}></PoppinsTextMedium>
-        </TouchableOpacity>
+     
       </View>
       
         </View>

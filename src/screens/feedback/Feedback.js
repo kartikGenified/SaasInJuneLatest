@@ -122,7 +122,7 @@ const Feedback = ({ navigation }) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 5, position: 'absolute', left: 60 }} content={"FeedBack"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 5, position: 'absolute', left: 60 }} content={"Feedback"}></PoppinsTextMedium>
 
 
             </View>
@@ -166,7 +166,7 @@ const Feedback = ({ navigation }) => {
                 >
 
                     <View>
-                        <FeedbackTextArea onFeedbackChange={handleFeedbackChange} />
+                        <FeedbackTextArea onFeedbackChange={handleFeedbackChange} placeholder="Write your feedback here" />
                         <View style={{ marginHorizontal: '20%' }}>
                             <ButtonWithPlane title="Submit" navigate="" parmas={{}} type={"feedback"} onModalPress={showSuccessModal}></ButtonWithPlane>
                         </View>

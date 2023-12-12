@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Image, ImageBackground,PermissionsAndroid } fro
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
-import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification,setSocials, setWebsite, setCustomerSupportMail, setCustomerSupportMobile } from '../../../redux/slices/appThemeSlice';
+import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions,setIsOnlineVeriification,setSocials, setWebsite, setCustomerSupportMail, setCustomerSupportMobile, setExtraFeatures } from '../../../redux/slices/appThemeSlice';
 import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
 import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId} from '../../../redux/slices/appUserDataSlice';
 import messaging from '@react-native-firebase/messaging';    
 import { setFcmToken } from '../../../redux/slices/fcmTokenSlice';
-import { setAppUsers } from '../../../redux/slices/appUserSlice';
+import { setAppUsers,setAppUsersData } from '../../../redux/slices/appUserSlice';
 import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersApi';
 
 const Splash = ({ navigation }) => {
@@ -48,19 +48,27 @@ const Splash = ({ navigation }) => {
     
     getUsers();
   }, []);
+
+  
   useEffect(() => {
     if (getUsersData) {
       console.log("type of users",getUsersData.body);
       const appUsers = getUsersData.body.map((item,index)=>{
         return item.name
       })
+      const appUsersData = getUsersData.body.map((item,index)=>{
+        return {"name":item.name,
+      "id":item.user_type_id
+      }
+      })
       console.log("appUsers",appUsers)
       dispatch(setAppUsers(appUsers))
-     
+      dispatch(setAppUsersData(appUsersData))
     } else if(getUsersError) {
       console.log("getUsersError",getUsersError);
     }
   }, [getUsersData, getUsersError]);
+
   useEffect(()=>{
     const requestLocationPermission = async () => {
       try {
@@ -195,6 +203,7 @@ const Splash = ({ navigation }) => {
       dispatch(setWebsite(getAppThemeData.body.website))
       dispatch(setCustomerSupportMail(getAppThemeData.body.customer_support_email))
       dispatch(setCustomerSupportMobile(getAppThemeData.body.customer_support_mobile))
+      dispatch(setExtraFeatures(getAppThemeData.body.addon_features))
       if(getAppThemeData.body.addon_features.kyc_online_verification!==undefined)
       {
         if(getAppThemeData.body.addon_features.kyc_online_verification)

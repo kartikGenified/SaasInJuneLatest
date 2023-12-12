@@ -47,6 +47,8 @@ const Verification = ({navigation}) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
+  // const [address, setAddress] = useState()
+  // const [splitAddress , setSplitAddress] = useState()
   const dispatch = useDispatch()
   const kycOptions =useSelector(
         state => state.apptheme.kycOptions,
@@ -208,6 +210,11 @@ console.log("showVerificationFields",arr)
       // showAndHideVerificationComponents("PAN",tempVerification)
 
     }
+    
+    else if(type==="aadhar_details")
+    {
+      temp.push({"type":"aadhar_details","value":value})
+    }
     // setVerifiedArray(temp)
     // console.log("Verification Array",tempVerification)
   
@@ -232,7 +239,11 @@ console.log("showVerificationFields",arr)
     for(var i =0;i<temp.length;i++)
     {
       console.log("temp",temp[i])
-      inputFormData[`is_valid_${temp[i].type}`] = true,
+      if(temp[i].type!=="aadhar_details")
+      {
+      inputFormData[`is_valid_${temp[i].type}`] = true
+        
+      }
       inputFormData[temp[i].type] = temp[i].value
     }
     const body=inputFormData
@@ -529,8 +540,20 @@ console.log(showAadhar,showPan,showGst)
         console.log("verifyAadharData",verifyAadharData)
         if(verifyAadharData.success)
         {
+          const aadhar_details = {
+            "address" : verifyAadharData.body.address,
+            "split_address" : verifyAadharData.body.split_address
+        }
+        const gender = verifyAadharData.body.gender
+        const dob = verifyAadharData.body.dob
       console.log("SUCCESS AADHAAR")  
+      props.handleVerification("gender",gender)
+      props.handleVerification("dob",dob)
       props.handleVerification("aadhar",aadhar)
+      props.handleVerification("aadhar_details",aadhar_details)
+      
+      
+
         }
       }
       else if(verifyAadharError){

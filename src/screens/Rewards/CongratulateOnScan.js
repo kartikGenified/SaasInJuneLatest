@@ -35,12 +35,16 @@ import { setQrIdList } from "../../../redux/slices/qrCodeDataSlice";
 import  Celebrate  from "react-native-vector-icons/MaterialIcons";
 import Error from "react-native-vector-icons/MaterialIcons"
 import { useGetActiveMembershipMutation } from '../../apiServices/membership/AppMembershipApi';
+import ErrorModal from "../../components/modals/ErrorModal";
+
 
 const CongratulateOnScan = ({ navigation, route }) => {
   const [showPoints, setShowPoints] = useState();
   const [showBulkScanPoints, setShowBulkScanPoints] = useState();
   const [membershipPercent, setMembershipPercent] = useState(0)
   const [totalPoints, setTotalPoints] = useState(0)
+  const [error,setError] = useState(false)
+  const [message, setMessage] = useState('')
   const buttonThemeColor = useSelector(
     (state) => state.apptheme.ternaryThemeColor
   )
@@ -232,7 +236,7 @@ const getMembership = async () => {
                 (Number(pointPercentage) / 100) 
 
                
-              console.log("extra flat points", points);
+              console.log("extra flat points", points,pointPercentage);
               const body = {
                 data: {
                   // app_user_id: userData.id.toString(),
@@ -271,9 +275,15 @@ const getMembership = async () => {
               alert("Points can't be shared for this tenant");
             }
           } else if (pointSharingData.is_point_reserved === true) {
+            const point =
+              productData["mrp"] *
+              (pointSharingData["percentage_points_value"] / 100);
+              const memberShipBonus = (points * Number(getActiveMembershipData?.body.points !==undefined ? getActiveMembershipData?.body.points : 0))/100
+          
+          const totalPoints = point + memberShipBonus
             const points =
-              Number(productData.mrp) *
-              (Number(pointSharingData.percentage_points_value) / 100);
+              totalPoints *
+              (Number(pointPercentage) / 100);
               
             console.log("mrp points", points);
             if (shouldSharePoints) {
@@ -637,6 +647,11 @@ const getMembership = async () => {
           handleWorkflowNavigation();
         }, 5000);
       }
+      else if(userPointEntryError.status === 400)
+      {
+        setError(true)
+        setMessage(userPointEntryError.data.message)
+      }
       console.log("userPointEntryError", userPointEntryError);
     }
   }, [userPointEntryData, userPointEntryError]);
@@ -698,6 +713,9 @@ const getMembership = async () => {
   const navigateQrScanner = () => {
     // navigation.navigate('QrCodeScanner')
     handleWorkflowNavigation();
+  };
+  const modalClose = () => {
+    setError(false);
   };
   return (
     <View
@@ -844,6 +862,11 @@ const getMembership = async () => {
             </View>
             {/* -------------------------------------------------------- */}
             {/* rewards container---------------------------------------------- */}
+           {error &&  <ErrorModal
+          modalClose={modalClose}
+
+          message={message}
+          openModal={error}></ErrorModal>}
             <View
               style={{
                 padding: 10,

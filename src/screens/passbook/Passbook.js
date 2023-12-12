@@ -265,7 +265,7 @@ const Passbook = ({ navigation }) => {
             <View style={{ alignItems: "center", height: '100%', width: "100%", backgroundColor: "white", paddingBottom: 100, }}>
 
                 {/* coloured header */}
-                <View style={{ height: 200, width: '100%', backgroundColor: ternaryThemeColor, alignItems: "flex-start", justifyContent: 'flex-start' }}>
+                <View style={{ height: 250, width: '100%', backgroundColor: ternaryThemeColor, alignItems: "flex-start", justifyContent: 'flex-start' }}>
 
                     <View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
                         <TouchableOpacity onPress={() => { navigation.goBack() }}>
@@ -290,7 +290,7 @@ const Passbook = ({ navigation }) => {
                         </TouchableOpacity>
 
                     </View>
-                    {workflowProgram?.length !== 0 && <View style={{ alignItems: "center", justifyContent: "center", width: '100%', top: 10 }}>
+                    {workflowProgram?.length !== 0 && <View style={{ alignItems: "center", justifyContent: "center", width: '100%',  }}>
                         <RewardBox ></RewardBox>
 
                     </View>}
@@ -358,7 +358,8 @@ const Passbook = ({ navigation }) => {
 
                         }
                         {
-                            pointSharing && userData?.user_type != "influencer" && <NavigateTO title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
+                            
+                            pointSharing  && <NavigateTO title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
                         }
                     </View>
                 }
@@ -424,7 +425,7 @@ const Passbook = ({ navigation }) => {
 
                             }
                             {
-                                pointSharing && userData?.user_type != "influencer" && <GridVIew title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+                                pointSharing  && <GridVIew title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
                             }
                         </View>
 

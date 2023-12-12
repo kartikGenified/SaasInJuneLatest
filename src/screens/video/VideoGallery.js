@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, StyleSheet,TouchableOpacity,Image,ScrollView, Dimensions, Linking} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, Linking } from 'react-native';
 import Video from 'react-native-video';
 import { useSelector } from 'react-redux';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
@@ -8,80 +8,80 @@ import * as Keychain from 'react-native-keychain';
 import Logo from 'react-native-vector-icons/AntDesign'
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import DataNotFound from '../data not found/DataNotFound';
 
-const VideoGallery = ({navigation}) => {
-  const [videoData, setVideoData] = useState()
+const VideoGallery = ({ navigation }) => {
+  const [videoData, setVideoData] = useState([])
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
-    const height = Dimensions.get('window').height
+  const height = Dimensions.get('window').height
 
-    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
 
-    const [appVideoFunc, {
-      data:appVideoData, 
-      error:appVideoError,
-      isLoading:appVideoIsLoading,
-      isError:appVideoIsError
-    }] = useGetAppVideoMutation()
-    useEffect(()=>{
-      const getToken=async()=>{
-        const credentials = await Keychain.getGenericPassword();
-        if (credentials) {
-          console.log(
-            'Credentials successfully loaded for user ' + credentials.username
-          );
-          const token = credentials.username
-          let parmas = {
-            token:token,
-          }
-          appVideoFunc(parmas)
+  const [appVideoFunc, {
+    data: appVideoData,
+    error: appVideoError,
+    isLoading: appVideoIsLoading,
+    isError: appVideoIsError
+  }] = useGetAppVideoMutation()
+
+  useEffect(() => {
+    const getToken = async () => {
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        console.log(
+          'Credentials successfully loaded for user ' + credentials.username
+        );
+        const token = credentials.username
+        let parmas = {
+          token: token,
         }
+        appVideoFunc(parmas)
       }
-      getToken()
-     
-     
-    },[])
+    }
+    getToken()
 
-    useEffect(()=>{
-      if(appVideoData)
-      {
-        console.log("appVideoData",appVideoData)
-        setVideoData(appVideoData.body)
-      }
-      else if(appVideoError)
-      {
-        console.log("appVideoError",appVideoError)
-      }
-    },[appVideoData,appVideoError])
 
-  const VideoComp=(props)=>{
+  }, [])
+
+  useEffect(() => {
+    if (appVideoData) {
+      console.log("appVideoData", appVideoData)
+      setVideoData(appVideoData.body)
+    }
+    else if (appVideoError) {
+      console.log("appVideoError", appVideoError)
+    }
+  }, [appVideoData, appVideoError])
+
+  const VideoComp = (props) => {
     const video = props.video
     const title = props.title
     const type = props.type
     const date = props.date
-    return(
-      <TouchableOpacity onPress={()=>{Linking.openURL(video)}} style={{height:180,width:'40%',borderRadius:10,backgroundColor:'white',elevation:10,margin:10,alignItems:'center',justifyContent:'flex-end'}}>
-       <View style={{width:'100%',backgroundColor:"#DDDDDD",alignItems:"center",justifyContent:'center',height:'50%'}}>
-        <Logo name="youtube" size={60} color="red"></Logo>
-       </View>
-
-        <View style={{backgroundColor:'black',width:'100%',alignItems:'flex-start',height:'50%',justifyContent:"center"}}>
-        <PoppinsTextMedium style={{color:'white',fontSize:13,marginLeft:8}} content = {`Title : ${title.substring(0,16)}`}></PoppinsTextMedium>
-        <PoppinsTextMedium style={{color:'white',fontSize:13,marginLeft:8}} content = {`Type : ${type}`}></PoppinsTextMedium>
-        <PoppinsTextMedium style={{color:'white',fontSize:13,marginBottom:6,marginLeft:8}} content = {`Date : ${moment(date).format("DD MMM YYYY")}`}></PoppinsTextMedium>
-        
+    return (
+      <TouchableOpacity onPress={() => { Linking.openURL(video) }} style={{ height: 180, width: '40%', borderRadius: 10, backgroundColor: 'white', elevation: 10, margin: 10, alignItems: 'center', justifyContent: 'flex-end' }}>
+        <View style={{ width: '100%', backgroundColor: "#DDDDDD", alignItems: "center", justifyContent: 'center', height: '50%' }}>
+          <Logo name="youtube" size={60} color="red"></Logo>
         </View>
-      
+
+        <View style={{ backgroundColor: 'black', width: '100%', alignItems: 'flex-start', height: '50%', justifyContent: "center" }}>
+          <PoppinsTextMedium style={{ color: 'white', fontSize: 13, marginLeft: 8 }} content={`Title : ${title.substring(0, 16)}`}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: 'white', fontSize: 13, marginLeft: 8 }} content={`Type : ${type}`}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: 'white', fontSize: 13, marginBottom: 6, marginLeft: 8 }} content={`Date : ${moment(date).format("DD MMM YYYY")}`}></PoppinsTextMedium>
+
+        </View>
+
       </TouchableOpacity>
     )
   }
 
-    return (
-        <View
+  return (
+    <View
       style={{
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -121,51 +121,56 @@ const VideoGallery = ({navigation}) => {
             color: 'white',
           }}></PoppinsTextMedium>
       </View>
-      <ScrollView style={{width:'100%',height:'90%'}}>
+      <ScrollView style={{ width: '100%', height: '90%' }}>
 
-      
-      <View
-        style={{
-          borderTopRightRadius: 30,
-          borderTopLeftRadius: 30,
-          backgroundColor: 'white',
-          minHeight:height-100,
-          marginTop: 10,
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          width: '100%',
-          paddingBottom: 40,
-          flexDirection:"row",
-          flexWrap:'wrap'
 
-        }}>
+        <View
+          style={{
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30,
+            backgroundColor: 'white',
+            minHeight: height - 100,
+            marginTop: 10,
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            width: '100%',
+            paddingBottom: 40,
+            flexDirection: "row",
+            flexWrap: 'wrap'
+          }}>
+
+          {appVideoIsLoading &&
+            <FastImage
+              style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+              source={{
+                uri: gifUri, // Update the path to your GIF
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+          }
+
           {
-            videoData && videoData.map((item,index)=>{
-              return(
-                <VideoComp key ={index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp>
+            videoData != undefined && videoData.length > 0 ? videoData.map((item, index) => {
+              return (
+                <View>
+                  {(videoData.length > 0) ? <VideoComp key={index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp> : <DataNotFound />}
+                </View>
               )
             })
+              :
+               appVideoData &&   <DataNotFound />
+            
           }
 
-          {!videoData &&
-              <FastImage
-                   style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
-                   source={{
-                       uri: gifUri, // Update the path to your GIF
-                       priority: FastImage.priority.normal,
-                   }}
-                   resizeMode={FastImage.resizeMode.contain}
-               />
-           
 
-          }
-            
-            
-        </View>
-        </ScrollView>
-        </View>
 
-    );
+
+        </View>
+      </ScrollView>
+    </View>
+
+  );
 }
 
 

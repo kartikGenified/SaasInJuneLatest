@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -26,7 +26,10 @@ const OtpVerification = ({navigation,route}) => {
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [mobile, setMobile] = useState();
+  const [timer, setTimer] = useState(60)
   const [showRedeemButton,setShowRedeemButton] = useState(false)
+  const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
+
   const pointsConversion = useSelector(state=>state.redemptionData.pointConversion)
   const cashConversion = useSelector(state=>state.redemptionData.cashConversion)
 console.log("Point conversion and cash conversion data",pointsConversion,cashConversion)
@@ -67,7 +70,11 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   ] = useGetLoginOtpForVerificationMutation();
   
   const type = route.params.type
-  
+
+  useEffect(() => {
+    timer > 0 && setTimeout(timeOutCallback, 1000);
+  }, [timer, timeOutCallback]);
+
   useEffect(()=>{
     if(redeemCashbackData)
     {
@@ -219,7 +226,10 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   }
 
   const handleOtpResend=()=>{
-    handleOtpSubmission(otp)
+    if (!timer) {
+      setTimer(60);
+      getMobile(mobile)
+    }
     setShowRedeemButton(false)
   }
   const getMobile = (data) => {
@@ -323,29 +333,28 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
           color={"white"}
         ></OtpInput>
         <PoppinsTextMedium content = "Enter OTP" style={{color:'black',fontSize:20,fontWeight:'800'}}></PoppinsTextMedium>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop:10
-          }}>
-          <PoppinsTextMedium
-            style={{ fontSize: 14, color: 'black' }}
-            content="Didn't you recieve the OTP?"></PoppinsTextMedium>
-          <Text
-            style={{
-              color: ternaryThemeColor,
-              fontSize: 14,
-              marginLeft: 4,
-              fontWeight: '800',
-            }}
-            onPress={() => {
-              handleOtpResend();
-            }}>
-            Resend
-          </Text>
-        </View>
+        <View style={{alignItems:'center',justifyContent:'center'}}>
+              <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',marginTop:4}}>
+              <Image
+                  style={{
+                    height: 20,
+                    width: 20,
+                    resizeMode: 'contain',
+                    
+                  }}
+                  source={require('../../../assets/images/clock.png')}></Image>
+                  <Text style={{color:ternaryThemeColor,marginLeft:4}}>{timer}</Text>
+              </View>
+              <View style={{alignItems:'center',justifyContent:'center'}}>
+                <Text style={{color:ternaryThemeColor,marginTop:10}}>Didn't you recieve any code?</Text>
+                
+{timer===0 &&
+                <Text onPress={()=>{handleOtpResend()}} style={{color:ternaryThemeColor,marginTop:6,fontWeight:'600',fontSize:16}}>Resend Code</Text>
+
+}                
+              </View>
+            </View>
+        
 
       </View>
       {showRedeemButton && <View style={{alignItems:'center',justifyContent:'center',width:'100%',position: 'absolute',bottom:20}}>

@@ -361,6 +361,9 @@ const CustomDrawer = () => {
               else if (props.title.toLowerCase() === "add user") {
                 navigation.navigate('ListUsers')
               }
+              else if (props.title.toLowerCase() === "query list") {
+                navigation.navigate('QueryList')
+              }
               else if (props.title.toLowerCase() === "share app") {
                 const options = {
                   title: "Share APP",
@@ -434,9 +437,10 @@ const CustomDrawer = () => {
   };
 
   return (
-    <View style={{ backgroundColor: '#DDDDDD' }}>
+    <View style={{ backgroundColor: '#DDDDDD',alignItems:"center",justifyContent:'center',width:'100%',height:'100%' }}>
       <View
         style={{
+          width:'100%',
           height: 125,
           backgroundColor: ternaryThemeColor,
           borderBottomLeftRadius: 30,
@@ -490,7 +494,7 @@ const CustomDrawer = () => {
             }}>
             {userData.name}
           </Text>}
-          {userData && <Text style={{ color: 'white', margin: 0 }}>{userData.user_type} Account</Text>}
+          {userData && <Text style={{ color: 'white', margin: 0,textTransform:"capitalize" }}>{userData.user_type} Account</Text>}
 
           {!Object.values(kycData).includes(false) ? <View style={{ flexDirection: 'row', marginTop: 4 }}>
             <View
@@ -529,7 +533,7 @@ const CustomDrawer = () => {
           }
         </View>
       </View>
-      <ScrollView contentContainerStyle={{ width: '100%',}} style={{marginBottom:140}} >
+      <ScrollView contentContainerStyle={{}} style={{ width: '100%',height:'100%'}} >
 
         {
           drawerData !== undefined && drawerData.app_menu.map((item, index) => {
@@ -547,7 +551,7 @@ const CustomDrawer = () => {
         {/* My Program Starting */}
         <View
           style={{
-            // height: 54,
+            minHeight: 54,
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
@@ -573,7 +577,7 @@ const CustomDrawer = () => {
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -629,7 +633,7 @@ const CustomDrawer = () => {
           {/* Ozone Products Starting */}
           <View
           style={{
-            // height: 54,
+            minHeight: 54,
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
@@ -655,7 +659,7 @@ const CustomDrawer = () => {
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -701,7 +705,7 @@ const CustomDrawer = () => {
            {/* Community Starting */}
            <View
           style={{
-            // height: 54,
+            minHeight: 54,
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
@@ -727,7 +731,7 @@ const CustomDrawer = () => {
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -777,7 +781,7 @@ const CustomDrawer = () => {
           {/* Knowledge Hub */}
           <View
           style={{
-            // height: 54,
+            minHeight: 54,
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
@@ -803,7 +807,7 @@ const CustomDrawer = () => {
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }] }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 

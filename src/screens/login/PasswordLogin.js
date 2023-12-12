@@ -175,6 +175,17 @@ const PasswordLogin = ({ navigation, route }) => {
 
   }
 
+  
+  // const handleAppointment = () => {
+  //   // navigation.navigate('BasicInfo',{needsApproval:needsApproval, userType:userType, userId:userId})
+
+  //   // navigation.navigate('RegisterUser',{needsApproval:needsApproval, userType:userType, userId:userId})
+  //   // navigation.navigate("BasicInfo", { needsApproval: needsApproval, userType: userType, userId: userId,navigatingFrom:"PasswordLogin" })
+  //   navigation.navigate('RequestAppointment');
+
+
+  // }
+
   const fetchTerms = async () => {
     const credentials = await Keychain.getGenericPassword();
     const token = credentials.username;
@@ -339,17 +350,37 @@ const PasswordLogin = ({ navigation, route }) => {
             }}
             source={require('../../../assets/images/ozoneWhiteLogo.png')}></Image>
           {/* ozone change */}
-         {route.params.userType==="influencer" &&  <View style={{ alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10 }}>
+         
+
+          {route.params.userType==="dealer" &&  <View style={{width:150, alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10 }}>
             {/* <PoppinsTextMedium style={{fontSize:18}} content ="Don't have an account ?"></PoppinsTextMedium> */}
             <ButtonNavigate
-              handleOperation={handleNavigationToRegister}
+              // handleOperation={handleAppointment}
               backgroundColor="#353535"
-              style={{ color: 'white', fontSize: 16 }}
-              content="Register"
+              style={{ color: 'white', fontSize: 12, }}
+              content="Enquiry"
+              navigateTo="RequestAppointment"
+              properties={{ needsApproval: needsApproval, userType: userType, userId: userId,navigatingFrom:"PasswordLogin" }}
             >
             </ButtonNavigate>
 
           </View>}
+
+          {route.params.userType==="sales" &&  <View style={{alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10,width:'50%' }}>
+            <PoppinsTextMedium style={{fontSize:14,color:'white'}} content ="Don't have an account ?"></PoppinsTextMedium>
+            <ButtonNavigate
+              // handleOperation={handleAppointment}
+              backgroundColor="#353535"
+              style={{ color: 'white', fontSize: 16 }}
+              content="Enquiry"
+              navigateTo="RequestAppointment"
+            >
+            </ButtonNavigate>
+
+          </View>}
+
+          
+
         </View>
         <View
           style={{
@@ -417,12 +448,12 @@ const PasswordLogin = ({ navigation, route }) => {
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'center', width: '90%' }}>
           <PoppinsTextMedium style={{ color: "#727272", fontSize: 14 }} content="Not remembering password? "></PoppinsTextMedium>
           <TouchableOpacity >
-            <PoppinsTextMedium style={{ color: ternaryThemeColor, fontSize: 14 }} content="Forgot Password"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{ color: ternaryThemeColor, fontSize: 14 }} content="Forget Password"></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
 
-        {/* <View style={{ width: "100%", flex: 1 }}> */}
-          <View style={{ marginBottom: 27, marginLeft: 20 }}>
+        <View style={{ width: "100%", flex: 1 }}>
+          <View style={{ marginBottom: 27, marginLeft: 20, marginTop: 'auto' }}>
             <ButtonNavigateArrow
               handleOperation={handleLogin}
               backgroundColor={buttonThemeColor}
@@ -432,7 +463,7 @@ const PasswordLogin = ({ navigation, route }) => {
             </ButtonNavigateArrow>
           </View>
 
-        {/* </View> */}
+        </View>
 
 
 

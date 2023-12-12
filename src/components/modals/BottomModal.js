@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import {Alert, Modal, StyleSheet, Text, Pressable, View,BackHandler} from 'react-native';
 import { useSelector } from 'react-redux';
 import  Icon  from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -13,18 +13,26 @@ const BottomModal = (props) => {
     const navigation = useNavigation()
     const navigateTo = props.navigateTo
     const Comp = props.comp
+   
   useEffect(()=>{
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
     if(props.openModal===true)
     
     {
       console.log("Trying to close the modal")
         setModalVisible(true)
+        
     }
     else{
         setModalVisible(false)
     }
+    return()=>{
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    }
   },[])
-  
+  const handleBackButtonClick=()=>{
+  navigation.goBack(null)
+  }
   const handleFilter=(data,type)=>{
     console.log("filter",data,type)
     props.handleFilter(data,type)
@@ -37,10 +45,10 @@ const BottomModal = (props) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}  
-        onRequestClose={() => {
-            props.modalClose()
-          setModalVisible(!modalVisible);
-        }}
+        // onRequestClose={() => {
+        //     props.modalClose()
+        //   setModalVisible(!modalVisible);
+        // }}
         >
 
         <View style={styles.centeredView}>

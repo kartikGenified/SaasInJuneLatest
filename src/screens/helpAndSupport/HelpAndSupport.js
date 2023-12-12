@@ -72,7 +72,7 @@ const HelpAndSupport = ({navigation}) => {
               <Image style={{height:300,width:300,resizeMode:"contain"}} source={require('../../../assets/images/customerSupportnew.png')}></Image>
             </View>
           <View style={{width:'100%',borderTopRightRadius:30,borderTopLeftRadius:30,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'flex-start',height:'60%'}}>
-            <TouchableOpacity onPress={()=>{Linking.openURL('mailto:Support@genuine.org')}} style={{width:'90%',alignItems:'center',justifyContent:'center',paddingBottom:20,borderBottomWidth:1,borderColor:'#DDDDDD',marginTop:10}}>
+            <TouchableOpacity onPress={()=>{Linking.openURL(`mailto:${supportMail}`)}} style={{width:'90%',alignItems:'center',justifyContent:'center',paddingBottom:20,borderBottomWidth:1,borderColor:'#DDDDDD',marginTop:10}}>
               <View style={{height:60,width:60,borderRadius:30,alignItems:"center",justifyContent:"center"}}>
                 <Image style={{height:40,width:40,resizeMode:"contain"}} source={require('../../../assets/images/whitemail.png')}></Image>
               </View>
@@ -93,7 +93,7 @@ const HelpAndSupport = ({navigation}) => {
             color: 'white',
           }}></PoppinsTextMedium>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{Linking.openURL('tel:8888888888')}} style={{width:'90%',alignItems:'center',justifyContent:'center',paddingBottom:20,borderBottomWidth:1,borderColor:'#DDDDDD',marginTop:10}}>
+            <TouchableOpacity onPress={()=>{Linking.openURL(`tel:${supportMobile}`)}} style={{width:'90%',alignItems:'center',justifyContent:'center',paddingBottom:20,borderBottomWidth:1,borderColor:'#DDDDDD',marginTop:10}}>
               <View style={{height:60,width:60,borderRadius:30,alignItems:"center",justifyContent:"center"}}>
                 <Image style={{height:40,width:40,resizeMode:"contain"}} source={require('../../../assets/images/whitemobile.png')}></Image>
               </View>

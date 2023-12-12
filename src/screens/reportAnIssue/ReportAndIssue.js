@@ -45,6 +45,7 @@ const ReportAndIssue = ({ navigation, route }) => {
   const data = route.params.productData
   console.log("data in report", data, userData)
   const productName = data?.product_code
+  const visibleCode = data?.batch_running_code
   const qrId = route.params?.qrId
 
   const [addIssueFunc, {
@@ -221,6 +222,9 @@ const ReportAndIssue = ({ navigation, route }) => {
             paddingBottom: 40,
           }}>
           <PoppinsTextMedium style={{ marginLeft: 20, marginTop: 20, fontWeight: '700', color: '#55595A', fontSize: 16, }} content={`Product Code : ${productName}`}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ marginLeft: 20, marginTop: 4, fontWeight: '700', color: '#55595A', fontSize: 16, }} content={`Visible Code : ${visibleCode}`}></PoppinsTextMedium>
+
+          
           {/* <RectangularUnderlinedDropDown style={{ marginLeft: 10 }} header="Select a reason" data={["1", "2", "3", "4"]} handleData={getReason}></RectangularUnderlinedDropDown> */}
           <View style={{ width: '90%', borderBottomWidth: 2, borderColor: "#DDDDDD", height: 80, marginLeft: 20, marginTop: 30, }}>
             <TextInput onChangeText={(val) => {

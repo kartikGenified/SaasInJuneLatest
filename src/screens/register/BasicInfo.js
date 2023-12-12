@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from 'react';
+import React, { useCallback, useEffect, useId, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,7 +7,8 @@ import {
   FlatList,
   TextInput,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Text
 } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector, useDispatch } from 'react-redux';
@@ -61,6 +62,10 @@ const BasicInfo = ({ navigation, route }) => {
   const [otpModal, setOtpModal] = useState(false)
   const [otpVisible, setOtpVisible] = useState(false)
   const [isValid, setIsValid] = useState(true)
+
+  const [timer, setTimer] = useState(0)
+
+  const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
 
 
 
@@ -140,6 +145,11 @@ const BasicInfo = ({ navigation, route }) => {
       isError: verifyOtpIsError,
     },
   ] = useVerifyOtpForNormalUseMutation();
+
+  useEffect(() => {
+    timer > 0 && setTimeout(timeOutCallback, 1000);
+  }, [timer, timeOutCallback]);
+
 
 
   useEffect(() => {
@@ -344,6 +354,23 @@ const BasicInfo = ({ navigation, route }) => {
     }
   }, [sendOtpData, sendOtpError])
 
+  const handleTimer = () => {
+
+    if(timer===60)
+    {
+      getOTPfunc()
+      setOtpVisible(true)
+    }
+    if (timer===0 || timer===-1) {
+      setTimer(60);
+      getOTPfunc()
+      setOtpVisible(true)
+
+     
+    }
+  }
+
+
   const isValidEmail = (text) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(text);
@@ -357,23 +384,24 @@ const BasicInfo = ({ navigation, route }) => {
 
 
   const handleChildComponentData = data => {
-   
+
     // setOtpVisible(true)
     if (data.name === "name") {
       setUserName(data.value)
     }
     // console.log("isValidEmail", isValidEmail(data.value))
 
-    if(data.name==="email")
-    {
-    console.log("from text input", data.name);
+    if (data.name === "email") {
+      console.log("from text input", data.name);
 
-      console.log("isValidEmail", isValidEmail(data.value),isValid)
+      console.log("isValidEmail", isValidEmail(data.value), isValid)
 
     }
-    
 
-    
+   
+
+
+
 
     if (data.name === "mobile") {
       setUserMobile(data.value)
@@ -453,31 +481,29 @@ const BasicInfo = ({ navigation, route }) => {
     inputFormData["name"] = name;
     inputFormData["mobile"] = mobile;
 
-   
+
 
     for (var i = 0; i < responseArray.length; i++) {
-      
+
       inputFormData[responseArray[i].name] = responseArray[i].value
     }
     const body = inputFormData
 
-    if (otpVerified ) {
+    if (otpVerified) {
       const keys = Object.keys(body)
       const values = Object.values(body)
 
-      if(keys.includes('email'))
-      {
+      if (keys.includes('email')) {
         const index = keys.indexOf('email')
-        if(isValidEmail(values[index]))
-        {
-        registerUserFunc(body)
+        if (isValidEmail(values[index])) {
+          registerUserFunc(body)
         }
-        else{
+        else {
           setError(true)
           setMessage("Email isn't verified")
         }
       }
-      else{
+      else {
         registerUserFunc(body)
       }
 
@@ -609,7 +635,7 @@ const BasicInfo = ({ navigation, route }) => {
                             placeHolder={item.name}
                             value={userMobile}
                             label={item.label}
-                            isEditable={!otpVerified}
+                            isEditable={false}
                           >
                             {' '}
                           </TextInputNumericRectangle>}
@@ -628,14 +654,16 @@ const BasicInfo = ({ navigation, route }) => {
 
                         {otpVerified ? <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                           <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/greenTick.png')}></Image>
-                        </View> : <TouchableOpacity style={{ flex: 0.15, marginTop: 6, backgroundColor: ternaryThemeColor, alignItems: 'center', justifyContent: 'center', height: 50, borderRadius: 5 }} onPress={getOTPfunc}>
+                        </View> : <TouchableOpacity style={{ flex: 0.15, marginTop: 6, backgroundColor: ternaryThemeColor, alignItems: 'center', justifyContent: 'center', height: 50, borderRadius: 5 }} onPress={()=>{
+                          handleTimer()
+                        }}>
                           <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }} content="Get OTP"></PoppinsTextLeftMedium>
                         </TouchableOpacity>}
                       </View>
 
 
 
-                    {console.log("conditions",otpVerified,otpVisible)}
+                      {console.log("conditions", otpVerified, otpVisible)}
                       {!otpVerified && otpVisible &&
                         <>
 
@@ -644,6 +672,26 @@ const BasicInfo = ({ navigation, route }) => {
                           <OtpInput
                             getOtpFromComponent={getOtpFromComponent}
                             color={'white'}></OtpInput>
+
+                          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 4 }}>
+                              <Image
+                                style={{
+                                  height: 20,
+                                  width: 20,
+                                  resizeMode: 'contain',
+
+                                }}
+                                source={require('../../../assets/images/clock.png')}></Image>
+                              <Text style={{ color: ternaryThemeColor, marginLeft: 4 }}>{timer}</Text>
+                            </View>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                              <Text style={{ color: ternaryThemeColor, marginTop: 10 }}>Didn't you recieve any code?</Text>
+
+                              <Text onPress={()=>{handleTimer()}} style={{ color: ternaryThemeColor, marginTop: 6, fontWeight: '600', fontSize: 16 }}>Resend Code</Text>
+
+                            </View>
+                          </View>
                         </>
                       }
                     </>
@@ -662,6 +710,7 @@ const BasicInfo = ({ navigation, route }) => {
                       placeHolder={item.name}
                       value={userName}
                       label={item.label}
+                      isEditable={false}
                     ></PrefilledTextInput>
                   )
                 }
@@ -674,9 +723,9 @@ const BasicInfo = ({ navigation, route }) => {
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                     
+
                       label={item.label}
-                      // isValidEmail = {isValidEmail}
+                    // isValidEmail = {isValidEmail}
                     ></EmailTextInput>
                   )
                 }
