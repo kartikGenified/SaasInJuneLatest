@@ -477,7 +477,7 @@ const BankAccounts = ({ navigation, route }) => {
             }
 
             {(listAccountData?.body?.length == 0  || listAccountData == undefined ) && <View style={{ alignItems: 'center', marginTop:"60%"}}>
-              <PoppinsTextMedium style ={{fontSize:16}}content="No Bank Account has Added yet !"></PoppinsTextMedium>
+              <PoppinsTextMedium style ={{fontSize:16}}content="No Bank Account has been added yet !"></PoppinsTextMedium>
             </View>}
 
 

@@ -41,6 +41,7 @@
     "react-native-permissions": "^3.8.4",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-reanimated": "~3.4.2",
+    "react-native-rename": "^3.2.13",
     "react-native-safe-area-context": "^4.7.1",
     "react-native-screens": "^3.24.0",
     "react-native-share": "^9.4.1",

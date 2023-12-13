@@ -676,12 +676,12 @@ console.log(showAadhar,showPan,showGst)
            
           <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
             <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-            <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Aadhar Number" > </PoppinsTextMedium>
+            <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Aadhaar Number" > </PoppinsTextMedium>
             </View>
             <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
             <TextInput ref={inpref} maxLength={12} value={ aadhar} onChangeText={(text)=>{
               handleAadhaar(text)
-            }} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:"black"}} placeholderTextColor="black" placeholder='Enter Aadhar Number'></TextInput>
+            }} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:"black"}} placeholderTextColor="black" placeholder='Enter Aadhaar Number'></TextInput>
             {verifyAadharData && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
             <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>
             </View>}

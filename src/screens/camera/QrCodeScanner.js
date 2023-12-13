@@ -428,7 +428,7 @@ else{
       } else {
 
         setError(true);
-        setMessage('This Qr is already added to the list');
+        setMessage('Sorry This QR is already added to the list');
       }
     }
   };
@@ -965,7 +965,7 @@ else{
                   source={require('../../../assets/images/qrHowTo.png')}></Image>
                 <PoppinsTextMedium
                   style={{color: 'grey', fontWeight: '700', fontSize: 20}}
-                  content="Please start scanning by pointing the camera towards QR code"></PoppinsTextMedium>
+                  content="Please start scanning by pointing the camera towards the QR Code"></PoppinsTextMedium>
               </ScrollView>
             </View>
           ) : (

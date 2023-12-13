@@ -113,7 +113,7 @@ const VideoGallery = ({ navigation }) => {
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Video"
+          content="Videos"
           style={{
             marginLeft: 10,
             fontSize: 16,

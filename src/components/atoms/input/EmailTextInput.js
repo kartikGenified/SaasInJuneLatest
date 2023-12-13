@@ -161,7 +161,7 @@ const handlekeyboardHide=(text)=>{
       {isValidEmailState===false && (
         <PoppinsTextLeftMedium
           style={{ color: "red", marginBottom: 5 }}
-          content="Please enter valid email"
+          content="Please enter a valid email"
         ></PoppinsTextLeftMedium>
       )}
     </View>

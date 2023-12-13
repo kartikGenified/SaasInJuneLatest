@@ -173,7 +173,7 @@ const EditProfile = ({ navigation, route }) => {
       }
       else{
         setError(true)
-        setMessage("Please enter valid email")
+        setMessage("Please enter a valid email")
       }
     
     }

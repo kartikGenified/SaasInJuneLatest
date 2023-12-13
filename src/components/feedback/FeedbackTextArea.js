@@ -41,7 +41,10 @@ const styles = StyleSheet.create({
   textInput: {
     height: 114,
     fontSize: 16,
-    color:'#000000'
+    color:'#000000',
+    textAlign:"left",
+    textAlignVertical:'top'
+    
   },
 });
 

@@ -686,7 +686,7 @@ const BasicInfo = ({ navigation, route }) => {
                               <Text style={{ color: ternaryThemeColor, marginLeft: 4 }}>{timer}</Text>
                             </View>
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                              <Text style={{ color: ternaryThemeColor, marginTop: 10 }}>Didn't you recieve any code?</Text>
+                              <Text style={{ color: ternaryThemeColor, marginTop: 10 }}>Didn't recieve any Code?</Text>
 
                               <Text onPress={()=>{handleTimer()}} style={{ color: ternaryThemeColor, marginTop: 6, fontWeight: '600', fontSize: 16 }}>Resend Code</Text>
 

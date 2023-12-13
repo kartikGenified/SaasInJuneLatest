@@ -205,7 +205,7 @@ const ScanAndRedirectToWarranty = ({ navigation }) => {
         setAddedQrList([...addedQrList, data]);
       } else {
         setError(true);
-        setMessage('This Qr is already added to the list');
+        setMessage('Sorry this QR is already added to the list');
       }
     }
   };
