@@ -60,21 +60,21 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = OzoneOverseas;
+			remoteInfo = "OzoneOverseas";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* OzoneOverseasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OzoneOverseasTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* OzoneOverseasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OzoneOverseasTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* OzoneOverseasTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OzoneOverseasTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* OzoneOverseasTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OzoneOverseasTests.m"; sourceTree = "<group>"; };
 		0E1B8BF0838049D291ECD299 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* OzoneOverseas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OzoneOverseas.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OzoneOverseas/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = OzoneOverseas/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OzoneOverseas/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OzoneOverseas/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OzoneOverseas/main.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* OzoneOverseas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OzoneOverseas.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "OzoneOverseas/AppDelegate.h"; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = "OzoneOverseas/AppDelegate.mm"; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "OzoneOverseas/Images.xcassets"; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "OzoneOverseas/Info.plist"; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "OzoneOverseas/main.m"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-OzoneOverseas-OzoneOverseasTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OzoneOverseas-OzoneOverseasTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE6820C23DE453CAB52F952 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		1E3DA997340647E68B5EABD5 /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
@@ -90,7 +90,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-OzoneOverseas.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OzoneOverseas.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6ADA9E2354B743C393570BC0 /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
 		7CD9F36D1CDD42B4A722D9A1 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OzoneOverseas/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "OzoneOverseas/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		884A6DE7592C4EE0B1A9E605 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-OzoneOverseas-OzoneOverseasTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OzoneOverseas-OzoneOverseasTests.release.xcconfig"; path = "Target Support Files/Pods-OzoneOverseas-OzoneOverseasTests/Pods-OzoneOverseas-OzoneOverseasTests.release.xcconfig"; sourceTree = "<group>"; };
 		8DB51198E9EA4355BC888C2C /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
@@ -149,7 +149,7 @@
 				00E356F21AD99517003FC87E /* OzoneOverseasTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = OzoneOverseasTests;
+			path = "OzoneOverseasTests";
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -196,7 +196,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = OzoneOverseas;
+			name = "OzoneOverseas";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -321,8 +321,8 @@
 			);
 			dependencies = (
 			);
-			name = OzoneOverseas;
-			productName = OzoneOverseas;
+			name = "OzoneOverseas";
+			productName = "OzoneOverseas";
 			productReference = 13B07F961A680F5B00A75B9A /* OzoneOverseas.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -608,7 +608,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = OzoneOverseasTests/Info.plist;
+				INFOPLIST_FILE = "OzoneOverseasTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -633,7 +633,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = OzoneOverseasTests/Info.plist;
+				INFOPLIST_FILE = "OzoneOverseasTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -659,7 +659,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = OzoneOverseas/Info.plist;
+				INFOPLIST_FILE = "OzoneOverseas/Info.plist";
+             INFOPLIST_KEY_CFBundleDisplayName = "Ozone Overseas";
 				INFOPLIST_KEY_CFBundleDisplayName = OzoneOverseas;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -672,7 +673,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ozoneoverseas;
-				PRODUCT_NAME = OzoneOverseas;
+				PRODUCT_NAME = "OzoneOverseas";
 				SWIFT_OBJC_BRIDGING_HEADER = "OzoneOverseas-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -687,7 +688,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = OzoneOverseas/Info.plist;
+				INFOPLIST_FILE = "OzoneOverseas/Info.plist";
+             INFOPLIST_KEY_CFBundleDisplayName = "Ozone Overseas";
 				INFOPLIST_KEY_CFBundleDisplayName = OzoneOverseas;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -700,7 +702,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ozoneoverseas;
-				PRODUCT_NAME = OzoneOverseas;
+				PRODUCT_NAME = "OzoneOverseas";
 				SWIFT_OBJC_BRIDGING_HEADER = "OzoneOverseas-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

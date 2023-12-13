@@ -728,6 +728,7 @@ const ScannedHistory = ({ navigation }) => {
                         data={item}
                         description={item.product_name}
                         productCode={item.product_code}
+                        batch_running_code={item.batch_running_code}
                         time={moment(item.scanned_at).format("HH:mm a")}
                       ></ListItem>
                     )}
