@@ -29,7 +29,7 @@ const DropDownRegistration = (props) => {
             <TouchableOpacity onPress={()=>{
                 handleSelect(title)
             }} style={{alignItems:"flex-start",justifyContent:"center",width:'90%',height:40,borderBottomWidth:1,borderColor:'#DDDDDD'}}>
-                <Text style={{color:'black',fontSize:14}}>{title}</Text>                
+                <Text style={{color:'black',fontSize:14,textTransform:'capitalize'}}>{title}</Text>                
             </TouchableOpacity>
         )
     }
@@ -40,7 +40,7 @@ const DropDownRegistration = (props) => {
 
             </View> */}
             <TouchableOpacity onPress={()=>{handleOpenList()}} style={{flexDirection:"row",width:'100%',alignItems:"center",justifyContent:'center',height:40,borderBottomWidth:1,borderColor:'#DDDDDD'}}>
-                <Text style={{color:'black',fontSize:14,position:"absolute",left:10,top:10,color:'black'}}>{selected}</Text>
+                <Text style={{color:'black',fontSize:14,position:"absolute",left:10,top:10,color:'black',textTransform:'capitalize'}}>{selected}</Text>
                 <Image style={{height:14,width:14,resizeMode:"contain",position:"absolute",right:10,top:10}} source={require('../../../../assets/images/arrowDown.png')}></Image>
             </TouchableOpacity>
             

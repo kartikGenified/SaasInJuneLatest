@@ -176,12 +176,12 @@ const RedeemedDetails = ({ navigation, route }) => {
             color: "#171717",
           }}
         ></PoppinsTextMedium>
-        <TouchableOpacity style={{ marginLeft: 160 }}>
+        {/* <TouchableOpacity style={{ marginLeft: 160 }}>
           <Image
             style={{ height: 30, width: 30, resizeMode: "contain" }}
             source={require("../../../assets/images/notificationOn.png")}
           ></Image>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <ScrollView style={{ width: "100%", height: "100%" }}>
         <View

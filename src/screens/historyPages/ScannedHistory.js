@@ -176,9 +176,26 @@ const ScannedHistory = ({ navigation }) => {
   };
 
   const fetchDataAccToFilter=()=>{
-    const startTemp = startDate
-    const endTemp = endDate
-    fetchScannedHistoryData(startTemp,endTemp)
+    
+    console.log("fetchDataAccToFilter",startDate,endDate)
+    if(startDate && endDate)
+    {
+      if(new Date(endDate).getTime() < new Date(startDate).getTime())
+      {
+        alert("Kindly enter proper end date")
+        startDate=undefined
+        endDate=undefined
+      }
+      else {
+        fetchScannedHistoryData(startDate,endDate)
+      }
+      
+    }
+    else{
+      alert("Kindly enter a valid date")
+      startDate=undefined
+      endDate=undefined
+    }
   }
  
     var currentOffset = 0;
@@ -218,8 +235,10 @@ const ScannedHistory = ({ navigation }) => {
     if (type === "start") {
       startDate = data
     }
-    if (type === "end") {
-      endDate = data
+    if (type === "end" ) {
+      
+        endDate = data 
+      
     }
     console.log("start date and end date",startDate,endDate)
   };
@@ -229,7 +248,7 @@ const ScannedHistory = ({ navigation }) => {
     const handleRedeemButtonPress = () => {
       if (Number(userPointData.body.point_balance) <= 0) {
         setError(true);
-        setMessage("You dont have enough points !");
+        setMessage("You don't have enough points !");
       } else {
         setModalVisible(true);
       }
@@ -304,19 +323,20 @@ const ScannedHistory = ({ navigation }) => {
     };
 
     const ModalContent = (props) => {
-      const [startDate, setStartDate] = useState("");
-      const [endDate, setEndDate] = useState("");
+      const [startDate, setStartDate] = useState();
+      const [endDate, setEndDate] = useState();
 
       const handleStartDate = (startdate) => {
-        // console.log("start date", startdate)
+        console.log("start date", startdate)
         setStartDate(startdate?.value);
         props.handleFilter(startdate?.value, "start");
       };
 
       const handleEndDate = (enddate) => {
-        // console.log("end date", enddate?.value)
+        console.log("end date", enddate?.value)
         setEndDate(enddate?.value);
         props.handleFilter(enddate?.value, "end");
+       
       };
       return (
         <View
@@ -344,8 +364,8 @@ const ScannedHistory = ({ navigation }) => {
             <InputDate data="End Date" handleData={handleEndDate} />
           </View>
           <TouchableOpacity
-            onPress={() => {
-              fetchDataAccToFilter();
+            onPress={()=>{
+              fetchDataAccToFilter(startDate,endDate)
             }}
             style={{
               backgroundColor: ternaryThemeColor,
@@ -359,7 +379,7 @@ const ScannedHistory = ({ navigation }) => {
           >
             <PoppinsTextMedium
               content="SUBMIT"
-              style={{ color: "white", fontSize: 20, borderRadius: 10 }}
+              style={{ color: "white", fontSize: 20 }}
             ></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
@@ -395,7 +415,7 @@ const ScannedHistory = ({ navigation }) => {
             left: 10,
             color:'black'
           }}
-          content="Redeemed Ledger"
+          content="Date Filter"
         ></PoppinsTextMedium>
 
         <TouchableOpacity

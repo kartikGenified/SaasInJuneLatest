@@ -366,7 +366,7 @@ const PasswordLogin = ({ navigation, route }) => {
 
           </View>}
 
-          {route.params.userType==="sales" &&  <View style={{alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10,width:'50%' }}>
+          {/* {route.params.userType==="sales" &&  <View style={{alignItems: 'center', justifyContent: "center", position: 'absolute', right: 10, top: 10,width:'50%' }}>
             <PoppinsTextMedium style={{fontSize:14,color:'white'}} content ="Don't have an account ?"></PoppinsTextMedium>
             <ButtonNavigate
               // handleOperation={handleAppointment}
@@ -377,7 +377,7 @@ const PasswordLogin = ({ navigation, route }) => {
             >
             </ButtonNavigate>
 
-          </View>}
+          </View>} */}
 
           
 

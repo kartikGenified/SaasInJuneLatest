@@ -64,6 +64,7 @@ const dispatch = useDispatch()
           app_user_id: userId,
           type: type
         }
+        console.log("params",params)
         listAddedUserFunc(params);
       }
     }

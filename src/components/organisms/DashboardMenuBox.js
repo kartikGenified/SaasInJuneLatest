@@ -92,6 +92,9 @@ const DashboardMenuBox=(props)=>{
         else if(data.toLowerCase() === "profile"){
             navigation.navigate('Profile')
         }
+        else if (data.toLowerCase() === "query list") {
+            navigation.navigate('QueryList')
+          }
         else if(data.toLowerCase() === "warranty list"){
             navigation.navigate('WarrantyHistory')
         }
@@ -126,7 +129,7 @@ const DashboardMenuBox=(props)=>{
     }
 
     return(
-        <View style={{borderColor:'#DDDDDD',borderRadius:20,borderWidth:1.2,width:width-20,alignItems:"center",justifyContent:"center",backgroundColor:'white',padding:10,marginBottom:30}}>
+        <View style={{borderColor:'#DDDDDD',borderRadius:20,borderWidth:1.2,width:width-20,alignItems:"center",justifyContent:"center",backgroundColor:'white',padding:4,marginBottom:30}}>
         <View style={{width:'100%',flexWrap:"wrap",flexDirection:"row",alignItems:"center",justifyContent:'center'}}>
         {
             data.map((item,index)=>{

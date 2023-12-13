@@ -64,7 +64,7 @@ const VideoGallery = ({ navigation }) => {
     const type = props.type
     const date = props.date
     return (
-      <TouchableOpacity onPress={() => { Linking.openURL(video) }} style={{ height: 180, width: '40%', borderRadius: 10, backgroundColor: 'white', elevation: 10, margin: 10, alignItems: 'center', justifyContent: 'flex-end' }}>
+      <TouchableOpacity onPress={() => { Linking.openURL(video) }} style={{ height: 180, width: '80%', borderRadius: 10, backgroundColor: 'white', elevation: 10, margin: 10, alignItems: 'center', justifyContent: 'flex-end' }}>
         <View style={{ width: '100%', backgroundColor: "#DDDDDD", alignItems: "center", justifyContent: 'center', height: '50%' }}>
           <Logo name="youtube" size={60} color="red"></Logo>
         </View>
@@ -153,7 +153,7 @@ const VideoGallery = ({ navigation }) => {
           {
             videoData != undefined && videoData.length > 0 ? videoData.map((item, index) => {
               return (
-                <View>
+                <View >
                   {(videoData.length > 0) ? <VideoComp key={index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp> : <DataNotFound />}
                 </View>
               )

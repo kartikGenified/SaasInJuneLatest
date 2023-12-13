@@ -74,6 +74,9 @@ import OtpVerification from '../screens/verification/OtpVerification';
 import FAQ from '../screens/myProgram/FAQ';
 import Tutorial from '../screens/myProgram/Tutorial';
 import AddedUserScanList from '../screens/addUser/AddedUserScanList';
+import RequestAppointment from '../screens/requestAppointment/RequestAppointment';
+import SupportQueries from '../screens/helpAndSupport/SupportQueries';
+import QueryList from '../screens/queryList/QueryList';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -95,6 +98,16 @@ const StackNavigator = () => {
                     {
                         headerShown: false
                     }
+                } name="SupportQueries" component={SupportQueries}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="QueryList" component={QueryList}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
                 } name="AddedUserScanList" component={AddedUserScanList}></Stack.Screen>
                 
                 <Stack.Screen options={
@@ -102,6 +115,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="FAQ" component={FAQ}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="RequestAppointment" component={RequestAppointment}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

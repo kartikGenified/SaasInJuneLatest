@@ -1,14 +1,13 @@
 //import liraries
 import React, { Component, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
-import PoppinsTextMedium from '../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
-import { useGetAllMediaMutation, useGetMediaByIdQuery } from '../apiServices/mediaApi/GetMediaApi';
+import { useGetAllMediaMutation, useGetMediaByIdQuery } from '../../apiServices/mediaApi/GetMediaApi';
 import * as Keychain from 'react-native-keychain';
-import { useGetSupportQueriesByIdMutation } from '../apiServices/supportQueries/supportQueriesApi';
-import PoppinsTextLeftMedium from '../components/electrons/customFonts/PoppinsTextLeftMedium';
-import DataNotFound from '../screens/data not found/DataNotFound';
-
+import { useGetSupportQueriesByIdMutation } from '../../apiServices/supportQueries/supportQueriesApi';
+import DataNotFound from '../../screens/data not found/DataNotFound';
+import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
+import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 
 // create a component
 const QueryList = ({ navigation }) => {
@@ -96,7 +95,7 @@ const QueryList = ({ navigation }) => {
                         <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '600' }} content={item?.data?.user_type}></PoppinsTextLeftMedium>
                     </View>
 
-                    <Image style={{ height: 20, width: 20, marginTop: 10 }} source={require('../../assets/images/info_icon.png')} />
+                    <Image style={{ height: 20, width: 20, marginTop: 10 }} source={require('../../../assets/images/info_icon.png')} />
 
                 </View>
 
@@ -126,7 +125,7 @@ const QueryList = ({ navigation }) => {
                     }}>
                     <Image
                         style={{ height: 20, width: 20, resizeMode: 'contain' }}
-                        source={require('../../assets/images/blackBack.png')}></Image>
+                        source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
                 <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: "3%", position: 'absolute', left: 50 }} content={"Query List"}></PoppinsTextMedium>

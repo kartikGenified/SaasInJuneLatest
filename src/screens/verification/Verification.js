@@ -317,6 +317,9 @@ console.log(showAadhar,showPan,showGst)
     }
     else if(verifyPanError)
     {
+      setPan("")
+      setError(true)
+      setMessage(verifyPanError.data.message)
     console.log("verifyPanError",verifyPanError)
     }
     },[verifyPanData,verifyPanError])
@@ -427,6 +430,9 @@ console.log(showAadhar,showPan,showGst)
       else if(verifyGstError)
       {
       console.log("verifyGstError",verifyGstError)
+      setError(true)
+      setGstin("")
+      setMessage(verifyGstError.data.message)
       }
       },[verifyGstData,verifyGstError])
   
@@ -558,8 +564,9 @@ console.log(showAadhar,showPan,showGst)
       }
       else if(verifyAadharError){
         console.log("verifyAadharError",verifyAadharError)
+        setAadhar("")
         setError(true)
-    setMessage(verifyAadharError.data.Error.message)
+    setMessage(verifyAadharError.data.message)
       }
       },[verifyAadharError,verifyAadharData])
 

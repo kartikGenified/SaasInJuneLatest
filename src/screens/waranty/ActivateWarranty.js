@@ -39,6 +39,7 @@ const ActivateWarranty = ({ navigation, route }) => {
   const [date, setDate] = useState();
   const [message, setMessage] = useState();
   const [error, setError] = useState(false)
+  const [emailValid, setIsValidEmail] = useState(true)
 
   //modal
   const [openModalWithBorder, setModalWithBorder] = useState(false);
@@ -159,7 +160,14 @@ const ActivateWarranty = ({ navigation, route }) => {
 
         const token = credentials.username;
 
-        activateWarrantyFunc({ token, body });
+        if(!emailValid){
+          activateWarrantyFunc({ token, body });
+        }
+        else{
+          setError(true)
+          setMessage("Please enter valid email.")
+        }
+
       } else {
         console.log('No credentials stored');
       }
@@ -220,6 +228,13 @@ const ActivateWarranty = ({ navigation, route }) => {
         item => item.name === data.name,
       );
 
+      if (data?.name == "email") {
+        console.log('entering')
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        const checkEmail = emailRegex.test(data.value)
+        setIsValidEmail(checkEmail);
+      }
+
       if (existingIndex !== -1) {
         // If an entry for the field already exists, update the value
         const updatedArray = [...prevArray];
@@ -279,10 +294,10 @@ const ActivateWarranty = ({ navigation, route }) => {
         }
       });
     }
-    
-
     //    console.log(productData)
   };
+
+
   const handleWorkflowNavigation = () => {
     console.log('scccess');
 

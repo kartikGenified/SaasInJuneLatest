@@ -13,26 +13,26 @@ const BottomModal = (props) => {
     const navigation = useNavigation()
     const navigateTo = props.navigateTo
     const Comp = props.comp
-   
+    const canGoBack = props.canGoBack
+    console.log("canGoBack",canGoBack)
   useEffect(()=>{
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+
+      
     if(props.openModal===true)
-    
     {
       console.log("Trying to close the modal")
-        setModalVisible(true)
-        
+        setModalVisible(true)       
     }
     else{
         setModalVisible(false)
     }
-    return()=>{
-      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
-    }
+    
+     
+    
+    
   },[])
-  const handleBackButtonClick=()=>{
-  navigation.goBack(null)
-  }
+ 
+ 
   const handleFilter=(data,type)=>{
     console.log("filter",data,type)
     props.handleFilter(data,type)
@@ -45,10 +45,16 @@ const BottomModal = (props) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}  
-        // onRequestClose={() => {
-        //     props.modalClose()
-        //   setModalVisible(!modalVisible);
-        // }}
+        onRequestClose={() => {
+          if(canGoBack)
+          {
+            props.modalClose()
+            setModalVisible(!modalVisible);
+          }
+           else{
+            console.log("back action disbled")
+           }
+        }}
         >
 
         <View style={styles.centeredView}>

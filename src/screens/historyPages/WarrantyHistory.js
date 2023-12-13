@@ -10,6 +10,8 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import FilterModal from '../../components/modals/FilterModal';
 import DataNotFound from '../data not found/DataNotFound';
+import InputDate from '../../components/atoms/input/InputDate';
+
 
 const WarrantyHistory = ({ navigation }) => {
     const ternaryThemeColor = useSelector(
@@ -28,7 +30,7 @@ const WarrantyHistory = ({ navigation }) => {
 
     const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
     const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
-
+    let startDate,endDate
 
 
 
@@ -55,7 +57,28 @@ const WarrantyHistory = ({ navigation }) => {
             console.log("getWarrantylistError", getWarrantylistError)
         }
     }, [getWarrantylistData, getWarrantylistError])
-
+    const fetchDataAccToFilter=()=>{
+    
+        console.log("fetchDataAccToFilter",startDate,endDate)
+        if(startDate && endDate)
+        {
+          if(new Date(endDate).getTime() < new Date(startDate).getTime())
+          {
+            alert("Kindly enter proper end date")
+            startDate=undefined
+            endDate=undefined
+          }
+          else {
+            console.log("fetchDataAccToFilter")
+          }
+          
+        }
+        else{
+          alert("Kindly enter a valid date")
+          startDate=undefined
+          endDate=undefined
+        }
+      }
     const Header = () => {
         const [openBottomModal, setOpenBottomModal] = useState(false)
         const [message, setMessage] = useState()
@@ -123,7 +146,7 @@ const WarrantyHistory = ({ navigation }) => {
         return (
             <View style={{ height: 40, width: '100%', backgroundColor: '#DDDDDD', alignItems: "center", flexDirection: "row", marginTop: 20 }}>
 
-                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10, color:'black' }} content="Redeemed Ledger"></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ marginLeft: 20, fontSize: 16, position: "absolute", left: 10, color:'black' }} content="Date Filter"></PoppinsTextMedium>
 
                 <TouchableOpacity onPress={() => { setOpenBottomModal(!openBottomModal), setMessage("BOTTOM MODAL") }} style={{ position: "absolute", right: 20 }}>
                     <Image style={{ height: 22, width: 22, resizeMode: "contain" }} source={require('../../../assets/images/settings.png')}></Image>

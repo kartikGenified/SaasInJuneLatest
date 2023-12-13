@@ -104,7 +104,7 @@ const EditProfile = ({ navigation, route }) => {
   }, [uploadImageData, uploadImageError]);
 
   const handleData = (data, title) => {
-    console.log(data, title)
+    // console.log("djnjbdhdndddjj",data, title)
 
     let submissionData = [...changedFormValues]
     let removedValues = submissionData.filter((item, index) => {
@@ -116,7 +116,7 @@ const EditProfile = ({ navigation, route }) => {
       const checkEmail = emailRegex.test(data)
       setIsValidEmail(checkEmail);
     }
-
+    
     removedValues.push({
       "value": data,
       "name": title
@@ -287,6 +287,7 @@ const EditProfile = ({ navigation, route }) => {
 
       </View>
       <View style={{ height: '70%', width: "100%", borderTopLeftRadius: 40, borderTopRightRadius: 40, alignItems: "center", justifyContent: "flex-start", backgroundColor: "white", marginTop: 20, paddingTop: 20 }}>
+        {console.log("form value", formFields)}
         {/* data goes here */}
         <ScrollView showsVerticalScrollIndicator={false} style={{ width: '90%' }}>
           {
@@ -295,12 +296,12 @@ const EditProfile = ({ navigation, route }) => {
               if (item.type === "text") {
                 return (
 
-                  <TextInputRectangularWithPlaceholder pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : "data not available"}></TextInputRectangularWithPlaceholder>
+                  <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
                 )
               }
               else if (item.type === "date") {
                 return (
-                  <InputDateProfile key={index} data={moment(formValues[index]).format("DD-MMM-YYYY")} title={item.name} handleData={handleData}></InputDateProfile>
+                  <InputDateProfile label={formFields?.[index]?.label} key={index} data={moment(formValues[index]).format("DD-MMM-YYYY")} title={item.name} handleData={handleData}></InputDateProfile>
 
                 )
               }
@@ -311,9 +312,6 @@ const EditProfile = ({ navigation, route }) => {
                 )
               }
             })
-
-
-
           }
         </ScrollView>
 

@@ -35,6 +35,7 @@ const Profile = ({ navigation }) => {
   const [openModalWithBorder, setModalBorder] = useState(false)
   const [profileData, setProfileData] = useState()
 
+  const kycData = useSelector(state => state.kycDataSlice.kycData)
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -79,7 +80,7 @@ const Profile = ({ navigation }) => {
 
   useEffect(() => {
     if (getActiveMembershipData) {
-      // console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
+      console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
     }
     else if (getActiveMembershipError) {
       // console.log("getActiveMembershipError", getActiveMembershipError)
@@ -112,7 +113,7 @@ const Profile = ({ navigation }) => {
       console.log('Form Field Error', getFormError);
     }
     else if (fetchProfileData) {
-      console.log('fetchProfileData', fetchProfileData);
+      console.log('fetchProfileData', fetchProfileData.body.profile_pic);
       if(fetchProfileData.success)
       {
       setProfileData(fetchProfileData)
@@ -201,7 +202,7 @@ const Profile = ({ navigation }) => {
 
   const name = profileName ? fetchProfileData?.body.name : '';
   const membership = getActiveMembershipData && getActiveMembershipData.body?.tier.name
-  const accountVerified = true;
+  const accountVerified = !Object.values(kycData).includes(false);
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
 
@@ -304,6 +305,8 @@ const Profile = ({ navigation }) => {
                   style={{ height: 60, width: 60, resizeMode: 'contain' }}
                   source={require('../../../assets/images/userGrey.png')}></Image>
               )}
+         
+
             </TouchableOpacity>
           )}
           <View
@@ -317,7 +320,7 @@ const Profile = ({ navigation }) => {
             <PoppinsText
               style={{ color: 'white', fontSize: 20 }}
               content={name}></PoppinsText>
-            {getActiveMembershipData && <View
+            {membership && <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
