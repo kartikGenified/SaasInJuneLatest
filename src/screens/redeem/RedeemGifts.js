@@ -248,7 +248,7 @@ const RedeemGifts = ({navigation,route}) => {
     }
     else{
       setError(true)
-      setMessage("You don't have enough points!!!")
+      setMessage("Sorry you don't have enough points.")
     }
     }
       

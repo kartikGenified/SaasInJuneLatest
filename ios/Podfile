@@ -66,4 +66,8 @@ pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
 pod 'react-native-blob-util',
     :path => '../node_modules/react-native-blob-util'
 
+    pod 'Firebase', :modular_headers => true
+    pod 'FirebaseCoreInternal', :modular_headers => true
+    pod 'GoogleUtilities', :modular_headers => true
+    pod 'FirebaseCore', :modular_headers => true
 # pod 'react-native-video', :path => '../node_modules/react-native-video/react-native-video.podspec'

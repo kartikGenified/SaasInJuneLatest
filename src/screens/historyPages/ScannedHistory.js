@@ -248,7 +248,7 @@ const ScannedHistory = ({ navigation }) => {
     const handleRedeemButtonPress = () => {
       if (Number(userPointData.body.point_balance) <= 0) {
         setError(true);
-        setMessage("You don't have enough points !");
+        setMessage("Sorry you don't have enough points.");
       } else {
         setModalVisible(true);
       }

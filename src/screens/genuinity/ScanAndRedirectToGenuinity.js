@@ -209,7 +209,7 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
         setAddedQrList([...addedQrList, data]);
       } else {
         setError(true);
-        setMessage('This Qr is already added to the list');
+        setMessage('This QR is already added to the list');
       }
     }
   };
