@@ -53,9 +53,9 @@ const ScannedDetails = ({navigation,route}) => {
 
                 </TouchableOpacity>
             <PoppinsTextMedium content ="Scanned Details" style={{marginLeft:10,fontSize:16,fontWeight:'600',color:'#171717'}}></PoppinsTextMedium>
-            <TouchableOpacity style={{marginLeft:160}}>
+            {/* <TouchableOpacity style={{marginLeft:160}}>
             <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/notificationOn.png')}></Image>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             </View>
             <StatusBox status={status}></StatusBox>
             {/* <Image style={{height:70,width:70,resizeMode:"contain",marginTop:20}} source={require('../../../assets/images/greenTick.png')}></Image> */}

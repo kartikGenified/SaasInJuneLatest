@@ -251,8 +251,9 @@ const ScanAndRedirectToWarranty = ({ navigation }) => {
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData.body);
-      if (verifyQrData.body?.qr?.qr_status === "1" || verifyQrData.body?.qr?.qr_status === "2") {
-        addQrDataToList(verifyQrData.body?.qr);
+      if (verifyQrData.body?.qr?.qr_status === "1" || verifyQrData.body?.qr?.qr_status === "2" || verifyQrData.body?.qr_status === "1" || verifyQrData.body?.qr_status === "2") {
+        addQrDataToList(verifyQrData.body?.qr ===undefined ? verifyQrData.body : verifyQrData.body?.qr);
+
       }
       // else if(verifyQrData.body.qr_status==="2")
       // {

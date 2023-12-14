@@ -19,7 +19,7 @@ const handleNavigation=()=>{
     {
         navigation.navigate('RedeemRewardHistory')
     }
-    else if(text ==="Customer support")
+    else if(text ==="Customer Support")
     {
         navigation.navigate('HelpAndSupport')
     }

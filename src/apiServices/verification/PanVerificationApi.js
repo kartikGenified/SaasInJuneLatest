@@ -11,7 +11,7 @@ export const PanVerificationApi = baseApi.injectEndpoints({
                 url: `/api/verification/pan`,
                 headers: {
                   "Content-Type": "application/json",
-                  
+                  slug:slug
                 },
                 body:data
               };

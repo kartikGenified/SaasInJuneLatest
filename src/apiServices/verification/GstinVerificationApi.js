@@ -10,7 +10,7 @@ export const GstinVerificationApi = baseApi.injectEndpoints({
                 url: `/api/verification/gstin`,
                 headers: {
                   "Content-Type": "application/json",
-                  
+                  slug:slug
                 },
                 body:data
               };

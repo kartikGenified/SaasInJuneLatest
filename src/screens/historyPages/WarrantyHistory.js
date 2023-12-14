@@ -127,7 +127,7 @@ const WarrantyHistory = ({ navigation }) => {
                         handleFilter={onFilter}
                         comp={ModalContent}></FilterModal>}
 
-                    <PoppinsTextMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, marginLeft: '35%', fontWeight: 'bold',alignSelf:"center" }}></PoppinsTextMedium>
+                    <PoppinsTextMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:"center" }}></PoppinsTextMedium>
                     <View>
                         <InputDate data="Start Date" handleData={handleStartDate} />
 

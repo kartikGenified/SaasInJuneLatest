@@ -93,16 +93,22 @@ const SupportQueries = ({ navigation }) => {
   }, [getQueriesTypeData, getQueriesTypeError])
 
   useEffect(() => {
-    if (getQueriesTypeData) {
+    if (submitQueriesTypeData) {
       console.log("submitQueriesTypeData", submitQueriesTypeData)
-      if (getQueriesTypeData?.success) {
+      if(submitQueriesTypeData?.success)
+      {
         setSuccess(true)
-        setMessage(submitQueriesTypeData.message)
+      setMessage(submitQueriesTypeData?.message)
       }
-
+     
     }
     else if (submitQueriesTypeError) {
       console.log("getQueriesTypeError", submitQueriesTypeError)
+      if(submitQueriesTypeError.status===400)
+      {
+        setError(true)
+        setMessage("Kindly fill the complete details")
+      }
     }
   }, [submitQueriesTypeData, submitQueriesTypeError])
 
@@ -161,7 +167,9 @@ const SupportQueries = ({ navigation }) => {
   }
 
   return (
+    <ScrollView style={{width:'100%'}} contentContainerStyle={{alignItems:"center",justifyContent:"center",height:'100%'}}>
     <View style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'flex-start', backgroundColor: ternaryThemeColor }}>
+      
       {error && (
         <ErrorModal
           modalClose={modalClose}
@@ -250,6 +258,8 @@ const SupportQueries = ({ navigation }) => {
 
       </View>
     </View>
+    </ScrollView>
+
   );
 }
 

@@ -106,6 +106,7 @@ const ReportAndIssue = ({ navigation, route }) => {
       tenant_id: slug,
       token: userData.token
     }
+    console.log(JSON.stringify(obj))
 
     addIssueFunc(obj);
   }

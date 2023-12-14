@@ -47,6 +47,7 @@ const RectangularUnderlinedDropDown = (props) => {
     );
   };
   return (
+    
     <View
       style={{
         backgroundColor: "white",
@@ -117,11 +118,11 @@ const RectangularUnderlinedDropDown = (props) => {
                 data={data}
                 renderItem={({ item, index }) => (
                   <SelectableDropDownComponent
-                    key={index}
+                    
                     title={item}
                   ></SelectableDropDownComponent>
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item,index) => index}
               />
             )}
           </View>

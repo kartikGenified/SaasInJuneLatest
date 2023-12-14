@@ -10,7 +10,7 @@ export const AadharVerificationApi = baseApi.injectEndpoints({
                 url: `/api/verification/aadhaar/otp`,
                 headers: {
                   "Content-Type": "application/json",
-                  
+                  slug:slug
                 },
                 body:data
               };
@@ -23,7 +23,7 @@ export const AadharVerificationApi = baseApi.injectEndpoints({
                 url: `/api/verification/aadhaar/verify`,
                 headers: {
                   "Content-Type": "application/json",
-                  
+                  slug:slug
                 },
                 body:data
               };

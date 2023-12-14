@@ -28,7 +28,7 @@ import MessageModal from '../../components/modals/MessageModal';
 import { useUpdateKycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
 import { setKycCompleted } from '../../../redux/slices/userKycStatusSlice';
 import FastImage from 'react-native-fast-image';
-
+import { gifUri } from '../../utils/GifUrl';
 
 const Verification = ({navigation}) => {
   const [kycArray, setKycArray] = useState([])
@@ -39,14 +39,19 @@ const Verification = ({navigation}) => {
   const [showGstProgress, setShowGstProgress] = useState(false)
   const [showAadharProgress, setShowAadharProgress] = useState(false)
   const [verified, setVerified] = useState([])
-  const [finalPan, setFinalPan] =useState()
-  const [finalGst, setFinalGst] = useState()
-  const [finalAadhar, setFinalAadhar] = useState()
+  const [pan, setPan] = useState("")
+  const [name, setName] = useState("")
+  const [businessName, setBusinessName] = useState("")
+  const [gstin, setGstin] = useState("")
   const [isManuallyApproved, setIsManuallyApproved] = useState()
   const [verifiedArray, setVerifiedArray] = useState([])
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
+  const [aadhar, setAadhar] = useState("")
+  const [otp, setOtp] = useState("")
+const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false)
+  const inpref = useRef(null)
   // const [address, setAddress] = useState()
   // const [splitAddress , setSplitAddress] = useState()
   const dispatch = useDispatch()
@@ -62,7 +67,6 @@ const Verification = ({navigation}) => {
     : 'grey';
       // console.log(kycOptions,userData)
       const manualApproval = useSelector(state => state.appusers.manualApproval)
-      const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
   const width = Dimensions.get('window').width
   let temp = []
@@ -89,7 +93,18 @@ const [verifyPanFunc,{
   isLoading:verifyPanIsLoading,
   isError:verifyPanIsError
 }]= useVerifyPanMutation()
-
+const [sendAadharOtpFunc,{
+  data:sendAadharOtpData,
+  error:sendAadharOtpError,
+  isLoading:sendAadharOtpIsLoading,
+  isError:sendAadharOtpIsError
+}]= useSendAadharOtpMutation()
+const [verifyAadharFunc,{
+  data:verifyAadharData,
+  error:verifyAadharError,
+  isLoading:verifyAadharIsLoading,
+  isError:verifyAadharIsError
+}]= useVerifyAadharMutation()
 
 const [updateKycStatusFunc,{
   data:updateKycStatusData,
@@ -130,11 +145,145 @@ const [verifyGstFunc,{
 }]= useVerifyGstMutation()
 
 
+useEffect(()=>{
+  if(verifyAadharData)
+  {
+    console.log("verifyAadharData",verifyAadharData)
+    if(verifyAadharData.success)
+    {
+      const aadhar_details = {
+        "address" : verifyAadharData.body.address,
+        "split_address" : verifyAadharData.body.split_address
+    }
+    const gender = verifyAadharData.body.gender
+    const dob = verifyAadharData.body.dob
+  console.log("SUCCESS AADHAAR")  
+  handleVerification("gender",gender)
+  handleVerification("dob",dob)
+  handleVerification("aadhar",aadhar)
+  handleVerification("aadhar_details",aadhar_details)
+  
+  
+
+    }
+  }
+  else if(verifyAadharError){
+    console.log("verifyAadharError",verifyAadharError)
+    setAadhar("")
+    setError(true)
+setMessage(verifyAadharError.data.message)
+  }
+  },[verifyAadharError,verifyAadharData])
+
+useEffect(()=>{
+if(sendAadharOtpData)
+{
+console.log("sendAadharOtpData",sendAadharOtpData)
+// setRefId(sendAadharOtpData.body.ref_id)
+if(sendAadharOtpData.success)
+{
+  setAadhaarOtpSent(true)
+  console.log("otp sent")
+  
+
+}
+}
+else if(sendAadharOtpError)
+{
+console.log("sendAadharOtpError",sendAadharOtpError)
+setError(true)
+if(sendAadharOtpError.data?.Error?.message!==undefined)
+{
+  setMessage(sendAadharOtpError.data?.Error?.message)
+
+}
+else{
+  setMessage(sendAadharOtpError.data.message)
+} 
+}
+},[sendAadharOtpData,sendAadharOtpError])
+
+//  useEffect(()=>{
+//   console.log("aadhaar",aadhar)
+
+ 
+  
+//  },[aadhar])
+  
+
+ const handleAadhaar=(text)=>{
+  // setFinalAadhar(aadhar)
+  setAadhar(text)
+  if(text.length===12)
+  {
+    
+    const data = {
+      "aadhaar_number":text
+  }
+  sendAadharOtpFunc(data)
+    console.log(data)
+   
+  }
+ }
+
+//  useEffect(()=>{
+
+//  },[otp])
+const handleOtpInput=(text)=>{
+  setOtp(text)
+if(text.length===6)
+  {
+    handleOtp(text)
+  }
+}
+
+ const handleOtp=(otp)=>{
+  const data={
+    "ref_id":sendAadharOtpData?.body.ref_id,
+  "otp":otp
+  }
+  verifyAadharFunc(data)
+}
 
 
 
 
+useEffect(()=>{
+  if(verifyPanData)
+  {
+  console.log("verifyPanData",verifyPanData)
+  if(verifyPanData.success)
+  {
+    // setName(verifyPanData.body.registered_name)
+    // setPan(verifyPanData.body.pan)
+   console.log("SUCCESS PAN")
+   handleVerification("pan",verifyPanData.body.pan)
+  }
+  }
+   if(verifyPanError)
+  {
+    setPan("")
+    setError(true)
+    // handlePanInput("")
+    setMessage(verifyPanError.data.message)
+  console.log("verifyPanError",verifyPanError)
+  }
+  },[verifyPanData,verifyPanError])
 
+
+console.log(pan)
+  const handlePanInput=(text)=>{
+    setPan(text)
+    console.log("pan value",text)
+    if(text.length===10)
+    {
+     
+    const data={
+      "pan":text
+      }
+    verifyPanFunc(data)
+    }
+  }
 
 
 const showVerificationFields=(arr)=>{
@@ -248,15 +397,56 @@ console.log("showVerificationFields",arr)
     }
     const body=inputFormData
     const params = {body:body,id:userData.id}
-    // updateProfileFunc(params)
-    updateKycStatusFunc(params)
+    if(Object.keys(body).length===0)
+    {
+setError(true)
+setMessage("Kindly submit the details to continue")
+    }
+else{
+   updateKycStatusFunc(params)
+}
+    
+    
     console.log("responseArray",body)
   }
     
     
   }
 
-  
+  useEffect(()=>{
+    if(verifyGstData)
+    {
+    console.log("verifyGstData",verifyGstData)
+    if(verifyGstData.success)
+    {
+      
+      handleVerification("gstin",verifyGstData.body.GSTIN)
+    console.log("SUCCESS GST")
+    }
+    
+    }
+     if(verifyGstError)
+    {
+    console.log("verifyGstError",verifyGstError)
+    setError(true)
+    setGstin("")
+    setMessage(verifyGstError.data.message)
+    }
+    },[verifyGstData,verifyGstError])
+
+   const handleGstInput=(text)=>{
+    console.log("gstin input",text)
+      setGstin(text)
+      if(text.length===15)
+      {
+        const data = {
+          "gstin":text,
+          // "business_name":"TEst"
+      }
+      verifyGstFunc(data)
+        
+      }
+    }
 
  
 
@@ -297,437 +487,104 @@ console.log("showVerificationFields",arr)
   }
 
 console.log(showAadhar,showPan,showGst)
-
-
-
-  const EnterPan=(props)=>{
-  const [pan, setPan] = useState("")
-  const [name, setName] = useState("")
-  useEffect(()=>{
-    if(verifyPanData)
-    {
-    console.log("verifyPanData",verifyPanData)
-    if(verifyPanData.success)
-    {
-      // setName(verifyPanData.body.registered_name)
-      // setPan(verifyPanData.body.pan)
-     console.log("SUCCESS PAN")
-     props.handleVerification("pan",verifyPanData.body.pan)
-    }
-    }
-    else if(verifyPanError)
-    {
-      setPan("")
-      setError(true)
-      setMessage(verifyPanError.data.message)
-    console.log("verifyPanError",verifyPanError)
-    }
-    },[verifyPanData,verifyPanError])
-  
-
-  console.log(pan)
-    const handlePanInput=(text)=>{
-
-      setPan(text)
-      if(text.length===10)
-      {
-       
-      const data={
-       
-        "pan":text
-        }
-      verifyPanFunc(data)
-      }
-    }
-
-    const PANDataBox = ({ panNumber, name }) => {
-      return (
-        <View
-          style={{
-            width: '90%',
-            borderStyle: 'dashed',
-            borderWidth: 1,
-            borderColor: ternaryThemeColor, // Make sure "ternaryThemeColor" is defined
-            borderRadius: 5,
-            flexWrap: 'wrap',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            padding: 10,
-            marginTop: 10,
-          }}
-        >
-          <View style={{ flexDirection: 'row', width: '100%' }}>
-            <PoppinsTextMedium content="PAN Number : " style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-            <PoppinsTextMedium content={panNumber} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10 }}></PoppinsTextMedium>
-          </View>
-          <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
-            <PoppinsTextMedium content="Name : " style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-            <PoppinsTextMedium content={name} style={{ fontWeight: '600', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-          </View>
-        </View>
-      );
-    };
-    
-    return(
-      <View style={{
-        width:'100%',alignItems:'center',justifyContent:'center',marginTop:20
-      }}>
-         <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
-          <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-          <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Pan Number" > </PoppinsTextMedium>
-          </View>
-          <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-          <TextInput maxLength={10} value={pan ? pan:verifyPanData?.body?.pan} onChangeText={(text)=>{handlePanInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholder='DBJUU1234'></TextInput>
-         {verifyPanData &&  <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
-          <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>
-          </View>}
-          {verifyPanIsLoading && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
-             <FastImage
-          style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-        </View>
-          }
-          </View>
-         
-        </View>
-         <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
-          <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-          <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Your Name" > </PoppinsTextMedium>
-          </View>
-          <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-          <TextInput value={name!=="" ? name : verifyPanData?.body?.registered_name } onChangeText={(text)=>{setName(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholder='Enter Your Name'></TextInput>
-          
-          </View>
-         
-        </View>
-       
-       {verifyPanData && <PANDataBox name={verifyPanData.body.registered_name} panNumber={verifyPanData.body.pan}></PANDataBox>}
+const PANDataBox = ({ panNumber, name }) => {
+  return (
+    <View
+      style={{
+        width: '90%',
+        borderStyle: 'dashed',
+        borderWidth: 1,
+        borderColor: ternaryThemeColor, // Make sure "ternaryThemeColor" is defined
+        borderRadius: 5,
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 10,
+        marginTop: 10,
+      }}
+    >
+      <View style={{ flexDirection: 'row', width: '100%' }}>
+        <PoppinsTextMedium content="PAN Number : " style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium content={panNumber} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10 }}></PoppinsTextMedium>
       </View>
-    )
-  }
-  
-  const EnterGst=(props)=>{
-    const [businessName, setBusinessName] = useState("")
-    const [gstin, setGstin] = useState("")
-  
-    useEffect(()=>{
-      if(verifyGstData)
-      {
-      console.log("verifyGstData",verifyGstData)
-      if(verifyGstData.success)
-      {
-        
-        props.handleVerification("gstin",verifyGstData.body.GSTIN)
-      console.log("SUCCESS GST")
-      }
-      
-      }
-      else if(verifyGstError)
-      {
-      console.log("verifyGstError",verifyGstError)
-      setError(true)
-      setGstin("")
-      setMessage(verifyGstError.data.message)
-      }
-      },[verifyGstData,verifyGstError])
-  
-     const handleGstInput=(text)=>{
-        setGstin(text)
-        if(text.length===15)
-        {
-          const data = {
-            "gstin":text,
-            // "business_name":"TEst"
-        }
-        verifyGstFunc(data)
-          
-        }
-      }
+      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+        <PoppinsTextMedium content="Name : " style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium content={name} style={{ fontWeight: '600', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+      </View>
+    </View>
+  );
+};
 
-      const GSTDataBox = ({ gstin, businessName }) => {
-        return (
-          <View
-            style={{
-              width: '90%',
-              borderStyle:'dashed',
-              borderWidth: 1,
-              borderColor: ternaryThemeColor,
-              borderRadius: 5,
-             flexWrap:'wrap',
-             alignItems:"flex-start",
-             justifyContent:"center",
-             padding:10,
-             marginTop:10,
-             marginBottom:20
+const GSTDataBox = ({ gstin, businessName }) => {
+  return (
+    <View
+      style={{
+        width: '90%',
+        borderStyle:'dashed',
+        borderWidth: 1,
+        borderColor: ternaryThemeColor,
+        borderRadius: 5,
+       flexWrap:'wrap',
+       alignItems:"flex-start",
+       justifyContent:"center",
+       padding:10,
+       marginTop:10,
+       marginBottom:20
 
-             
-             
-            }}
-          >
-            <View style={{flexDirection:"row",width:'100%' }}>
-              <PoppinsTextMedium content="GSTIN:" style={{ fontWeight: '700',color:'#919191',fontSize:14 }}></PoppinsTextMedium>
-              <PoppinsTextMedium style={{fontWeight: '600',color:'#919191',fontSize:14,marginLeft:10}} content={gstin}></PoppinsTextMedium>
-            </View>
-            <View style={{ flexDirection:"row",width:'100%',marginTop:10}}>
-              <PoppinsTextMedium content="Business Name:" style={{ fontWeight: '700',color:'#919191',fontSize:14 }}></PoppinsTextMedium>
-              <PoppinsTextMedium style={{fontWeight: '600',color:'#919191',fontSize:14,width:200}} content={businessName}></PoppinsTextMedium>
-            </View>
-          </View>
-        );
-      };
-      return(
-        <View style={{
-          width:'100%',alignItems:'center',justifyContent:'center',marginTop:20
-        }}>
-          <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
-            <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-            <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter GSTIN" > </PoppinsTextMedium>
-            </View>
-            <View style={{alignItems:"center",justifyContent:'center',flexDirection:"row",width:'100%',height:40}}>
-            <TextInput maxLength={15} value={gstin ? gstin : verifyGstData?.body?.GSTIN} onChangeText={(text)=>{handleGstInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Enter GSTIN'></TextInput>
-            <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
-            {verifyGstData && <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>}
-            
-             {verifyGstIsLoading && <FastImage
-          style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
        
-          }
-            </View>
-            </View>
-           
-          </View>
-           <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
-            <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-            <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Business Name" > </PoppinsTextMedium>
-            </View>
-            <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-            <TextInput value={verifyGstData ? verifyGstData.body.legal_name_of_business:businessName} onChangeText={(text)=>{handleGstInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Business Name'></TextInput>
-            
-            </View>
-           
-          </View>
-          
-         {verifyGstData && <GSTDataBox businessName={verifyGstData.body.legal_name_of_business} gstin={verifyGstData.body.GSTIN}></GSTDataBox>}
-        </View>
-      )
-    }
-
-  const EnterAadhar=(props)=>{
-    const [aadhar, setAadhar] = useState("")
-    const [otp, setOtp] = useState("")
-  const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false)
-    const inpref = useRef(null)
-    const [sendAadharOtpFunc,{
-      data:sendAadharOtpData,
-      error:sendAadharOtpError,
-      isLoading:sendAadharOtpIsLoading,
-      isError:sendAadharOtpIsError
-    }]= useSendAadharOtpMutation()
-    const [verifyAadharFunc,{
-      data:verifyAadharData,
-      error:verifyAadharError,
-      isLoading:verifyAadharIsLoading,
-      isError:verifyAadharIsError
-    }]= useVerifyAadharMutation()
-    useEffect(()=>{
-      if(verifyAadharData)
-      {
-        console.log("verifyAadharData",verifyAadharData)
-        if(verifyAadharData.success)
-        {
-          const aadhar_details = {
-            "address" : verifyAadharData.body.address,
-            "split_address" : verifyAadharData.body.split_address
-        }
-        const gender = verifyAadharData.body.gender
-        const dob = verifyAadharData.body.dob
-      console.log("SUCCESS AADHAAR")  
-      props.handleVerification("gender",gender)
-      props.handleVerification("dob",dob)
-      props.handleVerification("aadhar",aadhar)
-      props.handleVerification("aadhar_details",aadhar_details)
-      
-      
-
-        }
-      }
-      else if(verifyAadharError){
-        console.log("verifyAadharError",verifyAadharError)
-        setAadhar("")
-        setError(true)
-    setMessage(verifyAadharError.data.message)
-      }
-      },[verifyAadharError,verifyAadharData])
-
-    useEffect(()=>{
-    if(sendAadharOtpData)
-    {
-    console.log("sendAadharOtpData",sendAadharOtpData)
-    // setRefId(sendAadharOtpData.body.ref_id)
-    if(sendAadharOtpData.success)
-    {
-      setAadhaarOtpSent(true)
-      console.log("otp sent")
-      
-
-    }
-    }
-    else if(sendAadharOtpError)
-    {
-    console.log("sendAadharOtpError",sendAadharOtpError)
-    setError(true)
-    setMessage(sendAadharOtpError.data.Error.message)
-    }
-    },[sendAadharOtpData,sendAadharOtpError])
-    
-    //  useEffect(()=>{
-    //   console.log("aadhaar",aadhar)
-
-     
-      
-    //  },[aadhar])
-      
-
-     const handleAadhaar=(text)=>{
-      // setFinalAadhar(aadhar)
-      setAadhar(text)
-      if(text.length===12)
-      {
-        
-        const data = {
-          "aadhaar_number":text
-      }
-      sendAadharOtpFunc(data)
-        console.log(data)
        
-      }
-     }
+      }}
+    >
+      <View style={{flexDirection:"row",width:'100%' }}>
+        <PoppinsTextMedium content="GSTIN:" style={{ fontWeight: '700',color:'#919191',fontSize:14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium style={{fontWeight: '600',color:'#919191',fontSize:14,marginLeft:10}} content={gstin}></PoppinsTextMedium>
+      </View>
+      <View style={{ flexDirection:"row",width:'100%',marginTop:10}}>
+        <PoppinsTextMedium content="Business Name:" style={{ fontWeight: '700',color:'#919191',fontSize:14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium style={{fontWeight: '600',color:'#919191',fontSize:14,width:200}} content={businessName}></PoppinsTextMedium>
+      </View>
+    </View>
+  );
+};
+  
+const AadharDataBox = ({ dob, name,gender,address }) => {
+  return (
+    <View
+      style={{
+        width: '90%',
+        borderStyle: 'dashed',
+        borderWidth: 1,
+        borderColor: ternaryThemeColor, 
+        borderRadius: 5,
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 10,
+        marginTop: 10,
+      }}
+    >
+      <View style={{ flexDirection: 'row', width: '100%' }}>
+        <PoppinsTextMedium content="Name :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium  content ={name} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10 }}></PoppinsTextMedium>
+      </View>
+      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+        <PoppinsTextMedium content="DOB :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium content={dob} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10}}></PoppinsTextMedium>
+      </View>
+      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+        <PoppinsTextMedium content="Gender :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium content={gender} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10}}></PoppinsTextMedium>
+      </View>
+      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+        <PoppinsTextMedium content="Address:" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
+        <PoppinsTextMedium content= {address}style={{ fontWeight: '600', color: '#919191', fontSize: 14,width:width-100 }}></PoppinsTextMedium>
+      </View>
+    </View>
+  );
+};
+  
 
-    //  useEffect(()=>{
-   
-    //  },[otp])
-    const handleOtpInput=(text)=>{
-      setOtp(text)
-   if(text.length===6)
-      {
-        handleOtp(text)
-      }
-    }
-
-     const handleOtp=(otp)=>{
-      const data={
-        "ref_id":sendAadharOtpData?.body.ref_id,
-      "otp":otp
-      }
-      verifyAadharFunc(data)
-    }
-       
-      const AadharDataBox = ({ dob, name,gender,address }) => {
-        return (
-          <View
-            style={{
-              width: '90%',
-              borderStyle: 'dashed',
-              borderWidth: 1,
-              borderColor: ternaryThemeColor, 
-              borderRadius: 5,
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              padding: 10,
-              marginTop: 10,
-            }}
-          >
-            <View style={{ flexDirection: 'row', width: '100%' }}>
-              <PoppinsTextMedium content="Name :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-              <PoppinsTextMedium  content ={name} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10 }}></PoppinsTextMedium>
-            </View>
-            <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
-              <PoppinsTextMedium content="DOB :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-              <PoppinsTextMedium content={dob} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10}}></PoppinsTextMedium>
-            </View>
-            <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
-              <PoppinsTextMedium content="Gender :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-              <PoppinsTextMedium content={gender} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10}}></PoppinsTextMedium>
-            </View>
-            <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
-              <PoppinsTextMedium content="Address:" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-              <PoppinsTextMedium content= {address}style={{ fontWeight: '600', color: '#919191', fontSize: 14,width:width-100 }}></PoppinsTextMedium>
-            </View>
-          </View>
-        );
-      };
-      
-      return(
-        <View style={{
-          width:'100%',alignItems:'center',justifyContent:'center',marginTop:20
-        }}>
-           
-          <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
-            <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-            <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Aadhaar Number" > </PoppinsTextMedium>
-            </View>
-            <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-            <TextInput ref={inpref} maxLength={12} value={ aadhar} onChangeText={(text)=>{
-              handleAadhaar(text)
-            }} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:"black"}} placeholderTextColor="black" placeholder='Enter Aadhaar Number'></TextInput>
-            {verifyAadharData && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
-            <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>
-            </View>}
-            {sendAadharOtpIsLoading && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
-             <FastImage
-          style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-        </View>
-          }
-            </View>
-           
-          </View>
-         {aadhaarOtpSent && <View style={{alignItems:'flex-start',justifyContent:'center',width:'100%'}}>
-            <PoppinsTextMedium style={{color:ternaryThemeColor,fontWeight:'700', fontSize:16,marginLeft:30,marginTop:10}} content="OTP Sent"></PoppinsTextMedium>
-          </View>}
-          <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
-            <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-            <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter OTP" > </PoppinsTextMedium>
-            </View>
-            <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-            <TextInput textContentType='oneTimeCode' value={otp} onChangeText={(text)=>{
-              handleOtpInput(text)
-            }} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholderTextColor="black" placeholder='Enter OTP'></TextInput>
-            {verifyAadharIsLoading && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
-             <FastImage
-          style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-        </View>
-          }
-            </View>
-           
-          </View>
-         {verifyAadharData && <AadharDataBox dob={verifyAadharData.body.dob} name={verifyAadharData.body.name} gender={verifyAadharData.body.gender} address={verifyAadharData.body.address}></AadharDataBox>}
-        </View>
-      )
-    }
+  
 
   const KycProgress=(props)=>{
 
@@ -807,33 +664,149 @@ console.log(showAadhar,showPan,showGst)
               ></MessageModal>
           )}
             <View style={{width:'100%',height:'90%',backgroundColor:'white',alignItems:'center',justifyContent:"center",marginTop:20}}>
-            {showPan  && <EnterPan handleVerification={handleVerification} ></EnterPan>}
-            {showAadhar && <EnterAadhar handleVerification={handleVerification} ></EnterAadhar>}
-            {showGst  && <EnterGst handleVerification={handleVerification} ></EnterGst>}
+            {showPan  && 
+            <View style={{
+              width:'100%',alignItems:'center',justifyContent:'center',marginTop:20
+            }}>
+               <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
+                <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Pan Number" > </PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
+                <TextInput maxLength={10} value={pan ? pan:verifyPanData?.body?.pan} onChangeText={(text)=>{handlePanInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholder='DBJUU1234'></TextInput>
+               {verifyPanData &&  <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
+                <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>
+                </View>}
+                {verifyPanIsLoading && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
+                   <FastImage
+                style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
+                source={{
+                  uri: gifUri, // Update the path to your GIF
+                  priority: FastImage.priority.normal,
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+              </View>
+                }
+                </View>
+               
+              </View>
+               <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
+                <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Your Name" > </PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
+                <TextInput value={name!=="" ? name : verifyPanData?.body?.registered_name } onChangeText={(text)=>{setName(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholder='Enter Your Name'></TextInput>
+                
+                </View>
+               
+              </View>
+             
+             {verifyPanData && <PANDataBox name={verifyPanData.body.registered_name} panNumber={verifyPanData.body.pan}></PANDataBox>}
+            </View>
+            }
+            {showAadhar && 
+            <View style={{
+              width:'100%',alignItems:'center',justifyContent:'center',marginTop:20
+            }}>
+               
+              <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
+                <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Aadhar Number" > </PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
+                <TextInput ref={inpref} maxLength={12} value={ aadhar} onChangeText={(text)=>{
+                  handleAadhaar(text)
+                }} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:"black"}} placeholderTextColor="black" placeholder='Enter Aadhar Number'></TextInput>
+                {verifyAadharData && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
+                <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>
+                </View>}
+                {sendAadharOtpIsLoading && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
+                 <FastImage
+              style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
+              source={{
+                uri: gifUri, // Update the path to your GIF
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+            </View>
+              }
+                </View>
+               
+              </View>
+             {aadhaarOtpSent && <View style={{alignItems:'flex-start',justifyContent:'center',width:'100%'}}>
+                <PoppinsTextMedium style={{color:ternaryThemeColor,fontWeight:'700', fontSize:16,marginLeft:30,marginTop:10}} content="OTP Sent"></PoppinsTextMedium>
+              </View>}
+              <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
+                <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter OTP" > </PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
+                <TextInput textContentType='oneTimeCode' value={otp} onChangeText={(text)=>{
+                  handleOtpInput(text)
+                }} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholderTextColor="black" placeholder='Enter OTP'></TextInput>
+                {verifyAadharIsLoading && <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
+                 <FastImage
+              style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
+              source={{
+                uri: gifUri, // Update the path to your GIF
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+            </View>
+              }
+                </View>
+               
+              </View>
+             {verifyAadharData && <AadharDataBox dob={verifyAadharData.body.dob} name={verifyAadharData.body.name} gender={verifyAadharData.body.gender} address={verifyAadharData.body.address}></AadharDataBox>}
+            </View>
+            }
+            {showGst  && 
+            <View style={{
+              width:'100%',alignItems:'center',justifyContent:'center',marginTop:20
+            }}>
+              <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
+                <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter GSTIN" > </PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:'center',flexDirection:"row",width:'100%',height:40}}>
+                <TextInput maxLength={15} value={gstin ? gstin : verifyGstData?.body?.GSTIN} onChangeText={(text)=>{handleGstInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Enter GSTIN'></TextInput>
+                <View style={{width:'14%',height:40,alignItems:'center',justifyContent:'center',}}>
+                {verifyGstData && <Image style={{height:22,width:22,resizeMode:'contain'}} source={require('../../../assets/images/tickBlue.png')}></Image>}
+                
+                 {verifyGstIsLoading && <FastImage
+              style={{ width:20,height:20,alignItems:'center',justifyContent:'center',}}
+              source={{
+                uri: gifUri, // Update the path to your GIF
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+           
+              }
+                </View>
+                </View>
+               
+              </View>
+               <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
+                <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Business Name" > </PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
+                <TextInput value={verifyGstData ? verifyGstData.body.legal_name_of_business:businessName} onChangeText={(text)=>{handleGstInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Business Name'></TextInput>
+                
+                </View>
+               
+              </View>
+              
+             {verifyGstData && <GSTDataBox businessName={verifyGstData.body.legal_name_of_business} gstin={verifyGstData.body.GSTIN}></GSTDataBox>}
+            </View>
+            }
             <TouchableOpacity style ={{backgroundColor:ternaryThemeColor, height:50,width:200,borderRadius:4,marginTop:20, alignItems:'center', justifyContent:'center'}} onPress={()=>{
               handleRegistrationFormSubmission()
-          //     console.log(verified[1])
-          // if(verified[1].toLowerCase()==="pan")
-          // {
-          // showAndHideVerificationComponents(verified[0])
-          //   setShowPan(true)
-          //   setShowAadhar(false)
-          //   setShowGst(false)
-          // }
-          // else if(verified[1].toLowerCase()==="gst")
-          // {
-          // showAndHideVerificationComponents(verified[0])
-          //   setShowAadhar(false)
-          //   setShowPan(false)
-          //   setShowGst(true)
-          // }
-          // else if(verified[1].toLowerCase()==="aadhar")
-          // {
-          // showAndHideVerificationComponents(verified[0])
-          //   setShowGst(false)
-          //   setShowPan(false)
-          //   setShowAadhar(true)
-          // }
+         
           
         }}>
           

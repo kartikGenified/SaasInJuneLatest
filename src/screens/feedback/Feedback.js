@@ -8,7 +8,7 @@ import StarRating from 'react-native-star-rating';
 import FeedbackModal from '../../components/feedback/FeedbackModal';
 import { useAddFeedbackMutation } from '../../apiServices/feedbackApi/FeedbackApi';
 import * as Keychain from 'react-native-keychain';
-
+import ErrorModal from '../../components/modals/ErrorModal';
 
 const Feedback = ({ navigation }) => {
 
@@ -17,6 +17,7 @@ const Feedback = ({ navigation }) => {
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
     const [error, setError] = useState(false);
     const[message, setMessage] = useState("");
+  const userData = useSelector(state => state.appusersdata.userData)
 
     const userName = useSelector(state => state.appusersdata.name);
 
@@ -176,7 +177,7 @@ const Feedback = ({ navigation }) => {
             </View>
 
 
-            <FeedbackModal isVisible={isSuccessModalVisible} user={"Amit"} onClose={hideSuccessModal} />
+            <FeedbackModal isVisible={isSuccessModalVisible} user={userData.name} onClose={hideSuccessModal} />
 
             {error && <ErrorModal modalClose={()=>{setError(false)}} message={message} openModal={error}></ErrorModal>}
 

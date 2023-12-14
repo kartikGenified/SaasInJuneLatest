@@ -350,6 +350,7 @@ const getMembership = async () => {
             },
             token: token,
           };
+          console.log("addBulkPointOnProductFunc",params)
           addBulkPointOnProductFunc(params);
         }
       } else if (rewardType === "Wheel") {

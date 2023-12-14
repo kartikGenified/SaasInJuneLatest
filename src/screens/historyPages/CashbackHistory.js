@@ -116,7 +116,7 @@ const CashbackHistory = ({ navigation }) => {
                 </View>
 
                 {/* <PoppinsTextMedium style={{marginLeft:10,fontSize:20,fontWeight:'600',color:'#6E6E6E'}} content="Cashback"></PoppinsTextMedium> */}
-                <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Cashback are now instantly credited"></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Cashbacks are now instantly credited"></PoppinsTextMedium>
                 <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 15, fontWeight: '700', color: '#6E6E6E' }} content="Total cashback earned till date"></PoppinsTextMedium>
 
             </View>

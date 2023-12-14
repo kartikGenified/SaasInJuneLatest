@@ -17,6 +17,8 @@ import RectangularUnderlinedDropDown from '../../components/atoms/dropdown/Recta
 import ProfileDropDown from '../../components/atoms/dropdown/ProfileDropDown';
 import moment from 'moment';
 import TextInputRectangularWithPlaceholder from '../../components/atoms/input/TextInputRectangularWithPlaceholder';
+import DisplayOnlyTextInput from '../../components/atoms/DisplayOnlyTextInput';
+
 
 const EditProfile = ({ navigation, route }) => {
   const [changedFormValues, setChangedFormValues] = useState([])
@@ -294,10 +296,49 @@ const EditProfile = ({ navigation, route }) => {
 
             formFields && formValues && formFields.map((item, index) => {
               if (item.type === "text") {
-                return (
+                if(item.name==="aadhar")
+                {
+                  return(
+                    <DisplayOnlyTextInput
+                    key={index}
+                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
+                    title={item.label}
+                    photo={require('../../../assets/images/eye.png')}>
 
-                  <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
-                )
+                  </DisplayOnlyTextInput>
+                  )
+                }
+                else if(item.name==="pan")
+                {
+                  return(
+                    <DisplayOnlyTextInput
+                    key={index}
+                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
+                    title={item.label}
+                    photo={require('../../../assets/images/eye.png')}>
+
+                  </DisplayOnlyTextInput>
+                  )
+                }
+                else if(item.name==="enrollment_date")
+                {
+                  return(
+                    <DisplayOnlyTextInput
+                    key={index}
+                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
+                    title={item.label}
+                    photo={require('../../../assets/images/eye.png')}>
+
+                  </DisplayOnlyTextInput>
+                  )
+                }
+                else{
+                  return (
+
+                    <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
+                  )
+                }
+                
               }
               else if (item.type === "date") {
                 return (
