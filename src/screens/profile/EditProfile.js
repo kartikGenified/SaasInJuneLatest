@@ -332,6 +332,13 @@ const EditProfile = ({ navigation, route }) => {
                   </DisplayOnlyTextInput>
                   )
                 }
+                else if(item.name.split("_").includes("mobile"))
+                {
+                  return(
+                    <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
+
+                  )
+                }
                 else{
                   return (
 

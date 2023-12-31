@@ -277,15 +277,18 @@ const BasicInfo = ({ navigation, route }) => {
 
 
         }
-        console.log(locationJson)
+        console.log("getLocationFormPincodeDataLocationJson",locationJson)
         setLocation(locationJson)
       }
     }
     else if (getLocationFormPincodeError) {
       console.log("getLocationFormPincodeError", getLocationFormPincodeError)
+      setError(true)
+      setMessage(getLocationFormPincodeError.data.message)
     }
   }, [getLocationFormPincodeData, getLocationFormPincodeError])
 
+  
   useEffect(() => {
     if (getFormData) {
       if (getFormData.message !== "Not Found") {
@@ -433,6 +436,7 @@ const BasicInfo = ({ navigation, route }) => {
   };
 
   const getLocationFromPinCode = async (pin) => {
+    setLocation()
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
@@ -445,7 +449,7 @@ const BasicInfo = ({ navigation, route }) => {
 
       }
       getLocationFromPincodeFunc(params)
-      setLocation()
+     
 
     }
   }
@@ -774,7 +778,7 @@ const BasicInfo = ({ navigation, route }) => {
                     </TextInputGST>
                   );
                 }
-                else if ((item.name).trim().toLowerCase() === "city" && location !== undefined) {
+                else if ((item.name).trim().toLowerCase() === "city" ) {
 
                   return (
                     <PrefilledTextInput
@@ -782,7 +786,7 @@ const BasicInfo = ({ navigation, route }) => {
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      value={location.city}
+                      value={location?.city}
                       label={item.label}
                     ></PrefilledTextInput>
                   )
@@ -790,33 +794,51 @@ const BasicInfo = ({ navigation, route }) => {
 
 
                 }
-                else if ((item.name).trim().toLowerCase() === "pincode" && location !== undefined) {
-                  return (
-                    <PincodeTextInput
-                      jsonData={item}
-                      key={index}
-                      handleData={handleChildComponentData}
-                      handleFetchPincode={handleFetchPincode}
-                      placeHolder={item.name}
-                      value={location.postcode}
-                      label={item.label}
-                      maxLength={6}
-                    ></PincodeTextInput>
-                  )
-                }
-                else if ((item.name).trim().toLowerCase() === "state" && location !== undefined) {
+                else if ((item.name).trim().toLowerCase() === "pincode"   ) {
+                 
+                    return (
+                      <PincodeTextInput
+                        jsonData={item}
+                        key={index}
+                        handleData={handleChildComponentData}
+                        handleFetchPincode={handleFetchPincode}
+                        placeHolder={item.name}
+                        value={location?.postcode}
+                        label={item.label}
+                        maxLength={6}
+                      ></PincodeTextInput>
+                    )
+                  }
+                
+                  // else if ((item.name).trim().toLowerCase() === "pincode" ) {
+                 
+                  //   return (
+                  //     <PincodeTextInput
+                  //       jsonData={item}
+                  //       key={index}
+                  //       handleData={handleChildComponentData}
+                  //       handleFetchPincode={handleFetchPincode}
+                  //       placeHolder={item.name}
+
+                  //       label={item.label}
+                  //       maxLength={6}
+                  //     ></PincodeTextInput>
+                  //   )
+                  // }
+                
+                else if ((item.name).trim().toLowerCase() === "state"  ) {
                   return (
                     <PrefilledTextInput
                       jsonData={item}
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      value={location.state}
+                      value={location?.state}
                       label={item.label}
                     ></PrefilledTextInput>
                   )
                 }
-                else if ((item.name).trim().toLowerCase() === "district" && location !== undefined) {
+                else if ((item.name).trim().toLowerCase() === "district"  ) {
 
                   return (
                     <PrefilledTextInput
@@ -824,7 +846,7 @@ const BasicInfo = ({ navigation, route }) => {
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-                      value={location.district}
+                      value={location?.district}
                       label={item.label}
                     ></PrefilledTextInput>
                   )

@@ -64,12 +64,12 @@ const VideoGallery = ({ navigation }) => {
     const type = props.type
     const date = props.date
     return (
-      <TouchableOpacity onPress={() => { Linking.openURL(video) }} style={{ height: 180, width: '80%', borderRadius: 10, backgroundColor: 'white', elevation: 10, margin: 10, alignItems: 'center', justifyContent: 'flex-end' }}>
-        <View style={{ width: '100%', backgroundColor: "#DDDDDD", alignItems: "center", justifyContent: 'center', height: '50%' }}>
+      <TouchableOpacity onPress={() => { Linking.openURL(video) }} style={{ height: 180, width: '40%', borderRadius: 10, backgroundColor: 'white', elevation: 10, margin: 10, alignItems: 'center', justifyContent: 'flex-end' }}>
+        <View style={{ width: '100%', backgroundColor: "#DDDDDD", alignItems: "center", justifyContent: 'center', height: '40%' }}>
           <Logo name="youtube" size={60} color="red"></Logo>
         </View>
 
-        <View style={{ backgroundColor: 'black', width: '100%', alignItems: 'flex-start', height: '50%', justifyContent: "center" }}>
+        <View style={{ backgroundColor: 'black', width: '100%', alignItems: 'flex-start', height: '60%', justifyContent: "center",padding:4 }}>
           <PoppinsTextMedium style={{ color: 'white', fontSize: 13, marginLeft: 8 }} content={`Title : ${title.substring(0, 16)}`}></PoppinsTextMedium>
           <PoppinsTextMedium style={{ color: 'white', fontSize: 13, marginLeft: 8 }} content={`Type : ${type}`}></PoppinsTextMedium>
           <PoppinsTextMedium style={{ color: 'white', fontSize: 13, marginBottom: 6, marginLeft: 8 }} content={`Date : ${moment(date).format("DD MMM YYYY")}`}></PoppinsTextMedium>
@@ -129,17 +129,18 @@ const VideoGallery = ({ navigation }) => {
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30,
             backgroundColor: 'white',
-            minHeight: height - 100,
+            minHeight: 500,
             marginTop: 10,
             alignItems: 'flex-start',
             justifyContent: 'center',
             width: '100%',
             paddingBottom: 40,
             flexDirection: "row",
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            paddingTop:10
           }}>
 
-          {appVideoIsLoading &&
+          {appVideoIsLoading ?
             <FastImage
               style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
               source={{
@@ -147,19 +148,19 @@ const VideoGallery = ({ navigation }) => {
                 priority: FastImage.priority.normal,
               }}
               resizeMode={FastImage.resizeMode.contain}
-            />
+            /> :
+            appVideoData?.body?.length===0 && <DataNotFound></DataNotFound>
           }
 
           {
-            videoData != undefined && videoData.length > 0 ? videoData.map((item, index) => {
+            videoData != undefined && videoData.length > 0 && videoData.map((item, index) => {
               return (
-                <View >
-                  {(videoData.length > 0) && <VideoComp key={item.index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp> }
-                </View>
+               
+                  <VideoComp key={item.index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp> 
+                
               )
             })
-              :
-               appVideoData &&   <DataNotFound />
+             
             
           }
 

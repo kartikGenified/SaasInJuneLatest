@@ -180,7 +180,7 @@ const VerifyOtp = ({ navigation, route }) => {
         saveToken(verifyOtpData.body.token)
         storeData(verifyOtpData.body)
         saveUserDetails(verifyOtpData.body)
-        setMessage("Successfully Loged In")
+        setMessage("Successfully Logged In")
         setSuccess(true)
         setModalWithBorder(true)
       }

@@ -20,11 +20,12 @@ const PincodeTextInput = (props) => {
     })
     useEffect(()=>{
         handleInputEnd()
+        setValue(props.value)
     },[keyboardShow,props.value])
 
     const handleInput=(text)=>{
         setValue(text)
-
+        console.log(maxLength)
         if(text.length===6)
         {
             props.handleFetchPincode(text)

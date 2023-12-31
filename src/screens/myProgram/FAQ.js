@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component, useState , useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView } from 'react-native';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { useFetchAllfaqsMutation } from '../../apiServices/faq/faqApi';
 import * as Keychain from 'react-native-keychain';
 import DataNotFound from '../data not found/DataNotFound';
 import FastImage from 'react-native-fast-image';
+
 
 
 // create a component
@@ -82,7 +83,7 @@ const FAQ = ({ navigation }) => {
 
     const FaqComp = (props) => {
         const item = props.item
-        console.log("FAQ item", FAQ)
+        console.log("FAQ item", item)
         const [queVisible, setQueVisible] = useState(false);
         return (
             <View style={{ marginHorizontal: 20, borderWidth: 1, marginTop: 20, padding: 10, borderRadius: 5, borderColor:"#80808040" }}>
@@ -142,7 +143,7 @@ const FAQ = ({ navigation }) => {
                />
           }
 
-          
+          <ScrollView contentContainerStyle={{paddingBottom:20}} style={{width:'100%'}}>
             {
                 faqData?.length > 0 && faqData.map((item) => {
                     return (
@@ -153,6 +154,7 @@ const FAQ = ({ navigation }) => {
 
                 })
             }
+            </ScrollView>
 
           
         </View>

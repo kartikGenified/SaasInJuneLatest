@@ -5,12 +5,13 @@ import PoppinsTextLeftMedium from '../../electrons/customFonts/PoppinsTextLeftMe
 const TextInputRectangularWithPlaceholder = (props) => {
     const [value, setValue] = useState(props.value)
     const [keyboardType, setKeyboardType] = useState('default')
+    const [maxLength, setMaxlength] = useState(props.maxLength)
     const [error, setError] = useState(false);
     console.log("value", props)
     const placeHolder = props.placeHolder
-    const maxLength = props.maxLength
     const required = props.required
     const specialChar = props.specialCharValidation
+    const title  = props.title
 
     useEffect(() => {
         setValue(props.value)
@@ -20,6 +21,13 @@ const TextInputRectangularWithPlaceholder = (props) => {
     useEffect(() => {
         if (placeHolder === "Mobile No") {
             setKeyboardType('numeric')
+            setMaxlength(10)
+        }
+        if(title?.split("_").includes("mobile"))
+        {
+            setKeyboardType('numeric')
+            setMaxlength(10)
+
         }
     }, [])
 

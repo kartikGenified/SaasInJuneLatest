@@ -350,7 +350,7 @@ const getMembership = async () => {
             },
             token: token,
           };
-          console.log("addBulkPointOnProductFunc",params)
+          console.log("addBulkPointOnProductFunc",JSON.stringify(params))
           addBulkPointOnProductFunc(params);
         }
       } else if (rewardType === "Wheel") {
@@ -705,7 +705,7 @@ const getMembership = async () => {
     } else if (workflowProgram.length === 0) {
       setTimeout(() => {
         navigation.navigate("Dashboard");
-      }, 5000);
+      }, 3000);
     }
   };
   const navigateDashboard = () => {

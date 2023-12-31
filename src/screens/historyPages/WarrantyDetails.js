@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView, Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView, Platform, Linking } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -359,14 +359,14 @@ const WarrantyDetails = ({ navigation, route }) => {
             <View style={{ alignItems: "center", justifyContent: "center" }}>
                 <PoppinsTextMedium style={{ color: 'black', fontSize: 18 }} content={`Warranty Start : ${moment(warrantyStart).format('DD MMM YYYY')}`}></PoppinsTextMedium>
                 <PoppinsTextMedium style={{ color: 'black', fontSize: 18, marginTop: 4 }} content={`Warranty End : ${moment(warrantyEnd).format('DD MMM YYYY')}`}></PoppinsTextMedium>
-                <View style={{ height: 40, width: 240, alignItems: "center", justifyContent: "center", borderWidth: 1, borderStyle: 'dashed', backgroundColor: secondaryThemeColor, borderRadius: 4, marginTop: 50 }}>
-                    <PoppinsTextMedium style={{ color: 'black', fontSize: 18, marginTop: 4 }} content={`Warranty Id : ${warrantyId}`}></PoppinsTextMedium>
+                <View style={{ padding:8, width: 240, alignItems: "center", justifyContent: "center", borderWidth: 1, borderStyle: 'dashed', backgroundColor: ternaryThemeColor, borderRadius: 4, marginTop: 50 }}>
+                    <PoppinsTextMedium style={{ color: 'white', fontSize: 18, marginTop: 4 }} content={`Warranty Id : ${warrantyId}`}></PoppinsTextMedium>
                 </View>
             </View>
-            <View style={{ height: 40, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#91B406", marginTop: 20, borderRadius: 4 }}>
+            <TouchableOpacity onPress={()=>{Linking.openURL(BaseUrlImages+data.warranty_pdf)}} style={{ padding:8, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#91B406", marginTop: 20, borderRadius: 4 }}>
                 <PoppinsTextMedium style={{ color: 'white', fontSize: 18, marginTop: 4 }} content={`Download Warranty`}></PoppinsTextMedium>
-            </View>
-            <TouchableOpacity onPress={() => { setModal(true) }} style={{ height: 40, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#353535", marginTop: 20, borderRadius: 4 }}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => { setModal(true) }} style={{ padding:8, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#353535", marginTop: 20, borderRadius: 4 }}>
                 <PoppinsTextMedium style={{ color: 'white', fontSize: 18, marginTop: 4 }} content={`Claim Warranty/View Claim`}></PoppinsTextMedium>
             </TouchableOpacity>
             {/* <ClickToReport></ClickToReport> */}
@@ -375,6 +375,7 @@ const WarrantyDetails = ({ navigation, route }) => {
                 <BottomModal
                     modalClose={modalClose}
                     // message={message}
+                    canGoBack={true}
                     openModal={modal}
                     comp={ModalContent} ></BottomModal>}
 

@@ -41,9 +41,10 @@ const ReportAndIssue = ({ navigation, route }) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
+  const location = useSelector(state=>state.userLocation.location)
   const height = Dimensions.get('window').height
   const data = route.params.productData
-  console.log("data in report", data, userData)
+  console.log("data in report", data, userData,location)
   const productName = data?.product_code
   const visibleCode = data?.batch_running_code
   const qrId = route.params?.qrId
@@ -66,6 +67,7 @@ const ReportAndIssue = ({ navigation, route }) => {
     else if (addIssueError) {
       console.log("addIssueError", addIssueError)
       setError(true)
+      setMessage(addIssueError.data.message)
 
     }
   }, [addIssueData, addIssueError])
@@ -100,13 +102,19 @@ const ReportAndIssue = ({ navigation, route }) => {
         user_type_id: userData.user_type_id,
         user_type: userData.user_type,
         desc: description,
-        type: "point"
+        type: "point",
+        pincode:location.postcode,
+        state: location.state,
+        district: location.district,
+        city: location.city,
+        lat: String(location.lat),
+        log: String(location.lon),
       },
 
       tenant_id: slug,
       token: userData.token
     }
-    console.log(JSON.stringify(obj))
+    console.log("Report an issue ",JSON.stringify(obj))
 
     addIssueFunc(obj);
   }

@@ -84,7 +84,6 @@ const Genuinity = ({navigation,route}) => {
           if(isGenuinityOnly)
           {
           console.log(GenuineProduct)
-
           navigation.navigate("GenuineProduct",{workflowProgram:workflowProgram})
           }
           else{

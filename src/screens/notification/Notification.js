@@ -61,8 +61,8 @@ const Notification = ({ route, navigation }) => {
     }
 
     return (
-        <ScrollView style={{ height: '10%', backgroundColor: buttonThemeColor }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 10 }}>
+       <View style={{width:'100%',alignItems:'flex-start',justifyContent:'center',backgroundColor: buttonThemeColor }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 10,height:'10%' }}>
                 <TouchableOpacity onPress={() => {
                     console.log("hello")
                     navigation.goBack()
@@ -71,6 +71,8 @@ const Notification = ({ route, navigation }) => {
                 </TouchableOpacity>
                 <Text style={{ color: 'white', marginLeft: 10, fontWeight: '500' }}>Notification</Text>
             </View>
+         <ScrollView style={{ height: '90%', backgroundColor: buttonThemeColor }}>
+            
             <View style={{ paddingBottom: 120, height: height, backgroundColor: 'white', width: '100%', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20 }}>
                 {
                     notifData?.body?.data?.map((item, index) => {
@@ -80,6 +82,7 @@ const Notification = ({ route, navigation }) => {
                 }
             </View>
         </ScrollView>
+       </View>
 
 
     )

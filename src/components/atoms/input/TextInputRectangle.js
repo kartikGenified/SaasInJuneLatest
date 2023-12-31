@@ -15,6 +15,7 @@ const TextInputRectangle = (props) => {
   });
   useEffect(()=>{handleInputEnd()},[keyboardShow])
   const handleInput = (text) => {
+    console.log(label)
     setValue(text);
   };
   const handleInputEnd = () => {

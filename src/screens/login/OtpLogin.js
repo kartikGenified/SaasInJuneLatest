@@ -184,7 +184,8 @@ const OtpLogin = ({ navigation, route }) => {
       if (nameRegex.test(name)) {
         setName(data)
       }
-      else{
+
+      else {
         console.log("not allowed")
       }
 
@@ -205,39 +206,46 @@ const OtpLogin = ({ navigation, route }) => {
   const handleButtonPress = () => {
     // console.log("first",getNameData.message)
     // console.log("mobile",mobile,name.length,name,isChecked,getNameData)
-    if (getNameData && isChecked && name !== undefined && mobile !== undefined && name != "" && mobile.length !== 0 && name.length !== 0) {
-      // console.log("mobile",mobile,name.length)
-      if (getNameData.message === "Not Found") {
-        console.log("registrationRequired", registrationRequired)
-        if (mobile?.length == 10) {
-          registrationRequired ? navigation.navigate('BasicInfo', { needsApproval: needsApproval, userType: user_type, userId: user_type_id, name: name, mobile: mobile, navigatingFrom: "OtpLogin" }) : navigateToOtp()
-
+    if (isChecked) {
+      if (getNameData && isChecked && name !== undefined && mobile !== undefined && name != "" && mobile.length !== 0 && name.length !== 0) {
+        // console.log("mobile",mobile,name.length)
+        if (getNameData.message === "Not Found") {
+          console.log("registrationRequired", registrationRequired)
+          if (mobile?.length == 10) {
+            registrationRequired ? navigation.navigate('BasicInfo', { needsApproval: needsApproval, userType: user_type, userId: user_type_id, name: name, mobile: mobile, navigatingFrom: "OtpLogin" }) : navigateToOtp()
+          }
+          else {
+            setError(true)
+            setMessage("Mobile number lenght should be 10 digits")
+          }
+          // setName('')
+          // setMobile('')
         }
         else {
+          sendOtpFunc({ mobile, name, user_type, user_type_id })
+          // navigation.navigate('VerifyOtp',{navigationParams})
+        }
+
+      }
+
+      else {
+        if (mobile?.length != 10) {
           setError(true)
           setMessage("Mobile number lenght should be 10 digits")
         }
-        // setName('')
-        // setMobile('')
-      }
-      else {
-        sendOtpFunc({ mobile, name, user_type, user_type_id })
 
-        // navigation.navigate('VerifyOtp',{navigationParams})
+        else if (name == undefined || name == "") {
 
+          setError(true)
+          setMessage("Please enter name")
+        }
       }
     }
-    else {
-      if (mobile?.length != 10) {
-        setError(true)
-        setMessage("Mobile number lenght should be 10 digits")
-      }
-
-      if (name == undefined || name == "") {
-        setError(true)
-        setMessage("Please enter name")
-      }
+    else{
+      setError(true)
+      setMessage("Please Accept Terms and condition")
     }
+
   }
 
   const modalClose = () => {

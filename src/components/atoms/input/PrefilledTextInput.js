@@ -21,6 +21,7 @@ const PrefilledTextInput = (props) => {
    
    
     useEffect(()=>{
+        setValue(props.value)
         let tempJsonData ={...props.jsonData,"value":value}
         console.log("tempJsonData",tempJsonData)
         props.handleData(tempJsonData,props.placeHolder)

@@ -7,24 +7,35 @@ import * as Keychain from 'react-native-keychain';
 import { useFetchCashbackEnteriesOfUserMutation } from '../../apiServices/workflow/rewards/GetCashbackApi';
 import DataNotFound from '../data not found/DataNotFound';
 import AnimatedDots from '../../components/animations/AnimatedDots';
+import { useGetCashTransactionsMutation } from '../../apiServices/cashback/CashbackRedeemApi';
 
 const CashbackHistory = ({ navigation }) => {
     const [showNoDataFound, setShowNoDataFound] = useState(false)
     const cashback = 0
     const userId = useSelector(state => state.appusersdata.userId);
+  const userData = useSelector(state => state.appusersdata.userData)
+
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
     )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : '#FFB533';
-    console.log(userId)
-    const [fetchCashbackEnteriesFunc, {
-        data: fetchCashbackEnteriesData,
-        error: fetchCashbackEnteriesError,
-        isLoading: fetchCashbackEnteriesIsLoading,
-        isError: fetchCashbackEnteriesIsError
-    }] = useFetchCashbackEnteriesOfUserMutation()
 
+    console.log(userId)
+
+    // const [fetchCashbackEnteriesFunc, {
+    //     data: fetchCashbackEnteriesData,
+    //     error: fetchCashbackEnteriesError,
+    //     isLoading: fetchCashbackEnteriesIsLoading,
+    //     isError: fetchCashbackEnteriesIsError
+    // }] = useFetchCashbackEnteriesOfUserMutation()
+
+    const [getCashTransactionsFunc,{
+        data:getCashTransactionsData,
+        error:getCashTransactionsError,
+        isLoading:getCashTransactionsIsLoading,
+        isError:getCashTransactionsIsError
+    }] = useGetCashTransactionsMutation()
 
     useEffect(() => {
         const getData = async () => {
@@ -35,24 +46,24 @@ const CashbackHistory = ({ navigation }) => {
                     'Credentials successfully loaded for user ' + credentials.username
                 );
                 const token = credentials.username
-                const params = { token: token, userId: userId }
-                fetchCashbackEnteriesFunc(params)
+                const params = { token: token, appUserId: userData.id }
+                getCashTransactionsFunc(params)
             }
         }
         getData()
 
     }, [])
     useEffect(() => {
-        if (fetchCashbackEnteriesData) {
-            console.log("fetchCashbackEnteriesData", fetchCashbackEnteriesData)
-            if (fetchCashbackEnteriesData.body.data.length === 0) {
-                setShowNoDataFound(true)
-            }
+        if (getCashTransactionsData) {
+            console.log("getCashTransactionsData", JSON.stringify(getCashTransactionsData))
+            // if (getCashTransactionsData.body.data.length === 0) {
+            //     setShowNoDataFound(true)
+            // }
         }
-        else if (fetchCashbackEnteriesError) {
-            console.log("fetchCashbackEnteriesError", fetchCashbackEnteriesError)
+        else if (getCashTransactionsError) {
+            console.log("getCashTransactionsError", getCashTransactionsError)
         }
-    }, [fetchCashbackEnteriesData, fetchCashbackEnteriesError])
+    }, [getCashTransactionsData, getCashTransactionsError])
 
 
     const Header = () => {
@@ -112,7 +123,7 @@ const CashbackHistory = ({ navigation }) => {
                         source={require("../../../assets/images/wallet.png")}
                     ></Image>
 
-                    <PoppinsText style={{ marginLeft: 10, fontSize: 34, fontWeight: '600', color: 'black' }} content={fetchCashbackEnteriesData?.body?.total != undefined ?  `${fetchCashbackEnteriesData?.body?.total}` : <AnimatedDots color={'black'}/>}></PoppinsText>
+                    {/* <PoppinsText style={{ marginLeft: 10, fontSize: 34, fontWeight: '600', color: 'black' }} content={fetchCashbackEnteriesData?.body?.total != undefined ?  `${fetchCashbackEnteriesData?.body?.total}` : <AnimatedDots color={'black'}/>}></PoppinsText> */}
                 </View>
 
                 {/* <PoppinsTextMedium style={{marginLeft:10,fontSize:20,fontWeight:'600',color:'#6E6E6E'}} content="Cashback"></PoppinsTextMedium> */}
@@ -126,7 +137,7 @@ const CashbackHistory = ({ navigation }) => {
               initialNumToRender={20}
               contentContainerStyle={{alignItems:"center",justifyContent:"center"}}
               style={{width:'100%'}}
-                data={fetchCashbackEnteriesData?.body?.data}
+                data={getCashTransactionsData?.body?.data}
                 renderItem={({ item, index }) => (
                   <CashbackListItem
                     key={index}

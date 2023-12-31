@@ -28,7 +28,7 @@ import Close from 'react-native-vector-icons/Ionicons';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import ErrorModal from '../../components/modals/ErrorModal';
 import FastImage from 'react-native-fast-image';
-
+import { gifUri } from '../../utils/GifUrl';
 
 const ActivateWarranty = ({ navigation, route }) => {
   const [responseArray, setResponseArray] = useState([]);
@@ -39,7 +39,8 @@ const ActivateWarranty = ({ navigation, route }) => {
   const [date, setDate] = useState();
   const [message, setMessage] = useState();
   const [error, setError] = useState(false)
-  const [emailValid, setIsValidEmail] = useState(true)
+  const [emailValid, setIsValidEmail] = useState(false)
+
 
   //modal
   const [openModalWithBorder, setModalWithBorder] = useState(false);
@@ -55,7 +56,7 @@ const ActivateWarranty = ({ navigation, route }) => {
     },
   ] = useUploadImagesMutation();
 
-  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+  // const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
 
   const [
@@ -160,12 +161,12 @@ const ActivateWarranty = ({ navigation, route }) => {
 
         const token = credentials.username;
 
-        if(!emailValid){
+        if(emailValid){
           activateWarrantyFunc({ token, body });
         }
         else{
           setError(true)
-          setMessage("Please enter valid email.")
+          setMessage("Please enter a valid email")
         }
 
       } else {
@@ -220,7 +221,7 @@ const ActivateWarranty = ({ navigation, route }) => {
   //     const result = await launchImageLibrary();
   // };
   const handleChildComponentData = data => {
-    console.log("data", data);
+    console.log(" from child component", data);
 
     // Update the responseArray state with the new data
     setResponseArray(prevArray => {
@@ -232,7 +233,9 @@ const ActivateWarranty = ({ navigation, route }) => {
         console.log('entering')
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         const checkEmail = emailRegex.test(data.value)
+       
         setIsValidEmail(checkEmail);
+        console.log("check email",emailRegex.test(data.value))
       }
 
       if (existingIndex !== -1) {
@@ -263,36 +266,44 @@ const ActivateWarranty = ({ navigation, route }) => {
       setMessage("Kindly fill all the details to continue")
     }
     else{
-      responseArray &&
-      responseArray.map(item => {
-        if (item.name === 'name' || item.name === 'Name') {
-          setName(item.value);
-        } else if (item.name === 'phone' || item.name === 'Phone' || item.name === "mobile" || item.name === "Mobile") {
-          setPhone(item.value);
-        } else if (item.name === 'invoice' || item.name === 'Invoice') {
-          console.log('Inside file');
-
-          const imageData = {
-            uri: item.value,
-            name: item.value.slice(0, 10),
-            type: 'jpg/png',
-          };
-          const uploadFile = new FormData();
-          uploadFile.append('images', imageData);
-          // console.log("invoice data",item.value)
-          // if(item.value===undefined)
-          // {
-          //   setError(true)
-          //   setMessage("Kindly upload the invoice/bill ")
-          // }
-          // else{
-          uploadImageFunc({ body: uploadFile });
-
-          // }
-        } else if (item.name === 'dop' || item.name === "Date Of Purchase") {
-          setDate(item.value);
-        }
-      });
+      if(emailValid)
+      {
+        responseArray &&
+        responseArray.map(item => {
+          if (item.name === 'name' || item.name === 'Name') {
+            setName(item.value);
+          } else if (item.name === 'phone' || item.name === 'Phone' || item.name === "mobile" || item.name === "Mobile") {
+            setPhone(item.value);
+          } else if (item.name === 'invoice' || item.name === 'Invoice') {
+            console.log('Inside file');
+  
+            const imageData = {
+              uri: item.value,
+              name: item.value.slice(0, 10),
+              type: 'jpg/png',
+            };
+            const uploadFile = new FormData();
+            uploadFile.append('images', imageData);
+            // console.log("invoice data",item.value)
+            // if(item.value===undefined)
+            // {
+            //   setError(true)
+            //   setMessage("Kindly upload the invoice/bill ")
+            // }
+            // else{
+            uploadImageFunc({ body: uploadFile });
+  
+            // }
+          } else if (item.name === 'dop' || item.name === "Date Of Purchase") {
+            setDate(item.value);
+          }
+        });
+      }
+      else{
+        setError(true)
+        setMessage("Please enter a valid email")
+      }
+     
     }
     //    console.log(productData)
   };

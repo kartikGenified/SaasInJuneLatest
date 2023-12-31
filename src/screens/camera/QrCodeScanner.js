@@ -506,9 +506,9 @@ else{
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData);
-      if(verifyQrData.body?.qr_status==="1" )
+      if(verifyQrData.body?.qr?.qr_status==="1" )
       {
-      addQrDataToList(verifyQrData.body);
+      addQrDataToList(verifyQrData.body.qr);
       }
       if(verifyQrData.body?.qr?.qr_status==="2" && verifyQrData.status===201 )
       {

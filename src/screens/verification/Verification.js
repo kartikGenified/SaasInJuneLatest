@@ -29,22 +29,23 @@ import { useUpdateKycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
 import { setKycCompleted } from '../../../redux/slices/userKycStatusSlice';
 import FastImage from 'react-native-fast-image';
 import { gifUri } from '../../utils/GifUrl';
+import moment from 'moment';
+
 
 const Verification = ({navigation}) => {
   const [kycArray, setKycArray] = useState([])
   const [showPan, setShowPan] = useState(false)
   const [showGst, setShowGst] = useState(false)
   const [showAadhar, setShowAadhar] = useState(false)
-  const [showPanProgress, setShowPanProgress] = useState(false)
-  const [showGstProgress, setShowGstProgress] = useState(false)
-  const [showAadharProgress, setShowAadharProgress] = useState(false)
+  const [panVerified, setPanVerified] = useState(false)
+  const [aadhaarVerified, setAadhaarVerified] = useState(false)
+  const [gstVerified, setGstVerified] = useState(false)
   const [verified, setVerified] = useState([])
   const [pan, setPan] = useState("")
   const [name, setName] = useState("")
   const [businessName, setBusinessName] = useState("")
   const [gstin, setGstin] = useState("")
   const [isManuallyApproved, setIsManuallyApproved] = useState()
-  const [verifiedArray, setVerifiedArray] = useState([])
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
@@ -60,18 +61,19 @@ const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false)
       )
   // const userData = useSelector(state=>)
   const userData = useSelector(state=>state.appusersdata.userData)
+  const kycData = useSelector(state => state.kycDataSlice.kycData)
+
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
-      // console.log(kycOptions,userData)
+      console.log("kyc options ",kycData)
       const manualApproval = useSelector(state => state.appusers.manualApproval)
 
   const width = Dimensions.get('window').width
-  let temp = []
-  let tempVerification =[]
   
+  let temp = {}
 
   console.log(userData)
     
@@ -93,12 +95,14 @@ const [verifyPanFunc,{
   isLoading:verifyPanIsLoading,
   isError:verifyPanIsError
 }]= useVerifyPanMutation()
+
 const [sendAadharOtpFunc,{
   data:sendAadharOtpData,
   error:sendAadharOtpError,
   isLoading:sendAadharOtpIsLoading,
   isError:sendAadharOtpIsError
 }]= useSendAadharOtpMutation()
+
 const [verifyAadharFunc,{
   data:verifyAadharData,
   error:verifyAadharError,
@@ -151,20 +155,22 @@ useEffect(()=>{
     console.log("verifyAadharData",verifyAadharData)
     if(verifyAadharData.success)
     {
+      var dateArray = verifyAadharData.body.dob.split("-");
+      var formattedDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
       const aadhar_details = {
         "address" : verifyAadharData.body.address,
-        "split_address" : verifyAadharData.body.split_address
-    }
-    const gender = verifyAadharData.body.gender
-    const dob = verifyAadharData.body.dob
-  console.log("SUCCESS AADHAAR")  
-  handleVerification("gender",gender)
-  handleVerification("dob",dob)
-  handleVerification("aadhar",aadhar)
-  handleVerification("aadhar_details",aadhar_details)
-  
-  
+        "split_address" : verifyAadharData.body.split_address,
+        "gender" : verifyAadharData.body.gender,
+        "dob": formattedDate
 
+    }
+   
+  console.log("SUCCESS AADHAAR")  
+  // handleVerification("aadhar_details",aadhar_details)
+  const temp1={"type":"aadhar","value":aadhar}
+  const temp2={"type":"aadhar_details","value":aadhar_details}
+  setVerified([...verified,temp1,temp2])
+    setAadhaarVerified(true)
     }
   }
   else if(verifyAadharError){
@@ -211,41 +217,28 @@ else{
 //  },[aadhar])
   
 
- const handleAadhaar=(text)=>{
-  // setFinalAadhar(aadhar)
-  setAadhar(text)
-  if(text.length===12)
+ 
+
+useEffect(()=>{
+  if(verifyGstData)
   {
-    
-    const data = {
-      "aadhaar_number":text
-  }
-  sendAadharOtpFunc(data)
-    console.log(data)
-   
-  }
- }
-
-//  useEffect(()=>{
-
-//  },[otp])
-const handleOtpInput=(text)=>{
-  setOtp(text)
-if(text.length===6)
+  console.log("verifyGstData",verifyGstData)
+  if(verifyGstData.success)
   {
-    handleOtp(text)
+    const temp = {"type":"gstin","value":verifyGstData.body.GSTIN}
+    setVerified([...verified,temp])
+    setGstVerified(true)
   }
-}
-
- const handleOtp=(otp)=>{
-  const data={
-    "ref_id":sendAadharOtpData?.body.ref_id,
-  "otp":otp
+  
   }
-  verifyAadharFunc(data)
-}
-
-
+   if(verifyGstError)
+  {
+  console.log("verifyGstError",verifyGstError)
+  setError(true)
+  setGstin("")
+  setMessage(verifyGstError.data.message)
+  }
+  },[verifyGstData,verifyGstError])
 
 
 useEffect(()=>{
@@ -257,7 +250,9 @@ useEffect(()=>{
     // setName(verifyPanData.body.registered_name)
     // setPan(verifyPanData.body.pan)
    console.log("SUCCESS PAN")
-   handleVerification("pan",verifyPanData.body.pan)
+   const temp = {"type":"pan","value":verifyPanData.body.pan}
+   setVerified([...verified,temp])
+   setPanVerified(true)
   }
   }
    if(verifyPanError)
@@ -286,30 +281,38 @@ console.log(pan)
   }
 
 
-const showVerificationFields=(arr)=>{
-console.log("showVerificationFields",arr)
-  if(arr.length>0)
-  {
-   if(arr[0]==="PAN")
-  {
-   setShowPan(true)
-   setShowPanProgress(true)
-  }
-  else if(arr[0]==="GSTIN")
-  {
-   setShowGst(true)
-   setShowGstProgress(true)
-  }
-  else if(arr[0]==="Aadhar")
-  {
-   setShowAadhar(true)
-   setShowAadharProgress(true)
-  }
- }
- else{
-   console.log("Verification Completed")
- }
+  const handleAadhaar=(text)=>{
+    // setFinalAadhar(aadhar)
+    setAadhar(text)
+    if(text.length===12)
+    {
+      
+      const data = {
+        "aadhaar_number":text
+    }
+    sendAadharOtpFunc(data)
+      console.log(data)
+     
+    }
+   }
   
+  //  useEffect(()=>{
+  
+  //  },[otp])
+  const handleOtpInput=(text)=>{
+    setOtp(text)
+  if(text.length===6)
+    {
+      handleOtp(text)
+    }
+  }
+  
+   const handleOtp=(otp)=>{
+    const data={
+      "ref_id":sendAadharOtpData?.body.ref_id,
+    "otp":otp
+    }
+    verifyAadharFunc(data)
   }
 
 
@@ -338,39 +341,12 @@ console.log("showVerificationFields",arr)
     setSuccess(false)
   };
 
-  const handleVerification=(type, value)=>{
-   console.log("handleVerification", type,value)
   
-    if(type=="aadhar")
-    {
-      temp.push({"type":"aadhar","value":value})
 
-  //  showAndHideVerificationComponents("Aadhar",tempVerification)
-     
-    }
-    else if(type==="gstin"){
-    temp.push({"type":"gstin","value":value})
-    // showAndHideVerificationComponents("GSTIN",tempVerification)
-
-    }
-    else if(type==="pan")
-    {
-      temp.push({"type":"pan","value":value})
-      // showAndHideVerificationComponents("PAN",tempVerification)
-
-    }
-    
-    else if(type==="aadhar_details")
-    {
-      temp.push({"type":"aadhar_details","value":value})
-    }
-    // setVerifiedArray(temp)
-    // console.log("Verification Array",tempVerification)
+  console.log("verified array status",verified)
   
-  }
-
   const handleRegistrationFormSubmission=async()=>{
-    console.log("verified array",JSON.stringify(temp))
+    console.log("verified array",JSON.stringify(verified))
     
     const credentials = await Keychain.getGenericPassword();
   if (credentials) {
@@ -385,15 +361,15 @@ console.log("showVerificationFields",arr)
     // inputFormData["name"] = userData.name;
     // inputFormData["mobile"] = userData.mobile;
   
-    for(var i =0;i<temp.length;i++)
+    for(var i =0;i<verified.length;i++)
     {
-      console.log("temp",temp[i])
-      if(temp[i].type!=="aadhar_details")
+      console.log("verified",verified[i])
+      if(verified[i].type!=="aadhar_details")
       {
-      inputFormData[`is_valid_${temp[i].type}`] = true
+      inputFormData[`is_valid_${verified[i].type}`] = true
         
       }
-      inputFormData[temp[i].type] = temp[i].value
+      inputFormData[verified[i].type] = verified[i].value
     }
     const body=inputFormData
     const params = {body:body,id:userData.id}
@@ -404,6 +380,8 @@ setMessage("Kindly submit the details to continue")
     }
 else{
    updateKycStatusFunc(params)
+  console.log("final",JSON.stringify(body))
+
 }
     
     
@@ -413,26 +391,7 @@ else{
     
   }
 
-  useEffect(()=>{
-    if(verifyGstData)
-    {
-    console.log("verifyGstData",verifyGstData)
-    if(verifyGstData.success)
-    {
-      
-      handleVerification("gstin",verifyGstData.body.GSTIN)
-    console.log("SUCCESS GST")
-    }
-    
-    }
-     if(verifyGstError)
-    {
-    console.log("verifyGstError",verifyGstError)
-    setError(true)
-    setGstin("")
-    setMessage(verifyGstError.data.message)
-    }
-    },[verifyGstData,verifyGstError])
+ 
 
    const handleGstInput=(text)=>{
     console.log("gstin input",text)
@@ -463,24 +422,40 @@ else{
         tempArr.push(keys[i])
       }
     }
+    
     setKycArray(tempArr)
     console.log("tempArr",tempArr)
-    tempVerification = [...tempArr]
-   for(var i =0;i<tempArr.length;i++)
-   {
-    if(tempArr[i]==="Aadhar")
+    if(tempArr.includes("PAN"))
     {
+      if(!kycData.pan)
+      {
+        setShowPan(true)
+      }
+      else{
+        setPanVerified(true)
+      }
+    }
+    if(tempArr.includes("Aadhar"))
+    {
+      if(!kycData.aadhar)
+      {
         setShowAadhar(true)
+      }
+      else{
+        setAadhaarVerified(true)
+      }
     }
-    else if(tempArr[i]==="GSTIN")
+    if(tempArr.includes("GST"))
     {
+      if(!kycData.gstin)
+      {
         setShowGst(true)
+      }
+      else{
+        setGstVerified(true)
+      }
     }
-    else if(tempArr[i]==="PAN")
-    {
-      setShowPan(true)
-    }
-   }
+   
       
     
    
@@ -563,21 +538,21 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
         marginTop: 10,
       }}
     >
-      <View style={{ flexDirection: 'row', width: '100%' }}>
+      <View style={{ flexDirection: 'row', width: '90%' }}>
         <PoppinsTextMedium content="Name :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
         <PoppinsTextMedium  content ={name} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10 }}></PoppinsTextMedium>
       </View>
-      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+      <View style={{ flexDirection: 'row', width: '90%', marginTop: 10 }}>
         <PoppinsTextMedium content="DOB :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
         <PoppinsTextMedium content={dob} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10}}></PoppinsTextMedium>
       </View>
-      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+      <View style={{ flexDirection: 'row', width: '90%', marginTop: 10 }}>
         <PoppinsTextMedium content="Gender :" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
         <PoppinsTextMedium content={gender} style={{ fontWeight: '600', color: '#919191', fontSize: 14, marginLeft: 10}}></PoppinsTextMedium>
       </View>
-      <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+      <View style={{ flexDirection: 'row', width: '90%', marginTop: 10 }}>
         <PoppinsTextMedium content="Address:" style={{ fontWeight: '700', color: '#919191', fontSize: 14 }}></PoppinsTextMedium>
-        <PoppinsTextMedium content= {address}style={{ fontWeight: '600', color: '#919191', fontSize: 14,width:width-100 }}></PoppinsTextMedium>
+        <PoppinsTextMedium content= {address}style={{ fontWeight: '600', color: '#919191', fontSize: 14}}></PoppinsTextMedium>
       </View>
     </View>
   );
@@ -588,10 +563,10 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
 
   const KycProgress=(props)=>{
 
-    const showPan = props.showPan
-    const showAadhar = props.showAadhar
-    const showGst = props.showGst
-    console.log(kycArray.length)
+    const showsPan = props.showPan
+    const showsAadhar = props.showAadhar
+    const showsGst = props.showGst
+    console.log("show kyc details", showsAadhar,showsGst,showsPan)
     const Circle=(props)=>{
       const completed = props.completed
       const color= completed ? 'yellow': 'white'
@@ -620,7 +595,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
           {
             kycArray && kycArray.map((item,index)=>{
               return(
-                <Circle data = {kycArray} key={index} completed={item === "PAN" ? showPan : item === "GSTIN" ? showGst : showAadhar } title={item} index={index}></Circle>
+                <Circle data = {kycArray} key={index} completed={item === "PAN" ? showsPan : item === "GSTIN" ? showsGst : showsAadhar } title={item} index={index}></Circle>
               )
             })
           }
@@ -646,7 +621,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
                 <Image style={{height:20,width:20,resizeMode:'contain',transform:[{rotate:'180deg'}]}} source={require('../../../assets/images/whiteArrowRight.png')}></Image>
               </TouchableOpacity>
             </View>
-            <KycProgress showPan={true} showAadhar={true} showGst={true}></KycProgress>
+            <KycProgress showPan={panVerified} showAadhar={aadhaarVerified} showGst={gstVerified}></KycProgress>
             <ScrollView style={{width:'100%',height:'90%',backgroundColor:'white',marginTop:20}}>
             {error && (
             <ErrorModal

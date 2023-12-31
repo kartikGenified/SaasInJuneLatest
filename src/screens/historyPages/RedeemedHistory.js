@@ -507,7 +507,7 @@ const RedeemedHistory = ({ navigation }) => {
                   item.data.map((item, index) => {
                     return (
                       <View key={index}>
-                        <ListItem data={item} productStatus={item.gift_status} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM')} />
+                        <ListItem data={item} productStatus={item.gift_status} description={item.gift} productCode={item.product_code} amount={item.points} time={moment(item.created_at).format('HH:MM a')} />
 
                       </View>
 

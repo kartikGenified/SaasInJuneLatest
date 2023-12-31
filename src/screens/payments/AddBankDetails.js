@@ -133,18 +133,18 @@ const AddBankDetails = ({navigation}) => {
             <View style={{minHeight:180,width:'90%',backgroundColor:'white',borderRadius:20,marginTop:20,marginBottom:20,alignItems:'center',justifyContent:'center'}}>
                 <PoppinsTextMedium style={{color:"black",fontWeight:'700'}} content="Bank Details"></PoppinsTextMedium>
                 <RectangularUnderlinedDropDown header="Select Bank" data={bankNames} handleData={getBankName}></RectangularUnderlinedDropDown>
-                <RectanglarUnderlinedTextInput handleData={getIfscCode} placeHolder="SBIN0010650" title = "IFSC Code"></RectanglarUnderlinedTextInput>
+                <RectanglarUnderlinedTextInput label ="IFSC Code" handleData={getIfscCode} placeHolder="SBIN0010650" title = "IFSC Code"></RectanglarUnderlinedTextInput>
             </View>
         )
     }
     const AccountDetails=()=>{
         return(
             <View style={{minHeight:320,width:'90%',backgroundColor:'white',borderRadius:20,marginTop:20,marginBottom:20,alignItems:'center',justifyContent:'flex-start'}}>
-                <PoppinsTextMedium style={{color:"black",fontWeight:'700',marginTop:20}} content="Account Details"></PoppinsTextMedium>
-                <RectanglarUnderlinedTextInput handleData={getAccountNumber} placeHolder="Enter Account Number" ></RectanglarUnderlinedTextInput>
-                <RectanglarUnderlinedTextInput handleData={getConfirmAccountNumber} placeHolder="Confirm Account Number" ></RectanglarUnderlinedTextInput>
-                <RectanglarUnderlinedTextInput handleData={getBeneficiaryName} placeHolder="Enter Beneficiary Name" ></RectanglarUnderlinedTextInput>
-                <RectangularUnderlinedDropDown header="Select Account Type" data={accountType} handleData={getBankAccountType}></RectangularUnderlinedDropDown>
+                <PoppinsTextMedium style={{color:"black",fontWeight:'700',marginTop:20,paddingBottom:20}} content="Account Details"></PoppinsTextMedium>
+                <RectanglarUnderlinedTextInput label ="Account Number" handleData={getAccountNumber} placeHolder="Enter Account Number" ></RectanglarUnderlinedTextInput>
+                <RectanglarUnderlinedTextInput label ="Confirm Account Number" handleData={getConfirmAccountNumber} placeHolder="Confirm Account Number" ></RectanglarUnderlinedTextInput>
+                <RectanglarUnderlinedTextInput label = "Beneficiary Name" handleData={getBeneficiaryName} placeHolder="Enter Beneficiary Name" ></RectanglarUnderlinedTextInput>
+                <RectangularUnderlinedDropDown label ="Account Type" header="Select Account Type" data={accountType} handleData={getBankAccountType}></RectangularUnderlinedDropDown>
 
             </View>
         )

@@ -35,6 +35,7 @@ import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrA
 import FastImage from 'react-native-fast-image';
 import ScannedDetailsBox from '../../components/organisms/ScannedDetailsBox';
 import moment from 'moment';
+import AnimatedDots from '../../components/animations/AnimatedDots';
 
 const Dashboard = ({ navigation }) => {
   const [dashboardItems, setDashboardItems] = useState()
@@ -171,7 +172,7 @@ const Dashboard = ({ navigation }) => {
         query_params: queryParams,
       });
     })();
-  }, []);
+  }, [focused]);
   useEffect(() => {
     if (extraPointEntriesData) {
       console.log("extraPointEntriesData", extraPointEntriesData)
@@ -480,10 +481,13 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
               setCmpainVideoVisible(false)
             }} />
           </View>
-          <View style={{ width: "90%", height: 50, backgroundColor: 'white', marginBottom: 20, flexDirection: 'row', alignItems: 'center', borderColor: '#808080', borderWidth: 0.3, borderRadius: 10 }}>
+         {/* Ozone specific change do not show for sales */}
+         {
+            userData.user_type_id !== 13 && 
+            <View style={{ width: "90%", height: 50, backgroundColor: 'white', marginBottom: 20, flexDirection: 'row', alignItems: 'center', borderColor: '#808080', borderWidth: 0.3, borderRadius: 10 }}>
 
             <View style={{ backgroundColor: 'white', width: '42%', marginHorizontal: 20 }}>
-              <PoppinsText content={`Balance Points ${userPointData?.body?.point_balance ? userPointData?.body?.point_balance : "loading"}`} style={{ color: 'black', fontWeight: 'bold' }}></PoppinsText>
+             {userPointData?.body?.point_balance ? <PoppinsText content={`Balance Points ${userPointData?.body?.point_balance ? userPointData?.body?.point_balance : "loading"}`} style={{ color: 'black', fontWeight: 'bold' }}></PoppinsText> : <AnimatedDots color={'black'}/>} 
             </View>
 
             <View style={{ height: '100%', borderWidth: 0.4, color: "#808080", opacity: 0.3, width: 0.2 }}>
@@ -496,7 +500,8 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
             </View>
 
           </View>
-         {scanningDetails &&  <ScannedDetailsBox lastScannedDate={moment(scanningDetails.data.scanned_at).format("DD MMM YYYY")} scanCount={scanningDetails.total}></ScannedDetailsBox>}
+          }
+         {scanningDetails && scanningDetails?.data?.length &&  <ScannedDetailsBox lastScannedDate={moment(scanningDetails?.data[0]?.scanned_at).format("DD MMM YYYY")} scanCount={scanningDetails.total}></ScannedDetailsBox>}
           <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ paddingLeft: 10, paddingRight: 10, paddingBottom: 4 }}>
             {/* <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
           <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox> */}

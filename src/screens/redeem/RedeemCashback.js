@@ -15,7 +15,6 @@ import {useSelector,useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import {BaseUrlImages} from '../../utils/BaseUrlImages';
-import {useRedeemCashbackMutation} from '../../apiServices/cashback/CashbackRedeemApi';
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useCashPerPointMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
@@ -60,15 +59,7 @@ const RedeemCashback = ({navigation}) => {
     isError:cashPerPointIsError
   }] = useCashPerPointMutation()
 
-  const [
-    redeemCashbackFunc,
-    {
-      data: redeemCashbackData,
-      error: redeemCashbackError,
-      isLoading: redeemCashbackIsLoading,
-      isError: redeemCashbackIsError,
-    },
-  ] = useRedeemCashbackMutation();
+  
 
   const points =userPointData?.body.point_balance;
   const minPointsRedeemed = cashPerPointData?.body.min_point_redeem
@@ -78,7 +69,7 @@ const RedeemCashback = ({navigation}) => {
   const redeemCashback = async () => {
 if(Number(minPointsRedeemed)<=(pointsConversion))
 {
-  navigation.navigate('OtpVerification',{type:"Cashback"})
+  navigation.navigate('BankAccounts',{type:"Cashback"})
 }
 else{
   setError(true)

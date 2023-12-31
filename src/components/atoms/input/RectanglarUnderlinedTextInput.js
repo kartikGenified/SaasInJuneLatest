@@ -71,7 +71,7 @@ const RectanglarUnderlinedTextInput = (props) => {
       ></PoppinsTextMedium>
       <TextInput
         maxLength={maxLength}
-        value={input ===undefined ? "Data not available" : input}
+        value={input ===undefined ? "" : input}
         onChangeText={(inp) => {
           setInput(inp);
         }}
@@ -81,7 +81,7 @@ const RectanglarUnderlinedTextInput = (props) => {
         onSubmitEditing={() => {
           handleTextInput(input, title);
         }}
-        placeholderTextColor="black"
+        placeholderTextColor="#DDDDDD"
         placeholder={required ? `${placeHolder} *` : `${placeHolder}`}
         style={{
           width: "100%",

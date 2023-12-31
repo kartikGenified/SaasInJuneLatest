@@ -19,6 +19,9 @@ import * as Keychain from 'react-native-keychain';
 import { useRedeemGiftsMutation } from "../../apiServices/gifts/RedeemGifts";
 import { useRedeemCashbackMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import { useGetLoginOtpForVerificationMutation } from "../../apiServices/otp/GetOtpApi";
+import { useAddCashToBankMutation } from "../../apiServices/cashback/CashbackRedeemApi";
+import Geolocation from '@react-native-community/geolocation';
+
 
 const OtpVerification = ({navigation,route}) => {
   const [message, setMessage] = useState();
@@ -28,6 +31,7 @@ const OtpVerification = ({navigation,route}) => {
   const [mobile, setMobile] = useState();
   const [timer, setTimer] = useState(60)
   const [showRedeemButton,setShowRedeemButton] = useState(false)
+  const [location,setLocation] = useState()
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
 
   const pointsConversion = useSelector(state=>state.redemptionData.pointConversion)
@@ -59,6 +63,13 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     },
   ] = useRedeemCashbackMutation();
 
+  const [addCashToBankFunc,{
+    data:addCashToBankData,
+    error:addCashToBankError,
+    isError:addCashToBankIsError,
+    isLoading:addCashToBankIsLoading
+  }] = useAddCashToBankMutation()
+
   const [
     getOtpforVerificationFunc,
     {
@@ -70,17 +81,123 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   ] = useGetLoginOtpForVerificationMutation();
   
   const type = route.params.type
+  const selectedAccount = route.params?.selectedAccount
+  const handleCashbackRedemption=async()=>{
+    const credentials = await Keychain.getGenericPassword();
+    if (credentials) {
+      console.log(
+        'Credentials successfully loaded for user ' + credentials.username
+      );
+      const token = credentials.username
+      const params = {
+        token: token,
+        body: {
+          platform_id: 1,
+          platform: "mobile",
+          cash: cashConversion,
+          remarks: "demo",
+          state: location.state===undefined ? "N/A" : location.state,
+          district: location.district===undefined ? "N/A" : location.district,
+          city: location.city===undefined ? "N/A" : location.city,
+          lat: location.lat,
+          log: location.lon,
+          active_beneficiary_account_id: selectedAccount
+        },
+      }
+      console.log("addCashToBankFunc",params)
+      addCashToBankFunc(params)
+    }
+
+  }
 
   useEffect(() => {
     timer > 0 && setTimeout(timeOutCallback, 1000);
   }, [timer, timeOutCallback]);
 
+  useEffect(() => {
+    let lat = ''
+    let lon = ''
+    Geolocation.getCurrentPosition((res) => {
+      console.log("res", res)
+      lat = res.coords.latitude
+      lon = res.coords.longitude
+      // getLocation(JSON.stringify(lat),JSON.stringify(lon))
+      console.log("latlong", lat, lon)
+      var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
+        &location_type=ROOFTOP&result_type=street_address&key=AIzaSyADljP1Bl-J4lW3GKv0HsiOW3Fd1WFGVQE`
+
+      fetch(url).then(response => response.json()).then(json => {
+        console.log("location address=>", JSON.stringify(json));
+        const formattedAddress = json.results[0].formatted_address
+        const formattedAddressArray = formattedAddress.split(',')
+
+        let locationJson = {
+
+          lat: json.results[0].geometry.location.lat === undefined ? "N/A" : json.results[0].geometry.location.lat,
+          lon: json.results[0].geometry.location.lng === undefined ? "N/A" : json.results[0].geometry.location.lng,
+          address: formattedAddress === undefined ? "N/A" : formattedAddress
+
+        }
+
+        const addressComponent = json.results[0].address_components
+        console.log("addressComponent", addressComponent)
+        for (let i = 0; i <= addressComponent.length; i++) {
+          if (i === addressComponent.length) {
+            setLocation(locationJson)
+          }
+          else {
+            if (addressComponent[i].types.includes("postal_code")) {
+              console.log("inside if")
+
+              console.log(addressComponent[i].long_name)
+              locationJson["postcode"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("country")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["country"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("administrative_area_level_1")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["state"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("administrative_area_level_2")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["district"] = addressComponent[i].long_name
+            }
+            else if (addressComponent[i].types.includes("locality")) {
+              console.log(addressComponent[i].long_name)
+
+              locationJson["city"] = addressComponent[i].long_name
+            }
+          }
+
+        }
+
+
+        console.log("formattedAddressArray", locationJson)
+
+      })
+    })
+
+  }, [])
+
+
   useEffect(()=>{
     if(redeemCashbackData)
     {
         console.log("redeemCashbackData",redeemCashbackData)
-        setSuccess(true)
-        setMessage(redeemCashbackData.message)
+        if(redeemCashbackData.success)
+        {
+          handleCashbackRedemption()
+        }
+        // setSuccess(true)
+        // setMessage(redeemCashbackData.message)
+       
+        
+        
     }
     else if(redeemCashbackError){
       console.log("redeemCashbackError",redeemCashbackError)
@@ -101,6 +218,22 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
         
     }
   },[redeemCashbackData,redeemCashbackError])
+
+  useEffect(()=>{
+    if(addCashToBankData)
+    {
+      console.log("addCashToBankData",addCashToBankData)
+      setSuccess(true)
+      setMessage(addCashToBankData.message)
+    }
+    else if(addCashToBankError)
+    {
+      console.log("addCashToBankError",addCashToBankError)
+      setError(true)
+      setMessage("There was some problem ")
+    }
+  },[addCashToBankData,addCashToBankError])
+
   useEffect(() => {
     if (verifyOtpForNormalUseData) {
       console.log("Verify Otp", verifyOtpForNormalUseData)

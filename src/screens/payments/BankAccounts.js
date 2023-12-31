@@ -42,6 +42,8 @@ const BankAccounts = ({ navigation, route }) => {
     : 'grey';
   const userData = useSelector(state => state.appusersdata.userData)
 
+    const type = route.params?.type
+    console.log("navigating to bank page from",type)
   const [listAccountFunc, {
     data: listAccountData,
     error: listAccountError,
@@ -57,7 +59,6 @@ const BankAccounts = ({ navigation, route }) => {
   }] = useDeleteBankMutation()
 
   const focused = useIsFocused()
-  const refresh = route.params?.refresh
   const height = Dimensions.get('window').height
   const deleteData = async (data) => {
     const credentials = await Keychain.getGenericPassword();
@@ -485,12 +486,19 @@ const BankAccounts = ({ navigation, route }) => {
 
         </ScrollView>
         <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 10, right: 20 }}>
-          <PoppinsText content="Add Account" style={{ color: ternaryThemeColor, fontSize: 20 }}></PoppinsText>
+          <PoppinsText content="Add Account" style={{ color: ternaryThemeColor, fontSize: 16 }}></PoppinsText>
           <TouchableOpacity onPress={() => { navigation.navigate('AddBankAccountAndUpi') }} style={{ backgroundColor: '#DDDDDD', height: 60, width: 60, borderRadius: 30, alignItems: "center", justifyContent: 'center', marginLeft: 10 }}>
 
             <Plus name="pluscircle" size={50} color={ternaryThemeColor}></Plus>
           </TouchableOpacity>
         </View>
+           {
+           type==="Cashback" && <TouchableOpacity onPress={()=>{
+            navigation.navigate("OtpVerification",{type:"Cashback",selectedAccount:hasSelectedPaymentMethod})
+            }} style={{width:100,alignItems:'center',justifyContent:'center',backgroundColor:ternaryThemeColor,padding:8, position: 'absolute', bottom: 14, left: 20 }}>
+              <PoppinsText content ="Get OTP" style={{color:'white',fontSize:16}}></PoppinsText>
+            </TouchableOpacity>
+            }
 
 
       </View>
