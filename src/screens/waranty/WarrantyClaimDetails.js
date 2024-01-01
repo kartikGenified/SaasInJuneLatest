@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
@@ -23,6 +23,7 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
+            <ScrollView style={{width:"100%"}}>
             {/* header */}
             <View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
                 <TouchableOpacity onPress={() => {
@@ -97,7 +98,7 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
                 />
             } */}
 
-
+</ScrollView>
         </View>
     );
 };

@@ -224,7 +224,7 @@ const AddUser = ({ navigation }) => {
 
 
         }
-        console.log(locationJson)
+        console.log("location locationJSon", locationJson)
         setLocation(locationJson)
       }
     }
@@ -493,10 +493,12 @@ const AddUser = ({ navigation }) => {
                       handleData={handleData}
                       handleFetchPincode={handleFetchPincode}
                       placeHolder={item.name}
+                      value={location.postcode}
                       label={item.label}
                       required={item.required}
                       maxLength={6}
                     ></PincodeTextInput>
+                    
                   )
                 }
 

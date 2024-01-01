@@ -202,7 +202,7 @@ const WarrantyDetails = ({ navigation, route }) => {
         return (
             <View style={{ height: 200, width: '100%', backgroundColor: '#F7F7F7', alignItems: "center", justifyContent: 'center', padding: 16, marginTop: 90 }}>
                 <View style={{ height: 154, width: 154, borderRadius: 10, borderWidth: 1, backgroundColor: 'white', position: "absolute", top: -74, borderColor: '#DDDDDD', alignItems: "center", justifyContent: "center" }}>
-                 {data.product_images?.[0] ?   <Image style={{ height: 100, width: 100 }} source={{ uri: BaseUrlImages + data.product_images?.[0] }}></Image> : <PoppinsTextMedium style={{color:'black', fontWeight:'800'}} content="NO IMAGE"></PoppinsTextMedium>} 
+                 {data.product_images?.[0] ?   <Image style={{ height: 100, width: 100,resizeMode:'contain' }} source={{ uri: BaseUrlImages + data.product_images?.[0] }}></Image> : <PoppinsTextMedium style={{color:'black', fontWeight:'800'}} content="NO IMAGE"></PoppinsTextMedium>} 
                 </View>
                 <View style={{ alignItems: "flex-start", justifyContent: "center", position: "absolute", bottom: 10, left: 20, color: 'black' }}>
                     <PoppinsTextMedium style={{ margin: 4, fontSize: 18, fontWeight: '700', color: 'black' }} content={`Product Name : ${productName}`}></PoppinsTextMedium>

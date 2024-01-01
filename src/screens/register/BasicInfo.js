@@ -238,7 +238,7 @@ const BasicInfo = ({ navigation, route }) => {
 
               locationJson["state"] = addressComponent[i].long_name
             }
-            else if (addressComponent[i].types.includes("administrative_area_level_2")) {
+            else if (addressComponent[i].types.includes("administrative_area_level_3")) {
               console.log(addressComponent[i].long_name)
 
               locationJson["district"] = addressComponent[i].long_name
@@ -435,24 +435,31 @@ const BasicInfo = ({ navigation, route }) => {
     setError(false);
   };
 
-  const getLocationFromPinCode = async (pin) => {
-    setLocation()
-    const credentials = await Keychain.getGenericPassword();
-    if (credentials) {
-      console.log(
-        'Credentials successfully loaded for user ' + credentials.username
-      );
-      const token = credentials.username
-      const params = {
-        pincode: pin,
-        token: token
+  const getLocationFromPinCode =  (pin) => {
+    console.log("getting location from pincode",pin)
+    var url = `http://postalpincode.in/api/pincode/${pin}`
 
-      }
-      getLocationFromPincodeFunc(params)
-     
-
+  fetch(url).then(response => response.json()).then(json => {
+    console.log("location address=>", JSON.stringify(json));
+    if(json.PostOffice===null)
+    {
+      setError(true)
+      setMessage("Pincode data cannot be retrieved.")
     }
-  }
+    else{
+      const locationJson = {
+        "postcode":pin,
+        "district":json.PostOffice[0].District,
+        "state":json.PostOffice[0].State,
+        "country":json.PostOffice[0].Country,
+        "city":json.PostOffice[0].Region
+      }
+      setLocation(locationJson)
+    }
+    
+
+  })
+}
 
   const getOtpFromComponent = value => {
     if (value.length === 6) {

@@ -282,7 +282,7 @@ const SharedPointsHistory = ({ navigation }) => {
           )}
 
           <PoppinsTextLeftMedium
-            content="Filter Scanned Data"
+            content="Date Filter"
             style={{
               color: "black",
               marginTop: 20,

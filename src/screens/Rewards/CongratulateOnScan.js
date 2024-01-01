@@ -331,7 +331,7 @@ const getMembership = async () => {
           const params = {
             data: {
               qrs: qrIdList,
-              points_sharing: pointSharingData,
+              point_sharing: pointSharingData,
               platform_id: Number(platform),
               pincode:
                 location.postcode === undefined ? "N/A" : location.postcode,

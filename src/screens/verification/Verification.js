@@ -445,7 +445,7 @@ else{
         setAadhaarVerified(true)
       }
     }
-    if(tempArr.includes("GST"))
+    if(tempArr.includes("GSTIN"))
     {
       if(!kycData.gstin)
       {

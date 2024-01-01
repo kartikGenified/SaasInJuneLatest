@@ -11,6 +11,8 @@ import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegist
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import FastImage from 'react-native-fast-image';
 import { setCanMapUsers } from '../../../redux/slices/userMappingSlice';
+import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
+
 const ListUsers = ({ navigation }) => {
 
   const [selectedOption, setSelectedOption] = useState([]);
@@ -37,10 +39,6 @@ const dispatch = useDispatch()
 
   var allUsersData = []
   var allUsersList = []
-
-
-
-
 
   const [listAddedUserFunc, {
     data: listAddedUserData,
@@ -177,6 +175,7 @@ const dispatch = useDispatch()
 
 
   const UserListComponent = (props) => {
+   
     const name = props.name
     const index = props.index + 1
     const userType = props.userType
@@ -203,7 +202,7 @@ const dispatch = useDispatch()
           </View>
         </View>
         <View style={{ backgroundColor: status == 1 ? "#DCFCE7" : "#FFE2E6", height: 50, justifyContent: 'center' }}>
-          <PoppinsTextMedium style={{ color: '#413E3E', fontWeight: "700" }} content={`${status == 1 ? "Active" : "Inactive"}`}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: '#413E3E', fontWeight: "700" }} content={`${status == 1 ? "Verified" : "Not Verified"}`}></PoppinsTextMedium>
         </View>
       </TouchableOpacity>
     )
@@ -284,7 +283,7 @@ const dispatch = useDispatch()
               <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 20, }} content={`${active}`}></PoppinsTextLeftMedium>
 
 
-              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total Active`} ></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total Verified`} ></PoppinsTextLeftMedium>
 
             </View>
           </View>
@@ -296,7 +295,7 @@ const dispatch = useDispatch()
 
               {/* <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize:20, }} content={` ${totalCount}`} ></PoppinsTextLeftMedium> */}
 
-              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total inactive`} ></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total Not Verified`} ></PoppinsTextLeftMedium>
 
             </View>
           </View>

@@ -8,7 +8,8 @@ import { useGetSupportQueriesByIdMutation } from '../../apiServices/supportQueri
 import DataNotFound from '../../screens/data not found/DataNotFound';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
-
+import Plus from 'react-native-vector-icons/AntDesign';
+import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 // create a component
 const QueryList = ({ navigation }) => {
     const ternaryThemeColor = useSelector(
@@ -135,7 +136,7 @@ const QueryList = ({ navigation }) => {
             {/* navigator */}
 
             <View>
-                {getQueryData?.body?.supportQueriesList && getQueryData?.body?.supportQueriesList ?
+                {getQueryData?.body?.supportQueriesList &&
                     <FlatList
                         data={getQueryData?.body?.supportQueriesList}
                         maxToRenderPerBatch={10}
@@ -147,11 +148,20 @@ const QueryList = ({ navigation }) => {
                         )}
                         keyExtractor={(item, index) => index}
                     />
-                    :
-                    <DataNotFound/>
+                   
+                }
+                {
+                    getQueryData?.body?.supportQueriesList?.length===0 && <DataNotFound></DataNotFound>
                 }
 
             </View>
+            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 10, right: 20 }}>
+          <PoppinsText content="Add Issue" style={{ color: ternaryThemeColor, fontSize: 16 }}></PoppinsText>
+          <TouchableOpacity onPress={() => { navigation.navigate('SupportQueries') }} style={{ backgroundColor: '#DDDDDD', height: 60, width: 60, borderRadius: 30, alignItems: "center", justifyContent: 'center', marginLeft: 10 }}>
+
+            <Plus name="pluscircle" size={50} color={ternaryThemeColor}></Plus>
+          </TouchableOpacity>
+        </View>
         </View>
     );
 };

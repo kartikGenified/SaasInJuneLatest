@@ -127,7 +127,7 @@ const WarrantyHistory = ({ navigation }) => {
                         handleFilter={onFilter}
                         comp={ModalContent}></FilterModal>}
 
-                    <PoppinsTextMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:"center" }}></PoppinsTextMedium>
+                    <PoppinsTextMedium content="Date Filter" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:"center" }}></PoppinsTextMedium>
                     <View>
                         <InputDate data="Start Date" handleData={handleStartDate} />
 
@@ -170,11 +170,15 @@ const WarrantyHistory = ({ navigation }) => {
         var pending = 0
         if (getWarrantylistData) {
             getWarrantylistData && getWarrantylistData.body.map((item, index) => {
-                if (item.status === "1") {
+                if (item.status === "1" || item.status==="3") {
                     activated++
                 }
+                if(item.status==="2")
+                {
+                    pending++
+                }
             })
-            pending = getWarrantylistData.body.length - activated
+            
         }
 
         return (
@@ -303,7 +307,7 @@ const WarrantyHistory = ({ navigation }) => {
                 renderItem={({ item, index }) => {
                     console.log(index + 1, item)
                     return (
-                        <WarrantyList data={item} date={item.end_date} warrantyTillDate={item.end_date} productName={item.product_name} warrantyStatus={item.status === "1" ? "Not Activated" : "Activated"} ></WarrantyList>
+                        <WarrantyList data={item} date={item.end_date} warrantyTillDate={item.end_date} productName={item.product_name} warrantyStatus={item.status === "1" ? "Activated" : item.status === "2" ? "Not Activated" : "Claimed"} ></WarrantyList>
 
                     )
                 }}

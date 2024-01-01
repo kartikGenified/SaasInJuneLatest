@@ -249,7 +249,7 @@ const PointHistory = ({ navigation }) => {
                         handleFilter={onFilter}
                         comp={ModalContent}></FilterModal>}
 
-                    <PoppinsTextLeftMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:'center' }}></PoppinsTextLeftMedium>
+                    <PoppinsTextLeftMedium content="Date Filter" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:'center' }}></PoppinsTextLeftMedium>
                     <View>
                         <InputDate data="Start Date" handleData={handleStartDate} />
 

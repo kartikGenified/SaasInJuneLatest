@@ -162,7 +162,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
 
               locationJson["state"] = addressComponent[i].long_name
             }
-            else if (addressComponent[i].types.includes("administrative_area_level_2")) {
+            else if (addressComponent[i].types.includes("administrative_area_level_3")) {
               console.log(addressComponent[i].long_name)
 
               locationJson["district"] = addressComponent[i].long_name
@@ -202,19 +202,9 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     else if(redeemCashbackError){
       console.log("redeemCashbackError",redeemCashbackError)
 
-      if(redeemCashbackError.status=="409")
-      {
-        // navigation.navigate("BasicInfo",{
-        //   "userType":userData.user_type,
-        //   "userTypeId":userData.user_type_id
-        // })
-        setError(true)
-        setMessage("Kindly Complete")
-      }
-      else{
         setError(true)
         setMessage(redeemCashbackError.data.message)
-      }
+      
         
     }
   },[redeemCashbackData,redeemCashbackError])

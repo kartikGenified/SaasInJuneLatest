@@ -263,7 +263,7 @@ const ReportAndIssue = ({ navigation, route }) => {
         </View>
 
         <ModalWithBorder
-          modalClose={() => { setSuccessModal(false) }}
+          modalClose={() => { setSuccessModal(false),setMessage("") }}
           message={message}
           openModal={successmodal}
           navigateTo="Dashboard"
@@ -272,7 +272,7 @@ const ReportAndIssue = ({ navigation, route }) => {
 
         {error  && (
           <ErrorModal
-            modalClose={()=>{setError(false)}}
+            modalClose={()=>{setError(false),setMessage("")}}
             // productData={verifyQrData.body}
             message={message}
             // isReportable={true}

@@ -267,7 +267,7 @@ export default function GiftCatalogue({ navigation }) {
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          paddingBottom: 40,
+         
         }}
       >
         <View
@@ -308,7 +308,7 @@ export default function GiftCatalogue({ navigation }) {
           </ScrollView>
         </View>
 
-        <ScrollView style={{ width: "100%", height: "100%" }}>
+        <ScrollView contentContainerStyle={{paddingBottom:200}} style={{ width: "100%" }}>
           <View
             style={{
               width: "100%",

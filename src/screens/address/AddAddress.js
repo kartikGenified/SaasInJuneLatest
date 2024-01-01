@@ -115,7 +115,7 @@ const AddAddress = ({ navigation }) => {
                 locationJson["state"] = addressComponent[i].long_name;
               } else if (
                 addressComponent[i].types.includes(
-                  "administrative_area_level_2"
+                  "administrative_area_level_3"
                 )
               ) {
                 console.log(addressComponent[i].long_name);

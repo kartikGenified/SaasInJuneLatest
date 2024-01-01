@@ -58,7 +58,7 @@ const label = props.label
         {
         console.log("verifyPanError",verifyPanError)
         setError(true)
-        setMessage(verifyPanError.data.Error.message)
+        setMessage(verifyPanError.data.message)
         }
         },[verifyPanData,verifyPanError])
         

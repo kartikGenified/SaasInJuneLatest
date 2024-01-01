@@ -976,7 +976,7 @@ else{
                 justifyContent: 'center',
               }}>
               <FlatList
-                style={{width: '100%'}}
+                style={{width: '100%',height:400}}
                 data={addedQrList}
                 renderItem={({item, index}) => (
                   <View

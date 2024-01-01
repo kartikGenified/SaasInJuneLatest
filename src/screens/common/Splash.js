@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image, ImageBackground,PermissionsAndroid } from 'react-native';
+import { View, StyleSheet, Text, Image, ImageBackground,PermissionsAndroid, Platform } from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
@@ -14,7 +14,7 @@ import messaging from '@react-native-firebase/messaging';
 import { setFcmToken } from '../../../redux/slices/fcmTokenSlice';
 import { setAppUsers,setAppUsersData } from '../../../redux/slices/appUserSlice';
 import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersApi';
-
+import Geolocation from '@react-native-community/geolocation';
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
@@ -44,10 +44,50 @@ const Splash = ({ navigation }) => {
     },
   ] = useGetAppUsersDataMutation();
 
-  useEffect(() => {
-    
+  useEffect(()=>{
     getUsers();
-  }, []);
+    getAppTheme("ozone")
+    const checkToken = async () => {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+         console.log("fcmToken",fcmToken);
+         dispatch(setFcmToken(fcmToken))
+      } 
+     }
+     checkToken()
+    const requestLocationPermission = async () => {
+      try {
+        if(Platform.OS==="android")
+        {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Geolocation Permission',
+              message: 'Can we access your location?',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          console.log('granted', granted);
+          if (granted === 'granted') {
+            console.log('You can use Geolocation');
+            return true;
+          } else {
+            console.log('You cannot use Geolocation');
+            return false;
+          }
+        }
+        else{
+          Geolocation.requestAuthorization()
+        }
+        
+      } catch (err) {
+        return false;
+      }
+    };
+    requestLocationPermission()
+  },[])
 
   
   useEffect(() => {
@@ -69,47 +109,8 @@ const Splash = ({ navigation }) => {
     }
   }, [getUsersData, getUsersError]);
 
-  useEffect(()=>{
-    const requestLocationPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Geolocation Permission',
-            message: 'Can we access your location?',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
-        );
-        console.log('granted', granted);
-        if (granted === 'granted') {
-          console.log('You can use Geolocation');
-          return true;
-        } else {
-          console.log('You cannot use Geolocation');
-          return false;
-        }
-      } catch (err) {
-        return false;
-      }
-    };
-    requestLocationPermission()
-  },[])
-  useEffect(()=>{
-    const checkToken = async () => {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-         console.log("fcmToken",fcmToken);
-         dispatch(setFcmToken(fcmToken))
-      } 
-     }
-     checkToken()
-     
-      
-    
-      
-  },[])
+ 
+  
  
     const getData = async () => {
       try {
@@ -173,13 +174,7 @@ const Splash = ({ navigation }) => {
   
   
   // calling API to fetch themes for the app
-  useEffect(() => {
-    getAppTheme("ozone")
-    //         VersionCheck.getLatestVersion()
-    // .then(latestVersion => {
-    //     console.log(latestVersion);   
-    //     });
-  }, [focused])
+  
 
   // fetching data and checking for errors from the API-----------------------
   useEffect(() => {
@@ -214,14 +209,14 @@ const Splash = ({ navigation }) => {
       console.log("isAlreadyIntro", isAlreadyIntroduced)
       getData()
     }
-    else {
-      getAppTheme("ozone")
+    else if(getAppThemeError){
+      
 
       console.log("getAppThemeIsError", getAppThemeIsError)
       console.log("getAppThemeError", getAppThemeError)
     }
    
-  }, [getAppThemeData, getAppThemeError, isAlreadyIntroduced])
+  }, [getAppThemeData,getAppThemeError])
 
 
   

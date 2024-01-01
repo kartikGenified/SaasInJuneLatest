@@ -295,7 +295,7 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
 
               locationJson["state"] = addressComponent[i].long_name
             }
-            else if (addressComponent[i].types.includes("administrative_area_level_2")) {
+            else if (addressComponent[i].types.includes("administrative_area_level_3")) {
               console.log(addressComponent[i].long_name)
 
               locationJson["district"] = addressComponent[i].long_name
@@ -501,7 +501,7 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
 
           </View>
           }
-         {scanningDetails && scanningDetails?.data?.length &&  <ScannedDetailsBox lastScannedDate={moment(scanningDetails?.data[0]?.scanned_at).format("DD MMM YYYY")} scanCount={scanningDetails.total}></ScannedDetailsBox>}
+         {userData.user_type_id !== 13 && scanningDetails && scanningDetails?.data?.length &&  <ScannedDetailsBox lastScannedDate={moment(scanningDetails?.data[0]?.scanned_at).format("DD MMM YYYY")} scanCount={scanningDetails.total}></ScannedDetailsBox>}
           <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ paddingLeft: 10, paddingRight: 10, paddingBottom: 4 }}>
             {/* <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
           <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox> */}

@@ -14,6 +14,7 @@ const TextInputAadhar = (props) => {
     const [otpSent, setOtpSent] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [aadharVerified, setAadharVerified] =  useState(false)
+    const [aadharExists, setAadharExists] = useState(false)
     const placeHolder = props.placeHolder
     const required = props.required
 
@@ -46,7 +47,7 @@ const TextInputAadhar = (props) => {
       {
         if(value.length===12)
       {
-        setShowOtp(true)
+        
         
         const data = {
           "aadhaar_number":value
@@ -86,11 +87,15 @@ const TextInputAadhar = (props) => {
         {
           console.log("success")
           setOtpSent(true)
+          setShowOtp(true)
         }
         }
         else if(sendAadharOtpError)
         {
         console.log("sendAadharOtpError",sendAadharOtpError)
+        
+          setAadharExists(true)
+        
         }
         },[sendAadharOtpData,sendAadharOtpError])
 
@@ -154,6 +159,11 @@ const TextInputAadhar = (props) => {
               <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../../assets/images/greenTick.png')}></Image>
             </View>}
         </View>
+        {
+          aadharExists &&  <View style={{width:'100%',alignItems:'flex-start',justifyContent:'center'}}>
+          <PoppinsTextMedium style={{color:ternaryThemeColor,padding:4,fontSize:14,marginLeft:24}} content = {sendAadharOtpError?.data?.message}></PoppinsTextMedium>
+        </View>
+        }
         {
           otpSent && 
           

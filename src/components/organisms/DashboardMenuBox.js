@@ -124,7 +124,7 @@ const DashboardMenuBox=(props)=>{
             navigation.navigate('HelpAndSupport')
         }
         else if(data.toLowerCase() === "report an issue"){
-            navigation.navigate('SupportQueries')
+            navigation.navigate('QueryList')
         }
     }
 

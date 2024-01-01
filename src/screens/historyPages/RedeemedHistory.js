@@ -365,7 +365,7 @@ const RedeemedHistory = ({ navigation }) => {
             handleFilter={onFilter}
             comp={ModalContent}></FilterModal>}
 
-          <PoppinsTextLeftMedium content="Filter Scanned Data" style={{ color: 'black', marginTop: 20, marginLeft: '35%', fontWeight: 'bold' }}></PoppinsTextLeftMedium>
+          <PoppinsTextLeftMedium content="Date Filter" style={{ color: 'black', marginTop: 20, marginLeft: '35%', fontWeight: 'bold' }}></PoppinsTextLeftMedium>
           <View>
             <InputDate data="Start Date" handleData={handleStartDate} />
 

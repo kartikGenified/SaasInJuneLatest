@@ -4,6 +4,7 @@ export const AppThemeApi = baseApi.injectEndpoints({
     endpoints:(builder) =>({
         getAppThemeData : builder.mutation({
             query(clientName){
+                console.log("cient name". clientName)
                 return {
                     url:`/api/admin/vendorTheme/${clientName}`,
                     method:'get',

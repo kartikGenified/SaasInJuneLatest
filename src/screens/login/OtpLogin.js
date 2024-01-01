@@ -148,11 +148,9 @@ const OtpLogin = ({ navigation, route }) => {
     }
   }, [getNameData, getNameError])
 
-  // useEffect(() => {
-  //   setName('')
-  //   setMobile('')
-
-  // }, [focused])
+  useEffect(() => {
+    console.log("Name in use effect--------->>>>>>>>>>>>>>>",name)
+  }, [name])
 
   const getMobile = data => {
     // console.log(data)
@@ -176,22 +174,17 @@ const OtpLogin = ({ navigation, route }) => {
   }
 
 
+
+
   const getName = data => {
     const nameRegex = /^[a-zA-Z\s-]+$/;
-
+    console.log("Data getting function", data)
     if (data !== undefined) {
-
-      if (nameRegex.test(name)) {
+   
         setName(data)
-      }
-
-      else {
-        console.log("not allowed")
-      }
-
+      
+    
     }
-
-
   };
 
   const getCheckBoxData = (data) => {
@@ -216,7 +209,7 @@ const OtpLogin = ({ navigation, route }) => {
           }
           else {
             setError(true)
-            setMessage("Mobile number lenght should be 10 digits")
+            setMessage("Please enter your 10 digit mobile number")
           }
           // setName('')
           // setMobile('')
@@ -231,7 +224,7 @@ const OtpLogin = ({ navigation, route }) => {
       else {
         if (mobile?.length != 10) {
           setError(true)
-          setMessage("Mobile number lenght should be 10 digits")
+          setMessage("Please enter your 10 digit mobile number")
         }
 
         else if (name == undefined || name == "") {

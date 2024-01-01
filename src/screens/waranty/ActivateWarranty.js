@@ -208,9 +208,11 @@ const ActivateWarranty = ({ navigation, route }) => {
 
 
 
-  const warrantyForm = Object.values(form);
+  const warrantyForm =  form ?  Object.values(form) : [];
   // console.log(Object.keys(form))
   console.log(warrantyForm);
+
+ 
   // const handleDataTextInputMandatory = (data) => {
   //     console.log(data)
   // }
@@ -563,8 +565,11 @@ const ActivateWarranty = ({ navigation, route }) => {
               resizeMode={FastImage.resizeMode.contain}
             />
           }
+          {
+            warrantyForm.length===0 && <PoppinsTextMedium style={{color:"red",fontSize:18}} content ="Warranty form not created"></PoppinsTextMedium>
 
-          <ButtonOval
+          }
+          {warrantyForm.length!==0 && <ButtonOval
             handleOperation={() => {
               handleWarrantyFormSubmission();
             }}
@@ -575,7 +580,7 @@ const ActivateWarranty = ({ navigation, route }) => {
               padding: 10,
               color: 'white',
               fontSize: 16,
-            }}></ButtonOval>
+            }}></ButtonOval>}
         </View>
 
 

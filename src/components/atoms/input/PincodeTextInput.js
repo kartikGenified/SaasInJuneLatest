@@ -19,17 +19,20 @@ const PincodeTextInput = (props) => {
         setKeyboardShow(false)
     })
     useEffect(()=>{
-        handleInputEnd()
+       
         setValue(props.value)
-    },[keyboardShow,props.value])
+    },[props.value])
+    useEffect(()=>{
+        handleInputEnd()
+    },[keyboardShow])
 
     const handleInput=(text)=>{
         setValue(text)
-        console.log(maxLength)
-        if(text.length===6)
+        console.log(maxLength,text)
+        if(text.length===6 )
         {
-            props.handleFetchPincode(text)
-            let tempJsonData ={...props.jsonData,"value":text}
+        props.handleFetchPincode(text)
+        let tempJsonData ={...props.jsonData,"value":text}
         console.log(tempJsonData)
         props.handleData(tempJsonData)
         }

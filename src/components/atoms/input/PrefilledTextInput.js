@@ -19,14 +19,17 @@ const PrefilledTextInput = (props) => {
             setKeyboardShow(false)
         })
    
-   
+   useEffect(()=>{
+    setValue(props.value)
+   },[props.value])
+
     useEffect(()=>{
-        setValue(props.value)
+       
         let tempJsonData ={...props.jsonData,"value":value}
         console.log("tempJsonData",tempJsonData)
         props.handleData(tempJsonData,props.placeHolder)
         console.log("keyboard visible",keyboardShow,placeHolder)
-    },[props.value, keyboardShow])
+    },[keyboardShow])
 
     const handleInput=(text)=>{
         setValue(text)
