@@ -186,7 +186,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
         if(getActiveMembershipData.success)
         {
           
-          console.log("getActiveMembershipData.body.points",getActiveMembershipData.body.points)
+          console.log("getActiveMembershipData.body.points",getActiveMembershipData?.body?.points)
         }
     }
     else if (getActiveMembershipError) {

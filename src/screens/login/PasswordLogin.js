@@ -340,7 +340,7 @@ const PasswordLogin = ({ navigation, route }) => {
             style={{
               height: 50,
               width: 100,
-              resizeMode: 'center',
+              resizeMode: 'contain',
               top: 20,
               position: "absolute",
               left: 50,
