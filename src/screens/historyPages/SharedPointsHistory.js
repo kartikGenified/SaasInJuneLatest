@@ -286,7 +286,7 @@ const SharedPointsHistory = ({ navigation }) => {
             style={{
               color: "black",
               marginTop: 20,
-              marginLeft: "35%",
+             
               fontWeight: "bold",
               alignSelf:"center"
 
