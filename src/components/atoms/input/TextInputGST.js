@@ -23,8 +23,8 @@ const TextInputGST = (props) => {
         if(value.length===15)
         {
           const data = {
-            "gstin":"29AAICP2912R1ZR",
-    "business_name":"TEst"
+            "gstin":value,
+    
         }
         verifyGstFunc(data)
           console.log(data)

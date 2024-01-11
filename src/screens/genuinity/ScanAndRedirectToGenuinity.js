@@ -29,6 +29,8 @@ import { useGetProductDataMutation } from '../../apiServices/product/productApi'
 import { setProductData } from '../../../redux/slices/getProductSlice';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Close from 'react-native-vector-icons/Ionicons';
+import RNQRGenerator from 'rn-qr-generator';
+
 
 const ScanAndRedirectToGenuinity = ({ navigation }) => {
   const [zoom, setZoom] = useState(0);
@@ -155,36 +157,85 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
   };
 
   // function called on successfull scan --------------------------------------
+  // const onSuccess = e => {
+  //   console.log('Qr data is ------', JSON.stringify(e));
+  //   const qrData = e.data.split('=')[1];
+  //   // console.log(typeof qrData);
+
+  //   const requestData = { unique_code: qrData };
+  //   const verifyQR = async data => {
+  //     // console.log('qrData', data);
+  //     try {
+  //       // Retrieve the credentials
+
+  //       const credentials = await Keychain.getGenericPassword();
+  //       if (credentials) {
+  //         console.log(
+  //           'Credentials successfully loaded for user ' + credentials.username,
+  //         );
+  //         setSavedToken(credentials.username);
+  //         const token = credentials.username;
+
+  //         data && verifyQrFunc({ token, data });
+  //       } else {
+  //         console.log('No credentials stored');
+  //       }
+  //     } catch (error) {
+  //       console.log("Keychain couldn't be accessed!", error);
+  //     }
+  //   };
+  //   verifyQR(requestData);
+  // };
   const onSuccess = e => {
-    console.log('Qr data is ------', JSON.stringify(e));
-    const qrData = e.data.split('=')[1];
-    // console.log(typeof qrData);
+    console.log('Qr data is ------', e.data);
+    
+if(e.data===undefined)
+{
+  setError(true)
+  setMessage("Please scan a valid QR")
+}
+else{
+  const qrData = e.data.split('=')[1];
+    console.log ("qrData",qrData);
+    let requestData = {unique_code: qrData};
+  console.log("qrDataArray",qrData.split("-"))
+    if(qrData.split("-").length===1)
+    {
+      requestData = {unique_code: "ozone-"+qrData};
 
-    const requestData = { unique_code: qrData };
-    const verifyQR = async data => {
-      // console.log('qrData', data);
-      try {
-        // Retrieve the credentials
+    }
+    else if(qrData.split("-").length===2){
+      requestData = {unique_code: qrData};
 
-        const credentials = await Keychain.getGenericPassword();
-        if (credentials) {
-          console.log(
-            'Credentials successfully loaded for user ' + credentials.username,
-          );
-          setSavedToken(credentials.username);
-          const token = credentials.username;
 
-          data && verifyQrFunc({ token, data });
-        } else {
-          console.log('No credentials stored');
-        }
-      } catch (error) {
-        console.log("Keychain couldn't be accessed!", error);
+
+    }
+
+  const verifyQR = async data => {
+    // console.log('qrData', data);
+    try {
+      // Retrieve the credentials
+
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        console.log(
+          'Credentials successfully loaded for user ' + credentials.username, data
+        );
+        setSavedToken(credentials.username);
+        const token = credentials.username;
+
+        data && verifyQrFunc({token, data});
+      } else {
+        console.log('No credentials stored');
       }
-    };
-    verifyQR(requestData);
+    } catch (error) {
+      console.log("Keychain couldn't be accessed!", error);
+    }
   };
-
+  verifyQR(requestData);
+}
+   
+  };
   // add qr to the list of qr--------------------------------------
 
   const addQrDataToList = data => {
@@ -309,6 +360,23 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
 
   const handleOpenImageGallery = async () => {
     const result = await launchImageLibrary();
+    console.log("result",result)
+    RNQRGenerator.detect({
+      uri: result.assets[0].uri
+    })
+      .then(response => {
+        const { values } = response; // Array of detected QR code values. Empty if nothing found.
+        console.log("From gallery",response.values[0])
+        // const requestData = {unique_code: response.values[0].split("=")[1]};
+        const requestData = response.values[0]
+        onSuccess({data:requestData})
+        console.log("requestData",requestData)
+
+      })
+      .catch((error) => {
+      console.log('Cannot detect QR code in image', error)
+   
+  });
   };
 
   // --------------------------------------------------------

@@ -62,6 +62,7 @@ const CashbackHistory = ({ navigation }) => {
     };
     getData();
   }, []);
+
   useEffect(() => {
     if (getCashTransactionsData) {
         let cashback = 0

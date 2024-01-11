@@ -26,7 +26,7 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
+	<!-- <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
         <true/>
@@ -38,7 +38,7 @@
                 <true/>
             </dict>
         </dict>
-    </dict>
+    </dict> -->
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play music</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

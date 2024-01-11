@@ -277,7 +277,10 @@ if(addQrData)
       
     }
     console.log("Registration Bouns",body)
-      addRegistrationBonusFunc(body)
+      if(!userData?.is_scanned)
+      {
+        addRegistrationBonusFunc(body)
+      }
     } 
  
 }
@@ -375,8 +378,20 @@ if(e.data===undefined)
 else{
   const qrData = e.data.split('=')[1];
     console.log ("qrData",qrData);
+    let requestData = {unique_code: qrData};
+  console.log("qrDataArray",qrData.split("-"))
+    if(qrData.split("-").length===1)
+    {
+      requestData = {unique_code: "ozone-"+qrData};
 
-    const requestData = {unique_code: qrData};
+    }
+    else if(qrData.split("-").length===2){
+      requestData = {unique_code: qrData};
+
+
+
+    }
+
   const verifyQR = async data => {
     // console.log('qrData', data);
     try {
@@ -506,22 +521,32 @@ else{
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData);
-      if(verifyQrData.body?.qr?.qr_status==="1" )
+      if(verifyQrData.body?.qr?.qr_status==="1" || verifyQrData.body?.qr_status === "1" )
       {
       addQrDataToList(verifyQrData.body.qr);
       }
-      if(verifyQrData.body?.qr?.qr_status==="2" && verifyQrData.status===201 )
+      if(verifyQrData.body?.qr?.qr_status==="2" || verifyQrData.body?.qr_status==="2" )
       {
-       
+       if(verifyQrData.status===201)
+       {
         setError(true);
         setMessage(verifyQrData.message);
+       }
+       else if(verifyQrData.status===202)
+       {
+         setIsReportable(true)
+         setError(true);
+         setMessage(verifyQrData.message);
+       }
+       else if(verifyQrData.status===200)
+       {
+        
+         setError(true);
+         setMessage(verifyQrData.message);
+       }
       }
-      if(verifyQrData.body?.qr?.qr_status==="2" && verifyQrData.status===202 )
-      {
-       setIsReportable(true)
-        setError(true);
-        setMessage(verifyQrData.message);
-      }
+     
+     
     }
      else if(verifyQrError) {
       if(verifyQrError===undefined){
@@ -976,7 +1001,7 @@ else{
                 justifyContent: 'center',
               }}>
               <FlatList
-                style={{width: '100%',height:400}}
+                style={{width: '100%',height:300}}
                 data={addedQrList}
                 renderItem={({item, index}) => (
                   <View
