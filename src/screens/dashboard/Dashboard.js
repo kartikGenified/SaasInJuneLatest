@@ -24,7 +24,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { setPercentagePoints, setShouldSharePoints } from '../../../redux/slices/pointSharingSlice';
 import { useExtraPointEnteriesMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
-import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import { useFetchUserPointsHistoryMutation, useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import { setQrIdList } from '../../../redux/slices/qrCodeDataSlice';
 import CampaignVideoModal from '../../components/modals/CampaignVideoModal';
@@ -124,12 +124,14 @@ const Dashboard = ({ navigation }) => {
     isError: getFormIsError
   }] = useGetFormMutation()
 
-  const [extraPointEntriesFunc, {
-    data: extraPointEntriesData,
-    error: extraPointEntriesError,
-    isError: extraPointEntriesIsError,
-    isLoading: extraPointEntriesIsLoading
-  }] = useExtraPointEnteriesMutation()
+  const [fetchUserPointsHistoryFunc, {
+    data: fetchUserPointsHistoryData,
+    error: fetchUserPointsHistoryError,
+    isLoading: fetchUserPointsHistoryLoading,
+    isError: fetchUserPointsHistoryIsError
+}] = useFetchUserPointsHistoryMutation()
+
+  
   const id = useSelector(state => state.appusersdata.id);
 
   const fetchPoints = async () => {
@@ -140,6 +142,7 @@ const Dashboard = ({ navigation }) => {
       token: token
     }
     userPointFunc(params)
+    fetchUserPointsHistoryFunc(params)
 
   }
 
@@ -148,58 +151,26 @@ const Dashboard = ({ navigation }) => {
     fetchPoints()
     dispatch(setQrIdList([]))
   }, [focused])
+  
 
+  
+ 
   useEffect(() => {
-    (async () => {
-      const credentials = await Keychain.getGenericPassword();
-      const token = credentials.username;
-      let queryParams = `?user_type_id=${userData.user_type_id}&app_user_id=${userData.id}&limit=${1}`;
-      if (startDate && endDate) {
-        queryParams += `&from_date=${moment(startDate).format(
-          "YYYY-MM-DD"
-        )}&to_date=${moment(endDate).format("YYYY-MM-DD")}`;
-      } else if (startDate) {
-        queryParams += `&from_date=${moment(startDate).format(
-          "YYYY-MM-DD"
-        )}`;
-      }
+    if (fetchUserPointsHistoryData) {
+        console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
+        
 
-      console.log("queryParams", queryParams);
-
-      fetchAllQrScanedList({
-        token: token,
-
-        query_params: queryParams,
-      });
-    })();
-  }, [focused]);
-  useEffect(() => {
-    if (extraPointEntriesData) {
-      console.log("extraPointEntriesData", extraPointEntriesData)
-
-    }
-    else if (extraPointEntriesError) {
-      console.log("extraPointEntriesError", extraPointEntriesError)
-    }
-  }, [extraPointEntriesData, extraPointEntriesError])
-
-  useEffect(()=>{
-    if(fetchAllQrScanedListData)
-    {
-      console.log("fetchAllQrScanedListData",JSON.stringify(fetchAllQrScanedListData))
-      if(fetchAllQrScanedListData.success)
-      {
-        if(fetchAllQrScanedListData.body.total!==0)
+        if(fetchUserPointsHistoryData.success)
         {
-        seScanningDetails(fetchAllQrScanedListData.body)
-
+          seScanningDetails(fetchUserPointsHistoryData.body)
         }
-      }
     }
-    else if(fetchAllQrScanedListError)
-    {
-console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
-    }  },[fetchAllQrScanedListData],fetchAllQrScanedListError)
+    else if (fetchUserPointsHistoryError) {
+        console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
+    }
+
+}, [fetchUserPointsHistoryData, fetchUserPointsHistoryError])
+  
 
   useEffect(() => {
     if (getActiveMembershipData) {
@@ -520,7 +491,7 @@ console.log("fetchAllQrScanedListError",fetchAllQrScanedListError)
         </View>
       </ScrollView>
        {
-        getActiveMembershipIsLoading && getFormIsLoading && getWorkflowIsLoading && getBannerIsLoading && getDashboardIsLoading && fetchAllQrScanedListIsLoading && getKycStatusIsLoading && userPointIsLoading && <FastImage
+        getActiveMembershipIsLoading && getFormIsLoading && getWorkflowIsLoading && getBannerIsLoading && getDashboardIsLoading && fetchUserPointsHistoryLoading && getKycStatusIsLoading && userPointIsLoading && <FastImage
           style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
           source={{
             uri: gifUri, // Update the path to your GIF
