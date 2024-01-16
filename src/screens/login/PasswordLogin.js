@@ -119,9 +119,9 @@ const PasswordLogin = ({ navigation, route }) => {
   // ------------------------------------------
 
 
-  const userType = route.params.userType
-  const userId = route.params.userId
-  const needsApproval = route.params.needsApproval
+  const userType = route?.params?.userType
+  const userId = route?.params?.userId
+  const needsApproval = route?.params?.needsApproval
   console.log("Needs approval", needsApproval)
   const getUserId = (data) => {
     console.log(data)
@@ -158,7 +158,7 @@ const PasswordLogin = ({ navigation, route }) => {
 
   useEffect(() => {
     if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+      console.log("getTermsData", getTermsData?.body?.data?.[0]?.files[0]);
     }
     else if (getTermsError) {
       console.log("gettermserror", getTermsError)
@@ -208,11 +208,11 @@ const PasswordLogin = ({ navigation, route }) => {
 
     try {
       console.log("Saving user details", data)
-      dispatch(setAppUserId(data.user_type_id))
-      dispatch(setAppUserName(data.name))
-      dispatch(setAppUserType(data.user_type))
+      dispatch(setAppUserId(data?.user_type_id))
+      dispatch(setAppUserName(data?.name))
+      dispatch(setAppUserType(data?.user_type))
       dispatch(setUserData(data))
-      dispatch(setId(data.id))
+      dispatch(setId(data?.id))
     }
     catch (e) {
       console.log("error", e)

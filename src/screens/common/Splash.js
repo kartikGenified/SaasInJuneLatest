@@ -92,16 +92,16 @@ const Splash = ({ navigation }) => {
   
   useEffect(() => {
     if (getUsersData) {
-      console.log("type of users",getUsersData.body);
-      const appUsers = getUsersData.body.map((item,index)=>{
+      console.log("type of users",getUsersData?.body);
+      const appUsers = getUsersData?.body.map((item,index)=>{
         return item.name
       })
-      const appUsersData = getUsersData.body.map((item,index)=>{
+      const appUsersData = getUsersData?.body.map((item,index)=>{
         return {"name":item.name,
       "id":item.user_type_id
       }
       })
-      console.log("appUsers",appUsers)
+      console.log("appUsers",appUsers,appUsersData)
       dispatch(setAppUsers(appUsers))
       dispatch(setAppUsersData(appUsersData))
     } else if(getUsersError) {
@@ -115,10 +115,11 @@ const Splash = ({ navigation }) => {
     const getData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem('loginData');
-        console.log("loginData",JSON.parse(jsonValue))
         const parsedJsonValue = JSON.parse(jsonValue)
+
         const value = await AsyncStorage.getItem('isAlreadyIntroduced');
-      if (value !== null && jsonValue!==null ) {
+
+      if (value != null && jsonValue!=null ) {
         // value previously stored
         console.log("asynch value",value,jsonValue)
         try{
@@ -179,29 +180,29 @@ const Splash = ({ navigation }) => {
   // fetching data and checking for errors from the API-----------------------
   useEffect(() => {
     if (getAppThemeData) {
-      console.log("getAppThemeData", JSON.stringify(getAppThemeData.body))
-      dispatch(setPrimaryThemeColor(getAppThemeData.body.theme.color_shades["600"]))
-      dispatch(setSecondaryThemeColor(getAppThemeData.body.theme.color_shades["400"]))
-      dispatch(setTernaryThemeColor(getAppThemeData.body.theme.color_shades["700"]))
-      dispatch(setIcon(getAppThemeData.body.logo[0]))
-      dispatch(setIconDrawer(getAppThemeData.body.logo[0]))
-      dispatch(setOptLogin(getAppThemeData.body.login_options.Otp.users))
-      dispatch(setPasswordLogin(getAppThemeData.body.login_options.Password.users))
-      dispatch(setButtonThemeColor(getAppThemeData.body.theme.color_shades["700"]))
-      dispatch(setManualApproval(getAppThemeData.body.approval_flow_options.Manual.users))
-      dispatch(setAutoApproval(getAppThemeData.body.approval_flow_options.AutoApproval.users))
-      dispatch(setRegistrationRequired(getAppThemeData.body.registration_options.Registration.users))
-      dispatch(setColorShades(getAppThemeData.body.theme.color_shades))
-      dispatch(setKycOptions(getAppThemeData.body.kyc_options))
-      dispatch(setPointSharing(getAppThemeData.body.points_sharing))
-      dispatch(setSocials(getAppThemeData.body.socials))
-      dispatch(setWebsite(getAppThemeData.body.website))
-      dispatch(setCustomerSupportMail(getAppThemeData.body.customer_support_email))
-      dispatch(setCustomerSupportMobile(getAppThemeData.body.customer_support_mobile))
-      dispatch(setExtraFeatures(getAppThemeData.body.addon_features))
-      if(getAppThemeData.body.addon_features.kyc_online_verification!==undefined)
+      console.log("getAppThemeData", JSON.stringify(getAppThemeData?.body))
+      dispatch(setPrimaryThemeColor(getAppThemeData?.body?.theme?.color_shades["600"]))
+      dispatch(setSecondaryThemeColor(getAppThemeData?.body?.theme?.color_shades["400"]))
+      dispatch(setTernaryThemeColor(getAppThemeData?.body?.theme?.color_shades["700"]))
+      dispatch(setIcon(getAppThemeData?.body?.logo[0]))
+      dispatch(setIconDrawer(getAppThemeData?.body?.logo[0]))
+      dispatch(setOptLogin(getAppThemeData?.body?.login_options?.Otp.users))
+      dispatch(setPasswordLogin(getAppThemeData?.body?.login_options?.Password.users))
+      dispatch(setButtonThemeColor(getAppThemeData?.body?.theme?.color_shades["700"]))
+      dispatch(setManualApproval(getAppThemeData?.body?.approval_flow_options?.Manual.users))
+      dispatch(setAutoApproval(getAppThemeData?.body?.approval_flow_options?.AutoApproval.users))
+      dispatch(setRegistrationRequired(getAppThemeData?.body?.registration_options?.Registration?.users))
+      dispatch(setColorShades(getAppThemeData?.body?.theme.color_shades))
+      dispatch(setKycOptions(getAppThemeData?.body?.kyc_options))
+      dispatch(setPointSharing(getAppThemeData?.body?.points_sharing))
+      dispatch(setSocials(getAppThemeData?.body?.socials))
+      dispatch(setWebsite(getAppThemeData?.body?.website))
+      dispatch(setCustomerSupportMail(getAppThemeData?.body?.customer_support_email))
+      dispatch(setCustomerSupportMobile(getAppThemeData?.body?.customer_support_mobile))
+      dispatch(setExtraFeatures(getAppThemeData?.body?.addon_features))
+      if(getAppThemeData?.body?.addon_features?.kyc_online_verification!==undefined)
       {
-        if(getAppThemeData.body.addon_features.kyc_online_verification)
+        if(getAppThemeData?.body?.addon_features?.kyc_online_verification)
         {
           dispatch(setIsOnlineVeriification())
         }

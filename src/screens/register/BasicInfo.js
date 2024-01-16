@@ -42,7 +42,7 @@ import { useVerifyOtpForNormalUseMutation } from '../../apiServices/otp/VerifyOt
 import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegistration';
 import EmailTextInput from '../../components/atoms/input/EmailTextInput';
 import { validatePathConfig } from '@react-navigation/native';
-
+import { useIsFocused } from '@react-navigation/native';
 
 const BasicInfo = ({ navigation, route }) => {
   const [userName, setUserName] = useState(route.params.name)
@@ -62,11 +62,11 @@ const BasicInfo = ({ navigation, route }) => {
   const [otpModal, setOtpModal] = useState(false)
   const [otpVisible, setOtpVisible] = useState(false)
   const [isValid, setIsValid] = useState(true)
-
+  const [hideButton, setHideButton] = useState(false)
   const [timer, setTimer] = useState(0)
 
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
-
+  const focused = useIsFocused()
 
 
 
@@ -174,6 +174,10 @@ const BasicInfo = ({ navigation, route }) => {
     }
 
   }, [])
+
+  useEffect(()=>{
+    setHideButton(false)
+  },[focused])
 
   useEffect(() => {
     if (verifyOtpData?.success) {
@@ -316,6 +320,7 @@ const BasicInfo = ({ navigation, route }) => {
         setMessage(registerUserData.message)
         setModalTitle("WOW")
       }
+      setHideButton(false)
 
       // const values = Object.values(registerUserData.body.template)
       // setRegistrationForm(values)
@@ -324,6 +329,7 @@ const BasicInfo = ({ navigation, route }) => {
       console.log("form submission error", registerUserError)
       setError(true)
       setMessage(registerUserError.data.message)
+      setHideButton(false)
 
     }
   }, [registerUserData, registerUserError])
@@ -508,6 +514,7 @@ const BasicInfo = ({ navigation, route }) => {
         const index = keys.indexOf('email')
         if (isValidEmail(values[index])) {
           registerUserFunc(body)
+          setHideButton(true)
         }
         else {
           setError(true)
@@ -907,7 +914,7 @@ const BasicInfo = ({ navigation, route }) => {
               }
             })}
 
-          {formFound && <ButtonOval
+          {formFound && hideButton && <ButtonOval
             handleOperation={() => {
               handleRegistrationFormSubmission();
             }}

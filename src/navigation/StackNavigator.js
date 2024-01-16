@@ -77,6 +77,7 @@ import AddedUserScanList from '../screens/addUser/AddedUserScanList';
 import RequestAppointment from '../screens/requestAppointment/RequestAppointment';
 import SupportQueries from '../screens/helpAndSupport/SupportQueries';
 import QueryList from '../screens/queryList/QueryList';
+import PreviousTransactionHistory from '../screens/historyPages/PreviousTransactionHistory';
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
@@ -94,6 +95,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="WhatsNew" component={WhatsNew}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="PreviousTransactionHistory" component={PreviousTransactionHistory}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

@@ -27,7 +27,7 @@ import PoppinsTextLeftMedium from '../../components/electrons/customFonts/Poppin
 import Checkbox from '../../components/atoms/checkbox/Checkbox';
 import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalApi';
 import * as Keychain from 'react-native-keychain';
-
+import FastImage from 'react-native-fast-image';
 
 const OtpLogin = ({ navigation, route }) => {
   const [mobile, setMobile] = useState("")
@@ -36,7 +36,7 @@ const OtpLogin = ({ navigation, route }) => {
   const [message, setMessage] = useState()
   const [error, setError] = useState(false)
   const [isChecked, setIsChecked] = useState(false);
-
+  const [hideButton, setHideButton] = useState(false)
   // fetching theme for the screen-----------------------
 
   const primaryThemeColor = useSelector(
@@ -93,21 +93,24 @@ const OtpLogin = ({ navigation, route }) => {
     }
   ] = useGetNameMutation()
 
-  const needsApproval = route.params.needsApproval;
-  const user_type_id = route.params.userId;
-  const user_type = route.params.userType;
-  const registrationRequired = route.params.registrationRequired
+  const needsApproval = route?.params?.needsApproval;
+  const user_type_id = route?.params?.userId;
+  const user_type = route?.params?.userType;
+  const registrationRequired = route?.params?.registrationRequired
   console.log("registrationRequired", registrationRequired)
   const width = Dimensions.get('window').width;
   const navigationParams = { "needsApproval": needsApproval, "user_type_id": user_type_id, "user_type": user_type, "mobile": mobile, "name": name }
-
+  const gifUri = Image.resolveAssetSource(
+    require("../../../assets/gif/loader.gif")
+  ).uri;
   useEffect(() => {
     fetchTerms();
-  }, [])
+    setHideButton(false)
+  }, [focused])
 
   useEffect(() => {
     if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+      console.log("getTermsData", getTermsData?.body?.data?.[0]?.files[0]);
     }
     else if (getTermsError) {
       console.log("gettermserror", getTermsError)
@@ -118,18 +121,20 @@ const OtpLogin = ({ navigation, route }) => {
 
   useEffect(() => {
     if (sendOtpData) {
-      console.log("data", sendOtpData)
-      if (sendOtpData.success === true && mobile.length === 10) {
+      console.log("sendOtpData", sendOtpData)
+      if (sendOtpData?.success === true && mobile.length === 10) {
         navigation.navigate('VerifyOtp', { navigationParams })
       }
       else {
         console.log("Trying to open error modal")
       }
+      setHideButton(false)
     }
     else if (sendOtpError) {
       console.log("err", sendOtpError)
       setError(true)
-      setMessage(sendOtpError.data.message)
+      setHideButton(false)
+      setMessage(sendOtpError?.data?.message)
     }
 
 
@@ -139,8 +144,8 @@ const OtpLogin = ({ navigation, route }) => {
   useEffect(() => {
     if (getNameData) {
       console.log("getNameData", getNameData)
-      if (getNameData.success) {
-        setName(getNameData.body.name)
+      if (getNameData?.success) {
+        setName(getNameData?.body.name)
       }
     }
     else if (getNameError) {
@@ -194,6 +199,7 @@ const OtpLogin = ({ navigation, route }) => {
 
   const navigateToOtp = () => {
     sendOtpFunc({ mobile, name, user_type, user_type_id })
+    setHideButton(true)
     // navigation.navigate('VerifyOtp',{navigationParams})
   }
   const handleButtonPress = () => {
@@ -341,14 +347,15 @@ const OtpLogin = ({ navigation, route }) => {
           <View style={{ flexDirection: 'row', marginHorizontal: 24, }}>
             <Checkbox CheckBoxData={getCheckBoxData} />
             <TouchableOpacity onPress={() => {
-              navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })
+              navigation.navigate('PdfComponent', { pdf: getTermsData?.body?.data?.[0]?.files[0] })
             }}>
               <PoppinsTextLeftMedium content={"I agree to the Terms & Conditions"} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
             </TouchableOpacity>
           </View>
 
 
-          {<ButtonNavigateArrow
+          {
+            <ButtonNavigateArrow
             success={success}
             handleOperation={handleButtonPress}
             backgroundColor={buttonThemeColor}
@@ -357,10 +364,19 @@ const OtpLogin = ({ navigation, route }) => {
             navigateTo="VerifyOtp"
             navigationParams={navigationParams}
             mobileLength={mobile}
-            isChecked={isChecked && mobile?.length == 10 && name != ""}
+            isChecked={isChecked && mobile?.length == 10 && name != "" && !hideButton}
           ></ButtonNavigateArrow>}
 
-
+{
+        sendOtpIsLoading && <FastImage
+          style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 10 }}
+          source={{
+            uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      }
         </View>
         {error && <ErrorModal modalClose={modalClose} message={message} openModal={error}></ErrorModal>}
 

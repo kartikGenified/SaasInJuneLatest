@@ -9,9 +9,13 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import Cancel from 'react-native-vector-icons/MaterialIcons'
 import Left from 'react-native-vector-icons/AntDesign'
 import Right from 'react-native-vector-icons/AntDesign'
+import FastImage from 'react-native-fast-image';
 import DataNotFound from '../data not found/DataNotFound';
 const ImageGallery = ({navigation}) => {
   const [imageData, setImageData] = useState({})
+  const gifUri = Image.resolveAssetSource(
+    require("../../../assets/gif/loader.gif")
+  ).uri;
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -180,20 +184,37 @@ setIndexImage(indexImage +1)
         }}>
             <View style={{width:'100%',alignItems:"flex-start",justifyContent:'flex-start',flexDirection:'row',flexWrap:'wrap',marginTop:20}}>
             {
-            Object.keys(imageData).length > 0 ? imageData.map((item,index)=>{
+            Object.keys(imageData).length > 0  && imageData.map((item,index)=>{
               return(
                 <ImageComp key={index} title={item.title} type={item.type} image={item.images} date={item.updated_at}></ImageComp>
               )
             })
-            :
+            
          
-            <DataNotFound></DataNotFound>
+            
          
           }
+          {
+           !appGalleryIsLoading && Object.keys(imageData).length == 0 && <DataNotFound></DataNotFound>
+          
+          }
+         
+         
           
             </View>
           
-            
+            <View style={{alignItems:'center',justifyContent:'center'}}>
+          {
+            appGalleryIsLoading &&  <FastImage
+            style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
+            source={{
+              uri: gifUri, // Update the path to your GIF
+              priority: FastImage.priority.normal,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+          }
+          </View>
             
         </View>
         </ScrollView>

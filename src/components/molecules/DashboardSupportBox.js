@@ -4,10 +4,10 @@ import PoppinsTextMedium from '../electrons/customFonts/PoppinsTextMedium';
 import { useNavigation } from '@react-navigation/native';
 const DashboardSupportBox = (props) => {
     const navigation = useNavigation()
-   const image = props.image 
-   const backgroundColor = props.backgroundColor
-   const text = props.text
-   const borderColor =props.borderColor
+   const image = props?.image 
+   const backgroundColor = props?.backgroundColor
+   const text = props?.text
+   const borderColor =props?.borderColor
     const fontWeight =Platform.OS==='ios' ? '400' : '800'
     const fontSize =Platform.OS==='ios' ? 10 : 12
 

@@ -6,14 +6,14 @@ import { useSelector } from 'react-redux';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 
 const Banner = (props) => {
-  const [showImage, setShowImage] = useState(props.images[0]);
+  const [showImage, setShowImage] = useState(props?.images[0]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const newIndex = (index + 1) % props.images.length;
+      const newIndex = (index + 1) % props?.images?.length;
       setIndex(newIndex);
-      setShowImage(props.images[newIndex]);
+      setShowImage(props?.images[newIndex]);
     }, 4000);
 
     return () => {
@@ -27,15 +27,15 @@ const Banner = (props) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
   const onSwipeLeft = (gestureState) => {
-    const newIndex = (index + 1) % props.images.length;
+    const newIndex = (index + 1) % props?.images?.length;
     setIndex(newIndex);
-    setShowImage(props.images[newIndex]);
+    setShowImage(props?.images[newIndex]);
   };
 
   const onSwipeRight = (gestureState) => {
-    const newIndex = index === 0 ? props.images.length - 1 : index - 1;
+    const newIndex = index === 0 ? props?.images?.length - 1 : index - 1;
     setIndex(newIndex);
-    setShowImage(props.images[newIndex]);
+    setShowImage(props?.images[newIndex]);
   };
 
   const config = {

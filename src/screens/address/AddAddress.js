@@ -11,14 +11,18 @@ import * as Keychain from "react-native-keychain";
 import { useAddAddressMutation } from "../../apiServices/userAddress/UserAddressApi";
 import MessageModal from "../../components/modals/MessageModal";
 import ErrorModal from "../../components/modals/ErrorModal";
+import { useIsFocused } from "@react-navigation/native";
+
 const AddAddress = ({ navigation }) => {
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [responseArray, setResponseArray] = useState([]);
   const [fieldIsEmpty, setFieldIsEmpty] = useState(false)
+  const [hideButton, setHideButton] = useState(false)
   const [location, setLocation] = useState();
   const dispatch = useDispatch();
+  const focused = useIsFocused()
   const [
     getLocationFromPincodeFunc,
     {
@@ -37,17 +41,24 @@ const AddAddress = ({ navigation }) => {
       isError: addAddressIsError,
     },
   ] = useAddAddressMutation();
+
+  useEffect(()=>{
+    setHideButton(false)
+  },[focused])
+
   useEffect(() => {
     if (addAddressData) {
       console.log("addAddressData", addAddressData);
       if(addAddressData.success)
       {
+        setHideButton(false)
         setSuccess(true)
         setMessage(addAddressData.message)
       }
     } else if (addAddressError) {
       console.log("addAddressError", addAddressError);
       setError(true)
+      setHideButton(false)
       setMessage("Address can't be added")
     }
   }, [addAddressData, addAddressError]);
@@ -284,6 +295,7 @@ const AddAddress = ({ navigation }) => {
       }
      
        !check && addAddressFunc(params)
+       !check && setHideButton(true)
         check && alert("fields cant be empty")
      
     } else {
@@ -455,7 +467,7 @@ const AddAddress = ({ navigation }) => {
             label={"Country"}
           ></PrefilledTextInput>
 
-          <TouchableOpacity
+          {!hideButton && <TouchableOpacity
             onPress={() => {
               addAddress();
             }}
@@ -472,7 +484,7 @@ const AddAddress = ({ navigation }) => {
               style={{ color: "white", fontWeight: "800", fontSize: 18 }}
               content={"SUBMIT"}
             ></PoppinsTextMedium>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       )}
     </View>

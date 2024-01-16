@@ -85,7 +85,22 @@ export const GetForms = baseApi.injectEndpoints({
         };
       },
     }),
+    previousTransactions: builder.mutation({
+      query: body => {
+        console.log('body aisi', body);
+        return {
+          method: 'POST',
+          url: `/api/tenant/oopl/transactions`,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + body.token,
+            slug: slug,
+          },
+          body: JSON.stringify(body.data),
+        };
+      },
+    }),
   }),
 });
 
-export const {useAllUserPointsEntryMutation,useCheckUserPointMutation,useFetchUserPointsHistoryMutation,useFetchUserPointsMutation,useUserPointsEntryMutation,useCashPerPointMutation} = GetForms;
+export const {useAllUserPointsEntryMutation,useCheckUserPointMutation,useFetchUserPointsHistoryMutation,useFetchUserPointsMutation,useUserPointsEntryMutation,useCashPerPointMutation,usePreviousTransactionsMutation} = GetForms;

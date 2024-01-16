@@ -22,6 +22,7 @@ import Info from 'react-native-vector-icons/AntDesign';
 import {useVerifyPanMutation} from '../../apiServices/verification/PanVerificationApi';
 import VerifyUpi from '../../apiServices/bankAccount.js/VerifyUpi';
 import { useDeleteBankMutation } from '../../apiServices/bankAccount.js/DeleteBankAccount';
+import { useIsFocused } from '@react-navigation/native';
 
 const AddUpi = ({navigation}) => {
   const [upi, setUpi] = useState();
@@ -32,7 +33,8 @@ const AddUpi = ({navigation}) => {
   const [nameInitialsCapital, setNameInitialsCapital] = useState('');
   const [error, setError] = useState(false);
   const [openBottomModal, setOpenBottomModal] = useState(false);
-
+  const [hidebutton, setHideButton] = useState(false)
+  const focused = useIsFocused()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -58,6 +60,10 @@ const AddUpi = ({navigation}) => {
     },
   ] = useAddBankDetailsMutation();
 
+  useEffect(()=>{
+    setHideButton(false)
+  },[focused])
+
   useEffect(() => {
     if (addBankDetailsData) {
       console.log('addBankDetailsData', addBankDetailsData);
@@ -72,10 +78,12 @@ const AddUpi = ({navigation}) => {
           setSuccess(false);
           // navigation.navigate("BankAccounts",{refresh:true})
         }, 2000);
+        setHideButton(false)
       }
     } else if (addBankDetailsError) {
       console.log('addBankDetailsError', addBankDetailsError);
       setError(true);
+      setHideButton(false)
       setMessage(addBankDetailsError.data.message);
     }
   }, [addBankDetailsData, addBankDetailsError]);
@@ -140,6 +148,7 @@ console.log("deleteBankError",deleteBankError)
       const params = {token: token, data: data};
       console.log(params);
       addBankDetailsFunc(params);
+      setHideButton(true)
     }
   };
   const submitUpi = () => {
@@ -380,7 +389,7 @@ console.log("deleteBankError",deleteBankError)
             </TouchableOpacity>
           </View>
         </View>
-        <View
+       {!hidebutton && <View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
@@ -392,6 +401,7 @@ console.log("deleteBankError",deleteBankError)
             handleData={submitUpi}
             title="Verify"></ShowLoadingButtonSmall>
         </View>
+        }
       </View>
     </View>
   );

@@ -116,7 +116,7 @@ const VerifyOtp = ({ navigation, route }) => {
   // fetching navigation route params ------------------------
 
   // console.log("Navigation Params are", route.params.navigationParams)
-  const navigationParams = route.params.navigationParams;
+  const navigationParams = route?.params?.navigationParams;
   //   const needsApproval = route.params.navigationParams.needsApproval;
   //   const userType = route.params.navigationParams.userType;
   //   const userId = route.params.navigationParams.userId;
@@ -148,6 +148,7 @@ const VerifyOtp = ({ navigation, route }) => {
   }, [success, openModalWithBorder]);
 
   const storeData = async (value) => {
+    console.log("storeDataloginData",value)
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('loginData', jsonValue);
@@ -159,11 +160,11 @@ const VerifyOtp = ({ navigation, route }) => {
 
     try {
       console.log("Saving user details", data)
-      dispatch(setAppUserId(data.user_type_id))
-      dispatch(setAppUserName(data.name))
-      dispatch(setAppUserType(data.user_type))
+      dispatch(setAppUserId(data?.user_type_id))
+      dispatch(setAppUserName(data?.name))
+      dispatch(setAppUserType(data?.user_type))
       dispatch(setUserData(data))
-      dispatch(setId(data.id))
+      dispatch(setId(data?.id))
     }
     catch (e) {
       console.log("error", e)
@@ -173,13 +174,13 @@ const VerifyOtp = ({ navigation, route }) => {
   useEffect(() => {
     if (verifyOtpData) {
       console.log("user Login Data", verifyOtpData)
-      if (verifyOtpData.success) {
-        console.log(verifyOtpData.body.user_type_id, verifyOtpData.body.name, verifyOtpData.body.user_type)
+      if (verifyOtpData?.success) {
+        console.log(verifyOtpData?.body?.user_type_id, verifyOtpData?.body?.name, verifyOtpData?.body?.user_type)
 
         console.log("successfullyLoggedIn")
-        saveToken(verifyOtpData.body.token)
-        storeData(verifyOtpData.body)
-        saveUserDetails(verifyOtpData.body)
+        saveToken(verifyOtpData?.body?.token)
+        storeData(verifyOtpData?.body)
+        saveUserDetails(verifyOtpData?.body)
         setMessage("Successfully Logged In")
         setSuccess(true)
         setModalWithBorder(true)
@@ -195,12 +196,12 @@ const VerifyOtp = ({ navigation, route }) => {
   useEffect(() => {
     if (verifyLoginOtpData) {
       console.log("verifyLoginOtpData", verifyLoginOtpData)
-      const mobile = navigationParams.mobile;
-      const name = navigationParams.name;
-      const user_type_id = navigationParams.user_type_id;
-      const user_type = navigationParams.user_type;
+      const mobile = navigationParams?.mobile;
+      const name = navigationParams?.name;
+      const user_type_id = navigationParams?.user_type_id;
+      const user_type = navigationParams?.user_type;
       const fcm_token = fcmToken
-      if (verifyLoginOtpData.success) {
+      if (verifyLoginOtpData?.success) {
         verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token });
       }
     } else if (verifyLoginOtpError) {
@@ -292,11 +293,11 @@ const VerifyOtp = ({ navigation, route }) => {
   
   const verifyOtp = () => {
     console.log("first")
-    const mobile = navigationParams.mobile;
-    const name = navigationParams.name;
-    const user_type_id = navigationParams.user_type_id;
-    const user_type = navigationParams.user_type;
-    const is_approved_needed = navigationParams.needsApproval;
+    const mobile = navigationParams?.mobile;
+    const name = navigationParams?.name;
+    const user_type_id = navigationParams?.user_type_id;
+    const user_type = navigationParams?.user_type;
+    const is_approved_needed = navigationParams?.needsApproval;
     const fcm_token = fcmToken
     console.log(mobile, name, user_type_id, user_type, otp, is_approved_needed);
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Platform, TouchableOpacity,Image} from 'react-native';
+import { View, StyleSheet, ScrollView, Platform, TouchableOpacity,Image, Button} from 'react-native';
 import MenuItems from '../../components/atoms/MenuItems';
 import { BaseUrl } from '../../utils/BaseUrl';
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
@@ -36,6 +36,7 @@ import FastImage from 'react-native-fast-image';
 import ScannedDetailsBox from '../../components/organisms/ScannedDetailsBox';
 import moment from 'moment';
 import AnimatedDots from '../../components/animations/AnimatedDots';
+import analytics from '@react-native-firebase/analytics';
 
 const Dashboard = ({ navigation }) => {
   const [dashboardItems, setDashboardItems] = useState()
@@ -79,15 +80,7 @@ const Dashboard = ({ navigation }) => {
     isError: getDashboardIsError
   }] = useGetAppDashboardDataMutation()
 
-  const [
-    fetchAllQrScanedList,
-    {
-      data: fetchAllQrScanedListData,
-      isLoading: fetchAllQrScanedListIsLoading,
-      error: fetchAllQrScanedListError,
-      isError: fetchAllQrScanedListIsError,
-    },
-  ] = useFetchAllQrScanedListMutation();
+  
 
   const [getKycStatusFunc, {
     data: getKycStatusData,
@@ -153,7 +146,15 @@ const Dashboard = ({ navigation }) => {
   }, [focused])
   
 
-  
+  useEffect(()=>{
+    if(userPointData)
+    {
+      console.log("userPointData",userPointData)
+    }
+    else if(userPointError){
+      console.log("userPointError",userPointError)
+    }
+  },[userPointData])
  
   useEffect(() => {
     if (fetchUserPointsHistoryData) {
@@ -168,6 +169,7 @@ const Dashboard = ({ navigation }) => {
     else if (fetchUserPointsHistoryError) {
         console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
     }
+  
 
 }, [fetchUserPointsHistoryData, fetchUserPointsHistoryError])
   
@@ -175,9 +177,9 @@ const Dashboard = ({ navigation }) => {
   useEffect(() => {
     if (getActiveMembershipData) {
       console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
-      if(getActiveMembershipData.success)
+      if(getActiveMembershipData?.success)
       {
-        setMembership(getActiveMembershipData.body?.tier.name)
+        setMembership(getActiveMembershipData?.body?.tier.name)
       }
     }
     else if (getActiveMembershipError) {
@@ -188,13 +190,13 @@ const Dashboard = ({ navigation }) => {
   useEffect(() => {
     if (getKycStatusData) {
       console.log("getKycStatusData", getKycStatusData)
-      if (getKycStatusData.success) {
-        const tempStatus = Object.values(getKycStatusData.body)
+      if (getKycStatusData?.success) {
+        const tempStatus = Object.values(getKycStatusData?.body)
         
         setShowKyc(tempStatus.includes(false))
 
         dispatch(
-          setKycData(getKycStatusData.body)
+          setKycData(getKycStatusData?.body)
         )
 
 
@@ -208,7 +210,7 @@ const Dashboard = ({ navigation }) => {
   useEffect(() => {
     if (getDashboardData) {
       console.log("getDashboardData", getDashboardData)
-      setDashboardItems(getDashboardData.body.app_dashboard)
+      setDashboardItems(getDashboardData?.body?.app_dashboard)
     }
     else if (getDashboardError) {
       console.log("getDashboardError", getDashboardError)
@@ -226,23 +228,23 @@ const Dashboard = ({ navigation }) => {
       lon = res.coords.longitude
       // getLocation(JSON.stringify(lat),JSON.stringify(lon))
       console.log("latlong", lat, lon)
-      var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
+      var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
           &location_type=ROOFTOP&result_type=street_address&key=AIzaSyADljP1Bl-J4lW3GKv0HsiOW3Fd1WFGVQE`
 
       fetch(url).then(response => response.json()).then(json => {
         console.log("location address=>", JSON.stringify(json));
-        const formattedAddress = json.results[0].formatted_address
-        const formattedAddressArray = formattedAddress.split(',')
+        const formattedAddress = json?.results[0]?.formatted_address
+        const formattedAddressArray = formattedAddress?.split(',')
 
         let locationJson = {
 
-          lat: json.results[0].geometry.location.lat === undefined ? "N/A" : json.results[0].geometry.location.lat,
-          lon: json.results[0].geometry.location.lng === undefined ? "N/A" : json.results[0].geometry.location.lng,
+          lat: json?.results[0]?.geometry?.location?.lat === undefined ? "N/A" : json?.results[0]?.geometry?.location?.lat,
+          lon: json?.results[0]?.geometry?.location?.lng === undefined ? "N/A" : json?.results[0]?.geometry?.location?.lng,
           address: formattedAddress === undefined ? "N/A" : formattedAddress
 
         }
 
-        const addressComponent = json.results[0].address_components
+        const addressComponent = json?.results[0]?.address_components
         console.log("addressComponent", addressComponent)
         for (let i = 0; i <= addressComponent.length; i++) {
           if (i === addressComponent.length) {
@@ -253,28 +255,28 @@ const Dashboard = ({ navigation }) => {
             if (addressComponent[i].types.includes("postal_code")) {
               console.log("inside if")
 
-              console.log(addressComponent[i].long_name)
-              locationJson["postcode"] = addressComponent[i].long_name
+              console.log(addressComponent[i]?.long_name)
+              locationJson["postcode"] = addressComponent[i]?.long_name
             }
-            else if (addressComponent[i].types.includes("country")) {
-              console.log(addressComponent[i].long_name)
+            else if (addressComponent[i]?.types.includes("country")) {
+              console.log(addressComponent[i]?.long_name)
 
-              locationJson["country"] = addressComponent[i].long_name
+              locationJson["country"] = addressComponent[i]?.long_name
             }
-            else if (addressComponent[i].types.includes("administrative_area_level_1")) {
-              console.log(addressComponent[i].long_name)
+            else if (addressComponent[i]?.types.includes("administrative_area_level_1")) {
+              console.log(addressComponent[i]?.long_name)
 
-              locationJson["state"] = addressComponent[i].long_name
+              locationJson["state"] = addressComponent[i]?.long_name
             }
-            else if (addressComponent[i].types.includes("administrative_area_level_3")) {
-              console.log(addressComponent[i].long_name)
+            else if (addressComponent[i]?.types.includes("administrative_area_level_3")) {
+              console.log(addressComponent[i]?.long_name)
 
-              locationJson["district"] = addressComponent[i].long_name
+              locationJson["district"] = addressComponent[i]?.long_name
             }
-            else if (addressComponent[i].types.includes("locality")) {
-              console.log(addressComponent[i].long_name)
+            else if (addressComponent[i]?.types.includes("locality")) {
+              console.log(addressComponent[i]?.long_name)
 
-              locationJson["city"] = addressComponent[i].long_name
+              locationJson["city"] = addressComponent[i]?.long_name
             }
           }
 
@@ -288,16 +290,16 @@ const Dashboard = ({ navigation }) => {
 
   }, [])
   useEffect(() => {
-    const keys = Object.keys(pointSharingData.point_sharing_bw_user.user)
-    const values = Object.values(pointSharingData.point_sharing_bw_user.user)
-    const percentageKeys = Object.keys(pointSharingData.point_sharing_bw_user.percentage)
-    const percentageValues = Object.values(pointSharingData.point_sharing_bw_user.percentage)
+    const keys = Object.keys(pointSharingData?.point_sharing_bw_user.user)
+    const values = Object.values(pointSharingData?.point_sharing_bw_user.user)
+    const percentageKeys = Object.keys(pointSharingData?.point_sharing_bw_user.percentage)
+    const percentageValues = Object.values(pointSharingData?.point_sharing_bw_user.percentage)
 
     let eligibleUser = ''
     let percentage;
     let index;
     for (var i = 0; i < values.length; i++) {
-      if (values[i].includes(userData.user_type)) {
+      if (values[i].includes(userData?.user_type)) {
         eligibleUser = keys[i]
         index = percentageKeys.includes(eligibleUser) ? percentageKeys.indexOf(eligibleUser) : undefined
         const pointSharingPercent = percentageValues[index]
@@ -318,9 +320,9 @@ const Dashboard = ({ navigation }) => {
         const credentials = await Keychain.getGenericPassword();
         if (credentials) {
           console.log(
-            'Credentials successfully loaded for user ' + credentials.username
+            'Credentials successfully loaded for user ' + credentials?.username
           );
-          const token = credentials.username
+          const token = credentials?.username
           const form_type = "2"
           console.log("token from dashboard ", token)
           token && getDashboardFunc(token)
@@ -344,8 +346,8 @@ const Dashboard = ({ navigation }) => {
 
   useEffect(() => {
     if (getBannerData) {
-      console.log("getBannerData", getBannerData.body)
-      const images = Object.values(getBannerData.body).map((item) => {
+      console.log("getBannerData", getBannerData?.body)
+      const images = Object.values(getBannerData?.body).map((item) => {
         return item.image[0]
       })
       console.log("images", images)
@@ -363,12 +365,12 @@ const Dashboard = ({ navigation }) => {
       if (getWorkflowData.length === 1 && getWorkflowData[0] === "Genuinity") {
         dispatch(setIsGenuinityOnly())
       }
-      const removedWorkFlow = getWorkflowData.body[0]?.program.filter((item, index) => {
+      const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
         return item !== "Warranty"
       })
       console.log("getWorkflowData", getWorkflowData)
       dispatch(setProgram(removedWorkFlow))
-      dispatch(setWorkflow(getWorkflowData.body[0]?.workflow_id))
+      dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
 
     }
     else {
@@ -377,9 +379,9 @@ const Dashboard = ({ navigation }) => {
   }, [getWorkflowData, getWorkflowError])
   useEffect(() => {
     if (getFormData) {
-      console.log("Form Fields", getFormData.body)
-      dispatch(setWarrantyForm(getFormData.body.template))
-      dispatch(setWarrantyFormId(getFormData.body.form_template_id))
+      console.log("Form Fields", getFormData?.body)
+      dispatch(setWarrantyForm(getFormData?.body?.template))
+      dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
 
     }
     else {
@@ -393,9 +395,9 @@ const Dashboard = ({ navigation }) => {
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
-        'Credentials successfully loaded for user ' + credentials.username
+        'Credentials successfully loaded for user ' + credentials?.username
       );
-      const token = credentials.username
+      const token = credentials?.username
       getActiveMembershipFunc(token)
     }
   }
@@ -454,7 +456,7 @@ const Dashboard = ({ navigation }) => {
           </View>
          {/* Ozone specific change do not show for sales */}
          {
-            userData.user_type_id !== 13 && 
+            userData?.user_type_id !== 13 && 
             <View style={{ width: "90%", height: 50, backgroundColor: 'white', marginBottom: 20, flexDirection: 'row', alignItems: 'center', borderColor: '#808080', borderWidth: 0.3, borderRadius: 10 }}>
 
             <View style={{ backgroundColor: 'white', width: '42%', marginHorizontal: 20 }}>
@@ -472,22 +474,33 @@ const Dashboard = ({ navigation }) => {
 
           </View>
           }
-         {userData.user_type_id !== 13 && scanningDetails && scanningDetails?.data?.length &&  <ScannedDetailsBox lastScannedDate={moment(scanningDetails?.data[0]?.scanned_at).format("DD MMM YYYY")} scanCount={scanningDetails.total}></ScannedDetailsBox>}
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ paddingLeft: 10, paddingRight: 10, paddingBottom: 4 }}>
-            {/* <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
-          <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox> */}
+         {(userData?.user_type).toLowerCase() !== "dealer" ? (userData?.user_type).toLowerCase() !== "sales" ? scanningDetails && scanningDetails?.data.length!==0 &&  <ScannedDetailsBox lastScannedDate={moment(scanningDetails?.data[0]?.created_at).format("DD MMM YYYY")} scanCount={scanningDetails.total}></ScannedDetailsBox>:<></> :<></>}
+          {/* <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ paddingLeft: 10, paddingRight: 10, paddingBottom: 4 }}>
+            <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
+          <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
 
-          </ScrollView>
+          </ScrollView> */}
           {dashboardItems && <DashboardMenuBox navigation={navigation} data={dashboardItems}></DashboardMenuBox>}
           <View style={{ width: '100%', alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
             {showKyc && <KYCVerificationComponent buttonTitle="Complete Your KYC" title="Your KYC is not completed"></KYCVerificationComponent>}
           </View>
-          {(userData.user_type).toLowerCase()!=="dealer" && (userData.user_type).toLowerCase()!=="sales" &&<View style={{ flexDirection: "row", width: '100%', alignItems: "center", justifyContent: "center" }}>
+          <View style={{ flexDirection: "row", width: '100%', alignItems: "center", justifyContent: "center" }}>
             <DashboardSupportBox text="Rewards" backgroundColor="#D9C7B6" borderColor="#FEE8D4" image={require('../../../assets/images/reward_dashboard.png')} ></DashboardSupportBox>
             <DashboardSupportBox text="Customer Support" backgroundColor="#BCB5DC" borderColor="#E4E0FC" image={require('../../../assets/images/support.png')} ></DashboardSupportBox>
             <DashboardSupportBox text="Feedback" backgroundColor="#D8C8C8" borderColor="#FDDADA" image={require('../../../assets/images/feedback.png')} ></DashboardSupportBox>
 
-          </View>}
+          </View>
+          {/* <Button
+        title="Add To Basket"
+        onPress={async () =>
+          await analytics().logEvent('basket', {
+            id: 3745092,
+            item: 'mens grey t-shirt',
+            description: ['round neck', 'long sleeved'],
+            size: 'L',
+          })
+        }
+      /> */}
         </View>
       </ScrollView>
        {

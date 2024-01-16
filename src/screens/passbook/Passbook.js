@@ -146,6 +146,8 @@ const Passbook = ({ navigation }) => {
         const discription = props.discription
         const image = props.image
         const navigateToPages = (data) => {
+
+        console.log("navigateToPages",data)
             if (data === "Scanned History") {
                 navigation.navigate('ScannedHistory')
             }
@@ -169,8 +171,14 @@ const Passbook = ({ navigation }) => {
                 navigation.navigate('WheelHistory')
 
             }
+            
             else if (data === "Warranty History") {
                 navigation.navigate('WarrantyHistory')
+
+            }
+            else if (data === "Previous Transaction History") {
+                console.log("PreviousTransactionHistory")
+                navigation.navigate('PreviousTransactionHistory')
 
             }
             else if (data === "Shared Point History") {
@@ -235,6 +243,10 @@ const Passbook = ({ navigation }) => {
             }
             else if (data === "Shared Point History") {
                 navigation.navigate('SharedPointsHistory')
+
+            }
+            else if (data === "Previous Transaction History") {
+                navigation.navigate('PreviousTransactionHistory')
 
             }
         }
@@ -361,6 +373,8 @@ const Passbook = ({ navigation }) => {
 
                             pointSharing && <NavigateTO title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/shared_point.png')}></NavigateTO>
                         }
+                        <NavigateTO title="Previous Transaction History" discription=" Previous transaction done by you" image={require('../../../assets/images/coinStack.png')}></NavigateTO>
+
                     </View>
                 }
 
@@ -427,6 +441,8 @@ const Passbook = ({ navigation }) => {
                             {
                                 pointSharing && <GridVIew title="Shared Point History" discription=" list of shared points recieved by you" image={require('../../../assets/images/shared_point.png')}></GridVIew>
                             }
+                            <GridVIew title="Previous Transactions History" discription=" list of previous transaction done by you" image={require('../../../assets/images/coinStack.png')}></GridVIew>
+
                         </View>
                     </View>
                 }

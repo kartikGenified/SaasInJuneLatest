@@ -260,9 +260,9 @@ const WhatsNew = ({ navigation }) => {
                             renderItem={({ item }) =>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, height: 120, backgroundColor: "#80808020", borderRadius: 10, marginHorizontal: 10, }}>
                                     {console.log("itm", item)}
-                                    <View style={{ borderRadius: 100, borderColor: 'black', height: 40, borderWidth: 1, width: 40, marginLeft: 10, marginRight: 20, padding: 2 }}>
+                                    <View style={{ borderRadius: 100, borderColor: 'black', height: 50, borderWidth: 1, width: 50, marginLeft: 10, marginRight: 20, padding: 2,alignItems:'center',justifyContent:'center' }}>
                                         <Image
-                                            style={{ height: '100%', width: '100%', resizeMode: 'contain' }}
+                                            style={{ height: '70%', width: '70%', resizeMode: 'contain' }}
                                             source={{ uri: BaseUrlImages + item?.images[0] }}></Image>
                                     </View>
 

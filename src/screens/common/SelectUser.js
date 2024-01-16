@@ -31,9 +31,9 @@ const SelectUser = ({navigation}) => {
   }, []);
   useEffect(() => {
     if (getUsersData) {
-      console.log("type of users",getUsersData.body);
-      dispatch(setAppUsers(getUsersData.body))
-      setListUsers(getUsersData.body);
+      console.log("type of users",getUsersData?.body);
+      dispatch(setAppUsers(getUsersData?.body))
+      setListUsers(getUsersData?.body);
     } else if(getUsersError) {
       console.log("getUsersError",getUsersError);
     }
@@ -44,7 +44,10 @@ const SelectUser = ({navigation}) => {
     try {
       const jsonValue = await AsyncStorage.getItem('loginData');
       console.log("loginData",JSON.parse(jsonValue))
+      if(jsonValue!=null)
+      {
       saveUserDetails(JSON.parse(jsonValue))
+      }
       
     } catch (e) {
       console.log("Error is reading loginData",e)
@@ -53,12 +56,12 @@ const SelectUser = ({navigation}) => {
   const saveUserDetails = (data) => {
 
     try {
-      console.log("Saving user details", data.name)
-      dispatch(setAppUserId(data.user_type_id))
-      dispatch(setAppUserName(data.name))
-      dispatch(setAppUserType(data.user_type))
+      console.log("Saving user details", data)
+      dispatch(setAppUserId(data?.user_type_id))
+      dispatch(setAppUserName(data?.name))
+      dispatch(setAppUserType(data?.user_type))
       dispatch(setUserData(data))
-      dispatch(setId(data.id))
+      dispatch(setId(data?.id))
       handleNavigation()
     }
     catch (e) {

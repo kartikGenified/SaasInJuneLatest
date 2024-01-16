@@ -26,7 +26,7 @@ function BottomNavigator({navigation}) {
   const workflow = useSelector(state => state.appWorkflow.program)
 
     const platformFontWeight = Platform.OS==="ios" ? "400":"800"
-    console.log("workflow",workflow)
+    console.log("workflow",workflow,userData)
 
   return (
     <Tab.Navigator tabBar={()=><View style={{alignItems:"center",justifyContent:"center",width:"100%",backgroundColor:"#F7F7F7"}}>

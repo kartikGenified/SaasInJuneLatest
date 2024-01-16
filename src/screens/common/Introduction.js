@@ -38,11 +38,11 @@ const Introduction = ({navigation}) => {
     
     // function to handle next button press and to navigate to Select Language page when all the images are showed-----------------
     const handleNext=()=>{
-        console.log(descriptionImages.length)
-        if(imageIndex<descriptionImages.length)
+        console.log(descriptionImages?.length)
+        if(imageIndex<descriptionImages?.length)
         {
             
-            if(imageIndex==descriptionImages.length-1)
+            if(imageIndex==descriptionImages?.length-1)
             {
                 storeData();
                 navigation.navigate('SelectUser');
@@ -69,7 +69,7 @@ const Introduction = ({navigation}) => {
                 <Image style={{height:"100%",width:"100%"}} source={descriptionImages[imageIndex]}></Image>
             </View> */}
             <View style={{width:'100%',position:'absolute',bottom:30}}>
-            <DotHorizontalList no = {descriptionImages.length} primaryColor="white" secondaryColor="#0085A2" selectedNo = {imageIndex} ></DotHorizontalList>
+            <DotHorizontalList no = {descriptionImages?.length} primaryColor="white" secondaryColor="#0085A2" selectedNo = {imageIndex} ></DotHorizontalList>
             
             <View style={{width:"100%",height:'100%',marginTop:20}}>
                 {skipEnabled && <TouchableOpacity disabled={!skipEnabled} style={{position:"absolute",left:40,bottom:20}} onPress={()=>{handleSkip()}}>

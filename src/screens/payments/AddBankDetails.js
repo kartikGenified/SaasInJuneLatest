@@ -12,11 +12,14 @@ import RectangularUnderlinedDropDown from '../../components/atoms/dropdown/Recta
 import RectanglarUnderlinedTextInput from '../../components/atoms/input/RectanglarUnderlinedTextInput';
 import ShowLoadingButton from '../../components/atoms/buttons/ShowLoadingButton';
 import MessageModal from '../../components/modals/MessageModal';
+import { useIsFocused } from '@react-navigation/native';
 
 const AddBankDetails = ({navigation}) => {
     const [message, setMessage] = useState();
     const [success, setSuccess] = useState(false);
+    const [hideButton, setHideButton] = useState(false)
   const [error, setError] = useState(false);
+  const focused = useIsFocused()
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
       )
@@ -31,10 +34,15 @@ const AddBankDetails = ({navigation}) => {
     }] = useAddBankDetailsMutation()    
 
     useEffect(()=>{
+        setHideButton(false)
+      },[focused])
+      
+    useEffect(()=>{
         if(addBankDetailsData){
             console.log("addBankDetailsData",addBankDetailsData)
             if(addBankDetailsData.message==="Bank Account Created")
             {
+                setHideButton(false)
                 setSuccess(true)
                 setMessage("Account Added Successfully")
                 setTimeout(() => {
@@ -47,6 +55,7 @@ const AddBankDetails = ({navigation}) => {
         {
             console.log("addBankDetailsError",addBankDetailsError)
             setError(true)
+            setHideButton(false)
             setMessage(addBankDetailsError.data.message)
             setTimeout(() => {
                 setError(false)
@@ -124,6 +133,8 @@ const AddBankDetails = ({navigation}) => {
         data:data}
         console.log(params)
         addBankDetailsFunc(params)
+        setHideButton(true)
+            
         }
         
     }
@@ -192,7 +203,7 @@ const AddBankDetails = ({navigation}) => {
                 <BankDetails></BankDetails>
                 <AccountDetails></AccountDetails>
                  {/* <TransferDetails></TransferDetails> */}
-                <ShowLoadingButton handleData={submitData} title="Proceed"></ShowLoadingButton>
+               {!hideButton && <ShowLoadingButton handleData={submitData} title="Proceed"></ShowLoadingButton>}
             </View>
             </ScrollView>
             

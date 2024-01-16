@@ -40,6 +40,7 @@ const ActivateWarranty = ({ navigation, route }) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false)
   const [emailValid, setIsValidEmail] = useState(false)
+  const [hideButton, setHideButton] = useState(false)
 
 
   //modal
@@ -114,6 +115,7 @@ const ActivateWarranty = ({ navigation, route }) => {
       console.log('activate warranty data is', activateWarrantyData);
       if (activateWarrantyData.success) {
         handleWorkflowNavigation()
+        setHideButton(false)
         setModalWithBorder(true);
         setMessage(activateWarrantyData?.message)
       }
@@ -126,6 +128,7 @@ const ActivateWarranty = ({ navigation, route }) => {
       }
       console.log("activateWarrantyError", activateWarrantyError);
       setError(true)
+      setHideButton(false)
       setMessage(activateWarrantyError.data.message)
     }
     
@@ -163,6 +166,7 @@ const ActivateWarranty = ({ navigation, route }) => {
 
         if(emailValid){
           activateWarrantyFunc({ token, body });
+          setHideButton(true)
         }
         else{
           setError(true)
@@ -569,7 +573,7 @@ const ActivateWarranty = ({ navigation, route }) => {
             warrantyForm.length===0 && <PoppinsTextMedium style={{color:"red",fontSize:18}} content ="Warranty form not created"></PoppinsTextMedium>
 
           }
-          {warrantyForm.length!==0 && <ButtonOval
+          {warrantyForm.length!==0 && !hideButton && <ButtonOval
             handleOperation={() => {
               handleWarrantyFormSubmission();
             }}
