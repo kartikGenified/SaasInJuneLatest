@@ -467,9 +467,9 @@ const Dashboard = ({ navigation }) => {
             </View>
 
             <View style={{ backgroundColor: 'white', paddingLeft: '8%' }}>
-              <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
+              {userData && !userPointIsLoading && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
                 <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content="Redeem"  ></PoppinsTextLeftMedium>
-              </TouchableOpacity>
+              </TouchableOpacity>}
             </View>
 
           </View>
@@ -480,7 +480,17 @@ const Dashboard = ({ navigation }) => {
           <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
 
           </ScrollView> */}
-          {dashboardItems && <DashboardMenuBox navigation={navigation} data={dashboardItems}></DashboardMenuBox>}
+          {dashboardItems && !userPointIsLoading && <DashboardMenuBox navigation={navigation} data={dashboardItems}></DashboardMenuBox>}
+          {
+        userPointIsLoading && <FastImage
+          style={{ width: 100, height: 100, alignSelf: 'center',marginTop:20 }}
+          source={{
+            uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      }
           <View style={{ width: '100%', alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
             {showKyc && <KYCVerificationComponent buttonTitle="Complete Your KYC" title="Your KYC is not completed"></KYCVerificationComponent>}
           </View>
@@ -503,16 +513,7 @@ const Dashboard = ({ navigation }) => {
       /> */}
         </View>
       </ScrollView>
-       {
-        getActiveMembershipIsLoading && getFormIsLoading && getWorkflowIsLoading && getBannerIsLoading && getDashboardIsLoading && fetchUserPointsHistoryLoading && getKycStatusIsLoading && userPointIsLoading && <FastImage
-          style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-      }
+       
     </View>
   );
 }

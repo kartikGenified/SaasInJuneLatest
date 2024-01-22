@@ -56,6 +56,21 @@ const TierDetails = ({navigation}) => {
         }
     }, [getMembershipData, getMembershipError])
 
+    function formatPurchaseValue(value) {
+        const suffixes = ['', 'K', 'L', 'Cr']; // Thousand, Lakh, Crore
+      
+        let formattedValue = value.toString();
+      
+        for (let i = suffixes.length - 1; i > 0; i--) {
+          const divisor = Math.pow(10, i * 2 + 1); // Adjusted to Indian numbering system
+          if (value >= divisor) {
+            formattedValue = (value / divisor).toFixed(2) + suffixes[i];
+            break;
+          }
+        }
+      
+        return formattedValue;
+      }
 
     return (
         <>
@@ -120,10 +135,10 @@ const TierDetails = ({navigation}) => {
                                                 <View style={{ flexDirection: 'row' }}>
                                                     <PoppinsTextMedium
                                                         style={{ color: '#000000', fontSize: 18, fontWeight: '600' }}
-                                                        content={itm.range_start + "-"}></PoppinsTextMedium>
+                                                        content={formatPurchaseValue(itm.range_start) + "-"}></PoppinsTextMedium>
                                                     <PoppinsTextMedium
                                                         style={{ color: '#000000', fontSize: 18, fontWeight: '600' }}
-                                                        content={itm.range_end}></PoppinsTextMedium>
+                                                        content={formatPurchaseValue(itm.range_end)}></PoppinsTextMedium>
                                                 </View>
                                             </View>
 

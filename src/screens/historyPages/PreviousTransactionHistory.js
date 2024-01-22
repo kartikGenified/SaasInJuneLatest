@@ -8,7 +8,7 @@ import moment from 'moment';
 import DataNotFound from '../data not found/DataNotFound';
 import { dispatchCommand } from 'react-native-reanimated';
 
-const PreviousTransactionHistory = () => {
+const PreviousTransactionHistory = ({navigation}) => {
     const [displayList, setDisplayList] = useState()
   const userData = useSelector(state => state.appusersdata.userData)
 

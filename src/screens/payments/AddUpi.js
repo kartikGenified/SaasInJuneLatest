@@ -104,7 +104,7 @@ console.log("deleteBankError",deleteBankError)
 },[deleteBankData,deleteBankError])
 
   const getInitials = name => {
-    const initialsArray = name.split(' ');
+    const initialsArray = name?.split(' ');
     let nameInitialsTemp = '';
     initialsArray.map(item => {
       nameInitialsTemp = nameInitialsTemp + item.charAt(0).toUpperCase();

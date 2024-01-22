@@ -510,7 +510,7 @@ const Profile = ({ navigation }) => {
               resizeMode={FastImage.resizeMode.contain}
             />
 
-            <PoppinsTextMedium style={{ color: 'black', fontWeight: '600', fontSize: 12, marginTop: 30 }} content="No Form Field Available Yet!"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{ color: 'black', fontWeight: '600', fontSize: 14, marginTop: 10 }} content="Loading"></PoppinsTextMedium>
           </View>
 
         }

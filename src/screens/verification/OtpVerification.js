@@ -129,7 +129,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       fetch(url).then(response => response.json()).then(json => {
         console.log("location address=>", JSON.stringify(json));
         const formattedAddress = json.results[0].formatted_address
-        const formattedAddressArray = formattedAddress.split(',')
+        const formattedAddressArray = formattedAddress?.split(',')
 
         let locationJson = {
 
@@ -188,6 +188,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   useEffect(()=>{
     if(redeemCashbackData)
     {
+      setShowRedeemButton(true)
         console.log("redeemCashbackData",redeemCashbackData)
         if(redeemCashbackData.success)
         {
@@ -201,7 +202,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     }
     else if(redeemCashbackError){
       console.log("redeemCashbackError",redeemCashbackError)
-
+      setShowRedeemButton(true)
         setError(true)
         setMessage(redeemCashbackError.data.message)
       
@@ -244,11 +245,14 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       console.log("redeemGiftsData", redeemGiftsData)
       setSuccess(true)
       setMessage(redeemGiftsData.message)
+      setShowRedeemButton(true)
     }
     else if (redeemGiftsError) {
       console.log("redeemGiftsError", redeemGiftsError)
       setMessage(redeemGiftsError.data.message)
       setError(true)
+      setShowRedeemButton(true)
+
     }
   }, [redeemGiftsError, redeemGiftsData])
 
@@ -296,6 +300,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     setSuccess(false)
   };
   const finalGiftRedemption=async()=>{
+    setShowRedeemButton(false)
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(

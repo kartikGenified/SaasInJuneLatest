@@ -155,12 +155,12 @@ useEffect(()=>{
     console.log("verifyAadharData",verifyAadharData)
     if(verifyAadharData.success)
     {
-      var dateArray = verifyAadharData.body.dob.split("-");
+      var dateArray = verifyAadharData?.body?.dob?.split("-");
       var formattedDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
       const aadhar_details = {
-        "address" : verifyAadharData.body.address,
-        "split_address" : verifyAadharData.body.split_address,
-        "gender" : verifyAadharData.body.gender,
+        "address" : verifyAadharData?.body?.address,
+        "split_address" : verifyAadharData?.body?.split_address,
+        "gender" : verifyAadharData?.body?.gender,
         "dob": formattedDate
 
     }
@@ -177,7 +177,7 @@ useEffect(()=>{
     console.log("verifyAadharError",verifyAadharError)
     setAadhar("")
     setError(true)
-setMessage(verifyAadharError.data.message)
+setMessage(verifyAadharError?.data?.message)
   }
   },[verifyAadharError,verifyAadharData])
 

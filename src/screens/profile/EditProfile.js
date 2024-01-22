@@ -32,6 +32,8 @@ const EditProfile = ({ navigation, route }) => {
   const [error, setError] = useState(false);
   const [marginB, setMarginB] = useState(0)
   const [isValidEmail,setIsValidEmail] = useState(true)
+  const [isClicked, setIsClicked] = useState(false)
+
   // const userData = useSelector(state=>state.appusersdata.userData)
   console.log("saved image", route.params?.savedImage)
   // console.log("route.params.savedImage",route.params.savedImage)
@@ -71,11 +73,13 @@ const EditProfile = ({ navigation, route }) => {
       console.log("updateProfileData", updateProfileData)
       setMessage("Profile Updated Successfully")
       setSuccess(true)
+      setIsClicked(false);
     }
     else if (updateProfileError) {
       console.log("updateProfileError", updateProfileError)
       setMessage(updateProfileError.data.message)
       setError(true)
+      setIsClicked(false);
     }
   }, [updateProfileData, updateProfileError])
 
@@ -96,8 +100,8 @@ const EditProfile = ({ navigation, route }) => {
       if (uploadImageData.success) {
         setFilename(uploadImageData.body[0].filename)
         setModalVisible(false)
-        //  setMessage(uploadImageData.message)
-        //  setSuccess(true)
+         setMessage(uploadImageData.message)
+         setSuccess(true)
 
       }
     } else {
@@ -141,7 +145,17 @@ const EditProfile = ({ navigation, route }) => {
     setSuccess(false)
   };
 
+  const handleButtonPress = () => {
+    if(!isClicked){
+      updateProfile();
+      setIsClicked(true);
+    }
+   
+    console.log("buttonpressed");
+  };
+
   const updateProfile = () => {
+
     Keyboard.dismiss()
     setPressedSubmit(true)
     console.log("changedFormValues", changedFormValues)
@@ -176,6 +190,7 @@ const EditProfile = ({ navigation, route }) => {
       else{
         setError(true)
         setMessage("Please enter a valid email")
+        setIsClicked(false);
       }
     
     }
@@ -185,6 +200,7 @@ const EditProfile = ({ navigation, route }) => {
     const result = await launchImageLibrary();
     console.log("image reult from gallery", result.assets[0].uri)
     setProfileImage(result.assets[0])
+
   }
   const uploadProfilePicture = () => {
     if (profileImage !== BaseUrlImages + route.params.savedImage && profileImage !== null) {
@@ -332,7 +348,7 @@ const EditProfile = ({ navigation, route }) => {
                   </DisplayOnlyTextInput>
                   )
                 }
-                else if(item.name.split("_").includes("mobile"))
+                else if(item?.name?.split("_").includes("mobile"))
                 {
                   return(
                     <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
@@ -363,13 +379,13 @@ const EditProfile = ({ navigation, route }) => {
           }
         </ScrollView>
 
-        <View style={{ height: 60, width: '100%', backgroundColor: "white", alignItems: 'center', justifyContent: "center", marginBottom: 20 }}>
+        {!isClicked && <View style={{ height: 60, width: '100%', backgroundColor: "white", alignItems: 'center', justifyContent: "center", marginBottom: 20 }}>
           <TouchableOpacity onPress={() => {
-            updateProfile()
+            handleButtonPress()
           }} style={{ height: 40, width: 200, backgroundColor: ternaryThemeColor, borderRadius: 4, alignItems: 'center', justifyContent: "center" }}>
             <PoppinsTextMedium style={{ color: 'white', fontWeight: '700', fontSize: 16 }} content="Update Profile"></PoppinsTextMedium>
           </TouchableOpacity>
-        </View>
+        </View>}
 
       </View>
 

@@ -11,7 +11,7 @@ const PdfComponent = ({route}) => {
         <View style={styles.container}>
                 <Pdf
                 trustAllCerts={false}
-                    source={source}
+                    source={pdf && source}
                     onLoadComplete={(numberOfPages,filePath) => {
                         console.log(`Number of pages: ${numberOfPages}`);
                     }}

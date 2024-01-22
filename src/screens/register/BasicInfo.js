@@ -43,6 +43,8 @@ import DropDownRegistration from '../../components/atoms/dropdown/DropDownRegist
 import EmailTextInput from '../../components/atoms/input/EmailTextInput';
 import { validatePathConfig } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
+
 
 const BasicInfo = ({ navigation, route }) => {
   const [userName, setUserName] = useState(route.params.name)
@@ -96,7 +98,9 @@ const BasicInfo = ({ navigation, route }) => {
   console.log("appUsers", userType, userTypeId, isManuallyApproved, name, mobile)
   const width = Dimensions.get('window').width
   const height = Dimensions.get('window').height
-
+  const gifUri = Image.resolveAssetSource(
+    require("../../../assets/gif/loader.gif")
+  ).uri;
   const [getFormFunc, {
     data: getFormData,
     error: getFormError,
@@ -208,7 +212,7 @@ const BasicInfo = ({ navigation, route }) => {
       fetch(url).then(response => response.json()).then(json => {
         console.log("location address=>", JSON.stringify(json));
         const formattedAddress = json.results[0].formatted_address
-        const formattedAddressArray = formattedAddress.split(',')
+        const formattedAddressArray = formattedAddress?.split(',')
 
         let locationJson = {
 
@@ -364,19 +368,34 @@ const BasicInfo = ({ navigation, route }) => {
   }, [sendOtpData, sendOtpError])
 
   const handleTimer = () => {
-
-    if(timer===60)
+    if(userMobile)
     {
-      getOTPfunc()
-      setOtpVisible(true)
-    }
-    if (timer===0 || timer===-1) {
-      setTimer(60);
-      getOTPfunc()
-      setOtpVisible(true)
-
+      if(userMobile.length==10)
+      {
+        if(timer===60)
+        {
+          getOTPfunc()
+          setOtpVisible(true)
+        }
+        if (timer===0 || timer===-1) {
+          setTimer(60);
+          getOTPfunc()
+          setOtpVisible(true)
+    
+         
+        }
+      }
+      else{
+        setError(true)
+        setMessage("Mobile number length must be 10")
+      }
      
     }
+    else{
+      setError(true)
+        setMessage("Kindly enter mobile number")
+    }
+    
   }
 
 
@@ -677,6 +696,19 @@ const BasicInfo = ({ navigation, route }) => {
                         }}>
                           <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }} content="Get OTP"></PoppinsTextLeftMedium>
                         </TouchableOpacity>}
+                        {sendOtpIsLoading && <FastImage
+                style={{
+                  width: 40,
+                  height: 40,
+                  alignSelf: "center",
+                  
+                }}
+                source={{
+                  uri: gifUri, // Update the path to your GIF
+                  priority: FastImage.priority.normal,
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+              />}
                       </View>
 
 
@@ -914,7 +946,7 @@ const BasicInfo = ({ navigation, route }) => {
               }
             })}
 
-          {formFound && hideButton && <ButtonOval
+          {formFound && !hideButton && <ButtonOval
             handleOperation={() => {
               handleRegistrationFormSubmission();
             }}

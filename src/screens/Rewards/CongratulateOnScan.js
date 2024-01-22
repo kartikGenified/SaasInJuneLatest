@@ -36,7 +36,7 @@ import  Celebrate  from "react-native-vector-icons/MaterialIcons";
 import Error from "react-native-vector-icons/MaterialIcons"
 import { useGetActiveMembershipMutation } from '../../apiServices/membership/AppMembershipApi';
 import ErrorModal from "../../components/modals/ErrorModal";
-
+import FastImage from "react-native-fast-image";
 
 const CongratulateOnScan = ({ navigation, route }) => {
   const [showPoints, setShowPoints] = useState();
@@ -194,6 +194,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
     }
 }, [getActiveMembershipData, getActiveMembershipError])
 
+const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
 const getMembership = async () => {
   const credentials = await Keychain.getGenericPassword();
@@ -995,6 +996,14 @@ const getMembership = async () => {
                   title={addCashbackEnteriesData.body.cashback}
                 ></Win>
               )}
+             {(userPointEntryIsLoading || addBulkPointOnProductIsLoading) && checkUserPointIsLoading && extraPointEntryIsLoading || <FastImage
+                   style={{ width: 40, height: 40, alignSelf: 'center',justifyContent:'center' }}
+                   source={{
+                       uri: gifUri, // Update the path to your GIF
+                       priority: FastImage.priority.normal,
+                   }}
+                   resizeMode={FastImage.resizeMode.contain}
+               />}
               {/* {getCouponOnCategoryError && (
                 <PoppinsText
                   content={`Coupons For This ${getCouponOnCategoryError.data.message}`}

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
-const ReportIssue = () => {
+const ReportIssue = ({navigation}) => {
     return (
         <View
       style={{

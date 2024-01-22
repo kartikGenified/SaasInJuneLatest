@@ -1,47 +1,55 @@
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity,Image} from 'react-native';
-import PoppinsText from '../../electrons/customFonts/PoppinsText';
+import React,{useState,useEffect} from "react";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import PoppinsText from "../../electrons/customFonts/PoppinsText";
 
-const ButtonNavigateArrow = props => {
-  
-
+const ButtonNavigateArrow = (props) => {
+  const [isClicked, setIsClicked] = useState(false)
   const backgroundColor = props.backgroundColor;
   // prop to manipulate background color of button
   const style = props.style;
   const isChecked = props.isChecked;
-  
+
   // prop to navigate to another page
   const content = props.content;
+
+  console.log(props.success);
  
-  console.log ( props.success)
 
-  const handleButtonPress=()=>{
-    props.handleOperation()
-    console.log('buttonpressed');
-    
-    
-
-  }
+ 
+  const handleButtonPress = () => {
+    if(!isClicked){
+      props.handleOperation();
+      setIsClicked(true);
+    }
+   setTimeout(() => {
+    setIsClicked(false);
+   }, 1000);
+    console.log("buttonpressed");
+  };
 
   return (
     <TouchableOpacity
       onPress={() => {
-        handleButtonPress()
+        handleButtonPress();
       }}
       style={{
         padding: 14,
         borderRadius: 4,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         backgroundColor: isChecked ? backgroundColor : "#808080",
         margin: 10,
         paddingLeft: 20,
         paddingRight: 20,
-        flexDirection:'row',
-        width:"60%"
-      }}>
+        flexDirection: "row",
+        width: "60%",
+      }}
+    >
       <PoppinsText style={style} content={content}></PoppinsText>
-      <Image style={{height:20,width:20,resizeMode:"contain",marginLeft:20}} source={require('../../../../assets/images/whiteArrowRight.png')}></Image>
+      <Image
+        style={{ height: 20, width: 20, resizeMode: "contain", marginLeft: 20 }}
+        source={require("../../../../assets/images/whiteArrowRight.png")}
+      ></Image>
     </TouchableOpacity>
   );
 };

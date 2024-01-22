@@ -102,16 +102,16 @@ const DashboardMenuBox=(props)=>{
             navigation.navigate('BankAccounts')
         }
         else if(data.toLowerCase().substring(0,5) === "check"){
-            if(data.toLowerCase().split(" ")[1]==="genuinity")
+            if(data?.toLowerCase().split(" ")[1]==="genuinity")
             navigation.navigate('ScanAndRedirectToGenuinity')
 
-            else if(data.toLowerCase().split(" ")[1]==="warranty")
+            else if(data?.toLowerCase().split(" ")[1]==="warranty")
             navigation.navigate('ScanAndRedirectToWarranty')
         }
-        else if(data.toLowerCase().substring(0,8) === "activate"){
-            if(data.toLowerCase().split(" ")[1]==="genuinity")
+        else if(data?.toLowerCase().substring(0,8) === "activate"){
+            if(data?.toLowerCase().split(" ")[1]==="genuinity")
             navigation.navigate('ScanAndRedirectToGenuinity')
-            else if(data.toLowerCase().split(" ")[1]==="warranty")
+            else if(data?.toLowerCase().split(" ")[1]==="warranty")
             navigation.navigate('ScanAndRedirectToWarranty')
         }
         else if(data.toLowerCase() === "product catalogue"){

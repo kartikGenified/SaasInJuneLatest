@@ -121,7 +121,7 @@ const VideoGallery = ({ navigation }) => {
             color: 'white',
           }}></PoppinsTextMedium>
       </View>
-      <ScrollView style={{ width: '100%', height: '90%' }}>
+      <ScrollView style={{ width: '100%', height: '90%',backgroundColor:'white' }}>
 
 
         <View
@@ -140,7 +140,7 @@ const VideoGallery = ({ navigation }) => {
             paddingTop:10
           }}>
 
-          {appVideoIsLoading ?
+          {appVideoIsLoading &&
             <FastImage
               style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '50%' }}
               source={{
@@ -148,15 +148,14 @@ const VideoGallery = ({ navigation }) => {
                 priority: FastImage.priority.normal,
               }}
               resizeMode={FastImage.resizeMode.contain}
-            /> :
-            appVideoData?.body?.length===0 && <DataNotFound></DataNotFound>
+            /> 
           }
 
           {
             videoData != undefined && videoData.length > 0 && videoData.map((item, index) => {
               return (
                
-                  <VideoComp key={item.index} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp> 
+                  <VideoComp key={item.id} title={item.title} type={item.type} video={item.link} date={item.updated_at}></VideoComp> 
                 
               )
             })

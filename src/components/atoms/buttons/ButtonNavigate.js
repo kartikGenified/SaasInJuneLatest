@@ -1,10 +1,12 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import PoppinsText from '../../electrons/customFonts/PoppinsText';
 import {useNavigation} from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 
 const ButtonNavigate = props => {
+  const [isClicked, setIsClicked] = useState(false)
+
   const navigation = useNavigation();
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -21,9 +23,9 @@ const ButtonNavigate = props => {
   const properties  = props.properties
   // prop to display text inside the button
   
-  const handleButtonPress=()=>{
-
-    if(content==="Register")
+  const handleButtonPress = () => {
+    if(!isClicked){
+      if(content==="Register")
   {
     props.handleOperation()
   }
@@ -31,8 +33,15 @@ const ButtonNavigate = props => {
     console.log('buttonpressed');
     navigateTo &&  navigation.navigate(navigateTo,properties)
   }
+      setIsClicked(true);
+    }
+   setTimeout(() => {
+    setIsClicked(false);
+   }, 1000);
+    console.log("buttonpressed");
+  };
+
   
-  }
 
   
 

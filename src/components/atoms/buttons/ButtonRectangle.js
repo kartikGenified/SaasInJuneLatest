@@ -1,10 +1,11 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import PoppinsText from '../../electrons/customFonts/PoppinsText';
 import {useNavigation} from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 
 const ButtonRectangle = props => {
+  const [isClicked, setIsClicked] = useState(false)
   const navigation = useNavigation();
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -20,13 +21,16 @@ const ButtonRectangle = props => {
   const content = props.content;
   // prop to display text inside the button
   
-  const handleButtonPress=()=>{
-
-    
-    props.handleOperation()
-  
-  
-  }
+  const handleButtonPress = () => {
+    if(!isClicked){
+      props.handleOperation();
+      setIsClicked(true);
+    }
+   setTimeout(() => {
+    setIsClicked(false);
+   }, 1000);
+    console.log("buttonpressed");
+  };
 
   
 

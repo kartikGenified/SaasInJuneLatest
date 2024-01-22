@@ -379,16 +379,16 @@ if(e?.data===undefined)
   setMessage("Please scan a valid QR")
 }
 else{
-  const qrData = e.data.split('=')[1];
+  const qrData = e?.data?.split('=')[1];
     console.log ("qrData",qrData);
     let requestData = {unique_code: qrData};
-  console.log("qrDataArray",qrData.split("-"))
-    if(qrData.split("-").length===1)
+  console.log("qrDataArray",qrData?.split("-"))
+    if(qrData?.split("-").length===1)
     {
       requestData = {unique_code: "ozone-"+qrData};
 
     }
-    else if(qrData.split("-").length===2){
+    else if(qrData?.split("-").length===2){
       requestData = {unique_code: qrData};
 
 
