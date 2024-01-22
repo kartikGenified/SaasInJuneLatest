@@ -36,6 +36,7 @@ import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Close from 'react-native-vector-icons/Ionicons';
 import RNQRGenerator from 'rn-qr-generator';
 import { useCashPerPointMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import FastImage from 'react-native-fast-image';
 
 const QrCodeScanner = ({navigation}) => {
   const [zoom, setZoom] = useState(0);
@@ -53,6 +54,7 @@ const QrCodeScanner = ({navigation}) => {
   const [helpModal, setHelpModal] = useState(false);
   const [isFirstScan, setIsFirstScan] = useState(false) 
   const [isReportable, setIsReportable] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const userId = useSelector(state => state.appusersdata.userId);
   const userData = useSelector(state=>state.appusersdata.userData)
   const userType = useSelector(state => state.appusersdata.userType);
@@ -66,8 +68,12 @@ const QrCodeScanner = ({navigation}) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
+  const gifUri = Image.resolveAssetSource(
+      require("../../../assets/gif/loader.gif")
+    ).uri;
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram,shouldSharePoints,location,userData);
+  let addedqr =[]
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
 
   // mutations ----------------------------------------
@@ -302,7 +308,7 @@ if(addQrData)
 
   useEffect(() => {
     if (fetchAllQrScanedListData) {
-      console.log("fetchAllQrScanedListData", fetchAllQrScanedListData?.body?.data)
+      // console.log("fetchAllQrScanedListData", fetchAllQrScanedListData?.body?.data)
       // checkFirstScan(fetchAllQrScanedListData.body.data)
       if(fetchAllQrScanedListData?.body?.data?.length===0)
       {
@@ -370,85 +376,190 @@ if(addQrData)
   };
 
   // function called on successfull scan --------------------------------------
-  const onSuccess = e => {
-    console.log('Qr data is ------', e?.data);
+//   const onSuccess = e => {
+//     console.log('Qr data is ------', e?.data);
     
-if(e?.data===undefined)
-{
-  setError(true)
-  setMessage("Please scan a valid QR")
-}
-else{
-  const qrData = e?.data?.split('=')[1];
-    console.log ("qrData",qrData);
-    let requestData = {unique_code: qrData};
-  console.log("qrDataArray",qrData?.split("-"))
-    if(qrData?.split("-").length===1)
-    {
-      requestData = {unique_code: "ozone-"+qrData};
+// if(e?.data===undefined)
+// {
+//   setError(true)
+//   setMessage("Please scan a valid QR")
+// }
+// else{
+//   const qrData = e?.data?.split('=')[1];
+//     console.log ("qrData",qrData);
+//     let requestData = {unique_code: qrData};
+//   console.log("qrDataArray",qrData?.split("-"))
+//     if(qrData?.split("-").length===1)
+//     {
+//       requestData = {unique_code: "ozone-"+qrData};
 
-    }
-    else if(qrData?.split("-").length===2){
-      requestData = {unique_code: qrData};
+//     }
+//     else if(qrData?.split("-").length===2){
+//       requestData = {unique_code: qrData};
 
 
 
-    }
+//     }
 
-  const verifyQR = async data => {
-    // console.log('qrData', data);
-    try {
-      // Retrieve the credentials
+//   const verifyQR = async data => {
+//     console.log('qrDataVerifyQR', data);
+//     try {
+//       // Retrieve the credentials
 
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log(
-          'Credentials successfully loaded for user ' + credentials?.username, data
-        );
-        setSavedToken(credentials?.username);
-        const token = credentials?.username;
+//       const credentials = await Keychain.getGenericPassword();
+//       if (credentials) {
+//         console.log(
+//           'Credentials successfully loaded for user ' + credentials?.username, data
+//         );
+//         setSavedToken(credentials?.username);
+//         const token = credentials?.username;
 
-        data && verifyQrFunc({token, data});
-      } else {
-        console.log('No credentials stored');
-      }
-    } catch (error) {
-      console.log("Keychain couldn't be accessed!", error);
-    }
-  };
-  verifyQR(requestData);
-}
+//         data && await verifyQrFunc({token, data});
+//       } else {
+//         console.log('No credentials stored');
+//       }
+//     } catch (error) {
+//       console.log("Keychain couldn't be accessed!", error);
+//     }
+//   };
+//   try{
+//     await verifyQR(requestData);
+//   }
+//   catch(e){
+//     console.log("exception in verifying the qr",e)
+//   }
+// }
    
-  };
+//   };
+const onSuccess = async (e) => {
+  console.log('Qr data is ------', e?.data);
+
+  if (e?.data === undefined) {
+    setError(true);
+    setMessage("Please scan a valid QR");
+  } else {
+    const qrData = e?.data?.split('=')[1];
+    console.log("qrData", qrData);
+
+    let requestData = { unique_code: qrData };
+    console.log("qrDataArray", qrData?.split("-"));
+
+    if (qrData?.split("-").length === 1) {
+      requestData = { unique_code: "ozone-" + qrData };
+    } else if (qrData?.split("-").length === 2) {
+      requestData = { unique_code: qrData };
+    }
+
+    const verifyQR = async (data) => {
+      console.log('qrDataVerifyQR', data);
+      try {
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword();
+          if (credentials) {
+            console.log(
+              'Credentials successfully loaded for user ' + credentials?.username, data
+            );
+            setSavedToken(credentials?.username);
+            const token = credentials?.username;
+
+          // Call verifyQrFunc with the token and data
+          // data && (await verifyQrFunc({ token, data }));
+          const response = await verifyQrFunc({ token, data })
+          console.log("verifyQrFunc",response)
+          if (response?.data) {
+            console.log('Verify qr data', response?.data);
+        
+            const qrStatus = response?.data.body?.qr?.qr_status;
+            const statusCode = response?.data?.status;
+            const verifiedQrData = response?.data.body.qr
+            if (qrStatus === "1") {
+              await addQrDataToList(verifiedQrData);
+            }
+        
+            if (qrStatus === "2") {
+              if (statusCode === 201) {
+                setError(true);
+                setMessage(response?.data.message);
+              } else if (statusCode === 202) {
+                setIsReportable(true);
+                setError(true);
+                setMessage(response?.data.message);
+              } else if (statusCode === 200) {
+                setError(true);
+                setMessage(response?.data.message);
+              }
+            }
+          } else if (response.error) {
+            if (response.error === undefined) {
+              setError(true);
+              setMessage("This QR is not activated yet");
+            } else {
+              setError(true);
+              setMessage(response.error.data?.message);
+            }
+            console.log('Verify qr error', response.error?.data?.Error);
+          }
+        } else {
+          console.log('No credentials stored');
+        }
+      } catch (error) {
+        // Handle errors within verifyQR
+        console.log("Keychain couldn't be accessed!", error);
+      }
+    };
+
+    try {
+      // Call verifyQR function asynchronously
+      await verifyQR(requestData);
+    } catch (error) {
+      // Handle errors thrown during verifyQR function call
+      console.log("Exception in verifying the QR", error);
+    }
+  }
+};
+
 
   // add qr to the list of qr--------------------------------------
 
-  const addQrDataToList = data => {
+  const addQrDataToList =async(data) => {
+    setIsLoading(false)
     const qrId = data.id;
     setQr_id(qrId);
-    const token = savedToken;
+    
     const productCode = data?.product_code;
     
-
-   
-    checkGenuinityFunc({qrId, token});
+    
+    const credentials = await Keychain.getGenericPassword();
+    if (credentials) {
+      console.log(
+        'Credentials successfully loaded for user ' + credentials?.username, data
+      );
+      const token = credentials?.username;
+      checkGenuinityFunc({qrId, token});
     productDataFunc({productCode, userType, token});
     console.log("ProductDataFunc",{productCode, userType, token})
+    }
+    addedqr = addedQrList
+    console.log("addQrDataToList",addedqr,data)
 
-    if (addedQrList.length === 0) {
-      setAddedQrList([...addedQrList, data]);
+    if (addedqr.length === 0) {
+      //  setAddedQrList([...addedqr, data]);
+       addedqr.push(data)
     } else {
-      const existingObject = addedQrList.find(
+      const existingObject = addedqr.find(
         obj => obj?.unique_code === data?.unique_code,
       );
+      console.log("existingObject",existingObject,data)
       if (!existingObject) {
-        setAddedQrList([...addedQrList, data]);
+        // setAddedQrList([...addedqr, data]);
+        addedqr.push(data)
       } else {
-
         setError(true);
         setMessage('Sorry This QR is already added to the list');
       }
     }
+    setAddedQrList(addedqr)
+    return addedqr
   };
   // --------------------------------------------------------
 
@@ -521,48 +632,41 @@ else{
   // --------------------------------------------------------
 
   // getting verify qr data --------------------------
+ 
   useEffect(() => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData);
-      if(verifyQrData.body?.qr?.qr_status==="1" || verifyQrData.body?.qr_status === "1" )
-      {
-      addQrDataToList(verifyQrData.body.qr);
-      }
-      if(verifyQrData.body?.qr?.qr_status==="2" || verifyQrData.body?.qr_status==="2" )
-      {
-       if(verifyQrData?.status===201)
-       {
+      setIsLoading(false)
+      // const qrStatus = verifyQrData.body?.qr?.qr_status;
+      // const statusCode = verifyQrData?.status;
+  
+      // if (qrStatus === "1") {
+      //   addQrDataToList(verifyQrData.body.qr);
+      // }
+  
+      // if (qrStatus === "2") {
+      //   if (statusCode === 201) {
+      //     setError(true);
+      //     setMessage(verifyQrData.message);
+      //   } else if (statusCode === 202) {
+      //     setIsReportable(true);
+      //     setError(true);
+      //     setMessage(verifyQrData.message);
+      //   } else if (statusCode === 200) {
+      //     setError(true);
+      //     setMessage(verifyQrData.message);
+      //   }
+      // }
+    } else if (verifyQrError) {
+      setIsLoading(false)
+      if (verifyQrError === undefined) {
         setError(true);
-        setMessage(verifyQrData?.message);
-       }
-       else if(verifyQrData?.status===202)
-       {
-         setIsReportable(true)
-         setError(true);
-         setMessage(verifyQrData?.message);
-       }
-       else if(verifyQrData?.status===200 && qr_status=="2")
-       {
-         setError(true);
-         setMessage(verifyQrData?.message);
-       }
-      }
-     
-     
-    }
-     else if(verifyQrError) {
-      if(verifyQrError===undefined){
-        
-        setError(true)
-        setMessage("This QR is not activated yet")
-      }
-      else{
-        setError(true)
-        setMessage(verifyQrError?.data?.message);
-
+        setMessage("This QR is not activated yet");
+      } else {
+        setError(true);
+        setMessage(verifyQrError.data?.message);
       }
       console.log('Verify qr error', verifyQrError?.data?.Error);
-     
     }
   }, [verifyQrData, verifyQrError]);
   // --------------------------------------------------------
@@ -715,26 +819,44 @@ else{
     }
   };
 
+  
   const handleOpenImageGallery = async () => {
-    const result = await launchImageLibrary({selectionLimit:5});
-    console.log("result",result)
-    RNQRGenerator.detect({
-      uri: result?.assets[0]?.uri
-    })
-      .then(response => {
-        const { values } = response; // Array of detected QR code values. Empty if nothing found.
-        // console.log("From gallery",response.values[0])
-        // const requestData = {unique_code: response.values[0].split("=")[1]};
-        const requestData = response?.values[0]
-        onSuccess({data:requestData})
-        console.log(requestData)
-
-      })
-      .catch((error) => {
-      console.log('Cannot detect QR code in image', error)
-   
-  });
+    const result = await launchImageLibrary({ selectionLimit: 20 });
+    console.log("result", result);
+    setIsLoading(true)
+    if (result?.assets) {
+      const detectedQRCodes = [];
+  
+      for (let i = 0; i < result?.assets.length; i++) {
+        console.log("RNQRGenerator", result?.assets[i]?.uri);
+  
+        try {
+          const response = await RNQRGenerator.detect({
+            uri: result?.assets[i]?.uri,
+          });
+  
+          const { values } = response;
+          const requestData = values.length > 0 ? values[0] : null;
+  
+          if (requestData) {
+            console.log(requestData);
+            detectedQRCodes.push(requestData);
+          } else {
+            console.log('No QR code detected in the image');
+          }
+        } catch (error) {
+          console.log('Error detecting QR code in image', error);
+        }
+      }
+  
+      // Process all detected QR codes after the loop completes
+      detectedQRCodes.forEach((data) => {
+        onSuccess({ data });
+      });
+    }
   };
+  
+  
 
   // --------------------------------------------------------
 
@@ -977,6 +1099,16 @@ else{
               message={message}
               openModal={success}></MessageModal>
     )
+  }
+  {
+    isLoading && <FastImage
+    style={{ width: 60, height: 60, alignSelf: 'center' }}
+    source={{
+      uri: gifUri, // Update the path to your GIF
+      priority: FastImage.priority.normal,
+    }}
+    resizeMode={FastImage.resizeMode.contain}
+  />
   }
           {addedQrList.length === 0 ? (
             <View
