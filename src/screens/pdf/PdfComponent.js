@@ -4,7 +4,7 @@ import Pdf from 'react-native-pdf';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
 
 const PdfComponent = ({route}) => {
-    const pdf = route.params.pdf
+    const pdf = route?.params?.pdf
     const pdfLink = BaseUrlImages+pdf
     const source = { uri: pdfLink, cache: true };
     return (
@@ -22,7 +22,8 @@ const PdfComponent = ({route}) => {
                         console.log(error);
                     }}
                     onPressLink={(uri) => {
-                        console.log(`Link pressed: ${uri}`);
+
+                       console.log(`Link pressed: ${uri}`);
                     }}
                     style={styles.pdf}/>
             </View>

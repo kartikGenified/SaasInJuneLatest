@@ -462,7 +462,7 @@ const Profile = ({ navigation }) => {
             {/* <ProfileData></ProfileData> */}
             {showProfileData &&
               formFields.map((item, index) => {
-                console.log(item, formValues[index]);
+                console.log("showProfileData", item, formValues[index]);
                 if (item.type === "date" || item.type === "Date") {
                   return (
                     <DisplayOnlyTextInput
@@ -476,6 +476,18 @@ const Profile = ({ navigation }) => {
                   );
                 }
                 else {
+                  if ((item.name).toLowerCase() === "enrollment_date" ) {
+                    return (
+                      <DisplayOnlyTextInput
+                        key={index}
+                        data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : moment(formValues[index]).format("DD-MMM-YYYY")}
+                        title={item.label}
+                        photo={require('../../../assets/images/eye.png')}>
+  
+                      </DisplayOnlyTextInput>
+  
+                    );
+                  }
                   return (
                     <DisplayOnlyTextInput
                       key={index}

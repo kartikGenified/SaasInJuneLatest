@@ -604,17 +604,17 @@ const CustomDrawer = () => {
                 }} style={{  fontSize:15, color:ternaryThemeColor }}>Tutorial</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>[
-               getPolicyData && navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
+              {getPolicyData && getPolicyData?.body.length!==0 && <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>[
+               navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
               ]}>
                 <Text  style={{  fontSize:15, color:ternaryThemeColor }}>Policies</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>}
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
-                getTermsData && navigation.navigate('PdfComponent',{pdf:getTermsData.body.data?.[0]?.files[0]})
+              {getTermsData && getTermsData.body.data.length!==0 && <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
+                 navigation.navigate('PdfComponent',{pdf:getTermsData.body.data?.[0]?.files[0]})
               }}>
                 <Text  style={{  fontSize:15, color:ternaryThemeColor }}>T&C</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>}
 
               <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
                 navigation.navigate('FAQ');
