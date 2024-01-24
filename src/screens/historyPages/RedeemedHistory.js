@@ -25,9 +25,11 @@ const RedeemedHistory = ({ navigation }) => {
   const [redemptionStartData, setRedemptionStartDate]  = useState()
   const [redemptionEndDate, setRedemptionEndDate] = useState()
   const [showKyc, setShowKyc] = useState(true)
+  const [minRedemptionPoints, setMinRedemptionPoints] = useState()
   const [redeemedListData, setRedeemedListData] = useState([])
   const [redemptionWindowEligibility, setRedemptionWindowEligibility] = useState(true)
   const [navigateTo, setNavigateTo] = useState()
+  const [pointBalance, setPointBalance] = useState()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -128,8 +130,9 @@ const RedeemedHistory = ({ navigation }) => {
 
         {
           const temp = cashPerPointData?.body
-          setRedemptionStartDate(temp.redeem_start_date)
-          setRedemptionEndDate(temp.redeem_end_date)
+          setRedemptionStartDate(temp?.redeem_start_date)
+          setRedemptionEndDate(temp?.redeem_end_date)
+          setMinRedemptionPoints(temp?.min_point_redeem)
         }
     }
     else if(cashPerPointError){
@@ -141,6 +144,11 @@ const RedeemedHistory = ({ navigation }) => {
   useEffect(() => {
     if (userPointData) {
       console.log("userPointData", userPointData)
+      if(userPointData.success)
+      {
+      setPointBalance(userPointData.body.point_balance)
+
+      }
     }
     else if (userPointError) {
       console.log("userPointError", userPointError)
@@ -239,6 +247,12 @@ const RedeemedHistory = ({ navigation }) => {
       if (Number(userPointData.body.point_balance) <= 0 ) {
         setError(true)
         setMessage("Sorry you don't have enough points.")
+      }
+      else if(Number(minRedemptionPoints)>Number(pointBalance))
+      {
+        console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
+        setError(true)
+        setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
       }
       else {
         

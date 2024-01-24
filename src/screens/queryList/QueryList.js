@@ -74,6 +74,8 @@ const QueryList = ({ navigation }) => {
                     <PoppinsTextLeftMedium style={{ color: ternaryThemeColor, fontWeight: '800', fontSize: 18 }} content={item?.data?.type}></PoppinsTextLeftMedium>
 
                 </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ }}>
 
                 <View style={{ marginTop: 10, flexDirection: 'row', }}>
                     <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800' }} content={"Name:  "}></PoppinsTextLeftMedium>
@@ -89,6 +91,22 @@ const QueryList = ({ navigation }) => {
                     <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800' }} content={"Description: "}></PoppinsTextLeftMedium>
                     <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '600' }} content={item?.data?.long_description}></PoppinsTextLeftMedium>
                 </View>
+                </View>
+                {item?.data?.status =="2" && <View style={{alignItems:'center',justifyContent:'center'}}>
+                <Image style={{ height: 40, width: 40, marginTop: 30 }} source={require('../../../assets/images/greenTick.png')} />
+                <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800' }} content="Resolved"></PoppinsTextLeftMedium>
+
+                    </View>}
+                {item?.data?.status =="1" &&
+                <View style={{alignItems:'center',justifyContent:'center'}}>
+                                 <Image style={{ height: 32, width: 32, marginTop: 30 }} source={require('../../../assets/images/cancel.png')} />
+                <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800' }} content="Active"></PoppinsTextLeftMedium>
+
+                    </View>
+    }
+</View>
+
+               
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ marginTop: 10, flexDirection: 'row' }}>
@@ -96,7 +114,7 @@ const QueryList = ({ navigation }) => {
                         <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '600' }} content={item?.data?.user_type}></PoppinsTextLeftMedium>
                     </View>
 
-                    <Image style={{ height: 20, width: 20, marginTop: 10 }} source={require('../../../assets/images/info_icon.png')} />
+                   
 
                 </View>
 

@@ -142,7 +142,8 @@ const PointHistory = ({ navigation }) => {
             endDate=undefined
           }
           else {
-            fetchScannedHistoryData(startDate,endDate)
+            // fetchScannedHistoryData(startDate,endDate)
+            
           }
           
         }
