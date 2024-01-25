@@ -10,13 +10,13 @@ const ScannedDetails = ({navigation,route}) => {
     const data = route.params.data
     console.log(data)
     const points = data?.points_on_product
-    const image = data.images!==null ? data.images[0] : null
-    const date = data.scanned_at
+    const image = data?.images!==null ? data?.images[0] : null
+    const date = data?.scanned_at
 
 
     const ScannedDetailsProductBox=(props)=>{
-        const productName=data.product_name
-        const productSerialNumber = data.product_code
+        const productName=data?.product_name
+        const productSerialNumber = data?.product_code
         const recievedIn = props.recievedIn
         return(
             <View style={{height:180,width:'100%',backgroundColor:'#DDDDDD',alignItems:"center",justifyContent:'center',padding:16,marginTop:120}}>

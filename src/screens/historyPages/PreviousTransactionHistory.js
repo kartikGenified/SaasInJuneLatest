@@ -62,9 +62,6 @@ const PreviousTransactionHistory = ({navigation}) => {
         // const image = data.images !== null ? data.images[0] : null;
         return (
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("ScannedDetails", { data: data });
-            }}
             style={{
               flexDirection: "row",
               alignItems: "center",
