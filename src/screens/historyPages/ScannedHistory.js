@@ -347,21 +347,24 @@ const ScannedHistory = ({ navigation }) => {
             width: "100%",
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
+            alignItems:'center'
           }}
         >
           <PoppinsTextLeftMedium
             content="Filter Scanned Data"
             style={{
               color: "black",
-              marginTop: 20,
-              marginLeft: "35%",
+              marginTop: 20, 
               fontWeight: "bold",
             }}
           ></PoppinsTextLeftMedium>
-          <View>
+          <TouchableOpacity onPress={()=>{setOpenBottomModal(false)}} style={{height:40,width:40,alignItems:'center',justifyContent:'center',position:'absolute',top:10,right:10}}>
+            <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/cancel.png')}></Image>
+          </TouchableOpacity>
+          <View style={{width:'100%'}}>
             <InputDate data="Start Date" handleData={handleStartDate} />
           </View>
-          <View>
+          <View style={{width:'100%'}}>
             <InputDate data="End Date" handleData={handleEndDate} />
           </View>
           <TouchableOpacity
@@ -376,6 +379,8 @@ const ScannedHistory = ({ navigation }) => {
               justifyContent: "center",
               marginTop: 10,
               borderRadius: 10,
+              paddingLeft:10,
+              paddingRight:10
             }}
           >
             <PoppinsTextMedium

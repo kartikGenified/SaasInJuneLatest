@@ -222,7 +222,6 @@ const PointHistory = ({ navigation }) => {
 
         const ModalContent = (props) => {
             const [startDate, setStartDate] = useState("")
-            const [openBottomModal, setOpenBottomModal] = useState(false)
             const [endDate, setEndDate] = useState("")
 
 
@@ -243,14 +242,17 @@ const PointHistory = ({ navigation }) => {
             return (
                 <View style={{ height: 320, backgroundColor: 'white', width: '100%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
 
-                    {openBottomModal && <FilterModal
+                    {/* {openBottomModal && <FilterModal
                         modalClose={modalClose}
                         message={message}
                         openModal={openBottomModal}
                         handleFilter={onFilter}
-                        comp={ModalContent}></FilterModal>}
+                        comp={ModalContent}></FilterModal>} */}
 
                     <PoppinsTextLeftMedium content="Date Filter" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:'center' }}></PoppinsTextLeftMedium>
+                    <TouchableOpacity onPress={()=>{setOpenBottomModal(false)}} style={{height:40,width:40,alignItems:'center',justifyContent:'center',position:'absolute',top:10,right:10}}>
+                    <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/cancel.png')}></Image>
+                    </TouchableOpacity>
                     <View>
                         <InputDate data="Start Date" handleData={handleStartDate} />
 
@@ -320,7 +322,7 @@ const PointHistory = ({ navigation }) => {
         const is_reverted = props.is_reverted
         console.log("point props", props,type,image)
         return (
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 8, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10,width:'100%',height:100,backgroundColor:'white' }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", margin: 8, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingBottom: 10,width:'100%',height:120,backgroundColor:'white' }}>
                 <View style={{ height: 60, width: '14%', alignItems: "center", justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: '#DDDDDD',position:'absolute',left:10,}}>
                     {image ? <Image style={{ height: 40, width: 40, resizeMode: "contain" }} source={{uri:BaseUrlImages+image}}></Image>: <Image style={{ height: 40, width: 40, resizeMode: "contain" }} source={require('../../../assets/images/logoOzone.png')}></Image>}
                 </View>
@@ -330,9 +332,9 @@ const PointHistory = ({ navigation }) => {
 
                     {type!=="registration_bonus" &&<PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={`Product Code : ${productCode}`}></PoppinsTextMedium>}
                     {type!=="registration_bonus" && <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={`Visible Code : ${visibleCode}`}></PoppinsTextMedium>}
-                    <PoppinsTextMedium style={{ fontWeight: '200', fontSize: 12, color: 'black' }} content={date}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={date}></PoppinsTextMedium>
                     
-                    <PoppinsTextMedium style={{ fontWeight: '200', fontSize: 12, color: 'black' }} content={time}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={time}></PoppinsTextMedium>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center",position:'absolute',right:10,width:'26%' }}>
                     <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={  (status == 0 && (points<0) && is_reverted == true)?  require('../../../assets/images/minus_wallet.png') :  require('../../../assets/images/wallet.png')}></Image>

@@ -99,7 +99,6 @@ const WarrantyHistory = ({ navigation }) => {
 
         const ModalContent = (props) => {
             const [startDate, setStartDate] = useState("")
-            const [openBottomModal, setOpenBottomModal] = useState(false)
             const [endDate, setEndDate] = useState("")
 
 
@@ -120,14 +119,17 @@ const WarrantyHistory = ({ navigation }) => {
             return (
                 <View style={{ height: 320, backgroundColor: 'white', width: '100%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
 
-                    {openBottomModal && <FilterModal
+                    {/* {openBottomModal && <FilterModal
                         modalClose={modalClose}
                         message={message}
                         openModal={openBottomModal}
                         handleFilter={onFilter}
-                        comp={ModalContent}></FilterModal>}
+                        comp={ModalContent}></FilterModal>} */}
 
                     <PoppinsTextMedium content="Date Filter" style={{ color: 'black', marginTop: 20, fontWeight: 'bold',alignSelf:"center" }}></PoppinsTextMedium>
+                    <TouchableOpacity onPress={()=>{setOpenBottomModal(false)}} style={{height:40,width:40,alignItems:'center',justifyContent:'center',position:'absolute',top:10,right:10}}>
+            <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/cancel.png')}></Image>
+          </TouchableOpacity>
                     <View>
                         <InputDate data="Start Date" handleData={handleStartDate} />
 
