@@ -7,6 +7,7 @@ import {
   FlatList,
   Text,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import PoppinsText from "../../components/electrons/customFonts/PoppinsText";
 import PoppinsTextMedium from "../../components/electrons/customFonts/PoppinsTextMedium";
@@ -129,10 +130,10 @@ const ScannedHistory = ({ navigation }) => {
 
   useEffect(() => {
     if (fetchAllQrScanedListData) {
-      // console.log(
-      //   "fetchAllQrScanedListData",
-      //   fetchAllQrScanedListData.body.total
-      // );
+      console.log(
+        "fetchAllQrScanedListData",
+        fetchAllQrScanedListData.body
+      );
       fetchDates(fetchAllQrScanedListData.body.data);
     } else if (fetchAllQrScanedListError) {
       console.log("fetchAllQrScanedListError", fetchAllQrScanedListError);
@@ -463,6 +464,8 @@ const ScannedHistory = ({ navigation }) => {
             justifyContent: "center",
             borderRadius: 10,
             borderColor: "#DDDDDD",
+            backgroundColor:ternaryThemeColor,
+            marginLeft:20
           }}
         >
           {image !== null && (
@@ -477,7 +480,7 @@ const ScannedHistory = ({ navigation }) => {
             alignItems: "flex-start",
             justifyContent: "center",
             marginLeft: 10,
-            width: 200,
+            width: Dimensions.get('window').width-90,
           }}
         >
           <PoppinsTextMedium
@@ -485,6 +488,7 @@ const ScannedHistory = ({ navigation }) => {
               fontWeight: "600",
               fontSize: 14,
               textAlign: "auto",
+
               color: "black",
             }}
             content={description}

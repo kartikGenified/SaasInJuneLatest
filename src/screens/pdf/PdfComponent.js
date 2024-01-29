@@ -5,11 +5,11 @@ import { BaseUrlImages } from '../../utils/BaseUrlImages';
 
 const PdfComponent = ({route}) => {
     const pdf = route?.params?.pdf
-    const pdfLink = BaseUrlImages+pdf
-    const source = { uri: pdfLink, cache: true };
+    const pdfLink = pdf == null ?  BaseUrlImages : BaseUrlImages+pdf
+    const source = pdf == null ? { uri: BaseUrlImages, cache: true } : { uri: pdfLink, cache: true };
     return (
         <View style={styles.container}>
-                <Pdf
+                {pdf!=undefined && pdf!=null && <Pdf
                 trustAllCerts={false}
                     source={pdf && source}
                     onLoadComplete={(numberOfPages,filePath) => {
@@ -25,7 +25,7 @@ const PdfComponent = ({route}) => {
 
                        console.log(`Link pressed: ${uri}`);
                     }}
-                    style={styles.pdf}/>
+                    style={styles.pdf}/>}
             </View>
     );
 }

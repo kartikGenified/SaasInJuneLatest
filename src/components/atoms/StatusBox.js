@@ -10,8 +10,8 @@ const StatusBox = (props) => {
         : 'grey';
         const status = props.status
     return (
-        <View style={{padding:14,borderWidth:1,borderStyle:"dashed",backgroundColor:ternaryThemeColor,alignItems:"center",justifyContent:"center",borderRadius:4,opacity:0.7,marginTop:30}}>
-            <PoppinsTextMedium style={{color:'black',fontSize:16,fontWeight:'700'}} content={`Status : ${status}`}></PoppinsTextMedium>
+        <View style={{padding:14,borderWidth:1,borderStyle:"dashed",backgroundColor:ternaryThemeColor,alignItems:"center",justifyContent:"center",borderRadius:4,opacity:0.9,marginTop:30}}>
+            <PoppinsTextMedium style={{color:'white',fontSize:16,fontWeight:'800'}} content={`Status : ${status}`}></PoppinsTextMedium>
         </View>
     );
 }

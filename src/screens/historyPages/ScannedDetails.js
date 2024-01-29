@@ -9,7 +9,7 @@ const ScannedDetails = ({navigation,route}) => {
     
     const data = route.params.data
     console.log(data)
-    const points = data?.points_on_product
+    // const points = data?.points_on_product
     const image = data?.images!==null ? data?.images[0] : null
     const date = data?.scanned_at
 

@@ -204,7 +204,7 @@ if(sendAadharOtpError.data?.Error?.message!==undefined)
 
 }
 else{
-  setMessage(sendAadharOtpError.data.message)
+  setMessage(sendAadharOtpError.data?.message)
 } 
 }
 },[sendAadharOtpData,sendAadharOtpError])
@@ -225,7 +225,7 @@ useEffect(()=>{
   console.log("verifyGstData",verifyGstData)
   if(verifyGstData.success)
   {
-    const temp = {"type":"gstin","value":verifyGstData.body.GSTIN}
+    const temp = {"type":"gstin","value":verifyGstData.body?.GSTIN}
     setVerified([...verified,temp])
     setGstVerified(true)
   }
@@ -236,7 +236,7 @@ useEffect(()=>{
   console.log("verifyGstError",verifyGstError)
   setError(true)
   setGstin("")
-  setMessage(verifyGstError.data.message)
+  setMessage(verifyGstError.data?.message)
   }
   },[verifyGstData,verifyGstError])
 
@@ -250,7 +250,7 @@ useEffect(()=>{
     // setName(verifyPanData.body.registered_name)
     // setPan(verifyPanData.body.pan)
    console.log("SUCCESS PAN")
-   const temp = {"type":"pan","value":verifyPanData.body.pan}
+   const temp = {"type":"pan","value":verifyPanData.body?.pan}
    setVerified([...verified,temp])
    setPanVerified(true)
   }
@@ -260,7 +260,7 @@ useEffect(()=>{
     setPan("")
     setError(true)
     // handlePanInput("")
-    setMessage(verifyPanError.data.message)
+    setMessage(verifyPanError.data?.message)
   console.log("verifyPanError",verifyPanError)
   }
   },[verifyPanData,verifyPanError])
@@ -677,7 +677,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
                
               </View>
              
-             {verifyPanData && <PANDataBox name={verifyPanData.body.registered_name} panNumber={verifyPanData.body.pan}></PANDataBox>}
+             {verifyPanData && <PANDataBox name={verifyPanData.body?.registered_name} panNumber={verifyPanData.body?.pan}></PANDataBox>}
             </View>
             }
             {showAadhar && 
@@ -735,7 +735,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
                 </View>
                
               </View>
-             {verifyAadharData && <AadharDataBox dob={verifyAadharData.body.dob} name={verifyAadharData.body.name} gender={verifyAadharData.body.gender} address={verifyAadharData.body.address}></AadharDataBox>}
+             {verifyAadharData && <AadharDataBox dob={verifyAadharData.body?.dob} name={verifyAadharData.body?.name} gender={verifyAadharData.body?.gender} address={verifyAadharData.body?.address}></AadharDataBox>}
             </View>
             }
             {showGst  && 
@@ -770,13 +770,13 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
                 <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Business Name" > </PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
-                <TextInput value={verifyGstData ? verifyGstData.body.legal_name_of_business:businessName} onChangeText={(text)=>{handleGstInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Business Name'></TextInput>
+                <TextInput value={verifyGstData ? verifyGstData.body?.legal_name_of_business:businessName} onChangeText={(text)=>{handleGstInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20}} placeholder='Business Name'></TextInput>
                 
                 </View>
                
               </View>
               
-             {verifyGstData && <GSTDataBox businessName={verifyGstData.body.legal_name_of_business} gstin={verifyGstData.body.GSTIN}></GSTDataBox>}
+             {verifyGstData && <GSTDataBox businessName={verifyGstData.body?.legal_name_of_business} gstin={verifyGstData.body?.GSTIN}></GSTDataBox>}
             </View>
             }
             <TouchableOpacity style ={{backgroundColor:ternaryThemeColor, height:50,width:200,borderRadius:4,marginTop:20, alignItems:'center', justifyContent:'center'}} onPress={()=>{
