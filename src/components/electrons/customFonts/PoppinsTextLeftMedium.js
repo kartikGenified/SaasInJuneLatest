@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet,Text} from 'react-native';
 
 const PoppinsTextLeftMedium = (props) => {
+    
 
     const content=props.content 
     const style = props.style

@@ -33,7 +33,7 @@ const EditProfile = ({ navigation, route }) => {
   const [marginB, setMarginB] = useState(0)
   const [isValidEmail,setIsValidEmail] = useState(true)
   const [isClicked, setIsClicked] = useState(false)
-
+  const [submitProfile,setSubmitProfile] = useState(false)
   // const userData = useSelector(state=>state.appusersdata.userData)
   console.log("saved image", route.params?.savedImage)
   // console.log("route.params.savedImage",route.params.savedImage)
@@ -271,8 +271,8 @@ const EditProfile = ({ navigation, route }) => {
       )}
       {success && (
         <MessageModal
-          navigateTo="Profile"
-          modalClose={modalClose}
+          navigateTo={isClicked ? "Profile": undefined}
+          modalClose={modalClose} 
           title="Success"
           message={message}
           openModal={success}></MessageModal>

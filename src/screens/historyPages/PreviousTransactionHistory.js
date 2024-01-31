@@ -210,7 +210,7 @@ const PreviousTransactionHistory = ({navigation}) => {
                 renderItem={({ item, index }) => {
                     // console.log(index + 1, item)
                     return (
-                        <ListItem visibleCode = {item["QR Code Visible No"]} type = {item?.cause?.type} image={item?.images ===undefined ? undefined : item?.images[0]} description={item?.product_name} productCode={item["SKU Code"]} amount={item?.points} status={item?.status} points={item?.points} is_reverted= {item?.is_reverted} date = {item["Transaction Date"]} time={item["Transaction Date"]}/>
+                        <ListItem  visibleCode = {item["QR Code Visible No"]} type = {item?.cause?.type} image={item?.images ===undefined ? undefined : item?.images[0]} description={item?.product_name} productCode={item["SKU Code"]} amount={item["Total Points Rewarded (100%)"]} status={item?.status} points={item?.points} is_reverted= {item?.is_reverted} date = {item["Transaction Date"]} time={item["Transaction Date"]}/>
                     )
                 }}
                 keyExtractor={(item,index) => index}

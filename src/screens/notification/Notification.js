@@ -3,9 +3,10 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'rea
 import { useSelector } from "react-redux";
 import { useFetchAllPushNotificationDumpListByAppUserIdMutation } from "../../apiServices/pushNotification/fetchAllPushNotificationDumpListByAppUserId";
 import PoppinsTextLeftMedium from "../../components/electrons/customFonts/PoppinsTextLeftMedium";
+import HyperlinkText from "../../components/electrons/customFonts/HyperlinkText";
 
 
-const Notification = ({ route, navigation }) => {
+const Notification = ({ navigation }) => {
 
     const [getNotiFunc, {
         data: notifData,
@@ -51,10 +52,11 @@ const Notification = ({ route, navigation }) => {
                     <Image style={{ width: 20, height: 20 }} source={require('../../../assets/images/noti-small.png')}></Image>
                 </View>
 
-                <View style={{ width: '80%', margin: 20 }}>
+                <View style={{ width: '80%', margin: 10,padding:10 }}>
                     <Text style={{ fontWeight: '600', color: 'black' }}>{props.notification}</Text>
                     {/* <Text style={{ color: 'black' }}>{props?.subtitle}</Text> */}
-                    <PoppinsTextLeftMedium style={{color:'black', }} content={props?.body}></PoppinsTextLeftMedium>
+                    {/* <PoppinsTextLeftMedium style={{color:'black', }} content={props?.body}></PoppinsTextLeftMedium> */}
+                    <HyperlinkText text={props?.body} />
                 </View>
             </View>
         )
