@@ -7,7 +7,7 @@ export const getAllCouponsApi = baseApi.injectEndpoints({
             query: (token) => {
               return {
                 method: "GET",
-                url: `/api/tenant/oopl/token-coupons`,
+                url: `/api/tenant/oopl/dynamic-coupons`,
                 headers: {
                   Authorization: "Bearer " + token,
                   slug: slug,

@@ -291,7 +291,7 @@ const RedeemedHistory = ({ navigation }) => {
             <View style={styles.modalView}>
               <Image style={{ height: 80, width: 80, marginTop: 20 }} source={require('../../../assets/images/gift1.png')}></Image>
               <PoppinsTextMedium style={{ color: 'black', width: 300, marginTop: 20 }} content="Do you want redeem your point with amazing gift or cashback"></PoppinsTextMedium>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 20 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20,width:'100%'}}>
                 <TouchableOpacity onPress={() => {
                   console.log("gift")
                   setModalVisible(false)
@@ -302,10 +302,19 @@ const RedeemedHistory = ({ navigation }) => {
                   <PoppinsTextMedium style={{ color: 'white', marginLeft: 10 }} content="Gift"></PoppinsTextMedium>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
+                  console.log("Coupons")
+                  setModalVisible(false)
+                  navigation.navigate('RedeemCoupons')
+
+                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: ternaryThemeColor, flexDirection: "row", height: 40, width: 100, borderRadius: 10 }}>
+                  <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/giftWhite.png')}></Image>
+                  <PoppinsTextMedium style={{ color: 'white', marginLeft: 10 }} content="Coupons"></PoppinsTextMedium>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
                   console.log("cashback")
                   setModalVisible(false)
                   navigation.navigate('RedeemCashback')
-                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: ternaryThemeColor, flexDirection: "row", marginLeft: 40, height: 40, width: 120, borderRadius: 10 }}>
+                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: '#0E2659', flexDirection: "row", height: 40, width: 120, borderRadius: 10 }}>
                   <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/giftWhite.png')}></Image>
                   <PoppinsTextMedium style={{ color: 'white', marginLeft: 10 }} content="Cashback"></PoppinsTextMedium>
                 </TouchableOpacity>

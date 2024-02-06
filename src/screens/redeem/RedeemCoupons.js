@@ -111,11 +111,12 @@ const RedeemCoupons = ({navigation,route}) => {
 
     for(var i=0;i<data.length;i++)
     {
-      allCategories.push(giftCatalogueData.body[i].category)
+      allCategories.push(fetchAllCouponsData.body[i].brand_name)
     }
     const set = new Set(allCategories)
     const arr = Array.from(set)
     setDistinctCategories(arr)
+    console.log("setDistinctCategories",arr)
   }
 
   const modalClose = () => {
@@ -124,7 +125,7 @@ const RedeemCoupons = ({navigation,route}) => {
   };
 
   const handleSearch=(data)=>{
-    const searchOutput =  giftCatalogueData.body.filter((item,index)=>{
+    const searchOutput =  fetchAllCouponsData.body.filter((item,index)=>{
       return(item.name.toLowerCase().includes(data.toLowerCase()))
     })
     setDisplayContent(searchOutput)
@@ -137,7 +138,7 @@ const RedeemCoupons = ({navigation,route}) => {
     return (
       <TouchableOpacity 
       onPress={()=>{
-        const filteredData =  giftCatalogueData.body.filter((item,index)=>{
+        const filteredData =  fetchAllCouponsData.body.filter((item,index)=>{
           return(
             item.category == data
           )
@@ -226,15 +227,15 @@ const RedeemCoupons = ({navigation,route}) => {
     
       
     
-    console.log(pointBalance,"tempPoints",tempPoints,data.points)
+    console.log(pointBalance,"tempPoints",tempPoints,data.value)
     if(operation==="plus")
     {
-      console.log(Number(pointBalance),Number(data.points))
-      if(tempPoints+Number(data.points)<=pointBalance)
+      console.log(Number(pointBalance),Number(data.value))
+      if(tempPoints+Number(data.value)<=pointBalance)
     {
-      if(Number(pointBalance)>=Number(data.points))
+      if(Number(pointBalance)>=Number(data.value))
     {
-      tempPoints =  tempPoints+data.points
+      tempPoints =  tempPoints+Number(data.value)
       let temp =count
       temp++
       setCount(temp)
@@ -256,6 +257,11 @@ const RedeemCoupons = ({navigation,route}) => {
       setCount(temp)
       props.handleOperation(data,operation,temp)
       tempPoints = tempPoints-data.points
+
+      if(cart.length==0)
+      {
+        tempPoints=0;
+      }
 
       // setPointBalance(pointBalance+data.points)
 
@@ -301,8 +307,8 @@ const RedeemCoupons = ({navigation,route}) => {
               top: 14,
             }}>
             <Image
-              style={{height: 40, width: 40, resizeMode: 'contain'}}
-              source={{uri: BaseUrlImages + image}}></Image>
+              style={{height: 50, width: 50, resizeMode: 'contain'}}
+              source={{uri:image}}></Image>
           </View>
           <LinearGradient
             style={{
@@ -374,7 +380,7 @@ const RedeemCoupons = ({navigation,route}) => {
 
           <PoppinsTextMedium
             style={{color: '#919191', fontSize: 13, width: '90%'}}
-            content={category}></PoppinsTextMedium>
+            content={category.substring(0,25)}></PoppinsTextMedium>
         </View>
       </TouchableOpacity>
     );
@@ -464,7 +470,7 @@ const RedeemCoupons = ({navigation,route}) => {
             borderTopLeftRadius: 40,
             paddingBottom: 20,
           }}>
-          {giftCatalogueData && <View
+          {fetchAllCouponsData && <View
             style={{
               width: '100%',
               alignItems: 'center',
@@ -517,7 +523,7 @@ const RedeemCoupons = ({navigation,route}) => {
           }}>
           <TouchableOpacity
           onPress={()=>{
-            setDisplayContent(giftCatalogueData.body)
+            setDisplayContent(fetchAllCouponsData.body)
           }}
             style={{
               height: 70,
@@ -576,10 +582,10 @@ const RedeemCoupons = ({navigation,route}) => {
                   handleOperation={addItemToCart}
                     data={item}
                     key={index}
-                    product={item.name}
-                    category={item.catalogue_name}
-                    points={item.points}
-                    image={item.images[0]}></RewardsBox>
+                    product={item.brand_name}
+                    category={item.category}
+                    points={item.value}
+                    image={item.brand_image}></RewardsBox>
                 );
               }}
               keyExtractor={item => item.id}

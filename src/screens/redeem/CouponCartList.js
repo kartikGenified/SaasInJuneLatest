@@ -23,7 +23,7 @@ import MessageModal from '../../components/modals/MessageModal';
 import { useDispatch } from 'react-redux';
 import { additem } from '../../../redux/slices/rewardCartSlice';
 
-const CartList = ({ navigation, route }) => {
+const CouponCartList = ({ navigation, route }) => {
   const [cart, setCart] = useState(route.params.cart);
   const [cartId, setCartId] = useState([])
 
@@ -512,10 +512,10 @@ const CartList = ({ navigation, route }) => {
 
                   data={item}
                   key={index}
-                  product={item.name}
-                  category={item.catalogue_name}
-                  points={item.points}
-                  image={item.images[0]}></RewardsBox>
+                  product={item.brand_name}
+                  category={item.category}
+                  points={item.value}
+                  image={item.brand_image}></RewardsBox>
               );
             }}
             keyExtractor={(item, index) => index}
@@ -541,4 +541,4 @@ const CartList = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({});
 
-export default CartList;
+export default CouponCartList;

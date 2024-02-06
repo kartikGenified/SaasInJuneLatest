@@ -6,6 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useNavigation,DrawerActions } from '@react-navigation/core';
 import { BaseUrl } from '../../utils/BaseUrl';
 import RotateViewAnimation from '../animations/RotateViewAnimation';
+import FadeInOutAnimations from '../animations/FadeInOutAnimations';
 
 const DrawerHeader = () => {
     const navigation = useNavigation()
@@ -36,6 +37,7 @@ const DrawerHeader = () => {
                 <RotateViewAnimation outputRange={["0deg","30deg", "-30deg","0deg"]} inputRange={[0,1,2,3]} comp={BellComponent} style={{height:30,width:30,position:'absolute',right:30}}>
                     
                 </RotateViewAnimation>
+                {/* <FadeInOutAnimations comp = {BellComponent}></FadeInOutAnimations> */}
                 {/* <BellComponent></BellComponent> */}
            
             
