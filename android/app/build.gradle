@@ -75,13 +75,13 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.ozoneoverseas"
+    namespace "com.netcarrots.ozone"
     defaultConfig {
-        applicationId "com.ozoneoverseas"
+        applicationId "com.netcarrots.ozone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "6.0"
         missingDimensionStrategy 'react-native-camera', 'general'
         
     }

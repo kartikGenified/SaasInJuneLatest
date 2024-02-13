@@ -1,4 +1,4 @@
-package com.ozoneoverseas;
+package com.netcarrots.ozone;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

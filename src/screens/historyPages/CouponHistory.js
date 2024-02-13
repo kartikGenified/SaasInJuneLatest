@@ -7,6 +7,8 @@ import * as Keychain from 'react-native-keychain';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useGetAllRedeemedCouponsMutation } from '../../apiServices/workflow/rewards/GetCouponApi';
+import { useGetAllUserCouponsMutation } from '../../apiServices/coupons/getAllCouponsApi';
+
 const CouponHistory = ({navigation}) => {
     const [getAllRedeemedFunc,{
         data:getAllRedeemedData,
@@ -14,6 +16,15 @@ const CouponHistory = ({navigation}) => {
         isLoading:getAllRedeemedIsLoading,
         isError:getAllRedeemedIsError
     }] = useGetAllRedeemedCouponsMutation()
+
+    const [getAllCouponsFunc,{
+        data:getAllCouponsData,
+        error:getAllCouponsError,
+        isLoading:getAllCouponsIsLoading,
+        isError:getAllCouponsIsError
+    }] = useGetAllUserCouponsMutation()
+
+  const userData = useSelector(state => state.appusersdata.userData)
 
     useEffect(()=>{
         const getRedemptionData=async()=>{
@@ -26,6 +37,11 @@ const CouponHistory = ({navigation}) => {
               getAllRedeemedFunc({
                 token:token
             })
+            const body = {
+                app_user_id:userData.id,
+                token:token
+            }
+            getAllCouponsFunc(body)
         }
         
         
@@ -33,6 +49,7 @@ const CouponHistory = ({navigation}) => {
     getRedemptionData()
         
     },[])
+
     useEffect(()=>{
         if(getAllRedeemedData)
     {
@@ -42,6 +59,16 @@ const CouponHistory = ({navigation}) => {
         console.log("getAllRedeemedError",getAllRedeemedError)
     }
 },[getAllRedeemedError,getAllRedeemedData])
+
+useEffect(()=>{
+    if(getAllCouponsData)
+{
+    console.log("getAllCouponsData",getAllCouponsData.body.data)
+}
+else if(getAllCouponsError){
+    console.log("getAllCouponsError",getAllCouponsError)
+}
+},[getAllCouponsError,getAllCouponsData])
 
 
     const CouponItems=(props)=>{

@@ -44,6 +44,7 @@ import EmailTextInput from '../../components/atoms/input/EmailTextInput';
 import { validatePathConfig } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {GoogleMapsKey} from "@env"
 
 
 const BasicInfo = ({ navigation, route }) => {
@@ -207,7 +208,7 @@ const BasicInfo = ({ navigation, route }) => {
       // getLocation(JSON.stringify(lat),JSON.stringify(lon))
       console.log("latlong", lat, lon)
       var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
-        &location_type=ROOFTOP&result_type=street_address&key=AIzaSyCfuLK5LlNWwr9Pvz1au8k-WSCuUYZL-6E`
+        &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
 
       fetch(url).then(response => response.json()).then(json => {
         console.log("location address=>", JSON.stringify(json));

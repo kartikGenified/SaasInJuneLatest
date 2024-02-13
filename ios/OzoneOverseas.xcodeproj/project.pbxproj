@@ -31,8 +31,8 @@
 		D6E44A13696D485083EFABC2 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8DB51198E9EA4355BC888C2C /* Poppins-ExtraLight.ttf */; };
 		DA5D18081DF44D2E90FAD56A /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DDCCDBC21DE445887EF6F40 /* Poppins-LightItalic.ttf */; };
 		E92EE8EA2B4156DE00162902 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E92EE8E92B4156DE00162902 /* Assets.xcassets */; };
-		E97BDAAF2B68D60500E7EE47 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E97BDAAE2B68D60500E7EE47 /* assets */; };
-		E97BDAB12B68D60C00E7EE47 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = E97BDAB02B68D60C00E7EE47 /* main.jsbundle */; };
+		E97BDABB2B7B7BD000E7EE47 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = E97BDABA2B7B7BD000E7EE47 /* main.jsbundle */; };
+		E97BDABD2B7B7BD800E7EE47 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E97BDABC2B7B7BD800E7EE47 /* assets */; };
 		E99B6EA52B3CB11800D14E1F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E99B6EA42B3CB11800D14E1F /* GoogleService-Info.plist */; };
 		E9B14AB22A8CDED1004DE909 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9B14A9F2A8CDED1004DE909 /* Fontisto.ttf */; };
 		E9B14AB32A8CDED1004DE909 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9B14AA02A8CDED1004DE909 /* Octicons.ttf */; };
@@ -104,8 +104,8 @@
 		E92D736B2B3B50B3009D7BC1 /* libReact-hermes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libReact-hermes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E92D736D2B3B549D009D7BC1 /* OpenSSL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OpenSSL.xcframework; path = "Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework"; sourceTree = "<group>"; };
 		E92EE8E92B4156DE00162902 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E97BDAAE2B68D60500E7EE47 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
-		E97BDAB02B68D60C00E7EE47 /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		E97BDABA2B7B7BD000E7EE47 /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		E97BDABC2B7B7BD800E7EE47 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		E97F37B52B3AE9B500D662DB /* OzoneOverseas.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OzoneOverseas.entitlements; path = OzoneOverseas/OzoneOverseas.entitlements; sourceTree = "<group>"; };
 		E99B6EA22B3CA8A600D14E1F /* reacthermes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = reacthermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E99B6EA42B3CB11800D14E1F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -238,8 +238,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E97BDAB02B68D60C00E7EE47 /* main.jsbundle */,
-				E97BDAAE2B68D60500E7EE47 /* assets */,
+				E97BDABC2B7B7BD800E7EE47 /* assets */,
+				E97BDABA2B7B7BD000E7EE47 /* main.jsbundle */,
 				E92EE8E92B4156DE00162902 /* Assets.xcassets */,
 				E99B6EA42B3CB11800D14E1F /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* OzoneOverseas */,
@@ -397,8 +397,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E97BDAB12B68D60C00E7EE47 /* main.jsbundle in Resources */,
-				E97BDAAF2B68D60500E7EE47 /* assets in Resources */,
+				E97BDABD2B7B7BD800E7EE47 /* assets in Resources */,
+				E97BDABB2B7B7BD000E7EE47 /* main.jsbundle in Resources */,
 				E9B14AB32A8CDED1004DE909 /* Octicons.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				E9B14ABD2A8CDED1004DE909 /* FontAwesome5_Regular.ttf in Resources */,
@@ -640,7 +640,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ozoneoverseas;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcarrots.ozone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OzoneOverseas.app/OzoneOverseas";
 			};
@@ -666,7 +666,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ozoneoverseas;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcarrots.ozone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OzoneOverseas.app/OzoneOverseas";
 			};
@@ -693,18 +693,19 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 6.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ozoneoverseasteam;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcarrots.ozone;
 				PRODUCT_NAME = OzoneOverseas;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "OzoneOverseas-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -729,17 +730,18 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 6.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ozoneoverseasteam;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcarrots.ozone;
 				PRODUCT_NAME = OzoneOverseas;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "OzoneOverseas-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -814,10 +816,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_CFLAGS = "$(inherited)  ";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -891,10 +890,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_CFLAGS = "$(inherited)  ";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",

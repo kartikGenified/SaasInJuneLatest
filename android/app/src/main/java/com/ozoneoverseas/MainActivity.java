@@ -1,4 +1,4 @@
-package com.ozoneoverseas;
+package com.netcarrots.ozone;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

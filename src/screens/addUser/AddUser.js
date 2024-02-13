@@ -244,10 +244,17 @@ const AddUser = ({ navigation }) => {
     });
 
     if (data?.name == "email") {
+      if(data.required==true)
+      {
       console.log('entering')
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       const checkEmail = emailRegex.test(data.value)
       setIsValidEmail(checkEmail);
+      }
+      else{
+        setIsValidEmail(true)
+      }
+      
     }
 
 

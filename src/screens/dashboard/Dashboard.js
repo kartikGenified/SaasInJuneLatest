@@ -37,6 +37,8 @@ import ScannedDetailsBox from '../../components/organisms/ScannedDetailsBox';
 import moment from 'moment';
 import AnimatedDots from '../../components/animations/AnimatedDots';
 import analytics from '@react-native-firebase/analytics';
+import {GoogleMapsKey} from "@env"
+
 
 const Dashboard = ({ navigation }) => {
   const [dashboardItems, setDashboardItems] = useState()
@@ -229,7 +231,7 @@ const Dashboard = ({ navigation }) => {
       // getLocation(JSON.stringify(lat),JSON.stringify(lon))
       console.log("latlong", lat, lon)
       var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
-          &location_type=ROOFTOP&result_type=street_address&key=AIzaSyCfuLK5LlNWwr9Pvz1au8k-WSCuUYZL-6E`
+          &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
 
       fetch(url).then(response => response.json()).then(json => {
         console.log("location address=>", JSON.stringify(json));

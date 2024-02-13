@@ -235,11 +235,18 @@ const RedeemCoupons = ({navigation,route}) => {
     {
       if(Number(pointBalance)>=Number(data.value))
     {
-      tempPoints =  tempPoints+Number(data.value)
+      if(cart.length<1)
+      {
+        tempPoints =  tempPoints+Number(data.value)
       let temp =count
       temp++
       setCount(temp)
       props.handleOperation(data,operation,temp)
+      }
+      else {
+        alert("Kindly redeem one coupon at a time")
+      }
+      
       
     }
     else{
@@ -595,7 +602,7 @@ const RedeemCoupons = ({navigation,route}) => {
         <TouchableOpacity onPress={()=>{
           if(cart.length!==0)
           {
-            navigation.navigate("CartList",{cart:cart})
+            navigation.navigate("CouponCartList",{cart:cart})
           }
           else (
             setError(true),

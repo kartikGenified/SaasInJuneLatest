@@ -21,6 +21,8 @@ import { useRedeemCashbackMutation } from "../../apiServices/cashback/CashbackRe
 import { useGetLoginOtpForVerificationMutation } from "../../apiServices/otp/GetOtpApi";
 import { useAddCashToBankMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import Geolocation from '@react-native-community/geolocation';
+import { useCreateCouponRequestMutation } from "../../apiServices/coupons/getAllCouponsApi";
+import {GoogleMapsKey} from "@env"
 
 
 const OtpVerification = ({navigation,route}) => {
@@ -79,9 +81,17 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       isError: getOtpforVerificationIsError,
     },
   ] = useGetLoginOtpForVerificationMutation();
+
+  const [createCouponRequestFunc,{
+    data:createCouponRequestData,
+    error:createCouponRequestError,
+    isLoading:createCouponRequestIsLoading,
+    isError:createCouponRequestIsError
+  }] = useCreateCouponRequestMutation()
   
   const type = route.params.type
   const selectedAccount = route.params?.selectedAccount
+  const brand_product_code = route.params?.brand_product_code
   const handleCashbackRedemption=async()=>{
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
@@ -124,7 +134,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       // getLocation(JSON.stringify(lat),JSON.stringify(lon))
       console.log("latlong", lat, lon)
       var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res.coords.latitude},${res.coords.longitude}
-        &location_type=ROOFTOP&result_type=street_address&key=AIzaSyCfuLK5LlNWwr9Pvz1au8k-WSCuUYZL-6E`
+        &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
 
       fetch(url).then(response => response.json()).then(json => {
         console.log("location address=>", JSON.stringify(json));
@@ -209,6 +219,21 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
         
     }
   },[redeemCashbackData,redeemCashbackError])
+
+  useEffect(()=>{
+    if(createCouponRequestData)
+    {
+      console.log("createCouponRequestData",createCouponRequestData)
+      setSuccess(true)
+      setMessage(createCouponRequestData.message)
+    }
+    else if(createCouponRequestError)
+    {
+      console.log("createCouponRequestError",createCouponRequestError)
+      setError(true)
+      setMessage("There was some problem ")
+    }
+  },[createCouponRequestData,createCouponRequestError])
 
   useEffect(()=>{
     if(addCashToBankData)
@@ -315,6 +340,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     })
     console.log("tempID", tempID)
 
+    
       const data = {
         "user_type_id": String(userData.user_type_id),
         "user_type": userData.user_type,
@@ -348,6 +374,31 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
        };
        redeemCashbackFunc(params)
        console.log("params",params)
+    }
+    else if(type==="Coupon"){
+      
+      const params = {
+        data :{ 
+        name: userData.name,
+        email: userData.email,
+        mobile: userData.mobile,
+        brand_product_code:brand_product_code,
+         user_type_id: userData.user_type_id,
+         user_type: userData.user_type,
+         platform_id: 1,
+         platform: 'mobile',
+         app_user_id: userData.id,
+         state: location.state,
+         district: location.district,
+         city:location.city,
+         lat: location.lat,
+         log: location.lon
+        },
+         token:token,
+         
+       };
+       createCouponRequestFunc(params)
+       console.log("Coupon params",params)
     }
   }
 

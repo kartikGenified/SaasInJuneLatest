@@ -191,7 +191,7 @@ const Passbook = ({ navigation }) => {
         return (
             <TouchableOpacity onPress={() => {
                 navigateToPages(title)
-            }} style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", borderBottomWidth: 1, width: '100%', borderColor: '#EEEEEE', padding: 6 }}>
+            }} style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", borderBottomWidth: 1, width: '100%', borderColor: '#EEEEEE', padding: 6,paddingTop:8,paddingBottom:8 }}>
                 <View style={{ height: 44, width: 44, alignItems: "center", justifyContent: "center", borderRadius: 4, borderColor: ternaryThemeColor, borderWidth: 1, marginLeft: 10 }}>
                     <Image style={{ height: 26, width: 26, resizeMode: "contain" }} source={image}></Image>
                 </View>

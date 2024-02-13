@@ -72,8 +72,9 @@ const CouponCartList = ({ navigation, route }) => {
       dispatch(additem(cart))
   
      
-        navigation.navigate("ListAddress", {
-          cart: cart
+        navigation.navigate("OtpVerification", {
+          type: "Coupon",
+          brand_product_code: cart[0].brand_product_code
         })
     }
        // const credentials = await Keychain.getGenericPassword();
@@ -254,7 +255,7 @@ const CouponCartList = ({ navigation, route }) => {
     useEffect(() => {
       let temp = 0;
       cart && cart.map((item) => {
-        temp = Number(item.points) + temp;
+        temp = Number(item.value) + temp;
       })
       setPointsConsumed(temp)
     }, [cart])
@@ -350,7 +351,7 @@ const CouponCartList = ({ navigation, route }) => {
             }}>
             <Image
               style={{ height: 46, width: 56, resizeMode: 'center' }}
-              source={{ uri: BaseUrlImages + image }}></Image>
+              source={{ uri:image }}></Image>
           </View>
           <LinearGradient
             style={{
