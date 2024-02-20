@@ -19,9 +19,9 @@ const CouponDetails = ({navigation,route}) => {
 
   
     const data = route.params.data
-    const couponTitle = data.brand;
+    const couponTitle = data.brand_product_code;
   const validDate = moment(data.expire_date).format("DD MMM YYYY");
-  const couponCode = data.coupon_code
+  const couponCode = data.brand_product_code
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -94,14 +94,7 @@ const CouponDetails = ({navigation,route}) => {
           <PoppinsTextMedium
             style={{color: 'black', fontSize: 24, fontWeight: '700'}}
             content={couponTitle}></PoppinsTextMedium>
-          <PoppinsTextMedium
-            style={{
-              color: '#353535',
-              fontSize: 18,
-              fontWeight: '700',
-              marginTop: 10,
-            }}
-            content={`Valid Upto ${validDate}`}></PoppinsTextMedium>
+          
         </ImageBackground>
 
         {/* coupon -------------------------------------- */}
@@ -147,7 +140,7 @@ const CouponDetails = ({navigation,route}) => {
       </View>
       <View style={{alignItems:"center",justifyContent:"center",marginTop:20,position:"absolute",bottom:10,borderTopWidth:1,borderColor:'#DDDDDD',width:'90%',paddingTop:10}}>
                 <PoppinsTextMedium style={{color:"black",fontSize:18,fontWeight:"700"}} content="Issue With This ?"></PoppinsTextMedium>
-                <ButtonNavigate style={{color:"white"}}  content ="Click Here To Report" backgroundColor="#D10000"></ButtonNavigate>
+                <ButtonNavigate navigateTo="SupportQueries" style={{color:"white"}}  content ="Click Here To Report" backgroundColor="#D10000"></ButtonNavigate>
             
             </View>
     </View>

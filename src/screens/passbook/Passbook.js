@@ -355,7 +355,7 @@ const Passbook = ({ navigation }) => {
                         <NavigateTO title="Warranty History" discription=" list of warranty claimed by you" image={require('../../../assets/images/warranty_icon.png')}></NavigateTO>
                         {/* } */}
                         {
-                            couponOptionEnabled &&
+                            // couponOptionEnabled &&
                             <NavigateTO title="Coupon History" discription=" list of coupons redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
                         }
                         {

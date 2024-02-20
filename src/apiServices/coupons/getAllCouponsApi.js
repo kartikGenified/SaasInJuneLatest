@@ -30,9 +30,10 @@ export const getAllCouponsApi = baseApi.injectEndpoints({
         }),
         getAllUserCoupons: builder.mutation({
           query: (body) => {
+            console.log("getAllUserCoupons",body)
               return {
                   method: 'POST',
-                  url: `/api/tenant/oopl/history/:${body.app_user_id}`,
+                  url: `/api/tenant/oopl/history/${body.app_user_id}`,
                   headers: {
                       "Content-Type": "application/json",
                       Authorization: "Bearer " + body.token,
