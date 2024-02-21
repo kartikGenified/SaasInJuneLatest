@@ -19,7 +19,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useFetchGiftCatalogueByUserTypeAndCatalogueTypeMutation} from '../../apiServices/gifts/GiftApi';
 import {useFetchUserPointsMutation} from '../../apiServices/workflow/rewards/GetPointsApi';
 import * as Keychain from 'react-native-keychain';
-import {BaseUrlImages} from '../../utils/BaseUrlImages';
 import ErrorModal from '../../components/modals/ErrorModal';
 import SuccessModal from '../../components/modals/SuccessModal';
 import MessageModal from '../../components/modals/MessageModal';

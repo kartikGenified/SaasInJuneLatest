@@ -6,7 +6,6 @@ import * as Keychain from 'react-native-keychain';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
-import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import FastImage from 'react-native-fast-image';
 import DataNotFound from '../data not found/DataNotFound';
 
@@ -263,7 +262,7 @@ const WhatsNew = ({ navigation }) => {
                                     <View style={{ borderRadius: 100, borderColor: 'black', height: 50, borderWidth: 1, width: 50, marginLeft: 10, marginRight: 20, padding: 2,alignItems:'center',justifyContent:'center' }}>
                                         <Image
                                             style={{ height: '70%', width: '70%', resizeMode: 'contain' }}
-                                            source={{ uri: BaseUrlImages + item?.images[0] }}></Image>
+                                            source={{ uri: item?.images[0] }}></Image>
                                     </View>
 
                                     <View style={{ flexDirection: 'column', width: '80%' }}>

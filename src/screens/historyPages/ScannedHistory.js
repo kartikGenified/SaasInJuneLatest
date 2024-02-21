@@ -16,7 +16,6 @@ import { useSelector } from "react-redux";
 import * as Keychain from "react-native-keychain";
 import { useFetchUserPointsMutation } from "../../apiServices/workflow/rewards/GetPointsApi";
 import { useAllUserPointsEntryMutation } from "../../apiServices/workflow/rewards/GetPointsApi";
-import { BaseUrlImages } from "../../utils/BaseUrlImages";
 import moment from "moment";
 import BottomModal from "../../components/modals/BottomModal";
 import FastImage from "react-native-fast-image";
@@ -476,7 +475,7 @@ const ScannedHistory = ({ navigation }) => {
           {image !== null && (
             <Image
               style={{ height: 60, width: 60, resizeMode: "contain" }}
-              source={{ uri: BaseUrlImages + image }}
+              source={{ uri: image }}
             ></Image>
           )}
         </View>
