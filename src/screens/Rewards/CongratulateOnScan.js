@@ -75,7 +75,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   );
   // getting location from redux state
   const location = useSelector((state) => state.userLocation.location);
-  console.log("shouldSharePoints", shouldSharePoints, JSON.stringify(productData),pointPercentage);
+  console.log("shouldSharePoints", shouldSharePoints, JSON.stringify(productData));
   console.log("location", location);
   // console.log('Location', location, userData, productData, qrData);
   const height = Dimensions.get("window").height;
@@ -277,25 +277,12 @@ const getMembership = async () => {
               alert("Points can't be shared for this tenant");
             }
           } else if (pointSharingData.percentage_points === true) {
-            let point; 
-            let totalPoints;
-            let memberShipBonus
-            if(Number(pointSharingData["percentage_points_value"])==0)
-            {
-               point =
-              productData["mrp"]
-               memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
-              totalPoints = memberShipBonus
-
-            }
-            else{
-              point =
+            const point =
               productData["mrp"] *
               (pointSharingData["percentage_points_value"] / 100);
-               memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+              const memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
           
-              totalPoints = point + memberShipBonus
-            }
+          const totalPoints = point + memberShipBonus
             const points =
               totalPoints *
               (Number(pointPercentage) / 100);
@@ -603,28 +590,28 @@ const getMembership = async () => {
           const submitPoints = async () => {
             const credentials = await Keychain.getGenericPassword();
             const token = credentials.username;
-            let points; 
+            let point; 
             let totalPoints;
-            let memberShipBonus;
+            let memberShipBonus
             if(Number(pointSharingData["percentage_points_value"])==0)
             {
-               points =
+               point =
               productData["mrp"]
-               memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+               memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
               totalPoints = memberShipBonus
 
             }
             else{
-              points =
+              point =
               productData["mrp"] *
               (pointSharingData["percentage_points_value"] / 100);
-               memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+               memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
           
-              totalPoints = points + memberShipBonus
+              totalPoints = point + memberShipBonus
             }
-             
+          
           setShowPoints(totalPoints);
-          console.log("Simple points Recieved",totalPoints,points,memberShipBonus)
+          console.log("Simple points Recieved",totalPoints,point,memberShipBonus)
            
             const body = {
               data: {

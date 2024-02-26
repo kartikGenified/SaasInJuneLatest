@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 const CampaignVideoModal = ({ isVisible, onClose }) => {
 
     const [hide, setHide] = useState(true);
-
+    const [showModal, setShowModal] = useState(true)
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
     )
@@ -49,6 +49,10 @@ const CampaignVideoModal = ({ isVisible, onClose }) => {
     useEffect(() => {
         if (getAppCampaignData) {
             console.log("getAppCampaignData", getAppCampaignData);
+            if(getAppCampaignData?.body?.data.length==0)
+            {
+                setShowModal(false)
+            }
             setHide(getAppCampaignData?.body?.data?.[0]?.image?.can_user_hide);
         }
         else {
@@ -70,7 +74,7 @@ const CampaignVideoModal = ({ isVisible, onClose }) => {
     return (
         <Modal
             transparent={true}
-            visible={isVisible}
+            visible={isVisible && showModal}
             onRequestClose={onClose}
             animationType="slide"
         >
