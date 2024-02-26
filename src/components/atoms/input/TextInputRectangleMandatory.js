@@ -6,7 +6,8 @@ const TextInputRectangleMandatory = (props) => {
     const [value,setValue] = useState(props.value)
     const [maxLength, setMaxLength] = useState(props.maxLength ? props.maxLength : 100)
     const placeHolder = props.placeHolder
-   const required = props.required
+    const required = props.required ===undefined ? props.jsonData.required : props.required
+
    useEffect(()=>{
     let tempJsonData ={...props.jsonData,"value":props.value}
         console.log(tempJsonData)

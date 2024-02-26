@@ -264,10 +264,10 @@ const WarrantyDetails = ({ navigation, route }) => {
                 const imageDataTemp = {
                     uri: imageData.uri,
                     name: imageData.uri.slice(0, 10),
-                    type: 'jpg/png',
+                    type: 'image/png',
                 };
                 const uploadFile = new FormData();
-                uploadFile.append('images', imageDataTemp);
+                uploadFile.append('image', imageDataTemp);
 
                 
                 setModal(!modal);

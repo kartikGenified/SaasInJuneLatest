@@ -322,8 +322,8 @@ const BasicInfo = ({ navigation, route }) => {
       console.log("data after submitting form", registerUserData)
       if (registerUserData.success) {
         setSuccess(true)
-        setMessage(registerUserData.message)
-        setModalTitle("WOW")
+        setMessage("Thank you for joining OZOSTARS Loyalty program, we will get back to you within 1-2 working days")
+        setModalTitle("Greetings")
       }
       setHideButton(false)
 
@@ -415,15 +415,15 @@ const BasicInfo = ({ navigation, route }) => {
   const handleChildComponentData = data => {
 
     // setOtpVisible(true)
-    if (data.name === "name") {
-      setUserName(data.value)
+    if (data?.name === "name") {
+      setUserName(data?.value)
     }
     // console.log("isValidEmail", isValidEmail(data.value))
 
-    if (data.name === "email") {
-      console.log("from text input", data.name);
+    if (data?.name === "email") {
+      console.log("from text input", data?.name);
 
-      console.log("isValidEmail", isValidEmail(data.value), isValid)
+      console.log("isValidEmail", isValidEmail(data?.value), isValid)
 
     }
 
@@ -432,8 +432,8 @@ const BasicInfo = ({ navigation, route }) => {
 
 
 
-    if (data.name === "mobile") {
-      setUserMobile(data.value)
+    if (data?.name === "mobile") {
+      setUserMobile(data?.value)
     }
     // Update the responseArray state with the new data
     setResponseArray(prevArray => {
@@ -446,7 +446,7 @@ const BasicInfo = ({ navigation, route }) => {
         const updatedArray = [...prevArray];
         updatedArray[existingIndex] = {
           ...updatedArray[existingIndex],
-          value: data.value,
+          value: data?.value,
         };
         return updatedArray;
       } else {

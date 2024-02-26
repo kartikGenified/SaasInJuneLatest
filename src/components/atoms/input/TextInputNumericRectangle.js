@@ -6,7 +6,8 @@ const TextInputNumericRectangle = props => {
   const placeHolder = props.placeHolder;
   const maxLength = props.maxLength;
   const label = props.label
-  const required = props.required
+  const required = props.required ===undefined ? props.jsonData.required : props.required
+
   const isEditable = props.isEditable
   console.log("label",isEditable)
 

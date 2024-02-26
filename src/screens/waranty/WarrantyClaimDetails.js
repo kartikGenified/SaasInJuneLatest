@@ -66,9 +66,9 @@ const WarrantyClaimDetails = ({ navigation, route }) => {
                 borderColor: '#85BFF1',
                 alignSelf: 'center'
             }}>
-                <View style={{ marginHorizontal: 20, marginTop: 10, flexDirection: 'row' }}>
-                    <PoppinsTextMedium content="Prdoduct Name : " style={{ fontWeight: '700', fontSize: 18, color: "#474747" }} />
-                    <PoppinsTextMedium content={`${warrantyItemData?.product_name}`} style={{ fontWeight: '700', fontSize: 20, color: "#474747" }} />
+                <View style={{ marginHorizontal: 20, marginTop: 10, flexDirection: 'row',width:'100%' }}>
+                    <PoppinsTextMedium content="Prdoduct Name : " style={{ fontWeight: '700', fontSize: 18, color: "#474747",width:'40%' }} />
+                    <PoppinsTextMedium content={`${warrantyItemData?.product_name}`} style={{ fontWeight: '700', fontSize: 18, color: "#474747",width:'55%' }} />
                 </View>
 
                 <View style={{ marginHorizontal: 20, marginTop: 10, flexDirection: 'row' }}>

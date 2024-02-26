@@ -46,7 +46,7 @@ const MessageModal = (props) => {
           <Text style={{color:'black',fontSize:24,fontWeight:'600'}}>{props.title}</Text>
           <Icon name="cloud-done" size={100} color="green"></Icon>
 
-          <Text style={{...styles.modalText,fontSize:20,fontWeight:'600', color:'black'}}>{props.message}</Text>
+          <Text style={{...styles.modalText,fontSize:18,fontWeight:'600', color:'black'}}>{props.message}</Text>
             <Pressable
               style={{...styles.button,backgroundColor:ternaryThemeColor,width:100}}
               onPress={() => closeModal()}>

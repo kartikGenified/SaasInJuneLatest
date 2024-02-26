@@ -18,7 +18,7 @@ import InputDate from '../../components/atoms/input/InputDate';
 import ImageInput from '../../components/atoms/input/ImageInput';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 import ProductList from '../../components/molecules/ProductList';
-import { useUploadImagesMutation } from '../../apiServices/imageApi/imageApi';
+import {  useUploadSingleFileMutation } from '../../apiServices/imageApi/imageApi';
 import { useActivateWarrantyMutation } from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import * as Keychain from 'react-native-keychain';
 import moment from 'moment';
@@ -29,6 +29,7 @@ import { createIconSetFromFontello } from 'react-native-vector-icons';
 import ErrorModal from '../../components/modals/ErrorModal';
 import FastImage from 'react-native-fast-image';
 import { gifUri } from '../../utils/GifUrl';
+import PrefilledTextInput from '../../components/atoms/input/PrefilledTextInput';
 
 const ActivateWarranty = ({ navigation, route }) => {
   const [responseArray, setResponseArray] = useState([]);
@@ -55,7 +56,7 @@ const ActivateWarranty = ({ navigation, route }) => {
       isLoading: uploadImageIsLoading,
       isError: uploadImageIsError,
     },
-  ] = useUploadImagesMutation();
+  ] = useUploadSingleFileMutation();
 
   // const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
@@ -98,15 +99,17 @@ const ActivateWarranty = ({ navigation, route }) => {
     if (uploadImageData) {
       console.log("uploadImageData", uploadImageData);
       const uploadArray = []
-      uploadArray.push(uploadImageData.body[0].filename)
+      uploadArray.push(uploadImageData.body.fileLink)
       submitDataWithToken(uploadArray);
 
       if (uploadImageData.success) {
         console.log(uploadImageData.success)
       }
 
-    } else {
-      console.log(uploadImageError);
+    } else if(uploadImageError) {
+      console.log("uploadImageError",uploadImageError);
+      setError(true)
+      setMessage(uploadImageError.data?.message)
     }
   }, [uploadImageData, uploadImageError]);
 
@@ -232,16 +235,20 @@ const ActivateWarranty = ({ navigation, route }) => {
     // Update the responseArray state with the new data
     setResponseArray(prevArray => {
       const existingIndex = prevArray.findIndex(
-        item => item.name === data.name,
+        item => item?.name === data?.name,
       );
 
       if (data?.name == "email") {
-        console.log('entering')
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        const checkEmail = emailRegex.test(data.value)
+        if(data?.required==true)
+        {
+          console.log('entering')
+          const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+          const checkEmail = emailRegex.test(data?.value)
+         
+          setIsValidEmail(checkEmail);
+          console.log("check email",emailRegex.test(data?.value))
+        }
        
-        setIsValidEmail(checkEmail);
-        console.log("check email",emailRegex.test(data.value))
       }
 
       if (existingIndex !== -1) {
@@ -249,7 +256,7 @@ const ActivateWarranty = ({ navigation, route }) => {
         const updatedArray = [...prevArray];
         updatedArray[existingIndex] = {
           ...updatedArray[existingIndex],
-          value: data.value,
+          value: data?.value,
         };
         return updatedArray;
       } else {
@@ -286,10 +293,10 @@ const ActivateWarranty = ({ navigation, route }) => {
             const imageData = {
               uri: item.value,
               name: item.value.slice(0, 10),
-              type: 'jpg/png',
+              type: 'image/png',
             };
             const uploadFile = new FormData();
-            uploadFile.append('images', imageData);
+            uploadFile.append('image', imageData);
             // console.log("invoice data",item.value)
             // if(item.value===undefined)
             // {
@@ -297,7 +304,15 @@ const ActivateWarranty = ({ navigation, route }) => {
             //   setMessage("Kindly upload the invoice/bill ")
             // }
             // else{
-            uploadImageFunc({ body: uploadFile });
+              const getToken = async () => {
+                const credentials = await Keychain.getGenericPassword();
+                const token = credentials.username;
+                uploadImageFunc({ body: uploadFile,token:token });
+               
+            }
+    
+            getToken()
+            
   
             // }
           } else if (item.name === 'dop' || item.name === "Date Of Purchase") {

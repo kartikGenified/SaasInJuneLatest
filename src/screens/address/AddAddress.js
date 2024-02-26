@@ -191,7 +191,7 @@ const AddAddress = ({ navigation }) => {
     // Update the responseArray state with the new data
     setResponseArray((prevArray) => {
       const existingIndex = prevArray.findIndex(
-        (item) => item.name === data.name
+        (item) => item?.name === data?.name
       );
 
       if (existingIndex !== -1) {
@@ -199,7 +199,7 @@ const AddAddress = ({ navigation }) => {
         const updatedArray = [...prevArray];
         updatedArray[existingIndex] = {
           ...updatedArray[existingIndex],
-          value: data.value,
+          value: data?.value,
         };
         return updatedArray;
       } else {
