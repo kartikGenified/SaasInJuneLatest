@@ -117,10 +117,28 @@ const EditProfile = ({ navigation, route }) => {
     })
 
     if (title == "email") {
-      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      const checkEmail = emailRegex.test(data)
-      setIsValidEmail(checkEmail);
+      if(jsonData?.required)
+      {
+        console.log("email data", typeof data,data.length)
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        const checkEmail = emailRegex.test(data)
+        setIsValidEmail(checkEmail);
+        
+      }
+      else{
+        if(data.length>0)
+        {
+          const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+          const checkEmail = emailRegex.test(data)
+          setIsValidEmail(checkEmail);
+        }
+        else if(data.length===0)
+        {
+          setIsValidEmail(true)
+        }
+      }
     }
+    
     
     removedValues.push({
       "value": data,
@@ -359,14 +377,14 @@ const EditProfile = ({ navigation, route }) => {
                 else if(item?.name?.split("_").includes("mobile"))
                 {
                   return(
-                    <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
+                    <TextInputRectangularWithPlaceholder jsonData = {item} placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
 
                   )
                 }
                 else{
                   return (
 
-                    <TextInputRectangularWithPlaceholder placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
+                    <TextInputRectangularWithPlaceholder jsonData = {item} placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
                   )
                 }
                 

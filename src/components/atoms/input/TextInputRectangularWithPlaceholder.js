@@ -9,7 +9,7 @@ const TextInputRectangularWithPlaceholder = (props) => {
     const [error, setError] = useState(false);
     console.log("value", props)
     const placeHolder = props.placeHolder
-    const required = props.required
+    const required = props.jsonData.required
     const specialChar = props.specialCharValidation
     const title  = props.title
 

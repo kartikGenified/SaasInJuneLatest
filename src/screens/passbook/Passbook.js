@@ -245,7 +245,7 @@ const Passbook = ({ navigation }) => {
                 navigation.navigate('SharedPointsHistory')
 
             }
-            else if (data === "Previous Transaction History") {
+            else if (data === "Previous Transactions History") {
                 navigation.navigate('PreviousTransactionHistory')
 
             }
