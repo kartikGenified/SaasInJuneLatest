@@ -41,7 +41,7 @@ import FastImage from "react-native-fast-image";
 const CongratulateOnScan = ({ navigation, route }) => {
   const [showPoints, setShowPoints] = useState();
   const [showBulkScanPoints, setShowBulkScanPoints] = useState();
-  const [membershipPercent, setMembershipPercent] = useState(0)
+  const [membershipPercent, setMembershipPercent] = useState()
   const [totalPoints, setTotalPoints] = useState(0)
   const [error,setError] = useState(false)
   const [message, setMessage] = useState('')
@@ -179,13 +179,13 @@ const CongratulateOnScan = ({ navigation, route }) => {
   ] = useAddCashbackEnteriesMutation();
   useEffect(()=>{
     getMembership()
-  },[])
+  },[rewardType])
   useEffect(() => {
     if (getActiveMembershipData) {
         console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
         if(getActiveMembershipData.success)
         {
-          
+          setMembershipPercent(getActiveMembershipData?.body?.points)
           console.log("getActiveMembershipData.body.points",getActiveMembershipData?.body?.points)
         }
     }
@@ -230,103 +230,123 @@ const getMembership = async () => {
           };
 
           console.log("shouldSharePoints", shouldSharePoints);
-          if (pointSharingData.flat_points === true) {
-            if (shouldSharePoints) {
+          if(getActiveMembershipData)
+          {
+            if (pointSharingData.flat_points === true) {
+              if (shouldSharePoints) {
+                const points =
+                  Number(productData[`${userData.user_type}_points`]) *
+                  (Number(pointPercentage) / 100) 
+                  const memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+                  const totalPoints = points + memberShipBonus
+                 
+                console.log("extra flat points", points,pointPercentage);
+                const body = {
+                  data: {
+                    // app_user_id: userData.id.toString(),
+                    // user_type_id: userData.user_type_id,
+                    // user_type: userData.user_type,
+                    product_id: productData.product_id,
+                    product_code: productData.product_code,
+                    platform_id: Number(platform),
+                    pincode:
+                      location.postcode === undefined ? "N/A" : location.postcode,
+                    platform: "mobile",
+                    state: location.state === undefined ? "N/A" : location.state,
+                    district:
+                      location.district === undefined ? "N/A" : location.district,
+                    city: location.city === undefined ? "N/A" : location.city,
+                    area:
+                      location.district === undefined ? "N/A" : location.district,
+                    known_name:
+                      location.city === undefined ? "N/A" : location.city,
+                    lat:
+                      location.lat === undefined ? "N/A" : String(location.lat),
+                    log:
+                      location.lon === undefined ? "N/A" : String(location.lon),
+                    method_id: 1,
+                    method: "point on product",
+                    points: totalPoints,
+                    type: "points_sharing",
+                    point_earned_through_type: "points_sharing",
+                  },
+                  qrId: Number(qrData.id),
+                  tenant_id: slug,
+                  token: token,
+                };
+                extraPointEntryFunc(body);
+              } else if (!shouldSharePoints) {
+                alert("Points can't be shared for this tenant");
+              }
+            } else if (pointSharingData.percentage_points === true) {
+              let point; 
+              let totalPoints;
+              let memberShipBonus
+              if(membershipPercent)
+              {
+                if(Number(pointSharingData["percentage_points_value"])===0)
+              {
+                 point =
+                productData["mrp"]
+                 memberShipBonus = (point * Number(getActiveMembershipData?.body?.points!==undefined ? getActiveMembershipData?.body?.points : 0))/100
+                totalPoints = memberShipBonus
+                console.log("memberShipBonus recieved",getActiveMembershipData?.body?.points)
+              }
+              else{
+                 point =
+                productData["mrp"] *
+                (pointSharingData["percentage_points_value"] / 100);
+                 memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+                 totalPoints = point + memberShipBonus
+              }
+              }
+             
               const points =
-                Number(productData[`${userData.user_type}_points`]) *
-                (Number(pointPercentage) / 100) 
-                const memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
-                const totalPoints = points + memberShipBonus
-               
-              console.log("extra flat points", points,pointPercentage);
-              const body = {
-                data: {
-                  // app_user_id: userData.id.toString(),
-                  // user_type_id: userData.user_type_id,
-                  // user_type: userData.user_type,
-                  product_id: productData.product_id,
-                  product_code: productData.product_code,
-                  platform_id: Number(platform),
-                  pincode:
-                    location.postcode === undefined ? "N/A" : location.postcode,
-                  platform: "mobile",
-                  state: location.state === undefined ? "N/A" : location.state,
-                  district:
-                    location.district === undefined ? "N/A" : location.district,
-                  city: location.city === undefined ? "N/A" : location.city,
-                  area:
-                    location.district === undefined ? "N/A" : location.district,
-                  known_name:
-                    location.city === undefined ? "N/A" : location.city,
-                  lat:
-                    location.lat === undefined ? "N/A" : String(location.lat),
-                  log:
-                    location.lon === undefined ? "N/A" : String(location.lon),
-                  method_id: 1,
-                  method: "point on product",
-                  points: totalPoints,
-                  type: "points_sharing",
-                  point_earned_through_type: "points_sharing",
-                },
-                qrId: Number(qrData.id),
-                tenant_id: slug,
-                token: token,
-              };
-              extraPointEntryFunc(body);
-            } else if (!shouldSharePoints) {
-              alert("Points can't be shared for this tenant");
-            }
-          } else if (pointSharingData.percentage_points === true) {
-            const point =
-              productData["mrp"] *
-              (pointSharingData["percentage_points_value"] / 100);
-              const memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
-          
-          const totalPoints = point + memberShipBonus
-            const points =
-              totalPoints *
-              (Number(pointPercentage) / 100);
-              
-            console.log("mrp points", points,point,memberShipBonus);
-            if (shouldSharePoints) {
-              const body = {
-                data: {
-                  // app_user_id: userData.id.toString(),
-                  // user_type_id: userData.user_type_id,
-                  // user_type: userData.user_type,
-                  product_id: productData.product_id,
-                  product_code: productData.product_code,
-                  platform_id: Number(platform),
-                  pincode:
-                    location.postcode === undefined ? "N/A" : location.postcode,
-                  platform: "mobile",
-                  state: location.state === undefined ? "N/A" : location.state,
-                  district:
-                    location.district === undefined ? "N/A" : location.district,
-                  city: location.city === undefined ? "N/A" : location.city,
-                  area:
-                    location.district === undefined ? "N/A" : location.district,
-                  known_name:
-                    location.city === undefined ? "N/A" : location.city,
-                  lat:
-                    location.lat === undefined ? "N/A" : String(location.lat),
-                  log:
-                    location.lon === undefined ? "N/A" : String(location.lon),
-                  method_id: 1,
-                  method: "point on product",
-                  points: points,
-                  type: "points_sharing",
-                  point_earned_through_type: "points_sharing",
-                },
-                qrId: Number(qrData.id),
-                tenant_id: slug,
-                token: token,
-              };
-              extraPointEntryFunc(body);
-            } else if (!shouldSharePoints) {
-              alert("Points can't be shared for this tenant");
+                totalPoints *
+                (Number(pointPercentage) / 100);
+                
+              console.log("mrp points", points,point,memberShipBonus);
+              if (shouldSharePoints) {
+                const body = {
+                  data: {
+                    // app_user_id: userData.id.toString(),
+                    // user_type_id: userData.user_type_id,
+                    // user_type: userData.user_type,
+                    product_id: productData.product_id,
+                    product_code: productData.product_code,
+                    platform_id: Number(platform),
+                    pincode:
+                      location.postcode === undefined ? "N/A" : location.postcode,
+                    platform: "mobile",
+                    state: location.state === undefined ? "N/A" : location.state,
+                    district:
+                      location.district === undefined ? "N/A" : location.district,
+                    city: location.city === undefined ? "N/A" : location.city,
+                    area:
+                      location.district === undefined ? "N/A" : location.district,
+                    known_name:
+                      location.city === undefined ? "N/A" : location.city,
+                    lat:
+                      location.lat === undefined ? "N/A" : String(location.lat),
+                    log:
+                      location.lon === undefined ? "N/A" : String(location.lon),
+                    method_id: 1,
+                    method: "point on product",
+                    points: points,
+                    type: "points_sharing",
+                    point_earned_through_type: "points_sharing",
+                  },
+                  qrId: Number(qrData.id),
+                  tenant_id: slug,
+                  token: token,
+                };
+                extraPointEntryFunc(body);
+              } else if (!shouldSharePoints) {
+                alert("Points can't be shared for this tenant");
+              }
             }
           }
+          
 
           checkUserPointFunc(params);
         } else {
@@ -375,7 +395,7 @@ const getMembership = async () => {
 
   useEffect(() => {
     fetchRewardsAccToWorkflow();
-  }, [rewardType]);
+  }, [membershipPercent]);
 
   useEffect(() => {
     if (addBulkPointOnProductData) {
@@ -590,28 +610,28 @@ const getMembership = async () => {
           const submitPoints = async () => {
             const credentials = await Keychain.getGenericPassword();
             const token = credentials.username;
-            let point; 
-            let totalPoints;
-            let memberShipBonus
+            let totalPoints ;
+            let points;
+            let memberShipBonus;
             if(Number(pointSharingData["percentage_points_value"])==0)
             {
-               point =
+               points =
               productData["mrp"]
-               memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+               memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
               totalPoints = memberShipBonus
 
             }
             else{
-              point =
+              points =
               productData["mrp"] *
               (pointSharingData["percentage_points_value"] / 100);
-               memberShipBonus = (point * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
+               memberShipBonus = (points * Number(getActiveMembershipData?.body?.points !==undefined ? getActiveMembershipData?.body?.points : 0))/100
           
-              totalPoints = point + memberShipBonus
+           totalPoints = points + memberShipBonus
             }
-          
+            
           setShowPoints(totalPoints);
-          console.log("Simple points Recieved",totalPoints,point,memberShipBonus)
+          console.log("Simple points Recieved",totalPoints,points,memberShipBonus)
            
             const body = {
               data: {
