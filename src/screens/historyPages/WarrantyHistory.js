@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, Linking } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, Linking,Alert } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -230,7 +230,13 @@ const WarrantyHistory = ({ navigation }) => {
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 10, left: 20 }}>
                     <TouchableOpacity onPress={()=>{
+                        if(item.warranty_pdf!==undefined && item.warranty_pdf!==null && item.warranty_pdf!=="" )
+                        {
                         Linking.openURL(item.warranty_pdf)
+                        }
+                        else{
+                            Alert.alert("Sorry for the inconvenience","Warranty PDF is not available yet kindly contact the support team")
+                        }
                     }} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                         <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={require('../../../assets/images/greenDownload.png')}></Image>
                         <PoppinsTextMedium style={{ color: '#353535', fontWeight: "700", marginLeft: 4 }} content="Download Warranty"></PoppinsTextMedium>

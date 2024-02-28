@@ -26,7 +26,7 @@ import {setQrData, setQrIdList} from '../../../redux/slices/qrCodeDataSlice';
 import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/GetGenuinityApi';
 import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
-import {setProductData} from '../../../redux/slices/getProductSlice';
+import {setProductData,setProductMrp} from '../../../redux/slices/getProductSlice';
 import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
 import { useAddRegistrationBonusMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import { useAddBulkQrMutation } from '../../apiServices/bulkScan/BulkScanApi';
@@ -641,6 +641,7 @@ const onSuccess = async (e) => {
     if (verifyQrData) {
       console.log('Verify qr data', verifyQrData);
       setIsLoading(false)
+      dispatch(setProductMrp(verifyQrData?.body?.qr))
       // const qrStatus = verifyQrData.body?.qr?.qr_status;
       // const statusCode = verifyQrData?.status;
   
