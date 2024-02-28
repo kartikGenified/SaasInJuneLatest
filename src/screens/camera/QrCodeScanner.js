@@ -87,6 +87,7 @@ const QrCodeScanner = ({navigation}) => {
       isError: verifyQrIsError,
     },
   ] = useVerifyQrMutation();
+  
   const [cashPerPointFunc,{
     data:cashPerPointData,
     error:cashPerPointError,
@@ -348,7 +349,7 @@ if(addQrData)
 
     if(productDataData?.body?.products.length!==0)
     {
-       const body = {product_id: productDataData?.body?.products[0].product_id, qr_id: qr_id};
+      const body = {product_id: productDataData?.body?.products[0].product_id, qr_id: qr_id};
       console.log("productdata", token,body)
       dispatch(setProductData(productDataData?.body?.products[0]));
       setProductId(productDataData?.body?.product_id);

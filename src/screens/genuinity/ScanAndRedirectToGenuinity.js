@@ -40,6 +40,7 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
+  const [hideProceed, setHideProceed] = useState(true)
   const [savedToken, setSavedToken] = useState();
   const [productId, setProductId] = useState();
   const [qr_id, setQr_id] = useState();
@@ -137,13 +138,25 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
 
   useEffect(() => {
     if (productDataData) {
-      const form_type = '2';
+     if(productDataData.success)
+     {
+      if(productDataData.body?.products.length===0)
+      {
+        setError(true)
+        setMessage("Product data not found")
+        setHideProceed(false)
+      }
+      else{
+        const form_type = '2';
       const token = savedToken
-      const body = { product_id: productDataData.body.products[0].product_id, qr_id: qr_id };
-      console.log('Product Data is ', productDataData.body);
+      const body = { product_id: productDataData.body?.products[0]?.product_id, qr_id: qr_id };
+      console.log('Product Data is ', productDataData);
       console.log("productdata", token, body)
       dispatch(setProductData(productDataData.body.products[0]));
       setProductId(productDataData.body.product_id);
+      }
+     }
+      
 
       //   checkWarrantyFunc({form_type, token, body})
 
@@ -620,11 +633,11 @@ else{
               />
             </View>
           )}
-          <ButtonProceed
+          {hideProceed &&<ButtonProceed
             handleOperation={handleAddQr}
             style={{ color: 'white' }}
             content="Proceed"
-            navigateTo={'QrCodeScanner'}></ButtonProceed>
+            navigateTo={'QrCodeScanner'}></ButtonProceed>}
         </View>
       }
     />

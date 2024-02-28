@@ -729,13 +729,13 @@ const getMembership = async () => {
       if (userPointEntryData.success) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 5000);
+        }, 3000);
       }
     } else if (userPointEntryError) {
       if (userPointEntryError.status === 409) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 5000);
+        }, 3000);
       }
       else if(userPointEntryError.status === 400)
       {
@@ -794,7 +794,7 @@ const getMembership = async () => {
     } else if (workflowProgram.length === 0) {
       setTimeout(() => {
         navigation.navigate("Dashboard");
-      }, 3000);
+      }, 2000);
     }
   };
   const navigateDashboard = () => {

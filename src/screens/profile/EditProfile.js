@@ -108,7 +108,7 @@ const EditProfile = ({ navigation, route }) => {
     }
   }, [uploadImageData, uploadImageError]);
 
-  const handleData = (data, title) => {
+  const handleData = (data, title,jsonData) => {
     // console.log("djnjbdhdndddjj",data, title)
 
     let submissionData = [...changedFormValues]

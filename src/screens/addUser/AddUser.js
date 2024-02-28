@@ -186,6 +186,7 @@ const AddUser = ({ navigation }) => {
         setMessage("Your session is not valid")
 
       }
+      setMessage(registerUserError.data?.message)
       console.log("registerUserError", registerUserError)
     }
   }, [registerUserData, registerUserError])
@@ -252,7 +253,15 @@ const AddUser = ({ navigation }) => {
       setIsValidEmail(checkEmail);
       }
       else{
+        if(data.value=="" || data.value ==undefined)
+        {
         setIsValidEmail(true)
+        }
+        else{
+          const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      const checkEmail = emailRegex.test(data.value)
+      setIsValidEmail(checkEmail);
+        }
       }
       
     }
