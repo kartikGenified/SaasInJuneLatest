@@ -656,8 +656,9 @@ const CashbackHistory = ({ navigation }) => {
         contentContainerStyle={{
           alignItems: "flex-start",
           justifyContent: "center",
+          
         }}
-        style={{ width: "100%" }}
+        style={{ width: "100%",height:'77%' }}
         data={fetchCashbackEnteriesData?.body?.data}
         renderItem={({ item, index }) => (
           <CashbackListItem items={item}></CashbackListItem>
@@ -665,7 +666,7 @@ const CashbackHistory = ({ navigation }) => {
         keyExtractor={(item, index) => index}
       />}
       {
-        fetchCashbackEnteriesData?.body?.length === 0 && <View style={{ marginBottom: 300, width: '100%' }}>
+        fetchCashbackEnteriesData?.body?.length === 0 && <View style={{  width: '100%' }}>
           <DataNotFound></DataNotFound>
         </View>
       }

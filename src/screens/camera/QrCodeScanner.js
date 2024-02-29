@@ -26,7 +26,7 @@ import {setQrData, setQrIdList} from '../../../redux/slices/qrCodeDataSlice';
 import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/GetGenuinityApi';
 import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
-import {setProductData,setProductMrp} from '../../../redux/slices/getProductSlice';
+import {setProductData,setProductMrp,setScanningType} from '../../../redux/slices/getProductSlice';
 import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
 import { useAddRegistrationBonusMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import { useAddBulkQrMutation } from '../../apiServices/bulkScan/BulkScanApi';
@@ -87,7 +87,7 @@ const QrCodeScanner = ({navigation}) => {
       isError: verifyQrIsError,
     },
   ] = useVerifyQrMutation();
-  
+
   const [cashPerPointFunc,{
     data:cashPerPointData,
     error:cashPerPointError,
@@ -349,15 +349,24 @@ if(addQrData)
 
     if(productDataData?.body?.products.length!==0)
     {
-      const body = {product_id: productDataData?.body?.products[0].product_id, qr_id: qr_id};
-      console.log("productdata", token,body)
-      dispatch(setProductData(productDataData?.body?.products[0]));
-      setProductId(productDataData?.body?.product_id);
-      
-      checkWarrantyFunc({form_type, token, body})
-      setTimeout(() => {
-        setShowProceed(true)
-      }, 1000);
+      if(productDataData?.body?.products[0].points_active=== "2")
+      {
+        setShowProceed(false)
+        setError(true)
+        setMessage("Reward is not activated for this product")
+      }
+      else{
+        const body = {product_id: productDataData?.body?.products[0].product_id, qr_id: qr_id};
+        console.log("productdata", token,body)
+        dispatch(setProductData(productDataData?.body?.products[0]));
+        setProductId(productDataData?.body?.product_id);
+        
+        checkWarrantyFunc({form_type, token, body})
+        setTimeout(() => {
+          setShowProceed(true)
+        }, 1000);
+      }
+     
       }
       else{
        
@@ -474,9 +483,9 @@ const onSuccess = async (e) => {
           if (response?.data) {
             console.log('Verify qr data', response?.data);
         
-            const qrStatus = response?.data.body?.qr?.qr_status;
+            const qrStatus = response?.data.body?.qr?.qr_status == undefined ?  response?.data.body?.qr_status :  response?.data.body?.qr?.qr_status
             const statusCode = response?.data?.status;
-            const verifiedQrData = response?.data.body.qr
+            const verifiedQrData = response?.data.body.qr == undefined ? response?.data.body : response?.data.body.qr
             if (qrStatus === "1") {
               await addQrDataToList(verifiedQrData);
             }
@@ -580,6 +589,14 @@ const onSuccess = async (e) => {
 
   // function to handle workflow navigation-----------------------
   const handleWorkflowNavigation = (item1, item2, item3) => {
+    
+    if(addedQrList.length>1)
+    {
+      dispatch(setScanningType("Bulk"))
+    }
+    else{
+     dispatch(setScanningType("Single"))
+    }
     console.log('success');
     console.log("Items are",item1, item2, item3);
 
@@ -640,15 +657,31 @@ const onSuccess = async (e) => {
  
   useEffect(() => {
     if (verifyQrData) {
-      console.log('Verify qr data', verifyQrData);
+      // console.log('Verify qr data', verifyQrData?.body);
       setIsLoading(false)
       dispatch(setProductMrp(verifyQrData?.body?.qr))
-      // const qrStatus = verifyQrData.body?.qr?.qr_status;
-      // const statusCode = verifyQrData?.status;
-  
-      // if (qrStatus === "1") {
-      //   addQrDataToList(verifyQrData.body.qr);
+
+      // let qrStatus,statusCode;
+
+      // if(verifyQrData?.body?.qr!==undefined)
+      // {
+      //   qrStatus = verifyQrData.body?.qr?.qr_status == undefined
+      //   statusCode = verifyQrData?.status;
+   
+      //  if (qrStatus === "1") {
+      //    addQrDataToList(verifyQrData.body.qr);
+      //  }
       // }
+      // else{
+      //   dispatch(setProductMrp(verifyQrData?.body))
+      //   qrStatus = verifyQrData.body?.qr_status == undefined
+      //   statusCode = verifyQrData?.status;
+   
+      //  if (qrStatus === "1") {
+      //    addQrDataToList(verifyQrData.body);
+      //  }
+      // }
+      
   
       // if (qrStatus === "2") {
       //   if (statusCode === 201) {

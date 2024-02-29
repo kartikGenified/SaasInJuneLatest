@@ -45,6 +45,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   const [totalPoints, setTotalPoints] = useState(0)
   const [error,setError] = useState(false)
   const [message, setMessage] = useState('')
+  const [calledOnce, setCalledOnce] = useState(false)
   const buttonThemeColor = useSelector(
     (state) => state.apptheme.ternaryThemeColor
   )
@@ -57,6 +58,8 @@ const CongratulateOnScan = ({ navigation, route }) => {
   // product data recieved from scanned product
   const productMrp = useSelector((state)=> state.productData.productMrp)
   const productData = useSelector((state) => state.productData.productData);
+  const scanningType = useSelector((state) => state.productData.scanningType);
+
   const pointSharingData = useSelector(
     (state) => state.pointSharing.pointSharing
   );
@@ -76,7 +79,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   );
   // getting location from redux state
   const location = useSelector((state) => state.userLocation.location);
-  console.log("shouldSharePoints", shouldSharePoints, JSON.stringify(productData));
+  // console.log("shouldSharePoints", shouldSharePoints, JSON.stringify(productData));
   console.log("location", location);
   // console.log('Location', location, userData, productData, qrData);
   const height = Dimensions.get("window").height;
@@ -84,6 +87,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   const workflowProgram = route.params.workflowProgram;
   const rewardType = route.params.rewardType;
   console.log("rewardType", rewardType, workflowProgram, productData);
+  console.log("qrIDLIST",qrIdList,qrData,scanningType)
   const platform = Platform.OS === "ios" ? "1" : "2";
 
   const [getMemberShipFunc,
@@ -229,6 +233,8 @@ const CongratulateOnScan = ({ navigation, route }) => {
             {
               setMembershipPercent(Number(range.points))
               console.log("setMembershipPercent",range.points,stats)
+              fetchRewardsAccToWorkflow();
+
             }
           }
 
@@ -252,15 +258,16 @@ const getMembership = async () => {
   }
 }
   const fetchRewardsAccToWorkflow = async () => {
-    console.log("fetchRewardsAccToWorkflow")
+    console.log("fetchRewardsAccToWorkflow",rewardType)
+    let token;
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
         "Credentials successfully loaded for user " + credentials.username
       );
 
-      const token = credentials.username;
-
+       token = credentials.username;
+      }
       if (rewardType === "Static Coupon") {
         const params = {
           token: token,
@@ -269,15 +276,16 @@ const getMembership = async () => {
         };
         getCouponOnCategoryFunc(params);
       } else if (rewardType === "Points On Product") {
-        if (qrIdList.length === 0) {
+        console.log("fetchRewardsAccToWorkflowpop")
+        if (scanningType=="Single") {
           const params = {
             token: token,
             qr_code: qrData.id,
           };
 
-          console.log("shouldSharePoints", shouldSharePoints);
-          if(membershipPercent)
-          {
+        
+          console.log("shouldSharePoints", shouldSharePoints,membershipPercent);
+
             if (pointSharingData.flat_points === true) {
               if (shouldSharePoints) {
                 const points =
@@ -391,7 +399,7 @@ const getMembership = async () => {
                 alert("Points can't be shared for this tenant");
               }
             }
-          }
+          
           
 
           checkUserPointFunc(params);
@@ -434,14 +442,19 @@ const getMembership = async () => {
         };
         checkQrCodeAlreadyRedeemedFunc(params);
       }
-    } else {
-      console.log("No credentials stored");
-    }
+   
   };
 
-  useEffect(() => {
-    fetchRewardsAccToWorkflow();
-  }, [membershipPercent]);
+  // useEffect(() => {
+  //  console.log("this use effect is being called")
+  //  if(!calledOnce)
+  //  {
+  //   setCalledOnce(true)
+  //  }
+      
+     
+   
+  // }, [membershipPercent]);
 
   useEffect(() => {
     if (addBulkPointOnProductData) {
@@ -609,8 +622,8 @@ const getMembership = async () => {
 
       if (!checkUserPointData.body) {
         console.log("check user point data is false")
-      if(membershipPercent)
-          {
+     
+            
         if (pointSharingData.flat_points) {
           const points = productData[`${userData.user_type}_points`]
           
@@ -716,7 +729,8 @@ const getMembership = async () => {
           };
           submitPoints();
         }
-      }
+      
+      
       }
     } else if (checkUserPointError) {
       console.log("checkUserPointError", checkUserPointError);
@@ -994,7 +1008,7 @@ const getMembership = async () => {
 
               )}
               {showBulkScanPoints && (
-                <Win data="Total Points Earned" title={Math.floor(Number(totalPoints))}></Win>
+                <Win data="Total Points Earned" title={totalPoints}></Win>
 
                 // <View
                 //   style={{

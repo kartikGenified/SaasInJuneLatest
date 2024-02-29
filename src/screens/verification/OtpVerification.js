@@ -231,7 +231,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     {
       console.log("createCouponRequestError",createCouponRequestError)
       setError(true)
-      setMessage("There was some problem ")
+      setMessage(createCouponRequestError.data?.message)
     }
   },[createCouponRequestData,createCouponRequestError])
 
@@ -246,7 +246,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     {
       console.log("addCashToBankError",addCashToBankError)
       setError(true)
-      setMessage("There was some problem ")
+      setMessage(addCashToBankError.data?.message)
     }
   },[addCashToBankData,addCashToBankError])
 
@@ -290,7 +290,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     const address = useSelector(state=>state.address.address)
   const userData = useSelector((state) => state.appusersdata.userData);
 
-  console.log("cart and address", cart,address);
+  console.log("cart and address", cart,address,userData);
   useEffect(() => {
     if (getOtpforVerificationData) {
       console.log("getOtpforVerificationData", getOtpforVerificationData);
@@ -395,7 +395,6 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
          log: location.lon
         },
          token:token,
-         
        };
        createCouponRequestFunc(params)
        console.log("Coupon params",params)
