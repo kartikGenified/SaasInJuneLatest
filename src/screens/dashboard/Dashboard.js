@@ -38,6 +38,10 @@ import moment from 'moment';
 import AnimatedDots from '../../components/animations/AnimatedDots';
 import analytics from '@react-native-firebase/analytics';
 import {GoogleMapsKey} from "@env"
+import messaging from '@react-native-firebase/messaging';    
+import Close from 'react-native-vector-icons/Ionicons';
+import ModalWithBorder from '../../components/modals/ModalWithBorder';
+
 
 
 const Dashboard = ({ navigation }) => {
@@ -48,7 +52,8 @@ const Dashboard = ({ navigation }) => {
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
   const [membership, setMembership] = useState()
   const [scanningDetails, seScanningDetails] = useState()
-
+  const [notifModal, setNotifModal] = useState(false)
+  const [notifData, setNotifData] = useState(null)
   const focused = useIsFocused()
   const dispatch = useDispatch()
   const userId = useSelector((state) => state.appusersdata.userId)
@@ -140,7 +145,15 @@ const Dashboard = ({ navigation }) => {
     fetchUserPointsHistoryFunc(params)
 
   }
-
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+     setNotifModal(true)
+  setNotifData(remoteMessage?.notification)
+  console.log("remote message",remoteMessage)
+    });
+    
+    return unsubscribe;
+  }, []);
  
   useEffect(() => {
     fetchPoints()
@@ -413,11 +426,40 @@ const Dashboard = ({ navigation }) => {
     console.log("hello")
   };
 
-  
+  const notifModalFunc = () => {
+    return (
+      <View style={{height:130,width:'100%'  }}>
+        <View style={{ height: '100%', width:'100%', alignItems:'center',}}>
+          <View>
+          {/* <Bell name="bell" size={18} style={{marginTop:5}} color={ternaryThemeColor}></Bell> */}
+
+          </View>
+          <PoppinsTextLeftMedium content={notifData?.title ? notifData?.title : ""} style={{ color: ternaryThemeColor, fontWeight:'800', fontSize:20, marginTop:8 }}></PoppinsTextLeftMedium>
+      
+          <PoppinsTextLeftMedium content={notifData?.body ? notifData?.body : ""} style={{ color: '#000000', marginTop:10, padding:10, fontSize:15, fontWeight:'600' }}></PoppinsTextLeftMedium>
+        </View>
+
+        <TouchableOpacity style={[{
+          backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
+        }]} onPress={() => setNotifModal(false)} >
+          <Close name="close" size={17} color="#ffffff" />
+        </TouchableOpacity>
+
+
+
+      </View>
+    )
+  }
 
   return (
     <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: "#F7F9FA", flex: 1, height: '100%' }}>
-     
+     {notifModal &&  <ModalWithBorder
+            modalClose={() => {
+              setNotifModal(false)
+            }}
+            message={"message"}
+            openModal={notifModal}
+            comp={notifModalFunc}></ModalWithBorder>}
       
       <ScrollView style={{ width: '100%', marginBottom: platformMarginScroll, height: '100%' }}>
       <DrawerHeader></DrawerHeader>

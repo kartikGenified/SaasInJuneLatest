@@ -380,7 +380,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       const params = {
         data :{ 
         name: userData.name,
-        email: userData.email,
+        email: userData.email == null ? "appgenuinemark@gmail.com" : userData.email == undefined ? "appgenuinemark@gmail.com" : userData.email,
         mobile: userData.mobile,
         brand_product_code:brand_product_code,
          user_type_id: userData.user_type_id,

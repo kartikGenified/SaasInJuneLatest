@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, StyleSheet,TouchableOpacity,Image,FlatList} from 'react-native';
+import {View, StyleSheet,TouchableOpacity,Image,FlatList, Dimensions} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useAllUserPointsEntryMutation,useFetchUserPointsHistoryMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
@@ -24,6 +24,7 @@ const CouponHistory = ({navigation}) => {
         isError:getAllCouponsIsError
     }] = useGetAllUserCouponsMutation()
 
+    const width = Dimensions.get('window').width
   const userData = useSelector(state => state.appusersdata.userData)
   console.log("userdata is",userData)
 
@@ -78,11 +79,12 @@ else if(getAllCouponsError){
         const redeemedOn = props.redeemedOn
         const expiresOn = props.expiresOn
         const data = props.data
+        const approvalStatus = data.approval_status
         console.log(data)
         return(
             <TouchableOpacity onPress={()=>{navigation.navigate('CouponDetails',{
                 data:data
-            })}} style={{padding:10,alignItems:"center",justifyContent:"center",borderColor:'grey',borderRadius:10,margin:10,width:'44%',backgroundColor:'#F8F8F8',elevation:4}}>
+            })}} style={{padding:10,alignItems:"center",justifyContent:"center",borderColor:'grey',borderRadius:10,margin:10,width:(width/2)-30,backgroundColor:'#F8F8F8',elevation:4}}>
                 <View style={{height:80,width:80,alignItems:"center",justifyContent:"center",borderRadius:40,backgroundColor:"white"}}>
                 <Image style={{height:50,width:50,resizeMode:"contain"}} source={require('../../../assets/images/voucher.png')}></Image>
                 </View>
@@ -91,8 +93,12 @@ else if(getAllCouponsError){
                     <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={refNo}></PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:"center",marginTop:20}}>
+                    <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Status"></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={approvalStatus=="1" ? "Approval Pending" : approvalStatus=="2" ? "Approved" : "Rejected" }></PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:"center",marginTop:20}}>
                     <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Coupon Code"></PoppinsTextMedium>
-                    <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={couponCode}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={approvalStatus=="2" ?  couponCode  : "----------"}></PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:"center",marginTop:20,borderTopWidth:1,borderBottomWidth:1,borderStyle:'dotted',flexDirection:'row',padding:4,width:'100%',}}>
                     <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Redeemed on"></PoppinsTextMedium>
@@ -130,7 +136,7 @@ else if(getAllCouponsError){
                 
                  {getAllCouponsData && <FlatList
                 style={{width: '100%'}}
-                contentContainerStyle={{alignItems:"center",justifyContent:"center",paddingBottom:100,width: '100%'}}
+                contentContainerStyle={{alignItems:"center",justifyContent:"center",paddingBottom:100}}
                 data={getAllCouponsData.body}
                 
                 numColumns={2}

@@ -19,6 +19,7 @@ const CouponDetails = ({navigation,route}) => {
 
   
     const data = route.params.data
+    const approvalStatus = data.approval_status
     const couponTitle = data.brand_product_code;
   const validDate = moment(data.expire_date).format("DD MMM YYYY");
   const couponCode = data.brand_product_code
@@ -121,7 +122,7 @@ const CouponDetails = ({navigation,route}) => {
               marginTop:20
             }}>
             <View style={{height:60,width:'65%',borderWidth:1,borderStyle:'dashed',borderColor:ternaryThemeColor,alignItems:"center",justifyContent:"center"}}>
-           <PoppinsTextMedium style={{color:'#353535',fontSize:20,fontWeight:'700'}} content={couponCode}></PoppinsTextMedium>
+           <PoppinsTextMedium style={{color:'#353535',fontSize:20,fontWeight:'700'}} content={approvalStatus == "2" ? couponCode: "---------"}></PoppinsTextMedium>
             </View>
             <TouchableOpacity onPress={()=>{
                 copyToClipboard()
