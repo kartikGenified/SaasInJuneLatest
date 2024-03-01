@@ -160,7 +160,7 @@ const PreviousTransactionHistory = ({navigation}) => {
         );
       };
     return (
-        <View>
+        <View style={{height:'100%',width:'100%',alignItems:'center',justifyContent:'center'}}>
             <View
             style={{
               alignItems: "center",
@@ -216,10 +216,18 @@ const PreviousTransactionHistory = ({navigation}) => {
                 keyExtractor={(item,index) => index}
             />
             {
-                displayList==undefined && <DataNotFound></DataNotFound>
+                displayList==undefined &&
+                <View style={{position:'absolute',width:'100%',height:'70%'}}>
+                 <DataNotFound></DataNotFound>
+
+                </View>
             }
             {
-                displayList && displayList.length===0 && <DataNotFound></DataNotFound>
+                displayList && displayList.length===0 && 
+                <View style={{width:'100%', position:'absolute',height:'70%'}}>
+                <DataNotFound></DataNotFound>
+
+               </View>
             }
         </View>
     );

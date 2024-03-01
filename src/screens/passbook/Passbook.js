@@ -8,7 +8,7 @@ import { useGetActiveMembershipMutation } from '../../apiServices/membership/App
 import * as Keychain from 'react-native-keychain';
 import PlatinumModal from '../../components/platinum/PlatinumModal';
 import { useGetPointSharingDataMutation } from '../../apiServices/pointSharing/pointSharingApi';
-
+import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 
 const Passbook = ({ navigation }) => {
     const [warrantyOptionEnabled, setWarrantyOptionEnabled] = useState(false)
@@ -306,6 +306,13 @@ const Passbook = ({ navigation }) => {
                         <RewardBox ></RewardBox>
 
                     </View>}
+                    <View style={{width:'100%',alignItems:'center',justifyContent:'center',marginTop:20}}>
+                    <View style={{ backgroundColor: 'white' }}>
+              {userData  && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center',  }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
+                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content="Redeem"  ></PoppinsTextLeftMedium>
+              </TouchableOpacity>}
+            </View>
+                    </View>
                 </View>
 
 

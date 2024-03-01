@@ -155,7 +155,7 @@ const RequestAppointment = ({ navigation,route }) => {
             inputFormData[userResponse[i].name] = userResponse[i].value
         }
         const body = inputFormData
-        console.log("body", body)
+        console.log("body ENquiry boidy", body)
 
         submitFomrFunc(body)
 

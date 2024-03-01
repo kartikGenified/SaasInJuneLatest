@@ -529,7 +529,7 @@ const CashbackHistory = ({ navigation }) => {
             >
               <PoppinsTextMedium
                 style={{ color: "black", fontWeight: "600", fontSize: 14 }}
-                content={`To :  ${props.items?.bene_details?.bene_name} `}
+                content={`To :  ${props.items?.bene_details?.name} `}
               ></PoppinsTextMedium>
               <PoppinsTextMedium
                 style={{ color: "black", fontWeight: "600", fontSize: 14 }}
@@ -537,7 +537,7 @@ const CashbackHistory = ({ navigation }) => {
               ></PoppinsTextMedium>
               <PoppinsTextMedium
                 style={{ color: "black", fontWeight: "600", fontSize: 14 }}
-                content={` ${props.items?.transfer_mode} :  ${props.items?.transfer_mode == "upi" ? props.items?.bene_details?.upi_id : props.items?.bene_details?.account_no}  `}
+                content={` ${props.items?.transfer_mode} :  ${props.items?.transfer_mode == "upi" ? props.items?.bene_details?.vpa : props.items?.bene_details?.bankAccount}  `}
               ></PoppinsTextMedium>
 
                 {
@@ -658,7 +658,7 @@ const CashbackHistory = ({ navigation }) => {
           justifyContent: "center",
           
         }}
-        style={{ width: "100%",height:'77%' }}
+        style={{ width: "100%",height:'78%' }}
         data={fetchCashbackEnteriesData?.body?.data}
         renderItem={({ item, index }) => (
           <CashbackListItem items={item}></CashbackListItem>
@@ -666,7 +666,7 @@ const CashbackHistory = ({ navigation }) => {
         keyExtractor={(item, index) => index}
       />}
       {
-        fetchCashbackEnteriesData?.body?.length === 0 && <View style={{  width: '100%' }}>
+        fetchCashbackEnteriesData?.body?.count === 0 && <View style={{ position:'absolute', width: '100%',height:'78%' ,bottom:0}}>
           <DataNotFound></DataNotFound>
         </View>
       }

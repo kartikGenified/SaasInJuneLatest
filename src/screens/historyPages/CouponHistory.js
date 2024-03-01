@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, StyleSheet,TouchableOpacity,Image,FlatList, Dimensions} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
@@ -8,8 +8,10 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useGetAllRedeemedCouponsMutation } from '../../apiServices/workflow/rewards/GetCouponApi';
 import { useGetAllUserCouponsMutation } from '../../apiServices/coupons/getAllCouponsApi';
+import DataNotFound from '../data not found/DataNotFound';
 
 const CouponHistory = ({navigation}) => {
+    const [showNoData, setShowNoData] = useState(false)
     const [getAllRedeemedFunc,{
         data:getAllRedeemedData,
         error:getAllRedeemedError,
@@ -66,6 +68,11 @@ useEffect(()=>{
     if(getAllCouponsData)
 {
     console.log("getAllCouponsData",getAllCouponsData)
+    if(getAllCouponsData?.body.length==0 || getAllCouponsData==undefined)
+    {
+        setShowNoData(true)
+    }
+    
 }
 else if(getAllCouponsError){
     console.log("getAllCouponsError",getAllCouponsError)
@@ -111,7 +118,7 @@ else if(getAllCouponsError){
     }
 
     return (
-        <View style={{alignItems:'center',justifyContent:"center",backgroundColor:"white"}}>
+        <View style={{alignItems:'center',justifyContent:"center",backgroundColor:"white",height:'100%',width:'100%'}}>
             <View style={{alignItems:"center",justifyContent:"flex-start",flexDirection:"row",width:'100%',marginTop:10,height:40,marginLeft:20}}>
                 <TouchableOpacity onPress={()=>{
                     navigation.goBack()
@@ -146,7 +153,12 @@ else if(getAllCouponsError){
                 data={item}
                 key ={index} refNo={item.ref_no} couponCode={item.brand_product_code} redeemedOn={moment(item.updated_at).format("DD-MM-YYYY")} ></CouponItems> 
                 )}></FlatList>}
-                
+                 { showNoData &&
+                <View style={{ position:'absolute',width:'100%',height:'50%'}}>
+                    <DataNotFound/>
+
+                </View>
+                }
         </View>
     );
 }

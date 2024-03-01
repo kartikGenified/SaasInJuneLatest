@@ -254,7 +254,7 @@ const dispatch = useDispatch()
             selectedOption.length!==0 &&
             <DropDownRegistration
               title={selectedOption?.[0]}
-              header={selectedOption?.[0] ? selectedOption?.[0] :  selectUsers ? selectUsers : "Select Type"}
+              header={selectedOption?.[0] ? "Select Type" :  selectUsers ? selectUsers : "Select Type"}
               jsonData={{ "label": "UserType", "maxLength": "100", "name": "user_type", "options": [], "required": true, "type": "text" }}
               data={selectedOption}
               handleData={handleData}

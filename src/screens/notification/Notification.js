@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useFetchAllPushNotificationDumpListByAppUserIdMutation } from "../../apiServices/pushNotification/fetchAllPushNotificationDumpListByAppUserId";
 import PoppinsTextLeftMedium from "../../components/electrons/customFonts/PoppinsTextLeftMedium";
 import HyperlinkText from "../../components/electrons/customFonts/HyperlinkText";
-
+import DataNotFound from "../data not found/DataNotFound";
 
 const Notification = ({ navigation }) => {
 
@@ -73,7 +73,7 @@ const Notification = ({ navigation }) => {
                 </TouchableOpacity>
                 <Text style={{ color: 'white', marginLeft: 10, fontWeight: '500' }}>Notification</Text>
             </View>
-         <ScrollView style={{ height: '90%', backgroundColor: buttonThemeColor }}>
+            <ScrollView style={{ height: '90%', backgroundColor: buttonThemeColor, width:'100%' }}>
             
             <View style={{ paddingBottom: 120, height: height, backgroundColor: 'white', width: '100%', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20 }}>
                 {
@@ -81,6 +81,13 @@ const Notification = ({ navigation }) => {
                         return <Notificationbar notification={item?.title} body={item?.body} key={item?.id} ></Notificationbar>
 
                     })
+                }
+                 {
+                  notifData?.body?.count == "0"  &&
+                     <View style={{height:'100%', backgroundColor:'white', }}>
+                     <DataNotFound></DataNotFound>
+                     </View>
+
                 }
             </View>
         </ScrollView>

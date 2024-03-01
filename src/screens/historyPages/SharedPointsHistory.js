@@ -371,6 +371,7 @@ const SharedPointsHistory = ({ navigation }) => {
     const description = props.description;
     const productCode = props.productCode;
     const time = props.time;
+    const day = props.day
     const name = props.name;
     const mobile = props.mobile;
     const amount = props.amount;
@@ -440,6 +441,10 @@ const SharedPointsHistory = ({ navigation }) => {
           <PoppinsTextMedium
             style={{ color: "#91B406", fontSize: 12, color: "grey" }}
             content={`Mobile Number : ${mobile}`}
+          ></PoppinsTextMedium>
+           <PoppinsTextMedium
+            style={{ color: "#91B406", fontSize: 12, color: "grey" }}
+            content={`Date : ${day}`}
           ></PoppinsTextMedium>
           <View
             style={{
@@ -593,9 +598,10 @@ const SharedPointsHistory = ({ navigation }) => {
           <ScrollView contentContainerStyle={{ width: "100%" }}>
             {getPointSharingData.body.data &&
               getPointSharingData.body.data.map((item, index) => {
+                console.log("item?.images[0]",item?.images)
                 return (
                   <ListItem
-                    image={item.images[0]}
+                    image={item?.images===null ?  null :item?.images[0]   }
                     name={item.name}
                     mobile={item.mobile}
                     key={item.id}
@@ -603,6 +609,7 @@ const SharedPointsHistory = ({ navigation }) => {
                     description={item.product_name}
                     productCode={item.product_code}
                     time={moment(item.created_at).format("HH:mm a")}
+                    day={moment(item.created_at).format("DD-MMM-YYYY")}
                     amount={item.points}
                   ></ListItem>
                 );

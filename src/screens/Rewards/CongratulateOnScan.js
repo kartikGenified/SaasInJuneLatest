@@ -37,6 +37,8 @@ import Error from "react-native-vector-icons/MaterialIcons"
 import { useGetActiveMembershipMutation, useGetMembershipMutation, useGetOzoneActiveMembershipMutation } from '../../apiServices/membership/AppMembershipApi';
 import ErrorModal from "../../components/modals/ErrorModal";
 import FastImage from "react-native-fast-image";
+import { useGetMappingDetailsByAppUserIdMutation } from "../../apiServices/userMapping/userMappingApi";
+
 
 const CongratulateOnScan = ({ navigation, route }) => {
   const [showPoints, setShowPoints] = useState();
@@ -86,7 +88,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   // workflow for the given user
   const workflowProgram = route.params.workflowProgram;
   const rewardType = route.params.rewardType;
-  console.log("rewardType", rewardType, workflowProgram, productData);
+  console.log("rewardType", rewardType, workflowProgram, productData,pointPercentage);
   console.log("qrIDLIST",qrIdList,qrData,scanningType)
   const platform = Platform.OS === "ios" ? "1" : "2";
 
@@ -97,6 +99,14 @@ const CongratulateOnScan = ({ navigation, route }) => {
       isLoading:getMembershipIsLoading,
       isError:getMembershipIsError
     }] = useGetMembershipMutation()
+
+
+    // const [getMappedParentDetailsFunc,{
+    //   data:getMappedParentDetailsData,
+    //   error:getMappedParentDetailError,
+    //   isLoading:getMappedParentDetailsIsLoading,
+    //   isError:getMappedParentDetailsIsError
+    // }] =useGetMappingDetailsByAppUserIdMutation()
 
   const [
     getCouponOnCategoryFunc,
@@ -233,7 +243,10 @@ const CongratulateOnScan = ({ navigation, route }) => {
             {
               setMembershipPercent(Number(range.points))
               console.log("setMembershipPercent",range.points,stats)
-              fetchRewardsAccToWorkflow();
+              setTimeout(() => {
+              fetchRewardsAccToWorkflow(Number(range.points));
+
+              }, 1000);
 
             }
           }
@@ -257,7 +270,7 @@ const getMembership = async () => {
       getMemberShipFunc(token)
   }
 }
-  const fetchRewardsAccToWorkflow = async () => {
+  const fetchRewardsAccToWorkflow = async (percent) => {
     console.log("fetchRewardsAccToWorkflow",rewardType)
     let token;
     const credentials = await Keychain.getGenericPassword();
@@ -284,14 +297,14 @@ const getMembership = async () => {
           };
 
         
-          console.log("shouldSharePoints", shouldSharePoints,membershipPercent);
+          console.log("shouldSharePoints", shouldSharePoints,percent);
 
             if (pointSharingData.flat_points === true) {
               if (shouldSharePoints) {
                 const points =
                   Number(productData[`${userData.user_type}_points`]) *
                   (Number(pointPercentage) / 100) 
-                  const memberShipBonus = (points * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
+                  const memberShipBonus = (points * Number(percent !==undefined ? percent : 0))/100
                   const totalPoints = points + memberShipBonus
                  
                 console.log("extra flat points", points,pointPercentage);
@@ -329,6 +342,8 @@ const getMembership = async () => {
                   token: token,
                 };
                 extraPointEntryFunc(body);
+                console.log("extraPointEntryFunc",body)
+
               } else if (!shouldSharePoints) {
                 alert("Points can't be shared for this tenant");
               }
@@ -336,21 +351,21 @@ const getMembership = async () => {
               let point; 
               let totalPoints;
               let memberShipBonus
-              if(membershipPercent)
+              if(percent)
               {
                 if(Number(pointSharingData["percentage_points_value"])===0)
               {
                  point =
                 productMrp["mrp"]
-                 memberShipBonus = (point * Number(membershipPercent!==undefined ? membershipPercent : 0))/100
+                 memberShipBonus = (point * Number(percent!==undefined ? percent : 0))/100
                 totalPoints = memberShipBonus
-                console.log("memberShipBonus recieved",membershipPercent)
+                console.log("memberShipBonus recieved",percent)
               }
               else{
                  point =
                 productMrp["mrp"] *
                 (pointSharingData["percentage_points_value"] / 100);
-                 memberShipBonus = (point * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
+                 memberShipBonus = (point * Number(percent !==undefined ? percent : 0))/100
                  totalPoints = point + memberShipBonus
               }
               }
@@ -359,7 +374,7 @@ const getMembership = async () => {
                 totalPoints *
                 (Number(pointPercentage) / 100);
                 
-              console.log("mrp points", points,point,memberShipBonus);
+              console.log("mrp points", points,point,memberShipBonus, totalPoints, pointPercentage);
               if (shouldSharePoints) {
                 const body = {
                   data: {
@@ -395,6 +410,7 @@ const getMembership = async () => {
                   token: token,
                 };
                 extraPointEntryFunc(body);
+                console.log("extraPointEntryFunc",body)
               } else if (!shouldSharePoints) {
                 alert("Points can't be shared for this tenant");
               }
@@ -605,13 +621,13 @@ const getMembership = async () => {
       if (getCouponOnCategoryError.status === 409) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 3000);
+        }, 4000);
       } else if (
         getCouponOnCategoryError.data.message === "No Active Coupons Exist"
       ) {
         setTimeout(() => {
           handleWorkflowNavigation();
-        }, 3000);
+        }, 4000);
       }
     }
   }, [getCouponOnCategoryData, getCouponOnCategoryError]);
