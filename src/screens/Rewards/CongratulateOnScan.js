@@ -233,7 +233,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
         console.log("getMembershipData", JSON.stringify(getMembershipData))
         if(getActiveMembershipData.success)
         {
-          const stats = Number(getActiveMembershipData.body?.stats?.total) + Number(productMrp["mrp"])
+          const stats = Number(getActiveMembershipData.body?.stats?.total) + Number(productMrp?.mrp)
           const membershiparr = getMembershipData.body
 
           for(var i=0; i<membershiparr.length;i++)
@@ -356,14 +356,14 @@ const getMembership = async () => {
                 if(Number(pointSharingData["percentage_points_value"])===0)
               {
                  point =
-                productMrp["mrp"]
+                productMrp?.mrp
                  memberShipBonus = (point * Number(percent!==undefined ? percent : 0))/100
                 totalPoints = memberShipBonus
                 console.log("memberShipBonus recieved",percent)
               }
               else{
                  point =
-                productMrp["mrp"] *
+                productMrp?.mrp *
                 (pointSharingData["percentage_points_value"] / 100);
                  memberShipBonus = (point * Number(percent !==undefined ? percent : 0))/100
                  totalPoints = point + memberShipBonus
@@ -694,14 +694,14 @@ const getMembership = async () => {
             if(Number(pointSharingData["percentage_points_value"])==0)
             {
                points =
-              productMrp["mrp"]
+              productMrp?.mrp
                memberShipBonus = (points * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
               totalPoints = memberShipBonus
 
             }
             else{
               points =
-              productMrp["mrp"] *
+              productMrp?.mrp *
               (pointSharingData["percentage_points_value"] / 100);
                memberShipBonus = (points * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
           
