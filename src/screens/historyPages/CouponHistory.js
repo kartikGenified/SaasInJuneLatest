@@ -87,6 +87,7 @@ else if(getAllCouponsError){
         const expiresOn = props.expiresOn
         const data = props.data
         const approvalStatus = data.approval_status
+        
         console.log(data)
         return(
             <TouchableOpacity onPress={()=>{navigation.navigate('CouponDetails',{
@@ -151,7 +152,7 @@ else if(getAllCouponsError){
                 renderItem={({item, index}) => (
                  <CouponItems 
                 data={item}
-                key ={index} refNo={item.ref_no} couponCode={item.brand_product_code} redeemedOn={moment(item.updated_at).format("DD-MM-YYYY")} ></CouponItems> 
+                key ={index} refNo={item.ref_no} couponValue = {item.coupon_value} couponCode={item.brand_product_code} redeemedOn={moment(item.updated_at).format("DD-MM-YYYY")} ></CouponItems> 
                 )}></FlatList>}
                  { showNoData &&
                 <View style={{ position:'absolute',width:'100%',height:'50%'}}>

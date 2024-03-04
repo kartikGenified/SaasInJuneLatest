@@ -362,6 +362,30 @@ const EditProfile = ({ navigation, route }) => {
                   </DisplayOnlyTextInput>
                   )
                 }
+                else if(item.name==="name")
+                {
+                  return(
+                    <DisplayOnlyTextInput
+                    key={index}
+                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
+                    title={item.label}
+                    photo={require('../../../assets/images/eye.png')}>
+
+                  </DisplayOnlyTextInput>
+                  )
+                }
+                else if(item.name==="mobile")
+                {
+                  return(
+                    <DisplayOnlyTextInput
+                    key={index}
+                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
+                    title={item.label}
+                    photo={require('../../../assets/images/eye.png')}>
+
+                  </DisplayOnlyTextInput>
+                  )
+                }
                 else if(item.name==="enrollment_date")
                 {
                   return(

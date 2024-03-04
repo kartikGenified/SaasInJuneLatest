@@ -26,6 +26,7 @@ const PointHistory = ({ navigation }) => {
     const addonfeatures = useSelector(state=>state.apptheme.extraFeatures)
     const registrationRequired = useSelector(state=>state.appusers.registrationRequired)
   const userData = useSelector(state => state.appusersdata.userData)
+  const userId = useSelector(state => state.appusersdata.id);
 
   const [getPointSharingFunc, {
     data: getPointSharingData,
@@ -53,13 +54,42 @@ const PointHistory = ({ navigation }) => {
     const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
     const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
     let startDate,endDate
+    useEffect(() => {
+        (async () => {
+          const credentials = await Keychain.getGenericPassword();
+          const token = credentials.username;
 
+    const params ={
+        token: token,
+       userId :userId
+      }
+          fetchUserPointsHistoryFunc(params);
+        })();
+      }, []);
 
     useEffect(() => {
         fetchPoints()
     }, [])
-    const userId = useSelector(state => state.appusersdata.id);
 
+    const fetchPointHistoryData=(start,end)=>{
+
+        (async () => {
+          const credentials = await Keychain.getGenericPassword();
+          const token = credentials.username;
+          const startDate = moment(start).format(
+            "YYYY-MM-DD"
+          )
+          const endDate = moment(end).format("YYYY-MM-DD")
+          console.log("Start End",startDate,endDate)
+    
+          fetchUserPointsHistoryFunc({
+            startDate:startDate,
+            endDate:endDate,
+            token: token,
+            userId:userId
+          });
+        })();
+      }
     const fetchPoints = async () => {
         const credentials = await Keychain.getGenericPassword();
         const token = credentials.username;
@@ -69,7 +99,6 @@ const PointHistory = ({ navigation }) => {
             token: token
         }
         userPointFunc(params)
-        fetchUserPointsHistoryFunc(params)
 
     }
     useEffect(()=>{
@@ -141,7 +170,7 @@ const PointHistory = ({ navigation }) => {
             endDate=undefined
           }
           else {
-            // fetchScannedHistoryData(startDate,endDate)
+            fetchPointHistoryData(startDate,endDate)
             
           }
           

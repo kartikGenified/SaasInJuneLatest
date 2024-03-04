@@ -8,7 +8,7 @@ import Book from 'react-native-vector-icons/AntDesign'
 import {useSelector, useDispatch} from 'react-redux';
 import Wave from '../../assets/svg/bottomDrawer.svg'
 import PoppinsTextMedium from '../components/electrons/customFonts/PoppinsTextMedium';
-
+import BookOpen from 'react-native-vector-icons/Entypo' 
 
 const Tab = createBottomTabNavigator();
 
@@ -47,10 +47,19 @@ function BottomNavigator({navigation}) {
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Check Genuinity"></PoppinsTextMedium>
     </TouchableOpacity>
     }
-    <TouchableOpacity onPress={()=>{navigation.navigate('Passbook')}} style={{alignItems:"center",justifyContent:"center",position:'absolute',right:30}}>
+    {(userData.user_type).toLowerCase()!=="sales" &&
+      <TouchableOpacity onPress={()=>{navigation.navigate('Passbook')}} style={{alignItems:"center",justifyContent:"center",position:'absolute',right:30}}>
     <Book name="book" size={24} color={ternaryThemeColor}></Book>
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Passbook"></PoppinsTextMedium>
     </TouchableOpacity>
+    }
+    
+    {(userData.user_type).toLowerCase()=="sales" &&
+      <TouchableOpacity onPress={()=>{navigation.navigate('ProductCatalogue')}} style={{alignItems:"center",justifyContent:"center",position:'absolute',right:20}}>
+    <BookOpen name="open-book" size={24} color={ternaryThemeColor}></BookOpen>
+    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Product Catalogue"></PoppinsTextMedium>
+    </TouchableOpacity>
+    }
     </View>
     </View>}>
       <Tab.Screen  options={{headerShown:false,

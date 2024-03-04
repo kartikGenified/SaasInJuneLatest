@@ -175,6 +175,11 @@ const QrCodeScanner = ({navigation}) => {
 
     else if(addBulkQrError){
       console.log("addBulkQrError",addBulkQrError)
+      if(addBulkQrError.data)
+      {
+        setError(true)
+        setMessage(addBulkQrError.data?.message)
+      }
     }
   },[addBulkQrData,addBulkQrError])
   useEffect(()=>{
@@ -351,7 +356,6 @@ if(addQrData)
     {
       if(productDataData?.body?.products[0].points_active=== "2")
       {
-        setShowProceed(false)
         setError(true)
         setMessage("Reward is not activated for this product")
       }
@@ -369,10 +373,16 @@ if(addQrData)
      
       }
       else{
-       
-       
         setError(true)
         setMessage("Product data not available.")
+       if(addedQrList.length===1)
+       {
+        setShowProceed(false)
+       }
+       else{
+        setShowProceed(true)
+       }
+        
       }
    
 
@@ -482,7 +492,18 @@ const onSuccess = async (e) => {
           console.log("verifyQrFunc",response)
           if (response?.data) {
             console.log('Verify qr data', response?.data);
-        
+            // if(response?.data.success)
+            // {
+            //   if(response?.data?.body?.qr?.mrp==undefined || verifyQrData?.body?.qr?.mrp==undefined)
+            // {
+            //   setError(true)
+            //   setMessage("Cannot get mrp for the product")
+
+            // }
+            // }
+            
+            
+            
             const qrStatus = response?.data.body?.qr?.qr_status == undefined ?  response?.data.body?.qr_status :  response?.data.body?.qr?.qr_status
             const statusCode = response?.data?.status;
             const verifiedQrData = response?.data.body.qr == undefined ? response?.data.body : response?.data.body.qr
@@ -660,6 +681,7 @@ const onSuccess = async (e) => {
       // console.log('Verify qr data', verifyQrData?.body);
       setIsLoading(false)
       dispatch(setProductMrp(verifyQrData?.body?.qr))
+     
 
       // let qrStatus,statusCode;
 

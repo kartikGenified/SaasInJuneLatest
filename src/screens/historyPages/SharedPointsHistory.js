@@ -592,7 +592,7 @@ const SharedPointsHistory = ({ navigation }) => {
               content="Point Balance"
             ></PoppinsTextMedium>
 
-            <DisplayEarnings></DisplayEarnings>
+            {/* <DisplayEarnings></DisplayEarnings> */}
           </View>
           <Header></Header>
           <ScrollView contentContainerStyle={{ width: "100%" }}>
