@@ -365,7 +365,7 @@ const Dashboard = ({ navigation }) => {
       const images = Object.values(getBannerData?.body).map((item) => {
         return item.image[0]
       })
-      console.log("images", images)
+      console.log("imagesBanner", images)
       setBannerArray(images)
     }
     else {

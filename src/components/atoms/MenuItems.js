@@ -11,7 +11,7 @@ const MenuItems = (props) => {
     const content = props.content
     const platformFontSize = Platform.OS === 'ios' ? 10 :12
     const platformFontWeight = Platform.OS === 'ios' ? '500' :'600'
-
+    console.log("menu item images", image)
     const handlePress=()=>{
         console.log(content)
         props.handlePress(content)
