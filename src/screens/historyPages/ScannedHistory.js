@@ -475,7 +475,7 @@ const ScannedHistory = ({ navigation }) => {
           {image !== null && (
             <Image
               style={{ height: 60, width: 60, resizeMode: "contain" }}
-              source={{ uri: image }}
+              source={{ uri: image=='' ? null : image }}
             ></Image>
           )}
         </View>

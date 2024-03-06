@@ -125,7 +125,7 @@ const RedeemCoupons = ({navigation,route}) => {
 
   const handleSearch=(data)=>{
     const searchOutput =  fetchAllCouponsData.body.filter((item,index)=>{
-      return(item.name.toLowerCase().includes(data.toLowerCase()))
+      return(item.brand_name.toLowerCase().includes(data.toLowerCase()))
     })
     setDisplayContent(searchOutput)
 
@@ -139,7 +139,7 @@ const RedeemCoupons = ({navigation,route}) => {
       onPress={()=>{
         const filteredData =  fetchAllCouponsData.body.filter((item,index)=>{
           return(
-            item.category == data
+            item.brand_name == data
           )
         })
         setDisplayContent(filteredData)
