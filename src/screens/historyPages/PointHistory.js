@@ -201,6 +201,16 @@ const PointHistory = ({ navigation }) => {
             <View style={{width:'100%',backgroundColor:'white',height:60,elevation:1,flexDirection:'row',opacity:0.8,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:"grey"}}>
                 {registrationRequired.includes(userData.user_type) && 
                 <TouchableOpacity  onPress={()=>{
+                    (async () => {
+                        const credentials = await Keychain.getGenericPassword();
+                        const token = credentials.username;
+              
+                  const params ={
+                      token: token,
+                     userId :userId
+                    }
+                        fetchUserPointsHistoryFunc(params);
+                      })();
                     fetchPoints()
                     setType("regular")
                 }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',backgroundColor:type==="regular" ? "#DDDDDD":"white"}}>

@@ -15,12 +15,16 @@ import { setFcmToken } from '../../../redux/slices/fcmTokenSlice';
 import { setAppUsers,setAppUsersData } from '../../../redux/slices/appUserSlice';
 import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersApi';
 import Geolocation from '@react-native-community/geolocation';
+import InternetModal from '../../components/modals/InternetModal';
+
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
+  const [connected, setConnected] = useState(true)
 
   const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   const [gotLoginData, setGotLoginData] = useState()
+  const isConnected = useSelector(state => state.internet.isConnected);
 
 
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
@@ -89,7 +93,14 @@ const Splash = ({ navigation }) => {
     requestLocationPermission()
   },[])
 
-  
+  useEffect(()=>{
+    if(isConnected)
+    {
+      console.log(isConnected)
+      setConnected(isConnected.isConnected)
+    
+    }
+  },[isConnected])
   useEffect(() => {
     if (getUsersData) {
       console.log("type of users",getUsersData?.body);
@@ -226,7 +237,7 @@ const Splash = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
-
+      {!connected &&  <InternetModal />}
         {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
         {/* <FastImage
           style={{ width: 250, height: 250, marginTop:'auto',alignSelf:'center' }}
