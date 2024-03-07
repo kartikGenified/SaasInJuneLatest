@@ -147,7 +147,7 @@ const RedeemGifts = ({navigation,route}) => {
           )
         })
         setDisplayContent(filteredData)
-        // setCart([])
+        setCart([])
       }}
         style={{
           marginLeft: 30,

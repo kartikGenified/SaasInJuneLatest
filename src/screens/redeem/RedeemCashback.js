@@ -68,7 +68,16 @@ const RedeemCashback = ({navigation}) => {
   const redeemCashback = async () => {
 if(Number(minPointsRedeemed)<=(pointsConversion))
 {
-  navigation.navigate('BankAccounts',{type:"Cashback"})
+  console.log("shjadjhashgdhjgasjgd", pointsConversion,points)
+  if(Number(pointsConversion)>=Number(points))
+  {
+    setError(true)
+  setMessage("You only have "+points+" points")
+  }
+  else{
+    navigation.navigate('BankAccounts',{type:"Cashback"})
+
+  }
 }
 else{
   setError(true)
@@ -250,7 +259,7 @@ else{
             justifyContent: 'center',
             borderWidth: 0.8,
             borderColor: '#DDDDDD',
-            height: 60,
+            height: 70,
             borderRadius: 10,
             backgroundColor: '#F5F7F9',
             flexDirection: 'row',
@@ -263,6 +272,7 @@ else{
               justifyContent: 'center',
               borderRightWidth: 1,
               borderColor: '#DDDDDD',
+              height:60
             }}>
             <PoppinsTextMedium
               content="Points"
@@ -271,7 +281,7 @@ else{
                 fontWeight: '600',
                 fontSize: 14,
               }}></PoppinsTextMedium>
-           <TextInput value={pointsConversion + ""} style={{color:'black',height:40, fontWeight:'bold', fontSize:19,marginLeft:80}} onChangeText={(text)=>{setPointsConversion(text),dispatch(setPointConversionF(text))}} placeholder='Enter Points'></TextInput>
+           <TextInput value={pointsConversion + ""} style={{color:'black',height:50, fontWeight:'bold', fontSize:14,width:'50%'}} onChangeText={(text)=>{setPointsConversion(text),dispatch(setPointConversionF(text))}} placeholder='Enter Points'></TextInput>
           </View>
           <Image
             style={{height: 24, width: 24, resizeMode: 'contain', right: 12}}
@@ -282,6 +292,7 @@ else{
               alignItems: 'center',
               justifyContent: 'center',
               borderColor: '#DDDDDD',
+              height:60
             }}>
             <PoppinsTextMedium
               content="Cash"
@@ -289,10 +300,11 @@ else{
                 color: '#909090',
                 fontWeight: '600',
                 fontSize: 14,
+                marginBottom:12
               }}></PoppinsTextMedium>
             <PoppinsText
               style={{fontSize: 20, color: 'black'}}
-              content={Math.floor(Number(cashConversion))}></PoppinsText>
+              content={Math.round(cashConversion * 10) / 10}></PoppinsText>
           </View>
         </View>
 
