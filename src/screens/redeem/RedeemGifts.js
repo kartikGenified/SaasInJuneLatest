@@ -147,6 +147,7 @@ const RedeemGifts = ({navigation,route}) => {
           )
         })
         setDisplayContent(filteredData)
+        // setCart([])
       }}
         style={{
           marginLeft: 30,
@@ -250,7 +251,10 @@ const RedeemGifts = ({navigation,route}) => {
       setMessage("Sorry you don't have enough points.")
     }
     }
-      
+      // else{
+      //   setError(true)
+      //   setMessage("You don't have enough points")
+      // }
 
      
     }
@@ -522,6 +526,7 @@ const RedeemGifts = ({navigation,route}) => {
           <TouchableOpacity
           onPress={()=>{
             setDisplayContent(giftCatalogueData.body)
+            setCart([])
           }}
             style={{
               height: 70,

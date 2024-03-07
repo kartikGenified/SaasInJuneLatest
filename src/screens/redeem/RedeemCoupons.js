@@ -143,6 +143,7 @@ const RedeemCoupons = ({navigation,route}) => {
           )
         })
         setDisplayContent(filteredData)
+        setCart([])
       }}
         style={{
           marginLeft: 30,
@@ -530,6 +531,7 @@ const RedeemCoupons = ({navigation,route}) => {
           <TouchableOpacity
           onPress={()=>{
             setDisplayContent(fetchAllCouponsData.body)
+            setCart([])
           }}
             style={{
               height: 70,
