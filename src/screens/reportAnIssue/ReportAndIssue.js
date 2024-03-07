@@ -262,13 +262,13 @@ const ReportAndIssue = ({ navigation, route }) => {
           </View>
         </View>
 
-        <ModalWithBorder
+       {successmodal &&  <ModalWithBorder
           modalClose={() => { setSuccessModal(false),setMessage("") }}
           message={message}
           openModal={successmodal}
           navigateTo="Dashboard"
           // parameters={{ warrantyItemData: data, afterClaimData: warrantyClaimData }}
-          comp={ModalSuccess}></ModalWithBorder>
+          comp={ModalSuccess}></ModalWithBorder>}
 
         {error  && (
           <ErrorModal
