@@ -491,7 +491,7 @@ const onSuccess = async (e) => {
           const response = await verifyQrFunc({ token, data })
           console.log("verifyQrFunc",response)
           if (response?.data) {
-            console.log('Verify qr data', response?.data);
+            console.log('Verify qr data', JSON.stringify(response));
             // if(response?.data.success)
             // {
             //   if(response?.data?.body?.qr?.mrp==undefined || verifyQrData?.body?.qr?.mrp==undefined)
@@ -1211,7 +1211,7 @@ const onSuccess = async (e) => {
                         unique_code={item.unique_code}
                         index={index}
                         serialNo={item.batch_running_code}
-                        productName={item.created_by_name}
+                        productName={item.name}
                         productCode={item.product_code}
                         batchCode={item.batch_code}></ScannedListItem>
                     )}

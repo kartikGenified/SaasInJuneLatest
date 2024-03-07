@@ -319,8 +319,12 @@ const Dashboard = ({ navigation }) => {
         index = percentageKeys.includes(eligibleUser) ? percentageKeys.indexOf(eligibleUser) : undefined
         const pointSharingPercent = percentageValues[index]
         // console.log(pointSharingPercent)
-        console.log("On", userData.user_type, "scan", pointSharingPercent, "% Points would be shared with", eligibleUser)
-        dispatch(setPercentagePoints(pointSharingPercent))
+        if(percentageKeys.includes(eligibleUser))
+        {
+          dispatch(setPercentagePoints(pointSharingPercent))
+          console.log("On", userData.user_type, "scan", pointSharingPercent, "% Points would be shared with", eligibleUser)
+        
+        }
         dispatch(setShouldSharePoints())
 
       }

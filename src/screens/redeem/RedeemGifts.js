@@ -492,7 +492,7 @@ const RedeemGifts = ({navigation,route}) => {
                 size={30}
                 color={ternaryThemeColor}></Icon>
               <TextInput
-                style={{marginLeft: 20,width:'70%'}}
+                style={{marginLeft: 20,width:'70%',color:'black'}}
                 placeholder="Type Product Name"
                 value={search}
                 onChangeText={text => {
