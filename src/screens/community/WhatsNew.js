@@ -255,6 +255,7 @@ const WhatsNew = ({ navigation }) => {
                 {
                     media  &&
                         <FlatList
+                        style={{height:'100%'}}
                             data={media}
                             renderItem={({ item }) =>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, height: 120, backgroundColor: "#80808020", borderRadius: 10, marginHorizontal: 10, }}>

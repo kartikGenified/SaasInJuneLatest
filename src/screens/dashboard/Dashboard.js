@@ -171,7 +171,7 @@ const Dashboard = ({ navigation }) => {
     }
     else if(userPointError){
       setError(true)
-      setMessage("Can't get user user point data, kinldy retry.")
+      setMessage("Can't get user user point data, kindly retry.")
       console.log("userPointError",userPointError)
     }
   },[userPointData])
@@ -206,7 +206,7 @@ const Dashboard = ({ navigation }) => {
     }
     else if (getActiveMembershipError) {
       setError(true)
-      setMessage("Problem in fetching membership, kidly retry.")
+      setMessage("problem in fetching membership, kindly retry.")
       console.log("getActiveMembershipError", getActiveMembershipError)
     }
   }, [getActiveMembershipData, getActiveMembershipError])

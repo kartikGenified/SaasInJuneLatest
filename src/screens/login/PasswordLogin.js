@@ -430,6 +430,7 @@ const PasswordLogin = ({ navigation, route }) => {
           <TextInputRectangularWithPlaceholder
             placeHolder="Password"
             handleData={getPassword}
+            keyboardType = "password"
           // maxLength={10}
           ></TextInputRectangularWithPlaceholder>
 

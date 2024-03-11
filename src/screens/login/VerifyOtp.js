@@ -207,7 +207,7 @@ const VerifyOtp = ({ navigation, route }) => {
     } else if (verifyLoginOtpError) {
       console.log("verifyLoginOtpError", verifyLoginOtpError)
       setError(true)
-      setMessage("Please enter the correct OTP")
+      setMessage(verifyLoginOtpError?.data?.message)
     }
   }, [verifyLoginOtpData, verifyLoginOtpError]);
 

@@ -93,7 +93,7 @@ const Profile = ({ navigation }) => {
   useEffect(() => {
     if (getFormData) {
       if (getFormData.body.length !== 0) {
-        // console.log('Form Fields', JSON.stringify(getFormData));
+        console.log('Form Fields', JSON.stringify(getFormData));
 
         const filteredData = Object.values(getFormData.body.template).filter(
           (item, index) => {
@@ -116,7 +116,7 @@ const Profile = ({ navigation }) => {
       console.log('Form Field Error', getFormError);
     }
     else if (fetchProfileData) {
-      console.log('fetchProfileData', fetchProfileData.body.profile_pic);
+      console.log('fetchProfileData', fetchProfileData);
       if(fetchProfileData.success)
       {
       setProfileData(fetchProfileData)
