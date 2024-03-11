@@ -149,6 +149,13 @@ const Dashboard = ({ navigation }) => {
 
   }
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+
+    return () => backHandler.remove();
+  }, [focused]);
+  
+
+  useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
      setNotifModal(true)
   setNotifData(remoteMessage?.notification)
@@ -479,8 +486,8 @@ const Dashboard = ({ navigation }) => {
 
   const notifModalFunc = () => {
     return (
-      <View style={{height:130,width:'100%'  }}>
-        <View style={{ height: '100%', width:'100%', alignItems:'center',}}>
+      <View style={{width:'100%'  }}>
+        <View style={{ width:'100%', alignItems:'center',marginTop:20}}>
           <View>
           {/* <Bell name="bell" size={18} style={{marginTop:5}} color={ternaryThemeColor}></Bell> */}
 

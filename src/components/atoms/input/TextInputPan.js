@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {View, StyleSheet,TextInput,Modal,Pressable,Text,Image} from 'react-native';
+import {View, StyleSheet,TextInput,Modal,Pressable,Text,Image,Keyboard} from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import { useVerifyPanMutation } from '../../../apiServices/verification/PanVerificationApi';
 import ZoomImageAnimation from '../../animations/ZoomImageAnimation';
@@ -8,6 +8,7 @@ const TextInputPan = (props) => {
     const [value,setValue] = useState()
     const [modalVisible, setModalVisible] = useState(false);
     const [message, setMessage] = useState();
+    const [keyboardShow, setKeyboardShow] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const placeHolder = props.placeHolder
@@ -21,7 +22,12 @@ const label = props.label
       }]= useVerifyPanMutation()
 
     console.log("Aadhar TextInput")
-
+    Keyboard.addListener('keyboardDidShow',()=>{
+      setKeyboardShow(true)
+  })
+Keyboard.addListener('keyboardDidHide',()=>{
+      setKeyboardShow(false)
+  })
     useEffect(()=>{
        if(value)
        {
@@ -61,7 +67,7 @@ const label = props.label
         setMessage(verifyPanError.data.message)
         }
         },[verifyPanData,verifyPanError])
-        
+        useEffect(()=>{handleInputEnd()},[keyboardShow])
     const handleInput=(text)=>{
         setValue(text)
         // props.handleData(value)

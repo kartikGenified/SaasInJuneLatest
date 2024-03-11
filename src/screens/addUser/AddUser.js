@@ -357,6 +357,7 @@ const AddUser = ({ navigation }) => {
         setError(true)
         setMessage("Please enter a valid email")
     }else{
+      console.log("add user body",body)
       registerUserFunc(body)    
     }
  

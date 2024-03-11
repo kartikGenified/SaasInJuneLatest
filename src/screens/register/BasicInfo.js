@@ -102,6 +102,9 @@ const BasicInfo = ({ navigation, route }) => {
   const gifUri = Image.resolveAssetSource(
     require("../../../assets/gif/loader.gif")
   ).uri;
+
+  let timeoutId;
+
   const [getFormFunc, {
     data: getFormData,
     error: getFormError,
@@ -152,7 +155,6 @@ const BasicInfo = ({ navigation, route }) => {
   ] = useVerifyOtpForNormalUseMutation();
 
   useEffect(() => {
-    let timeoutId;
     if(timer > 0){
       timeoutId = setTimeout(timeOutCallback, 1000);
     } 
@@ -194,7 +196,6 @@ const BasicInfo = ({ navigation, route }) => {
       setOtpModal(true)
       console.log("verifyOtp", verifyOtpData)
       setMessage("OTP Verified")
-
 
     }
     else if (verifyOtpError) {

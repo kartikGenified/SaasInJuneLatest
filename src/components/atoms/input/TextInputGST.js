@@ -7,6 +7,8 @@ import ZoomImageAnimation from '../../animations/ZoomImageAnimation';
 const TextInputGST = (props) => {
     const [value,setValue] = useState()
     const [modalVisible, setModalVisible] = useState(false);
+    const [keyboardShow, setKeyboardShow] = useState(false);
+
     const placeHolder = props.placeHolder
     const required = props.required
   const label = props.label
@@ -18,7 +20,12 @@ const TextInputGST = (props) => {
       }]= useVerifyGstMutation()
 
     console.log("Aadhar TextInput")
-
+    Keyboard.addListener('keyboardDidShow',()=>{
+      setKeyboardShow(true)
+  })
+Keyboard.addListener('keyboardDidHide',()=>{
+      setKeyboardShow(false)
+  })
     useEffect(()=>{
         if(value.length===15)
         {
@@ -30,6 +37,8 @@ const TextInputGST = (props) => {
           console.log(data)
         }
       },[value])
+      
+      useEffect(()=>{handleInputEnd()},[keyboardShow])
 
       useEffect(()=>{
         if(verifyGstData)

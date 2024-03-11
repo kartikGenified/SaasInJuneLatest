@@ -1,11 +1,27 @@
-import React from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import React,{useEffect} from 'react';
+import { StyleSheet, Dimensions, View, BackHandler} from 'react-native';
 import Pdf from 'react-native-pdf';
 
-const PdfComponent = ({route}) => {
+const PdfComponent = ({route,navigation}) => {
     const pdf = route?.params?.pdf
     const pdfLink = pdf == null ?  "" : pdf
     const source = pdf == null ? { uri: "", cache: true } : { uri: pdfLink, cache: true };
+
+    useEffect(() => {
+        const handleBackPress = () => {
+            navigation.goBack(); // Navigate back when back button is pressed
+            return true; // Prevent default back press behavior
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            handleBackPress
+        );
+
+        return () => backHandler.remove(); // Cleanup function to remove the event listener
+
+    }, [navigation]); // Include navigation in the dependency array
+
     return (
         <View style={styles.container}>
                 {pdf!=undefined && pdf!=null && <Pdf
