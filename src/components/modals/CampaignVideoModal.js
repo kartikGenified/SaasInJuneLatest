@@ -101,7 +101,7 @@ const CampaignVideoModal = ({ isVisible, onClose }) => {
 
                     {
                         !hide &&
-                        <TouchableOpacity style={[{
+                        <TouchableOpacity accessibilityLabel="cancel" style={[{
                             backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
                         }]} onPress={() => { onClose() }}>
                             <Close name="close" size={17} color="#ffffff" />

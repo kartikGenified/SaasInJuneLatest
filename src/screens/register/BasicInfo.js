@@ -152,7 +152,11 @@ const BasicInfo = ({ navigation, route }) => {
   ] = useVerifyOtpForNormalUseMutation();
 
   useEffect(() => {
-    timer > 0 && setTimeout(timeOutCallback, 1000);
+    let timeoutId;
+    if(timer > 0){
+      timeoutId = setTimeout(timeOutCallback, 1000);
+    } 
+    return () => clearTimeout(timeoutId);
   }, [timer, timeOutCallback]);
 
 
@@ -190,6 +194,7 @@ const BasicInfo = ({ navigation, route }) => {
       setOtpModal(true)
       console.log("verifyOtp", verifyOtpData)
       setMessage("OTP Verified")
+
 
     }
     else if (verifyOtpError) {
@@ -413,7 +418,7 @@ const BasicInfo = ({ navigation, route }) => {
 
 
   const handleChildComponentData = data => {
-
+console.log("handleChildComponentData", data)
     // setOtpVisible(true)
     if (data?.name === "name") {
       setUserName(data?.value)
