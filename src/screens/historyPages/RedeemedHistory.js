@@ -243,10 +243,12 @@ const RedeemedHistory = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const handleRedeemButtonPress = () => {
+      
       if (Number(userPointData.body.point_balance) <= 0 ) {
         setError(true)
         setMessage("Sorry you don't have enough points.")
       }
+    
       else if(Number(minRedemptionPoints)>Number(pointBalance))
       {
         console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
@@ -322,19 +324,21 @@ const RedeemedHistory = ({ navigation }) => {
             </View>
           </View>
         </Modal>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          {userPointData && <PoppinsText style={{ color: "black" }} content={userPointData.body.point_earned}></PoppinsText>}
+        {userPointData && <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <PoppinsText style={{ color: "black" }} content={userPointData.body.point_earned}></PoppinsText>
           <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content="Lifetime Earnings"></PoppinsTextMedium>
         </View>
-        <View style={{ alignItems: "center", justifyContent: "center", marginLeft: 20 }}>
-          {userPointData && <PoppinsText style={{ color: "black" }} content={userPointData.body.point_redeemed}></PoppinsText>}
+  }
+        {userPointData  && <View style={{ alignItems: "center", justifyContent: "center", marginLeft: 20 }}>
+          <PoppinsText style={{ color: "black" }} content={userPointData.body.point_redeemed}></PoppinsText>
           <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content="Lifetime Burns"></PoppinsTextMedium>
         </View>
-        <TouchableOpacity onPress={() => {
+  } 
+        {userPointData && <TouchableOpacity onPress={() => {
           handleRedeemButtonPress()
         }} style={{ borderRadius: 2, height: 40, width: 100, backgroundColor: "#FFD11E", alignItems: "center", justifyContent: "center", marginLeft: 20 }}>
           <PoppinsTextMedium style={{ color: 'black' }} content="Redeem"></PoppinsTextMedium>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     )
   }

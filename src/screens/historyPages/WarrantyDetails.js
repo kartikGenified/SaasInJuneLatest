@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView, Platform, Linking } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, FlatList, ImageBackground, TextInput, Button, ScrollView, Platform, Linking,Alert} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -371,7 +371,15 @@ const WarrantyDetails = ({ navigation, route }) => {
                     <PoppinsTextMedium style={{ color: 'white', fontSize: 18, marginTop: 4 }} content={`Warranty Id : ${warrantyId}`}></PoppinsTextMedium>
                 </View>
             </View>
-            <TouchableOpacity onPress={()=>{Linking.openURL(data.warranty_pdf)}} style={{ padding:8, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#91B406", marginTop: 20, borderRadius: 4 }}>
+            <TouchableOpacity onPress={()=>{  
+            if(data.warranty_pdf!==undefined && data.warranty_pdf!==null && data.warranty_pdf!=="" )
+                        {
+                        Linking.openURL(data.warranty_pdf)
+                        }
+                        else{
+                            Alert.alert("Sorry for the inconvenience","Warranty PDF is not available yet kindly contact the support team")
+                        }
+                        }} style={{ padding:8, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#91B406", marginTop: 20, borderRadius: 4 }}>
                 <PoppinsTextMedium style={{ color: 'white', fontSize: 18, marginTop: 4 }} content={`Download Warranty`}></PoppinsTextMedium>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { setModal(true) }} style={{ padding:8, width: 240, alignItems: "center", justifyContent: "center", backgroundColor: "#353535", marginTop: 20, borderRadius: 4 }}>

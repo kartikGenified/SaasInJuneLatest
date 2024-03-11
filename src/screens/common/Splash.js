@@ -16,12 +16,15 @@ import { setAppUsers,setAppUsersData } from '../../../redux/slices/appUserSlice'
 import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersApi';
 import Geolocation from '@react-native-community/geolocation';
 import InternetModal from '../../components/modals/InternetModal';
+import ErrorModal from '../../components/modals/ErrorModal';
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
   const [connected, setConnected] = useState(true)
-
+  const [message, setMessage] = useState();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
@@ -103,7 +106,7 @@ const Splash = ({ navigation }) => {
   },[isConnected])
   useEffect(() => {
     if (getUsersData) {
-      console.log("type of users",getUsersData?.body);
+      // console.log("type of users",getUsersData?.body);
       const appUsers = getUsersData?.body.map((item,index)=>{
         return item.name
       })
@@ -112,11 +115,13 @@ const Splash = ({ navigation }) => {
       "id":item.user_type_id
       }
       })
-      console.log("appUsers",appUsers,appUsersData)
+      // console.log("appUsers",appUsers,appUsersData)
       dispatch(setAppUsers(appUsers))
       dispatch(setAppUsersData(appUsersData))
     } else if(getUsersError) {
       console.log("getUsersError",getUsersError);
+      setError(true)
+      setMessage("Error in getting profile data, kindly retry after sometime")
     }
   }, [getUsersData, getUsersError]);
 
@@ -222,15 +227,17 @@ const Splash = ({ navigation }) => {
       getData()
     }
     else if(getAppThemeError){
-      
-
+      setError(true)
+      setMessage("Error in fetching data, kindly retry in some time")
       console.log("getAppThemeIsError", getAppThemeIsError)
       console.log("getAppThemeError", getAppThemeError)
     }
    
   }, [getAppThemeData,getAppThemeError])
 
-
+  const modalClose = () => {
+    setError(false);
+  };
   
 
 
@@ -238,6 +245,11 @@ const Splash = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
       {!connected &&  <InternetModal />}
+      {error &&  <ErrorModal
+          modalClose={modalClose}
+
+          message={message}
+          openModal={error}></ErrorModal>}
         {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
         {/* <FastImage
           style={{ width: 250, height: 250, marginTop:'auto',alignSelf:'center' }}

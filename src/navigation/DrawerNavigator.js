@@ -22,6 +22,7 @@ import PoppinsTextMedium from '../components/electrons/customFonts/PoppinsTextMe
 import PoppinsTextLeftMedium from '../components/electrons/customFonts/PoppinsTextLeftMedium';
 import { useFetchLegalsMutation } from '../apiServices/fetchLegal/FetchLegalApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ErrorModal from '../components/modals/ErrorModal';
 
 const Drawer = createDrawerNavigator();
 const CustomDrawer = () => {
@@ -31,7 +32,9 @@ const CustomDrawer = () => {
   const [ozoneProductVisible, setOzoneProductVisible] = useState(false);
   const [communityVisible, setCommunityVisible] = useState(false);
   const [KnowledgeHubVisible, setKnowledgeHubVisible] = useState(false);
-
+  const [message, setMessage] = useState();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
 
 
@@ -95,7 +98,7 @@ const CustomDrawer = () => {
     isError: getAppMenuIsError
   }] = useGetAppMenuDataMutation()
 
-  console.log("getAppMenuData", getAppMenuData)
+  // console.log("getAppMenuData", getAppMenuData)
 
   const [getActiveMembershipFunc, {
     data: getActiveMembershipData,
@@ -136,8 +139,11 @@ const CustomDrawer = () => {
   useEffect(()=>{
     if(getPolicyData){
       console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>",getPolicyData);
+    
     }
     else if(getPolicyError){
+      setError(true)
+      setMessage(getPolicyError?.message)
       console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
     }
   },[getPolicyData,getPolicyError])
@@ -253,18 +259,22 @@ const CustomDrawer = () => {
     }
   },[getTermsData,getTermsError]);
 
-
+  const modalClose = () => {
+    setError(false);
+  };
+  
   useEffect(() => {
     if (getAppMenuData) {
-      console.log("usertype", userData.user_type)
-      console.log("getAppMenuData", JSON.stringify(getAppMenuData))
+      // console.log("usertype", userData.user_type)
+      // console.log("getAppMenuData", JSON.stringify(getAppMenuData))
       const tempDrawerData = getAppMenuData.body.filter((item) => {
         return item.user_type === userData.user_type
       })
-      console.log("tempDrawerData", JSON.stringify(tempDrawerData))
+      // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
       setDrawerData(tempDrawerData[0])
     }
     else if (getAppMenuError) {
+      
       console.log("getAppMenuError", getAppMenuError)
     }
   }, [getAppMenuData, getAppMenuError])
@@ -437,6 +447,11 @@ const CustomDrawer = () => {
 
   return (
     <View style={{ backgroundColor: '#DDDDDD',alignItems:"center",justifyContent:'center',width:'100%',height:'100%' }}>
+       {error &&  <ErrorModal
+          modalClose={modalClose}
+
+          message={message}
+          openModal={error}></ErrorModal>}
       <View
         style={{
           width:'100%',
@@ -869,6 +884,7 @@ function DrawerNavigator() {
 
   return (
     <Drawer.Navigator drawerContent={() => <CustomDrawer />}>
+     
       <Drawer.Screen options={{ headerShown: false }} name="DashboardDrawer" component={BottomNavigator} />
       <Drawer.Screen options={{ headerShown: false }} name="Redeem Reward" component={RedeemRewardHistory} />
       <Drawer.Screen options={{ headerShown: false }} name="Add BankAccount And Upi" component={AddBankAccountAndUpi} />

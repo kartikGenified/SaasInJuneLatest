@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Dimensions, Image, ScrollView} from 'react-native';
+import {View, StyleSheet, Dimensions, Image, ScrollView,BackHandler} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {BaseUrl} from '../../utils/BaseUrl';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,10 +24,12 @@ const SelectUser = ({navigation}) => {
     },
   ] = useGetAppUsersDataMutation();
   const dispatch = useDispatch()
-
+  
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
     getData()
     getUsers();
+    return () => backHandler.remove()
   }, []);
   useEffect(() => {
     if (getUsersData) {
@@ -35,6 +37,8 @@ const SelectUser = ({navigation}) => {
       dispatch(setAppUsers(getUsersData?.body))
       setListUsers(getUsersData?.body);
     } else if(getUsersError) {
+      setError(true)
+      setMessage("Error in getting profile data, kindly retry after sometime")
       console.log("getUsersError",getUsersError);
     }
   }, [getUsersData, getUsersError]);

@@ -216,7 +216,7 @@ const CouponCartList = ({ navigation, route }) => {
         }}>
         <TouchableOpacity
         onPress={()=>{
-          navigation.navigate("RedeemGifts")
+          navigation.navigate("RedeemCoupons")
         }}
           style={{
             height: 50,

@@ -129,6 +129,10 @@ const PointHistory = ({ navigation }) => {
         else if (getPointSharingError) {
             console.log("getPointSharingError", getPointSharingError)
         }
+        else if(getPointSharingIsLoading)
+        {
+            setIsLoading(true)
+        }
     }, [getPointSharingData, getPointSharingError])
 
     useEffect(() => {

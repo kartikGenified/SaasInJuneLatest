@@ -1,5 +1,5 @@
 import React,{useEffect, useId, useState} from 'react';
-import {View, StyleSheet,TouchableOpacity,Image,FlatList,ScrollView,Dimensions} from 'react-native';
+import {View, StyleSheet,TouchableOpacity,Image,FlatList,ScrollView,Dimensions, Alert} from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import RectanglarUnderlinedTextInput from '../../components/atoms/input/Rectangl
 import ShowLoadingButton from '../../components/atoms/buttons/ShowLoadingButton';
 import MessageModal from '../../components/modals/MessageModal';
 import { useIsFocused } from '@react-navigation/native';
+import ErrorModal from '../../components/modals/ErrorModal';
 
 const AddBankDetails = ({navigation}) => {
     const [message, setMessage] = useState();
@@ -120,19 +121,26 @@ const AddBankDetails = ({navigation}) => {
             'Credentials successfully loaded for user ' + credentials.username,
           );
           const token = credentials.username;
-          const data = {
-            "bank" : selectedBankName,
-            "account_no": selectedAccountNumber,
-            "account_holder_name":selectedBeneficiaryName,
-            "ifsc": selectedIfscCode,
-            "transfer_mode":"banktransfer"
-        }
-        console.log(data)
-        const params = {token:token,
-        data:data}
-        console.log(params)
-        addBankDetailsFunc(params)
-        setHideButton(true)
+          if(selectedAccountNumber==confirmAccountNumber)
+          {
+            const data = {
+                "bank" : selectedBankName,
+                "account_no": selectedAccountNumber,
+                "account_holder_name":selectedBeneficiaryName,
+                "ifsc": selectedIfscCode,
+                "transfer_mode":"banktransfer"
+            }
+            console.log(data)
+            const params = {token:token,
+            data:data}
+            console.log(params)
+            addBankDetailsFunc(params)
+            setHideButton(true)
+          }
+          else{
+            alert("Account number and selected account number can't be different")
+          }
+          
             
         }
         
@@ -172,11 +180,10 @@ const AddBankDetails = ({navigation}) => {
     return (
         <View style={{alignItems:"center",justifyContent:"center",width:'100%',backgroundColor:ternaryThemeColor,height:'100%'}}>
             {error && (
-            <MessageModal
+            <ErrorModal
               modalClose={modalClose}
-              title="Error"
               message={message}
-              openModal={error}></MessageModal>
+              openModal={error}></ErrorModal>
           )}
            {success && (
             <MessageModal

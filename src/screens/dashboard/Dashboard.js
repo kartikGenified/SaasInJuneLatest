@@ -41,7 +41,7 @@ import {GoogleMapsKey} from "@env"
 import messaging from '@react-native-firebase/messaging';    
 import Close from 'react-native-vector-icons/Ionicons';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
-
+import ErrorModal from '../../components/modals/ErrorModal';
 
 
 const Dashboard = ({ navigation }) => {
@@ -54,6 +54,9 @@ const Dashboard = ({ navigation }) => {
   const [scanningDetails, seScanningDetails] = useState()
   const [notifModal, setNotifModal] = useState(false)
   const [notifData, setNotifData] = useState(null)
+  const [message, setMessage] = useState();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const focused = useIsFocused()
   const dispatch = useDispatch()
   const userId = useSelector((state) => state.appusersdata.userId)
@@ -164,16 +167,18 @@ const Dashboard = ({ navigation }) => {
   useEffect(()=>{
     if(userPointData)
     {
-      console.log("userPointData",userPointData)
+      // console.log("userPointData",userPointData)
     }
     else if(userPointError){
+      setError(true)
+      setMessage("Can't get user user point data, kinldy retry.")
       console.log("userPointError",userPointError)
     }
   },[userPointData])
  
   useEffect(() => {
     if (fetchUserPointsHistoryData) {
-        console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
+        // console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
         
 
         if(fetchUserPointsHistoryData.success)
@@ -182,6 +187,8 @@ const Dashboard = ({ navigation }) => {
         }
     }
     else if (fetchUserPointsHistoryError) {
+      setError(true)
+      setMessage("Unable to fetch user point history.")
         console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
     }
   
@@ -198,13 +205,15 @@ const Dashboard = ({ navigation }) => {
       }
     }
     else if (getActiveMembershipError) {
+      setError(true)
+      setMessage("Problem in fetching membership, kidly retry.")
       console.log("getActiveMembershipError", getActiveMembershipError)
     }
   }, [getActiveMembershipData, getActiveMembershipError])
 
   useEffect(() => {
     if (getKycStatusData) {
-      console.log("getKycStatusData", getKycStatusData)
+      // console.log("getKycStatusData", getKycStatusData)
       if (getKycStatusData?.success) {
         const tempStatus = Object.values(getKycStatusData?.body)
         
@@ -218,16 +227,20 @@ const Dashboard = ({ navigation }) => {
       }
     }
     else if (getKycStatusError) {
+      setError(true)
+      setMessage("Can't get KYC status kindly retry after sometime.")
       console.log("getKycStatusError", getKycStatusError)
     }
   }, [getKycStatusData, getKycStatusError])
 
   useEffect(() => {
     if (getDashboardData) {
-      console.log("getDashboardData", getDashboardData)
+      // console.log("getDashboardData", getDashboardData)
       setDashboardItems(getDashboardData?.body?.app_dashboard)
     }
     else if (getDashboardError) {
+      setError(true)
+      setMessage("Can't get dashboard data, kindly retry.")
       console.log("getDashboardError", getDashboardError)
     }
   }, [getDashboardData, getDashboardError])
@@ -247,7 +260,7 @@ const Dashboard = ({ navigation }) => {
           &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
 
       fetch(url).then(response => response.json()).then(json => {
-        console.log("location address=>", JSON.stringify(json));
+        // console.log("location address=>", JSON.stringify(json));
         const formattedAddress = json?.results[0]?.formatted_address
         const formattedAddressArray = formattedAddress?.split(',')
 
@@ -260,7 +273,7 @@ const Dashboard = ({ navigation }) => {
         }
 
         const addressComponent = json?.results[0]?.address_components
-        console.log("addressComponent", addressComponent)
+        // console.log("addressComponent", addressComponent)
         for (let i = 0; i <= addressComponent.length; i++) {
           if (i === addressComponent.length) {
             dispatch(setLocation(locationJson))
@@ -344,12 +357,10 @@ const Dashboard = ({ navigation }) => {
           const token = credentials?.username
           const form_type = "2"
           console.log("token from dashboard ", token)
-          token && getDashboardFunc(token)
-          token && getKycStatusFunc(token)
-          token && getBannerFunc(token)
+          
           token && getWorkflowFunc({ userId, token })
           token && getFormFunc({ form_type, token })
-         getMembership()
+        console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
         } else {
           console.log('No credentials stored');
         }
@@ -359,20 +370,49 @@ const Dashboard = ({ navigation }) => {
     }
     getDashboardData()
 
-  }, [focused])
+  }, [])
+  useEffect(()=>{
+    const fetchOnPageActive = async()=>{
+      try {
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword();
+        if (credentials) {
+          console.log(
+            'Credentials successfully loaded for user ' + credentials?.username
+          );
+          const token = credentials?.username
+          const form_type = "2"
+          console.log("token from dashboard ", token)
+          token && getDashboardFunc(token)
+          token && getKycStatusFunc(token)
+          token && getBannerFunc(token)
+         
+         getMembership()
+        console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
+        } else {
+          console.log('No credentials stored');
+        }
+      } catch (error) {
+        console.log("Keychain couldn't be accessed!", error);
+      }
+    }
+    fetchOnPageActive()
+  },[focused])
 
 
 
   useEffect(() => {
     if (getBannerData) {
-      console.log("getBannerData", getBannerData?.body)
+      // console.log("getBannerData", getBannerData?.body)
       const images = Object.values(getBannerData?.body).map((item) => {
         return item.image[0]
       })
-      console.log("imagesBanner", images)
+      // console.log("imagesBanner", images)
       setBannerArray(images)
     }
-    else {
+    else if(getBannerError){
+      setError(true)
+      setMessage("Unable to fetch app banners")
       console.log(getBannerError)
     }
   }, [getBannerError, getBannerData])
@@ -392,8 +432,10 @@ const Dashboard = ({ navigation }) => {
       dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
 
     }
-    else {
-      console.log(getWorkflowError)
+    else if(getWorkflowError) {
+      console.log("getWorkflowError",getWorkflowError)
+      setError(true)
+      setMessage("Oops something went wrong")
     }
   }, [getWorkflowData, getWorkflowError])
   useEffect(() => {
@@ -403,8 +445,10 @@ const Dashboard = ({ navigation }) => {
       dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
 
     }
-    else {
+    else if(getFormError) {
       console.log("Form Field Error", getFormError)
+      setError(true)
+      setMessage("Can't fetch forms for warranty.")
     }
   }, [getFormData, getFormError])
 
@@ -428,6 +472,9 @@ const Dashboard = ({ navigation }) => {
   const showSuccessModal = () => {
     setIsSuccessModalVisible(true);
     console.log("hello")
+  };
+  const modalClose = () => {
+    setError(false);
   };
 
   const notifModalFunc = () => {
@@ -464,6 +511,11 @@ const Dashboard = ({ navigation }) => {
             message={"message"}
             openModal={notifModal}
             comp={notifModalFunc}></ModalWithBorder>}
+            {error &&  <ErrorModal
+          modalClose={modalClose}
+
+          message={message}
+          openModal={error}></ErrorModal>}
       
       <ScrollView style={{ width: '100%', marginBottom: platformMarginScroll, height: '100%' }}>
       <DrawerHeader></DrawerHeader>

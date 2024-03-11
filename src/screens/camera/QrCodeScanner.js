@@ -185,7 +185,7 @@ const QrCodeScanner = ({navigation}) => {
   useEffect(()=>{
     if(cashPerPointData)
     {
-        console.log("cashPerPointData",cashPerPointData)
+        // console.log("cashPerPointData",cashPerPointData)
         if(cashPerPointData?.success)
 
         {
@@ -194,7 +194,9 @@ const QrCodeScanner = ({navigation}) => {
         }
     }
     else if(cashPerPointError){
-        console.log("cashPerPointError",cashPerPointError)
+      setError(true)
+      setMessage("Unable to fetch cash per point data.")
+        // console.log("cashPerPointError",cashPerPointError)
         
     }
   },[cashPerPointData,cashPerPointError])
@@ -210,7 +212,7 @@ const QrCodeScanner = ({navigation}) => {
   useEffect(() => {
 if(addQrData)
 {
-  console.log("addQrData",addQrData)
+  // console.log("addQrData",addQrData)
   if(addQrData?.success)
   {
     isFirstScan && checkFirstScan()
@@ -309,6 +311,8 @@ if(addQrData)
       }
     }
     else if (addRegistrationBonusError) {
+      setError(true)
+      setMessage("There was a problem in adding registration bonus")
       console.log("addRegistrationBonusError", addRegistrationBonusError)
     }
   }, [addRegistrationBonusData, addRegistrationBonusError])
@@ -327,6 +331,8 @@ if(addQrData)
       
     }
     else if (fetchAllQrScanedListError) {
+      setError(true)
+      setMessage("Can't fetch scanned QR list")
       console.log("fetchAllQrScanedListError", fetchAllQrScanedListError)
     }
   }, [fetchAllQrScanedListData, fetchAllQrScanedListError])
@@ -334,6 +340,8 @@ if(addQrData)
     if (checkGenuinityData) {
       console.log('genuinity check', checkGenuinityData);
     } else if (checkGenuinityError) {
+      setError(true)
+      setMessage("Unable to check warranty status of this QR")
       console.log('Error', checkGenuinityError);
     }
   }, [checkGenuinityData, checkGenuinityError]);
@@ -342,6 +350,8 @@ if(addQrData)
     if (checkWarrantyData) {
       console.log('warranty check', checkWarrantyData);
     } else if (checkWarrantyError) {
+      setError(true)
+      setMessage("Unable to check warranty status of this QR")
       console.log('warranty Error', checkWarrantyError);
     }
   }, [checkWarrantyData, checkWarrantyError]);
@@ -489,16 +499,20 @@ const onSuccess = async (e) => {
           // Call verifyQrFunc with the token and data
           // data && (await verifyQrFunc({ token, data }));
           const response = await verifyQrFunc({ token, data })
-          console.log("verifyQrFunc",response)
+          // console.log("verifyQrFunc",response)
           if (response?.data) {
-            console.log('Verify qr data', JSON.stringify(response));
+            // console.log('Verify qr data', JSON.stringify(response));
+            if(response?.data?.body==null)
+            {
+              setError(true)
+              setMessage("Can't get product data")
+            }
             // if(response?.data.success)
             // {
             //   if(response?.data?.body?.qr?.mrp==undefined || verifyQrData?.body?.qr?.mrp==undefined)
             // {
             //   setError(true)
             //   setMessage("Cannot get mrp for the product")
-
             // }
             // }
             
@@ -859,7 +873,9 @@ const onSuccess = async (e) => {
        
       }
     } else if(addQrError) {
-      console.log("addQrError",addQrError);
+      setError(true)
+      setMessage("Problem while adding QR.")
+      // console.log("addQrError",addQrError);
     }
   }, [addQrData, addQrError]);
   // --------------------------------------------------------

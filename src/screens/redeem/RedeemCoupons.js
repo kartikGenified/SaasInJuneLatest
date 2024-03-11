@@ -221,7 +221,7 @@ const RedeemCoupons = ({navigation,route}) => {
     const category = props.category
     const data = props.data
     console.log("data",data)
-    
+    const cleanCategory = category.replace(/-API/g, '');
    const changeCounter=(operation)=>{
     
     
@@ -281,7 +281,7 @@ const RedeemCoupons = ({navigation,route}) => {
       <TouchableOpacity
         onPress={()=>{console.log("Pressed")}}
         style={{
-          height: 120,
+          height: 170,
           width: '90%',
           alignItems: 'center',
           justifyContent: 'flex-start',
@@ -311,7 +311,7 @@ const RedeemCoupons = ({navigation,route}) => {
               borderColor: '#DDDDDD',
               backgroundColor: 'white',
               marginLeft: 20,
-              top: 14,
+              top: 0,
             }}>
             <Image
               style={{height: 50, width: 50, resizeMode: 'contain'}}
@@ -375,19 +375,19 @@ const RedeemCoupons = ({navigation,route}) => {
         </View>
         <View
           style={{
-            height: '60%',
-            alignItems: 'flex-start',
+            height:'62%',
+            alignItems: 'center',
             justifyContent: 'center',
             marginTop: 4,
-            width: '90%',
+            width: '100%',
           }}>
           <PoppinsTextMedium
             style={{color: 'black', fontSize: 13, width: '90%', marginLeft: 4}}
             content={product}></PoppinsTextMedium>
 
           <PoppinsTextMedium
-            style={{color: '#919191', fontSize: 13, width: '90%'}}
-            content={category.substring(0,25)}></PoppinsTextMedium>
+            style={{color: '#919191', fontSize: 12, width: '100%'}}
+            content={cleanCategory}></PoppinsTextMedium>
         </View>
       </TouchableOpacity>
     );

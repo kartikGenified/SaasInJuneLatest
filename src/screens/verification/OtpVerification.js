@@ -297,6 +297,8 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       
     } else if (getOtpforVerificationError) {
       console.log("getOtpforVerificationError", getOtpforVerificationError);
+      setError(true)
+      setMessage(getOtpforVerificationError?.data?.message)
     }
   }, [getOtpforVerificationData, getOtpforVerificationError]);
 
@@ -526,10 +528,9 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
               <View style={{alignItems:'center',justifyContent:'center'}}>
                 <Text style={{color:ternaryThemeColor,marginTop:10}}>Didn't recieve any Code?</Text>
                 
-{timer===0 &&
-                <Text onPress={()=>{handleOtpResend()}} style={{color:ternaryThemeColor,marginTop:6,fontWeight:'600',fontSize:16}}>Resend Code</Text>
-
-}                
+                  {timer===0 &&
+                                  <Text onPress={()=>{handleOtpResend()}} style={{color:ternaryThemeColor,marginTop:6,fontWeight:'600',fontSize:16}}>Resend Code</Text>
+                  }                
               </View>
             </View>
         
