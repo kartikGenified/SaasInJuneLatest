@@ -149,10 +149,22 @@ const Dashboard = ({ navigation }) => {
 
   }
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    const handleBackPress = () => {
+      navigation.goBack(); // Navigate back when back button is pressed
+      return true; // Prevent default back press behavior
+  };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    fetchPoints()
+    dispatch(setQrIdList([]))
+    return () => {
+      // Ensure backHandler exists and remove the listener
+      console.log("unmounting compionent sajkdahjsdhsaghd")
 
-    return () => backHandler.remove();
-  }, [focused]);
+      if (backHandler) {
+        BackHandler.addEventListener('hardwareBackPress', () => false)
+      }
+  };
+  }, [focused,dispatch]);
   
 
   useEffect(() => {
@@ -165,10 +177,7 @@ const Dashboard = ({ navigation }) => {
     return unsubscribe;
   }, []);
  
-  useEffect(() => {
-    fetchPoints()
-    dispatch(setQrIdList([]))
-  }, [focused])
+  
   
 
   useEffect(()=>{

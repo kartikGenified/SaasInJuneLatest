@@ -684,7 +684,7 @@ const getMembership = async () => {
           };
           submitPoints();
         } else if (pointSharingData.percentage_points) {
-          console.log("using percentage points for this")
+          console.log("using percentage points for this",productMrp?.mrp)
           const submitPoints = async () => {
             const credentials = await Keychain.getGenericPassword();
             const token = credentials.username;

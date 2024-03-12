@@ -501,7 +501,7 @@ const onSuccess = async (e) => {
           const response = await verifyQrFunc({ token, data })
           // console.log("verifyQrFunc",response)
           if (response?.data) {
-            // console.log('Verify qr data', JSON.stringify(response));
+            console.log('Verify qr data', JSON.stringify(response));
             if(response?.data?.body==null)
             {
               setError(true)
@@ -692,7 +692,7 @@ const onSuccess = async (e) => {
  
   useEffect(() => {
     if (verifyQrData) {
-      // console.log('Verify qr data', verifyQrData?.body);
+      console.log('Verify qr data', verifyQrData?.body);
       setIsLoading(false)
       dispatch(setProductMrp(verifyQrData?.body?.qr))
      
