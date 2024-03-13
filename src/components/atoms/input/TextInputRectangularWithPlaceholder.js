@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import PoppinsTextLeftMedium from '../../electrons/customFonts/PoppinsTextLeftMedium';
 const TextInputRectangularWithPlaceholder = (props) => {
@@ -61,7 +61,7 @@ const TextInputRectangularWithPlaceholder = (props) => {
     }
 
     return (
-        <>
+        <KeyboardAvoidingView>
             <View style={{ height: 60, width: '86%', borderColor: '#DDDDDD', alignItems: "center", justifyContent: "center", backgroundColor: 'white', margin: 10, borderWidth: 0.6 }}>
                 <View style={{ alignItems: "center", justifyContent: 'center', backgroundColor: 'white', position: "absolute", top: -15, left: 16 }}>
                     <PoppinsTextMedium style={{ color: "#919191", padding: 4, fontSize: 18 }} content={placeHolder}></PoppinsTextMedium>
@@ -69,7 +69,7 @@ const TextInputRectangularWithPlaceholder = (props) => {
                 <TextInput secureTextEntry={keyboardType=="password" ? true : false}  editable={props.editable} keyboardType={keyboardType} maxLength={maxLength} onEndEditing={() => { handleInputEnd(value, placeHolder) }} style={{ height: 50, width: '100%', alignItems: "center", justifyContent: "flex-start", fontWeight: '500', marginLeft: 32, letterSpacing: 1, fontSize: 16, color: 'black' }} placeholderTextColor="#808080" onChangeText={(text) => { handleInput(text, placeHolder) }} value={placeHolder.toLowerCase() =="username" ? value?.toUpperCase() : value} placeholder={ placeHolder ? required ? `${placeHolder} *` : `${placeHolder}`:"No Data"}></TextInput>
             </View>
             {specialChar && error && <PoppinsTextLeftMedium content="Special Charaters are not allowed" style={{ color: 'red' }}></PoppinsTextLeftMedium>}
-        </>
+        </KeyboardAvoidingView>
 
     );
 }
