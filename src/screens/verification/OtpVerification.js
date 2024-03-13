@@ -425,6 +425,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
           name: name,
           user_type: user_type,
           user_type_id: user_type_id,
+          type:'redemption'
         };
         getOtpforVerificationFunc(params);
 
