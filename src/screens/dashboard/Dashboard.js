@@ -156,6 +156,7 @@ const Dashboard = ({ navigation }) => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
     fetchPoints()
     dispatch(setQrIdList([]))
+    dispatch({ type: 'NETWORK_REQUEST' });
     return () => {
       // Ensure backHandler exists and remove the listener
       console.log("unmounting compionent sajkdahjsdhsaghd")

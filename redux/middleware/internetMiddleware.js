@@ -8,7 +8,7 @@ const internetMiddleware = store => {
   };
 
   NetInfo.addEventListener(handleConnectivityChange);
-
+  
   return next => action => {
     return next(action);
   };

@@ -34,7 +34,7 @@ const BankAccounts = ({ navigation, route }) => {
   const [accountData, setAccountData] = useState()
   const [hasSelectedPaymentMethod, setHasSelectedPaymentMethod] = useState()
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [deleteAccountId, setDeleteAccountId] = useState('')
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -60,19 +60,22 @@ const BankAccounts = ({ navigation, route }) => {
 
   const focused = useIsFocused()
   const height = Dimensions.get('window').height
-  const deleteData = async (data) => {
+
+  const deleteData = async () => {
+    console.log("deleteData ",deleteAccountId)
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
         'Credentials successfully loaded for user ' + credentials.username
       );
       const token = credentials.username
-      const id = data
+      const id = deleteAccountId
 
       const params = {
         token: token,
         id: id
       }
+      if(deleteAccountId!=='')
       deleteBankFunc(params)
       refetchData()
     }
@@ -146,6 +149,48 @@ const BankAccounts = ({ navigation, route }) => {
   const setSelectedPaymentMethod = (data) => {
     console.log("Selected bank account",data)
     setHasSelectedPaymentMethod(data.id)
+  }
+
+  const DeleteAccountModal =()=>{
+    return(
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Info name="info" color={ternaryThemeColor} size={40}></Info>
+              <PoppinsTextMedium style={{ color: 'black', width: 300, marginTop: 20, fontSize: 18 }} content="Are you sure?"></PoppinsTextMedium>
+              <PoppinsTextMedium style={{ color: 'black', width: '90%', marginTop: 20, fontSize: 20 }} content="Do you want to delete this account?"></PoppinsTextMedium>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 20 }}>
+                <TouchableOpacity onPress={() => {
+                  console.log("cancel")
+                  setModalVisible(false)
+
+
+                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: 'white', flexDirection: "row", height: 40, width: 100, borderRadius: 20, borderWidth: 1 }}>
+                  <PoppinsTextMedium style={{ color: 'black', marginLeft: 10, fontWeight: '700' }} content="Cancel"></PoppinsTextMedium>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  // console.log("Upi component delete",props.id)
+                  console.log("Delete")
+                  setModalVisible(false)
+                  deleteData()
+
+                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: ternaryThemeColor, flexDirection: "row", marginLeft: 40, height: 40, width: 100, borderRadius: 20 }}>
+                  <PoppinsTextMedium style={{ color: 'white', marginLeft: 10 }} content="Delete"></PoppinsTextMedium>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+          </View>
+        </Modal>
+    )
   }
 
 
@@ -225,8 +270,8 @@ const BankAccounts = ({ navigation, route }) => {
                           <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:14,marginLeft:4}} content="Edit"></PoppinsTextMedium>                        
                         </TouchableOpacity> */}
               <TouchableOpacity onPress={() => {
-                console.log(props.id)
-                deleteData(String(props.id))
+                console.log("account component delete",props.id)
+                setDeleteAccountId(props.id)
                 setModalVisible(true)
 
               }} style={{ height: '50%', flexDirection: 'row', alignItems: "center", justifyContent: 'center' }}>
@@ -278,42 +323,7 @@ const BankAccounts = ({ navigation, route }) => {
     return (
 
       <View style={{ alignItems: "flex-start", justifyContent: 'center', width: '90%', height: 110, marginTop: 20, flexDirection: "row", borderBottomWidth: 1, borderColor: '#DDDDDD' }}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-
-            setModalVisible(!modalVisible);
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Info name="info" color={ternaryThemeColor} size={40}></Info>
-              <PoppinsTextMedium style={{ color: 'black', width: 300, marginTop: 20, fontSize: 18 }} content="Are you sure?"></PoppinsTextMedium>
-              <PoppinsTextMedium style={{ color: 'black', width: '90%', marginTop: 20, fontSize: 20 }} content="Do you want to delete this account?"></PoppinsTextMedium>
-
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 20 }}>
-                <TouchableOpacity onPress={() => {
-                  console.log("cancel")
-                  setModalVisible(false)
-
-
-                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: 'white', flexDirection: "row", height: 40, width: 100, borderRadius: 20, borderWidth: 1 }}>
-                  <PoppinsTextMedium style={{ color: 'black', marginLeft: 10, fontWeight: '700' }} content="Cancel"></PoppinsTextMedium>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                  console.log("Delete")
-                  setModalVisible(false)
-                  deleteData(String(props.id))
-
-                }} style={{ alignItems: "center", justifyContent: "center", backgroundColor: ternaryThemeColor, flexDirection: "row", marginLeft: 40, height: 40, width: 100, borderRadius: 20 }}>
-                  <PoppinsTextMedium style={{ color: 'white', marginLeft: 10 }} content="Delete"></PoppinsTextMedium>
-                </TouchableOpacity>
-              </View>
-
-            </View>
-          </View>
-        </Modal>
+        
         <View
           style={{
             width: '80%',
@@ -340,7 +350,8 @@ const BankAccounts = ({ navigation, route }) => {
                          
                         </TouchableOpacity> */}
               <TouchableOpacity onPress={() => {
-                console.log(props.id)
+                console.log("ID",props.id)
+                setDeleteAccountId(props.id)
                 setModalVisible(true)
               }} style={{ height: '50%', flexDirection: 'row', alignItems: "center", justifyContent: 'center' }}>
                 <Delete style={{ marginLeft: 4 }} name="delete" size={14} color={ternaryThemeColor}></Delete>
@@ -366,7 +377,7 @@ const BankAccounts = ({ navigation, route }) => {
         backgroundColor: ternaryThemeColor,
         height: '100%',
       }}>
-
+        {modalVisible && <DeleteAccountModal></DeleteAccountModal>}
       {error && (
         <MessageModal
           modalClose={modalClose}
@@ -494,7 +505,10 @@ const BankAccounts = ({ navigation, route }) => {
         </View>
            {
            type==="Cashback" && <TouchableOpacity onPress={()=>{
+            if(hasSelectedPaymentMethod)
+            {
             navigation.navigate("OtpVerification",{type:"Cashback",selectedAccount:hasSelectedPaymentMethod})
+            }
             }} style={{width:100,alignItems:'center',justifyContent:'center',backgroundColor:ternaryThemeColor,padding:8, position: 'absolute', bottom: 14, left: 20 }}>
               <PoppinsText content ="Get OTP" style={{color:'white',fontSize:16}}></PoppinsText>
             </TouchableOpacity>

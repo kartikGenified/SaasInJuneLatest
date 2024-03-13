@@ -74,8 +74,8 @@ const QueryList = ({ navigation }) => {
                     <PoppinsTextLeftMedium style={{ color: ternaryThemeColor, fontWeight: '800', fontSize: 18 }} content={item?.data?.type}></PoppinsTextLeftMedium>
 
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View style={{ }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between',width:'100%' }}>
+                <View style={{width:'70%' }}>
 
                 <View style={{ marginTop: 10, flexDirection: 'row', }}>
                     <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800' }} content={"Name:  "}></PoppinsTextLeftMedium>
@@ -92,7 +92,7 @@ const QueryList = ({ navigation }) => {
                     <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '600' }} content={item?.data?.long_description}></PoppinsTextLeftMedium>
                 </View>
                 </View>
-                {item?.data?.status =="2" && <View style={{alignItems:'center',justifyContent:'center'}}>
+                {item?.data?.status =="2" && <View style={{alignItems:'center',justifyContent:'center',width:'30%'}}>
                 <Image style={{ height: 40, width: 40, marginTop: 30 }} source={require('../../../assets/images/greenTick.png')} />
                 <PoppinsTextLeftMedium style={{ color: 'black', fontSize: 15, fontWeight: '800' }} content="Resolved"></PoppinsTextLeftMedium>
 

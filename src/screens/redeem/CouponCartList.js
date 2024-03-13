@@ -309,6 +309,8 @@ const CouponCartList = ({ navigation, route }) => {
     const points = props.points;
     const product = props.product;
     const category = props.category;
+    const cleanCategory = category.replace(/-API/g, '');
+
     return (
       <TouchableOpacity
         onPress={() => {
@@ -415,7 +417,7 @@ const CouponCartList = ({ navigation, route }) => {
             }}>
             <PoppinsTextMedium
               style={{ color: '#919191', fontSize: 11, width: '90%' }}
-              content={category}></PoppinsTextMedium>
+              content={cleanCategory}></PoppinsTextMedium>
           </View>
         </View>
       </TouchableOpacity>

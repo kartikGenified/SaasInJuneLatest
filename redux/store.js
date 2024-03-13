@@ -37,9 +37,12 @@ export const store = configureStore({
     redemptionData: redemptionDataSlice,
     fcmToken: fcmTokenSlice,
     userMapping: userMappingSlice,
-    internet: internetSlice, // Add internet slice to reducers
+    internet: internetSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware, internetMiddleware),
+    getDefaultMiddleware().concat(baseApi.middleware, internetMiddleware), // Include networkMiddleware
 });
+
 setupListeners(store.dispatch);
+
+export default store;

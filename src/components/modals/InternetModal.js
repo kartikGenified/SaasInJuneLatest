@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Modal, Text, StyleSheet } from 'react-native';
 
-const InternetModal = () => {
+const InternetModal = (props) => {
+  const Comp = props.comp
   return (
     <Modal
       animationType="slide"
@@ -10,8 +11,7 @@ const InternetModal = () => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>No Internet Connection</Text>
-          <Text>Please check your internet connection and try again.</Text>
+          <Comp></Comp>
         </View>
       </View>
     </Modal>

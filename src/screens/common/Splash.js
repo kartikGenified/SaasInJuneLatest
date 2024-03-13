@@ -18,16 +18,19 @@ import Geolocation from '@react-native-community/geolocation';
 import InternetModal from '../../components/modals/InternetModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 
+
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
   const [connected, setConnected] = useState(true)
+  const [isSlowInternet, setIsSlowInternet] = useState(false)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
+  
 
 
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
@@ -94,16 +97,20 @@ const Splash = ({ navigation }) => {
       }
     };
     requestLocationPermission()
+    dispatch({ type: 'NETWORK_REQUEST' });
   },[])
 
   useEffect(()=>{
     if(isConnected)
     {
-      console.log(isConnected)
+      console.log("internet status",isConnected)
       setConnected(isConnected.isConnected)
-    
+      setIsSlowInternet(isConnected.isInternetReachable ? false : true)
+      console.log("is connected",isConnected.isInternetReachable)
     }
+
   },[isConnected])
+  
   useEffect(() => {
     if (getUsersData) {
       // console.log("type of users",getUsersData?.body);
@@ -118,10 +125,9 @@ const Splash = ({ navigation }) => {
       // console.log("appUsers",appUsers,appUsersData)
       dispatch(setAppUsers(appUsers))
       dispatch(setAppUsersData(appUsersData))
+
     } else if(getUsersError) {
       console.log("getUsersError",getUsersError);
-      setError(true)
-      setMessage("Error in getting profile data, kindly retry after sometime")
     }
   }, [getUsersData, getUsersError]);
 
@@ -187,7 +193,10 @@ const Splash = ({ navigation }) => {
    
   
   
-
+    useEffect(() => {
+      // Dispatch the NETWORK_REQUEST action on component mount
+      dispatch({ type: 'NETWORK_REQUEST' });
+    }, []);
   
   
   // calling API to fetch themes for the app
@@ -227,8 +236,6 @@ const Splash = ({ navigation }) => {
       getData()
     }
     else if(getAppThemeError){
-      setError(true)
-      setMessage("Error in fetching data, kindly retry in some time")
       console.log("getAppThemeIsError", getAppThemeIsError)
       console.log("getAppThemeError", getAppThemeError)
     }
@@ -238,13 +245,29 @@ const Splash = ({ navigation }) => {
   const modalClose = () => {
     setError(false);
   };
-  
-
+  const NoInternetComp = ()=>{
+    return (
+      <View style={{alignItems:'center',justifyContent:'center',width:'90%'}}>
+        <Text style={{color:'black'}}>No Internet Connection</Text>
+          <Text style={{color:'black'}}>Please check your internet connection and try again.</Text>
+      </View>
+    )
+  }
+  const SlowInternetComp  = ()=>{
+    return (
+      <View style={{alignItems:'center',justifyContent:'center',width:'90%'}}>
+        <Text style={{color:'black'}}>Slow Internet Connection Detected</Text>
+          <Text style={{color:'black'}}>Please check your internet connection. </Text>
+      </View>
+    )
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
-      {!connected &&  <InternetModal />}
+      {!connected &&  <InternetModal comp = {NoInternetComp} />}
+      {isSlowInternet && <InternetModal comp = {SlowInternetComp} /> }
+      
       {error &&  <ErrorModal
           modalClose={modalClose}
 

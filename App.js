@@ -7,12 +7,12 @@ import messaging from '@react-native-firebase/messaging';
 import VersionCheck from 'react-native-version-check';
 import Close from 'react-native-vector-icons/Ionicons';
 import ModalWithBorder from './src/components/modals/ModalWithBorder';
-
-
+import NetInfo from "@react-native-community/netinfo";
 
 const App = () => {
   const [notifModal, setNotifModal] = useState(false)
   const [notifData, setNotifData] = useState(null)
+
 
   console.log("Version check",JSON.stringify(VersionCheck.getPlayStoreUrl({ packageName: 'com.netcarrots.ozone' })))
     useEffect(() => {
@@ -24,6 +24,9 @@ const App = () => {
         
         return unsubscribe;
       }, []);
+
+     
+    
 
       useEffect(() => {
         const checkAppVersion = async () => {
@@ -70,6 +73,9 @@ const App = () => {
         checkAppVersion();
       }, []);
         
+      
+      
+
       const notifModalFunc = () => {
         return (
           <View style={{height:130  }}>
@@ -106,6 +112,7 @@ const App = () => {
             message={"message"}
             openModal={notifModal}
             comp={notifModalFunc}></ModalWithBorder>}
+           
             </StackNavigator>
         </SafeAreaView>
         </Provider>

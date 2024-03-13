@@ -439,7 +439,10 @@ const Passbook = ({ navigation }) => {
                                 <GridVIew title="Cashback History" discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
 
                             }
-
+        {
+                            // couponOptionEnabled &&
+                            <GridVIew title="Coupon History" discription=" list of coupons redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
+                        }
                             {
                                 wheelOptionEnabled &&
                                 <GridVIew title="Wheel History" discription=" list of wheel spinned by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
