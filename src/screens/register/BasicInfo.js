@@ -438,7 +438,13 @@ console.log("handleChildComponentData", data)
      
      if(data?.value.length<12)
      {
+      if(data?.value.length===0)
+     {
       setHideButton(false)
+     }
+     else{
+      setHideButton(true)
+     }
      }
       
       
