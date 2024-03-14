@@ -159,13 +159,25 @@ const OtpLogin = ({ navigation, route }) => {
 
   const getMobile = data => {
     // console.log(data)
-    setMobile(data)
-    if (data !== undefined) {
-      if (data.length === 10) {
-        getNameFunc({ mobile: data })
-        Keyboard.dismiss();
+    const reg = '^([0|+[0-9]{1,5})?([1-9][0-9]{9})$';
+    const mobReg = new RegExp(reg)
+    
+      setMobile(data)
+      if (data !== undefined) {
+        if (data.length === 10) {
+          if(mobReg.test(data))
+        {
+          getNameFunc({ mobile: data })
+          Keyboard.dismiss();
+        }
+        else{
+          setError(true)
+          setMessage("Please enter a valid mobile number")
+        }
       }
     }
+    
+    
 
   };
 

@@ -594,7 +594,7 @@ const SharedPointsHistory = ({ navigation }) => {
 
             {/* <DisplayEarnings></DisplayEarnings> */}
           </View>
-          <Header></Header>
+          {/* <Header></Header> */}
           <ScrollView contentContainerStyle={{ width: "100%" }}>
             {getPointSharingData.body.data &&
               getPointSharingData.body.data.map((item, index) => {

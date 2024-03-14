@@ -270,7 +270,7 @@ const WarrantyHistory = ({ navigation }) => {
                 </TouchableOpacity> */}
             </View>
             <DisplayEarnings></DisplayEarnings>
-            <Header></Header>
+            {/* <Header></Header> */}
 
             {
                 !getWarrantylistData  && <FastImage

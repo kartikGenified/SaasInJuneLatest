@@ -509,7 +509,7 @@ const RedeemedHistory = ({ navigation }) => {
         <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Points Balance"></PoppinsTextMedium>
       </View>
       <DisplayEarnings></DisplayEarnings>
-      <Header></Header>
+      {/* <Header></Header> */}
      
         
           <FlatList

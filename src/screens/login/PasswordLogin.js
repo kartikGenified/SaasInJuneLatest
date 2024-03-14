@@ -136,6 +136,7 @@ const PasswordLogin = ({ navigation, route }) => {
     const user_id = username
     const password = passwords
     const fcm_token = fcmToken
+    console.log("fcmtoken password login", fcmToken)
     if (user_id !== "" && password !== "" && isChecked) {
       passwordLoginfunc({ user_id, password, fcm_token })
     }
@@ -244,7 +245,10 @@ const PasswordLogin = ({ navigation, route }) => {
   //function to handle Modal
   const modalWithBorderClose = () => {
     setModalWithBorder(false);
+    navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+
     navigation.navigate("Dashboard")
+
   };
 
   const ModalContent = () => {

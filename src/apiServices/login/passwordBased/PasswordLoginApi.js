@@ -4,7 +4,7 @@ import { slug } from "../../../utils/Slug";
 export const PasswordLoginApi = baseApi.injectEndpoints({
     endpoints:(builder) =>({
         passwordLogin : builder.mutation({
-            query({user_id,password}){
+            query({user_id,password,fcm_token}){
                 console.log("Password Login API",user_id,password)
                 return {
                     url:`/api/app/appUserLogin/login`,
@@ -15,7 +15,8 @@ export const PasswordLoginApi = baseApi.injectEndpoints({
                     },
                     body:{
                         "user_id" : user_id,
-                        "password" : password
+                        "password" : password,
+                        "fcm_token":fcm_token
                     }
                     
                    
