@@ -344,7 +344,7 @@ const AddAddress = ({ navigation }) => {
 
         <PoppinsTextMedium
           style={{ fontSize: 20, color: "#ffffff", marginLeft: 10 }}
-          content={"Add Adress"}
+          content={"Add Address"}
         ></PoppinsTextMedium>
       </View>
       {/* navigator */}

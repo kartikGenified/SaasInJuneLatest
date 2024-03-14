@@ -88,10 +88,12 @@ const TextInputAadhar = (props) => {
           console.log("success")
           setOtpSent(true)
           setShowOtp(true)
+          props.notVerified(true)
         }
         }
         else if(sendAadharOtpError)
         {
+          props.notVerified(false)
         console.log("sendAadharOtpError",sendAadharOtpError)
         
           setAadharExists(true)
@@ -107,10 +109,13 @@ const TextInputAadhar = (props) => {
               {
               setModalVisible(true)
               setAadharVerified(true)
+              props.notVerified(true)
               }
             }
             else if(verifyAadharError){
               console.log("verifyAadharError",verifyAadharError)
+              props.notVerified(false)
+
             }
             },[verifyAadharError,verifyAadharData])
     const handleInput=(text)=>{

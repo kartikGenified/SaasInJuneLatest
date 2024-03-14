@@ -13,7 +13,7 @@ import PoppinsTextLeftMedium from "../../components/electrons/customFonts/Poppin
 import { useIsFocused } from "@react-navigation/native";
 import { addAddress } from "../../../redux/slices/redemptionAddressSlice";
 const ListAddress = ({ navigation }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState();
   const [selectedAddress, setSelectedAddress] = useState();
   const [addressList, setAddressList] = useState();
   const focused = useIsFocused()
@@ -36,6 +36,7 @@ const ListAddress = ({ navigation }) => {
   const setAddress = (data) => {
     console.log("Selected", data);
     setSelectedIndex(data.index);
+    setSelectedAddress(data)
     // setSelectedAddress(data)
     dispatch(addAddress(data))
 
@@ -105,63 +106,194 @@ const ListAddress = ({ navigation }) => {
     getToken();
   };
 
+  // const AddressComponent = (props) => {
+  //   const [selected, setSelected] = useState(false);
+  //   const address = props.address;
+  //   const city = props.city;
+  //   const state = props.state;
+  //   const country = props.country;
+  //   const index = props.index;
+  //   const district = props.district;
+  //   const pincode = props.pincode;
+  //   const selectedIndex = props.selectedIndex;
+  //   const data = props.data;
+  //   const addressJson = {
+  //     index: index,
+  //     city: city,
+  //     district: district,
+  //     state: state,
+  //     country: country,
+  //     pincode: pincode,
+  //     data:data
+  //   };
+
+  //   // useEffect(() => {
+  //   //   console.log("props.isSelected", props.isSelected=="1");
+  //   //   if (props.isSelected == "1") {
+  //   //     setSelected(true);
+  //   //     // props.setAddress(addressJson);
+  //   //   }
+  //   // }, [props.isSelected]);
+
+  //   // useEffect(() => {
+  //   //   if (selectedIndex === index) {
+  //   //     setSelected(true);
+  //   //     props.setAddress(addressJson);
+  //   //   } else {
+  //   //     setSelected(false);
+  //   //   }
+  //   // }, [selected, selectedIndex]);
+
+  //   const setSelectedAddress = (selectedData) => {
+  //     console.log("adessjksajdjsahjhd",data,selectedData)
+  //     const myPromise = new Promise((resolve, reject) => {
+  //       if (selectedData === true) {
+  //         resolve(addressJson);
+  //       } else {
+  //         reject();
+  //       }
+  //     });
+
+  //     myPromise.then(function () {
+  //       props.setAddress(addressJson)
+        
+  //     }, function () {
+  //       console.log("Promise failed");
+  //     });
+  //     setSelected(selectedData);
+  //   };
+
+  //   const deleteAddress = () => {
+  //     props.deleteAddress(data);
+  //   };
+
+  //   return (
+  //     <View
+  //       style={{
+  //         alignItems: "center",
+  //         justifyContent: "center",
+  //         width: "90%",
+  //         borderWidth: 1,
+  //         borderColor: "#DDDDDD",
+  //         borderRadius: 10,
+  //         flexDirection: "row",
+  //         paddingTop: 10,
+  //         paddingBottom: 10,
+  //         marginTop: 20,
+  //       }}
+  //     >
+  //       <View
+  //         style={{
+  //           alignItems: "center",
+  //           justifyContent: "center",
+  //           width: "10%",
+  //         }}
+  //       >
+  //         <TouchableOpacity
+  //           onPress={() => {
+            
+  //             setSelectedAddress(!selected);
+  //           }}
+  //           style={{
+  //             height: 30,
+  //             width: 30,
+  //             borderRadius: 15,
+  //             backgroundColor: "white",
+  //             borderWidth: 1,
+  //             borderColor: "#DDDDDD",
+  //             alignItems: "center",
+  //             justifyContent: "center",
+  //           }}
+  //         >
+  //           {selected && (
+  //             <Image
+  //               style={{ height: 24, width: 24, resizeMode: "contain" }}
+  //               source={require("../../../assets/images/greenTick.png")}
+  //             ></Image>
+  //           )}
+  //         </TouchableOpacity>
+  //       </View>
+  //       <View
+  //         style={{
+  //           alignItems: "flex-start",
+  //           justifyContent: "center",
+  //           width: "70%",
+  //         }}
+  //       >
+  //         <PoppinsTextLeftMedium
+  //           style={{ color: "black", fontSize: 16, marginLeft: 10 }}
+  //           content={`Address : ${address}`}
+  //         ></PoppinsTextLeftMedium>
+  //         <PoppinsTextMedium
+  //           style={{ color: "black", fontSize: 16, marginLeft: 10 }}
+  //           content={`City : ${city}`}
+  //         ></PoppinsTextMedium>
+  //         <PoppinsTextMedium
+  //           style={{ color: "black", fontSize: 16, marginLeft: 10 }}
+  //           content={`District : ${district}`}
+  //         ></PoppinsTextMedium>
+  //         <PoppinsTextMedium
+  //           style={{ color: "black", fontSize: 16, marginLeft: 10 }}
+  //           content={`State : ${state}`}
+  //         ></PoppinsTextMedium>
+  //         <PoppinsTextMedium
+  //           style={{ color: "black", fontSize: 16, marginLeft: 10 }}
+  //           content={`Pincode : ${pincode}`}
+  //         ></PoppinsTextMedium>
+  //       </View>
+  //       <View
+  //         style={{
+  //           alignItems: "center",
+  //           justifyContent: "center",
+  //           width: "10%",
+  //         }}
+  //       >
+  //         <TouchableOpacity
+  //           onPress={() => {
+  //             deleteAddress();
+  //           }}
+  //           style={{
+  //             height: 30,
+  //             width: 30,
+  //             borderRadius: 15,
+  //             backgroundColor: "white",
+  //             alignItems: "center",
+  //             justifyContent: "center",
+  //           }}
+  //         >
+  //           {
+  //             <Image
+  //               style={{ height: 30, width: 30, resizeMode: "contain" }}
+  //               source={require("../../../assets/images/delete.png")}
+  //             ></Image>
+  //           }
+  //         </TouchableOpacity>
+  //       </View>
+  //     </View>
+  //   );
+  // };
   const AddressComponent = (props) => {
+    const { address, city, state, country, index, district, pincode } = props;
     const [selected, setSelected] = useState(false);
-    const address = props.address;
-    const city = props.city;
-    const state = props.state;
-    const country = props.country;
-    const index = props.index;
-    const district = props.district;
-    const pincode = props.pincode;
-    const selectedIndex = props.selectedIndex;
-    const data = props.data;
     const addressJson = {
-      index: index,
-      city: city,
-      district: district,
-      state: state,
-      country: country,
-      pincode: pincode,
-      data:data
+      index,
+      city,
+      district,
+      state,
+      country,
+      pincode,
     };
-
-    useEffect(() => {
-      console.log("props.isSelected", props.isSelected=="1");
-      if (props.isSelected == "1") {
-        setSelected(true);
-        // props.setAddress(addressJson);
-      }
-    }, [props.isSelected]);
-
-    useEffect(() => {
-      if (selectedIndex === index) {
-        setSelected(true);
-        props.setAddress(addressJson);
-      } else {
-        setSelected(false);
-      }
-    }, [selected, selectedIndex]);
-
-    const setSelectedAddress = (selectedData) => {
-      const myPromise = new Promise((resolve, reject) => {
-        if (selectedData === true) {
-          resolve(addressJson);
-        } else {
-          reject();
-        }
-      });
-
-      myPromise.then(props.setAddress(addressJson), function () {
-        console.log("Promise failed");
-      });
-      setSelected(selectedData);
+  
+    const toggleSelection = () => {
+      props.setAddress(addressJson);
+     
+      setSelected(!selected); // If you want to toggle selection, uncomment this and remove 'selected' state
     };
-
+  
     const deleteAddress = () => {
-      props.deleteAddress(data);
+      props.deleteAddress(addressJson);
     };
-
+  
     return (
       <View
         style={{
@@ -177,6 +309,7 @@ const ListAddress = ({ navigation }) => {
           marginTop: 20,
         }}
       >
+        {/* Selection Toggle */}
         <View
           style={{
             alignItems: "center",
@@ -185,9 +318,7 @@ const ListAddress = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => {
-              setSelectedAddress(!selected);
-            }}
+            onPress={toggleSelection}
             style={{
               height: 30,
               width: 30,
@@ -199,14 +330,16 @@ const ListAddress = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
-            {selected && (
+            {props.selectedIndex == index && (
               <Image
                 style={{ height: 24, width: 24, resizeMode: "contain" }}
                 source={require("../../../assets/images/greenTick.png")}
-              ></Image>
+              />
             )}
           </TouchableOpacity>
         </View>
+  
+        {/* Address Details */}
         <View
           style={{
             alignItems: "flex-start",
@@ -217,24 +350,26 @@ const ListAddress = ({ navigation }) => {
           <PoppinsTextLeftMedium
             style={{ color: "black", fontSize: 16, marginLeft: 10 }}
             content={`Address : ${address}`}
-          ></PoppinsTextLeftMedium>
+          />
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 16, marginLeft: 10 }}
             content={`City : ${city}`}
-          ></PoppinsTextMedium>
+          />
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 16, marginLeft: 10 }}
             content={`District : ${district}`}
-          ></PoppinsTextMedium>
+          />
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 16, marginLeft: 10 }}
             content={`State : ${state}`}
-          ></PoppinsTextMedium>
+          />
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 16, marginLeft: 10 }}
             content={`Pincode : ${pincode}`}
-          ></PoppinsTextMedium>
+          />
         </View>
+  
+        {/* Delete Button */}
         <View
           style={{
             alignItems: "center",
@@ -243,9 +378,7 @@ const ListAddress = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => {
-              deleteAddress();
-            }}
+            onPress={deleteAddress}
             style={{
               height: 30,
               width: 30,
@@ -255,17 +388,17 @@ const ListAddress = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
-            {
-              <Image
-                style={{ height: 30, width: 30, resizeMode: "contain" }}
-                source={require("../../../assets/images/delete.png")}
-              ></Image>
-            }
+            <Image
+              style={{ height: 30, width: 30, resizeMode: "contain" }}
+              source={require("../../../assets/images/delete.png")}
+            />
           </TouchableOpacity>
         </View>
       </View>
     );
   };
+  
+  
   return (
     <View
       style={{
@@ -358,7 +491,12 @@ const ListAddress = ({ navigation }) => {
         }}
       >
         <TouchableOpacity style={{height:40,width:120,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:4,position:'absolute',left:20}} onPress={()=>{
-          navigation.navigate('OtpVerification',{type:"Gift"})
+          if(selectedAddress){
+            navigation.navigate('OtpVerification',{type:"Gift"})
+          }
+          else{
+            alert("Please select an address first")
+          }
         }}>
           <PoppinsTextMedium style={{fontSize:18,color:'white',fontWeight:'700'}} content="Select"></PoppinsTextMedium>
 

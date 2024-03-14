@@ -67,6 +67,7 @@ const BasicInfo = ({ navigation, route }) => {
   const [isValid, setIsValid] = useState(true)
   const [hideButton, setHideButton] = useState(false)
   const [timer, setTimer] = useState(0)
+  const [aadhaarVerified, setAadhaarVerified] = useState(true)
 
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
   const focused = useIsFocused()
@@ -432,8 +433,17 @@ console.log("handleChildComponentData", data)
       console.log("isValidEmail", isValidEmail(data?.value), isValid)
 
     }
-
-   
+    if(data?.name=== "aadhar")
+    {
+     
+     if(data?.value.length<12)
+     {
+      setHideButton(false)
+     }
+      
+      
+    }
+    
 
 
 
@@ -515,6 +525,16 @@ console.log("handleChildComponentData", data)
     sendOtpFunc(params)
   }
 
+  const addharVerified = (bool)=>{
+    if(!bool)
+    {
+      setAadhaarVerified(false)
+      setHideButton(true)
+    }
+    else{
+      setHideButton(false)
+    }
+  }
 
   const handleRegistrationFormSubmission = () => {
     const inputFormData = {}
@@ -795,6 +815,7 @@ console.log("handleChildComponentData", data)
                       required={item.required}
                       jsonData={item}
                       key={index}
+                      notVerified={addharVerified}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       label={item.label}
