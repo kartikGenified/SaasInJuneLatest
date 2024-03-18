@@ -381,19 +381,20 @@ const OtpLogin = ({ navigation, route }) => {
           </View>
 
 
-          { !sendOtpIsLoading &&
+        
             <ButtonNavigateArrow
             success={success}
             handleOperation={handleButtonPress}
             backgroundColor={buttonThemeColor}
             style={{ color: 'white', fontSize: 16 }}
+            isLoading={sendOtpIsLoading}
             content="Login"
             navigateTo="VerifyOtp"
             navigationParams={navigationParams}
             mobileLength={mobile}
             isChecked={isChecked && mobile?.length == 10 && name != "" && !hideButton}
           ></ButtonNavigateArrow>
-          }
+          
 
       {
         sendOtpIsLoading && <FastImage
