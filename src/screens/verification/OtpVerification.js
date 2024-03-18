@@ -318,8 +318,9 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       const name = userData.name;
       const user_type_id = userData.user_type_id;
       const user_type = userData.user_type;
+      const type = "redemption"
       
-      verifyOtpForNormalUseFunc({ mobile, name, otp, user_type_id, user_type });
+      verifyOtpForNormalUseFunc({ mobile, name, otp, user_type_id, user_type,type});
       
   }
   const modalClose = () => {
@@ -340,7 +341,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     cart && cart.map((item, index) => {
       tempID.push(((item.gift_id)))
     })
-    console.log("tempID", tempID)
+    console.log("tempID", tempID,userData,address)
 
     
       const data = {
@@ -353,7 +354,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
         "app_user_id": String(userData.id),
         "remarks": "demo",
         "type": "point",
-        "address_id": address.data.id
+        "address_id": address.id
       }
       const params = {
         token: token,
@@ -375,7 +376,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
          token:token
        };
        redeemCashbackFunc(params)
-       console.log("params",params)
+       console.log("Cashbackparams",params)
     }
     else if(type==="Coupon"){
       

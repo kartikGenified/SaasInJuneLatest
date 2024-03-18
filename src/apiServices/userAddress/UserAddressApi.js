@@ -54,7 +54,7 @@ export const UserAddressApi = baseApi.injectEndpoints({
       }),
       deleteAddress: builder.mutation({
         query(params) {
-          console.log(params)
+          console.log("deleteAddressMutation", params)
           return {
             url: `/api/app/address/${params.data.id}`,
             method: 'delete',

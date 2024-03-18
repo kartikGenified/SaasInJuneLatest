@@ -92,19 +92,9 @@ const RequestAppointment = ({ navigation,route }) => {
         const getForm = async () => {
             try {
                 // Retrieve the credentials
-                const credentials = await Keychain.getGenericPassword();
-                if (credentials) {
-                    console.log(
-                        'Credentials successfully loaded for user ' + credentials.username
-                    );
-                    const token = credentials.username
-                    const form_type = "9"
+                getFormFunc({ formId: "9", AppUserType: appUserType })
 
-                    token && getFormFunc({ formId: "9", AppUserType: appUserType })
-
-                } else {
-                    console.log('No credentials stored');
-                }
+               
             } catch (error) {
                 console.log("Keychain couldn't be accessed!", error);
             }

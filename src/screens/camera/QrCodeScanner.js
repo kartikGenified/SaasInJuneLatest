@@ -27,7 +27,6 @@ import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/Ge
 import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
 import {setProductData,setProductMrp,setScanningType} from '../../../redux/slices/getProductSlice';
-import { useFetchAllQrScanedListMutation } from '../../apiServices/qrScan/AddQrApi';
 import { useAddRegistrationBonusMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import { useAddBulkQrMutation } from '../../apiServices/bulkScan/BulkScanApi';
 import { slug } from '../../utils/Slug';
@@ -35,7 +34,7 @@ import MessageModal from '../../components/modals/MessageModal';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Close from 'react-native-vector-icons/Ionicons';
 import RNQRGenerator from 'rn-qr-generator';
-import { useCashPerPointMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
+import { useCashPerPointMutation, useFetchUserPointsHistoryMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import FastImage from 'react-native-fast-image';
 
 const QrCodeScanner = ({navigation}) => {
@@ -114,6 +113,13 @@ const QrCodeScanner = ({navigation}) => {
     },
   ] = useCheckGenuinityMutation();
 
+  const [fetchUserPointsHistoryFunc, {
+    data: fetchUserPointsHistoryData,
+    error: fetchUserPointsHistoryError,
+    isLoading: fetchUserPointsHistoryLoading,
+    isError: fetchUserPointsHistoryIsError
+}] = useFetchUserPointsHistoryMutation()
+
   const [checkWarrantyFunc,{
     data:checkWarrantyData,
     error:checkWarrantyError,
@@ -141,15 +147,7 @@ const QrCodeScanner = ({navigation}) => {
     },
   ] = useAddRegistrationBonusMutation();
 
-  const [
-    fetchAllQrScanedList,
-    {
-      data: fetchAllQrScanedListData,
-      isLoading: fetchAllQrScanedListIsLoading,
-      error: fetchAllQrScanedListError,
-      isError: fetchAllQrScanedListIsError,
-    },
-  ] = useFetchAllQrScanedListMutation();
+ 
 
   const [addBulkQrFunc ,{
     data:addBulkQrData,
@@ -230,35 +228,27 @@ if(addQrData)
     (async () => {
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
-      getScannedHistory()
+      (async () => {
+        const credentials = await Keychain.getGenericPassword();
+        const token = credentials.username;
+  
+  const params ={
+      token: token,
+     userId : userData.id,
+     
+    }
+        fetchUserPointsHistoryFunc(params);
+      })();
       cashPerPointFunc(token)
      
     })();
   },[verifyQrData])
 
-  const getScannedHistory=async()=>{
-    (async () => {
-      const credentials = await Keychain.getGenericPassword();
-      const token = credentials.username;
-      let queryParams = `?user_type_id=${userData?.user_type_id
-        }&app_user_id=${userData?.id}`;
-      if (fromDate && toDate) {
-        queryParams += `&from_date=${moment(fromDate).format('YYYY-MM-DD')}&to_date=${moment(toDate).format('YYYY-MM-DD')}`;
-      } else if (fromDate) {
-        queryParams += `&from_date=${fromDate}`;
-      }
+  useEffect(() => {
+   
+  }, []);
+
   
-      console.log("queryParams", queryParams);
-      if(shouldSharePoints)
-      {
-        fetchAllQrScanedList({
-          token: token,
-          query_params: queryParams,
-        });
-      }
-     
-    })();
-  }
 
   const checkFirstScan=async()=>{
 
@@ -317,25 +307,7 @@ if(addQrData)
     }
   }, [addRegistrationBonusData, addRegistrationBonusError])
 
-  useEffect(() => {
-    if (fetchAllQrScanedListData) {
-      // console.log("fetchAllQrScanedListData", fetchAllQrScanedListData?.body?.data)
-      // checkFirstScan(fetchAllQrScanedListData.body.data)
-      if(fetchAllQrScanedListData?.body?.data?.length===0)
-      {
-        setIsFirstScan(true)
-      }
-      else{
-        setIsFirstScan(false)
-      }
-      
-    }
-    else if (fetchAllQrScanedListError) {
-      setError(true)
-      setMessage("Can't fetch scanned QR list")
-      console.log("fetchAllQrScanedListError", fetchAllQrScanedListError)
-    }
-  }, [fetchAllQrScanedListData, fetchAllQrScanedListError])
+ 
   useEffect(() => {
     if (checkGenuinityData) {
       console.log('genuinity check', checkGenuinityData);
@@ -355,6 +327,31 @@ if(addQrData)
       console.log('warranty Error', checkWarrantyError);
     }
   }, [checkWarrantyData, checkWarrantyError]);
+
+
+  useEffect(() => {
+    if (fetchUserPointsHistoryData) {
+        console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
+        
+
+        if(fetchUserPointsHistoryData.success)
+        {
+          if(fetchUserPointsHistoryData?.body?.data?.length===0)
+          {
+            setIsFirstScan(true)
+          }
+          else{
+            setIsFirstScan(false)
+          }
+        }
+    }
+    else if (fetchUserPointsHistoryError) {
+      setError(true)
+      setMessage("Can't fetch scanned QR list")
+        console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
+    }
+
+}, [fetchUserPointsHistoryData, fetchUserPointsHistoryError])
 
   useEffect(() => {
     if (productDataData) {

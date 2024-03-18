@@ -24,7 +24,9 @@ const HyperlinkText = ({ text }) => {
       }
 
       // Otherwise, render the regular text
-      return part;
+      return(
+        <Text style={{color:'black'}}> {part}</Text>
+      ) 
     });
   };
 

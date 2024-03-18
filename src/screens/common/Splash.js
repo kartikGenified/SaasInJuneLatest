@@ -18,7 +18,6 @@ import Geolocation from '@react-native-community/geolocation';
 import InternetModal from '../../components/modals/InternetModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 
-
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
@@ -53,6 +52,12 @@ const Splash = ({ navigation }) => {
       isError: getUsersDataIsError,
     },
   ] = useGetAppUsersDataMutation();
+  
+  // }
+
+  useEffect(()=>{
+    getUsers();
+  },[])
 
   useEffect(()=>{
     getUsers();
@@ -104,16 +109,20 @@ const Splash = ({ navigation }) => {
     if(isConnected)
     {
       console.log("internet status",isConnected)
-      setConnected(isConnected.isConnected)
-      setIsSlowInternet(isConnected.isInternetReachable ? false : true)
-      console.log("is connected",isConnected.isInternetReachable)
-    }
+      if(!isConnected)
+      {
+        setConnected(isConnected.isConnected)
+        setIsSlowInternet(isConnected.isInternetReachable ? false : true)
+        console.log("is connected",isConnected.isInternetReachable)
+      }
+      }
+     
 
   },[isConnected])
   
   useEffect(() => {
     if (getUsersData) {
-      // console.log("type of users",getUsersData?.body);
+      console.log("type of users",getUsersData?.body);
       const appUsers = getUsersData?.body.map((item,index)=>{
         return item.name
       })

@@ -46,6 +46,7 @@ const Notification = ({ navigation }) => {
     const height = Dimensions.get('window').height
 
     const Notificationbar = (props) => {
+        console.log("Notificationbar",props.notification)
         return (
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{ height: 40, width: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: "#FFE7E7", marginLeft: 20 }}>
@@ -78,7 +79,7 @@ const Notification = ({ navigation }) => {
             <View style={{ paddingBottom: 120, height: height, backgroundColor: 'white', width: '100%', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginTop: 20 }}>
                 {
                     notifData?.body?.data?.map((item, index) => {
-                        return <Notificationbar notification={item?.title} body={item?.body} key={item?.id} ></Notificationbar>
+                        return <Notificationbar notification={item?.title} body={item?.body} key={index} ></Notificationbar>
 
                     })
                 }

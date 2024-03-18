@@ -493,7 +493,7 @@ const AddUser = ({ navigation }) => {
                       key={index}
                       handleData={handleData}
                       placeHolder={item.name}
-                      value={location.city}
+                      value={location?.city}
                       label={item.label}
                       required={item.required}
                     ></PrefilledTextInput>
@@ -510,7 +510,7 @@ const AddUser = ({ navigation }) => {
                       handleData={handleData}
                       handleFetchPincode={handleFetchPincode}
                       placeHolder={item.name}
-                      value={location.postcode}
+                      value={location?.postcode}
                       label={item.label}
                       required={item.required}
                       maxLength={6}
@@ -527,7 +527,7 @@ const AddUser = ({ navigation }) => {
                       key={index}
                       handleData={handleData}
                       placeHolder={item.name}
-                      value={location.state}
+                      value={location?.state}
                       label={item.label}
                       required={item.required}
                     ></PrefilledTextInput>
@@ -541,7 +541,7 @@ const AddUser = ({ navigation }) => {
                       key={index}
                       handleData={handleData}
                       placeHolder={item.name}
-                      value={location.district}
+                      value={location?.district}
                       label={item.label}
                       required={item.required}
                     ></PrefilledTextInput>

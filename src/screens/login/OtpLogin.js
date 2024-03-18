@@ -96,10 +96,11 @@ const OtpLogin = ({ navigation, route }) => {
   const needsApproval = route?.params?.needsApproval;
   const user_type_id = route?.params?.userId;
   const user_type = route?.params?.userType;
-  const registrationRequired = route?.params?.registrationRequired
-  console.log("registrationRequired", registrationRequired)
+  const registrationRequired = route?.params?.registrationRequired 
+  console.log("registrationRequiredotpLogin", registrationRequired)
   const width = Dimensions.get('window').width;
   const navigationParams = { "needsApproval": needsApproval, "user_type_id": user_type_id, "user_type": user_type, "mobile": mobile, "name": name }
+  console.log("navigationParams",navigationParams)
   const gifUri = Image.resolveAssetSource(
     require("../../../assets/gif/loader.gif")
   ).uri;
@@ -123,7 +124,11 @@ const OtpLogin = ({ navigation, route }) => {
     if (sendOtpData) {
       console.log("sendOtpData", sendOtpData)
       if (sendOtpData?.success === true && mobile.length === 10) {
+        if(Object.keys(getNameData.body).length!=0)
+        {
         navigation.navigate('VerifyOtp', { navigationParams })
+
+        }
       }
       else {
         console.log("Trying to open error modal")
@@ -218,12 +223,21 @@ const OtpLogin = ({ navigation, route }) => {
     // console.log("first",getNameData.message)
     // console.log("mobile",mobile,name.length,name,isChecked,getNameData)
     if (isChecked) {
+      console.log("handleButtonPress",getNameData,isChecked,name,mobile)
       if (getNameData && isChecked && name !== undefined && mobile !== undefined && name != "" && mobile.length !== 0 && name.length !== 0) {
         // console.log("mobile",mobile,name.length)
         if (getNameData.message === "Not Found") {
           console.log("registrationRequired", registrationRequired)
           if (mobile?.length == 10) {
-            registrationRequired ? navigation.navigate('BasicInfo', { needsApproval: needsApproval, userType: user_type, userId: user_type_id, name: name, mobile: mobile, navigatingFrom: "OtpLogin" }) : navigateToOtp()
+            if(registrationRequired){
+              setMobile('')
+              setName('')
+              navigation.navigate('BasicInfo', { needsApproval: needsApproval, userType: user_type, userId: user_type_id, name: name, mobile: mobile, navigatingFrom: "OtpLogin",registrationRequired:registrationRequired })
+            }
+            else{
+              navigateToOtp()
+            }
+            
           }
           else {
             setError(true)
@@ -337,6 +351,7 @@ const OtpLogin = ({ navigation, route }) => {
               placeHolder="Mobile No"
               handleData={getMobile}
               maxLength={10}
+              value = {mobile}
               KeyboardType="numeric"
             ></TextInputRectangularWithPlaceholder>
 
@@ -366,7 +381,7 @@ const OtpLogin = ({ navigation, route }) => {
           </View>
 
 
-          {
+          { !sendOtpIsLoading &&
             <ButtonNavigateArrow
             success={success}
             handleOperation={handleButtonPress}
@@ -377,9 +392,10 @@ const OtpLogin = ({ navigation, route }) => {
             navigationParams={navigationParams}
             mobileLength={mobile}
             isChecked={isChecked && mobile?.length == 10 && name != "" && !hideButton}
-          ></ButtonNavigateArrow>}
+          ></ButtonNavigateArrow>
+          }
 
-{
+      {
         sendOtpIsLoading && <FastImage
           style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 10 }}
           source={{

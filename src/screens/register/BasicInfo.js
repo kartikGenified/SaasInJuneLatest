@@ -95,6 +95,11 @@ const BasicInfo = ({ navigation, route }) => {
   const userTypeId = route.params.userId
   const needsApproval = route.params.needsApproval
   const navigatingFrom = route.params.navigatingFrom
+  const registrationRequired = route.params.registrationRequired
+  console.log("registration required basic info", registrationRequired)
+  // const navigationParams = { "needsApproval": needsApproval, "userId": userTypeId, "user_type": userType, "mobile": mobile, "name": name, "registrationRequired":registrationRequired}
+  const navigationParams = { "needsApproval": needsApproval, "userId": userTypeId, "userType": userType, "registrationRequired":registrationRequired}
+console.log("navigation params from basic info",navigationParams)
   const name = route.params?.name
   const mobile = route.params?.mobile
   console.log("appUsers", userType, userTypeId, isManuallyApproved, name, mobile)
@@ -420,7 +425,11 @@ const BasicInfo = ({ navigation, route }) => {
 
 
   const handleChildComponentData = data => {
-console.log("handleChildComponentData", data)
+    if(data?.name == "aadhar")
+    {
+      console.log("handleChildComponentData", data)
+
+    }
     // setOtpVisible(true)
     if (data?.name === "name") {
       setUserName(data?.value)
@@ -436,16 +445,24 @@ console.log("handleChildComponentData", data)
     if(data?.name=== "aadhar")
     {
      
-     if(data?.value.length<12)
-     {
-      if(data?.value.length===0)
+        console.log("aadhar input returned", data?.value?.length)
+      
+        
+       
+      if(data?.value?.length==0 || data?.value==undefined)
      {
       setHideButton(false)
      }
-     else{
+     else if(data?.value.length<12)
+     {
       setHideButton(true)
      }
-     }
+    
+     
+     
+     
+      
+     
       
       
     }
@@ -515,7 +532,7 @@ console.log("handleChildComponentData", data)
       setOtp(value);
 
 
-      const params = { mobile: userMobile, name: userName, otp: value, user_type_id: userTypeId, user_type: userType, }
+      const params = { mobile: userMobile, name: userName, otp: value, user_type_id: userTypeId, user_type: userType,type:'login' }
 
 
       verifyOtpFunc(params);
@@ -532,6 +549,7 @@ console.log("handleChildComponentData", data)
   }
 
   const addharVerified = (bool)=>{
+    console.log("aadhar text input status", bool)
     if(!bool)
     {
       setAadhaarVerified(false)
@@ -625,7 +643,7 @@ console.log("handleChildComponentData", data)
           message={message}
           openModal={success}
           navigateTo={navigatingFrom === "PasswordLogin" ? "PasswordLogin" : "OtpLogin"}
-          params={{ needsApproval: needsApproval, userType: userType, userId: userTypeId }}></MessageModal>
+          params={{ needsApproval: needsApproval, userType: userType, userId: userTypeId, registrationRequired:registrationRequired }}></MessageModal>
       )}
 
       {otpModal && (
@@ -658,7 +676,7 @@ console.log("handleChildComponentData", data)
             left: 10
           }}
           onPress={() => {
-            navigation.goBack();
+            navigation.navigate('OtpLogin',navigationParams);
           }}>
           <Image
             style={{

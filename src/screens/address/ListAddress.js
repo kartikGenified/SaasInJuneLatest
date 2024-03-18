@@ -92,6 +92,7 @@ const ListAddress = ({ navigation }) => {
   }, [getAllAddressData, getAllAddressError]);
 
   const deleteAddress = (data) => {
+    // console.log("address json", data)
     const getToken = async () => {
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
@@ -100,6 +101,7 @@ const ListAddress = ({ navigation }) => {
         );
         const token = credentials.username;
         const params = { token: token, data: data };
+        console.log("address json",params)
         deleteAddressFunc(params);
       }
     };
@@ -282,6 +284,7 @@ const ListAddress = ({ navigation }) => {
       state,
       country,
       pincode,
+      id: props.data.id
     };
   
     const toggleSelection = () => {
@@ -291,9 +294,10 @@ const ListAddress = ({ navigation }) => {
     };
   
     const deleteAddress = () => {
-      props.deleteAddress(addressJson);
+      props.deleteAddress(props?.data);
     };
   
+    console.log("Address data from address component",props.data);
     return (
       <View
         style={{
