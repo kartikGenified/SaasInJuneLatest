@@ -416,6 +416,10 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   const getMobile = (data) => {
     console.log("mobile number from mobile textinput", data)
     setMobile(data);
+    const reg = '^([0|+[0-9]{1,5})?([6-9][0-9]{9})$';
+    const mobReg = new RegExp(reg)
+    if(mobReg.test(data))
+      {
     if (data !== undefined) {
       if (data.length === 10) {
         const user_type = userData.user_type;
@@ -432,6 +436,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
 
         Keyboard.dismiss();
       }
+    }
     }
   };
 

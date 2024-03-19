@@ -497,12 +497,12 @@ const CashbackHistory = ({ navigation }) => {
         >
           {console.log("item of item", props)}
           <PoppinsTextMedium
-            style={{ color:   props.items.status === "0"? "red" : "green", fontWeight: "600", fontSize: 18 }}
+            style={{ color:   props.items.status === "0"? "red" : props.items.status === "2" ? "orange" : "green", fontWeight: "600", fontSize: 18 }}
             
             content={
              props.items.status === "0"
                 ? "Declined from the panel"
-                :    "Credited to cash balance"
+                :    props.items.status === "2" ? "Pending from the panel" : "Credited to cash balance"
 
              
             }

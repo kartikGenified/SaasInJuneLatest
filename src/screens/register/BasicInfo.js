@@ -472,7 +472,19 @@ console.log("navigation params from basic info",navigationParams)
 
 
     if (data?.name === "mobile") {
+      const reg = '^([0|+[0-9]{1,5})?([6-9][0-9]{9})$';
+      const mobReg = new RegExp(reg)
+      if (data?.value?.length === 10) {
+        if(mobReg.test(data?.value))
+      {
       setUserMobile(data?.value)
+      }
+      else{
+        setError(true)
+        setMessage("Please enter a valid mobile number")
+      }
+    }
+
     }
     // Update the responseArray state with the new data
     setResponseArray(prevArray => {

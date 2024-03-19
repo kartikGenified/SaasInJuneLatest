@@ -237,7 +237,20 @@ const ActivateWarranty = ({ navigation, route }) => {
       const existingIndex = prevArray.findIndex(
         item => item?.name === data?.name,
       );
-
+        if(data.name == "mobile")
+        {
+          const reg = '^([0|+[0-9]{1,5})?([6-9][0-9]{9})$';
+          const mobReg = new RegExp(reg)
+         
+            if(mobReg.test(data?.value))
+          {
+          
+          }
+          else{
+            setError(true)
+            setMessage("Kindly enter a valid mobile number")
+          }
+        }
       if (data?.name == "email") {
         if(data?.required==true)
         {
@@ -250,6 +263,7 @@ const ActivateWarranty = ({ navigation, route }) => {
         }
        
       }
+      
 
       if (existingIndex !== -1) {
         // If an entry for the field already exists, update the value
@@ -286,6 +300,7 @@ const ActivateWarranty = ({ navigation, route }) => {
           if (item.name === 'name' || item.name === 'Name') {
             setName(item.value);
           } else if (item.name === 'phone' || item.name === 'Phone' || item.name === "mobile" || item.name === "Mobile") {
+
             setPhone(item.value);
           } else if (item.name === 'invoice' || item.name === 'Invoice') {
             console.log('Inside file');

@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import FeedbackTextArea from '../../components/feedback/FeedbackTextArea';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
@@ -101,11 +101,10 @@ const Feedback = ({ navigation }) => {
     return (
         <View style={[styles.container, { backgroundColor: ternaryThemeColor }]}>
 
-
             {/* Navigator */}
             <View
                 style={{
-                    height: 50,
+                    height: '10%',
                     width: '100%',
                     backgroundColor: 'transparent',
                     alignItems: 'flex-start',
@@ -129,8 +128,9 @@ const Feedback = ({ navigation }) => {
             </View>
             {/* navigator */}
 
-
-            <View style={{ backgroundColor: '#ffffff', flex: 1, borderTopRightRadius: 30, borderTopLeftRadius: 30 }}>
+            <ScrollView contentContainerStyle={{height:'100%',width:'100$'}}>
+            <View  style={{ backgroundColor: '#ffffff', flex: 1, borderTopRightRadius: 30, borderTopLeftRadius: 30,height:'100%' }}>
+                
                 <View style={styles.marginTopTen}>
                     <Image
                         style={styles.feedbackImage}
@@ -160,27 +160,22 @@ const Feedback = ({ navigation }) => {
                     </View>
                 </View>
 
-                <KeyboardAvoidingView
-                    style={[styles.FeedbackStars]}
-                    behavior="position"
-                    enabled
-                >
+                
 
-                    <View>
+                    <View >
                         <FeedbackTextArea onFeedbackChange={handleFeedbackChange} placeholder="Write your feedback here" />
-                        <View style={{ marginHorizontal: '20%' }}>
-                            <ButtonWithPlane title="Submit" navigate="" parmas={{}} type={"feedback"} onModalPress={showSuccessModal}></ButtonWithPlane>
-                        </View>
+                        
                     </View>
 
-                </KeyboardAvoidingView>
+                <View style={{ marginHorizontal: '20%' }}>
+                            <ButtonWithPlane title="Submit" navigate="" parmas={{}} type={"feedback"} onModalPress={showSuccessModal}></ButtonWithPlane>
+                        </View>
             </View>
-
+            </ScrollView>
 
             <FeedbackModal isVisible={isSuccessModalVisible} user={userData.name} onClose={hideSuccessModal} />
 
             {error && <ErrorModal modalClose={()=>{setError(false)}} message={message} openModal={error}></ErrorModal>}
-
         </View>
     );
 };
@@ -211,13 +206,15 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     marginTopTen: {
-        marginTop: '10%',
+        marginTop: 20,
+        alignItems:'center',
+        justifyContent:'center'
     },
     feedbackImage: {
-        height: 206,
+        height: 160,
         width: '90%',
         resizeMode: 'contain',
-        alignSelf: 'center',
+       
     },
     feedbackText: {
         color: '#58585a',

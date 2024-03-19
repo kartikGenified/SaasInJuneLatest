@@ -164,7 +164,7 @@ const OtpLogin = ({ navigation, route }) => {
 
   const getMobile = data => {
     // console.log(data)
-    const reg = '^([0|+[0-9]{1,5})?([1-9][0-9]{9})$';
+    const reg = '^([0|+[0-9]{1,5})?([6-9][0-9]{9})$';
     const mobReg = new RegExp(reg)
     
       setMobile(data)

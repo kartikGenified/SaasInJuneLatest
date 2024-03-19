@@ -114,7 +114,15 @@ const RegisterUser = ({navigation,route}) => {
 
     const getMobile = data => {
         // console.log(data)
+        const reg = '^([0|+[0-9]{1,5})?([6-9][0-9]{9})$';
+        const mobReg = new RegExp(reg)
+        if(mobReg.test(data))
+        {
         setMobile(data)
+        }
+        else{
+          alert("Enter a valid mobile number")
+        }
       };
       const getName = data => {
         // console.log(data)

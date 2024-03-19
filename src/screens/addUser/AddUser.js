@@ -244,6 +244,21 @@ const AddUser = ({ navigation }) => {
       return item.name !== data.name;
     });
 
+    if(data?.name == "mobile")
+    {
+      const reg = '^([0|+[0-9]{1,5})?([6-9][0-9]{9})$';
+      const mobReg = new RegExp(reg)
+      if (data?.value?.length === 10) {
+        if(mobReg.test(data?.value))
+      {
+      
+      }
+      else{
+        setError(true)
+        setMessage("Kindly enter a valid mobile number")
+      }
+    }
+  }
     if (data?.name == "email") {
       if(data.required==true)
       {
