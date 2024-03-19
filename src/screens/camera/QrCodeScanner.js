@@ -27,7 +27,6 @@ import {useCheckGenuinityMutation} from '../../apiServices/workflow/genuinity/Ge
 import {useCheckWarrantyMutation} from '../../apiServices/workflow/warranty/ActivateWarrantyApi';
 import {useGetProductDataMutation} from '../../apiServices/product/productApi';
 import {setProductData,setProductMrp,setScanningType} from '../../../redux/slices/getProductSlice';
-import { useAddRegistrationBonusMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import { useAddBulkQrMutation } from '../../apiServices/bulkScan/BulkScanApi';
 import { slug } from '../../utils/Slug';
 import MessageModal from '../../components/modals/MessageModal';
@@ -36,6 +35,8 @@ import Close from 'react-native-vector-icons/Ionicons';
 import RNQRGenerator from 'rn-qr-generator';
 import { useCashPerPointMutation, useFetchUserPointsHistoryMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import FastImage from 'react-native-fast-image';
+import { setFirstScan,setRegistrationBonusFirstScan } from '../../../redux/slices/scanningSlice';
+
 
 const QrCodeScanner = ({navigation}) => {
   const [zoom, setZoom] = useState(0);
@@ -93,6 +94,7 @@ const QrCodeScanner = ({navigation}) => {
     isLoading:cashPerPointIsLoading,
     isError:cashPerPointIsError
   }] = useCashPerPointMutation()
+
   const [
     addQrFunc,
     {
@@ -137,17 +139,6 @@ const QrCodeScanner = ({navigation}) => {
     },
   ] = useGetProductDataMutation();
   
-  const [
-    addRegistrationBonusFunc,
-    {
-      data: addRegistrationBonusData,
-      isLoading: addRegistrationBonusIsLoading,
-      error: addRegistrationBonusError ,
-      isError: addRegistrationBonusIsError,
-    },
-  ] = useAddRegistrationBonusMutation();
-
- 
 
   const [addBulkQrFunc ,{
     data:addBulkQrData,
@@ -162,7 +153,7 @@ const QrCodeScanner = ({navigation}) => {
       console.log("addBulkQrData",addBulkQrData)
       if(addBulkQrData.success)
       {
-        isFirstScan && checkFirstScan()
+        // isFirstScan && checkFirstScan()
         isFirstScan && setTimeout(() => {
           handleWorkflowNavigation("Genuinity","Warranty")
         }, 3000);
@@ -188,6 +179,7 @@ const QrCodeScanner = ({navigation}) => {
 
         {
          setRegistrationBonus(Number(cashPerPointData?.body.registration_bonus))
+         dispatch(setRegistrationBonusFirstScan((Number(cashPerPointData?.body.registration_bonus))))
           
         }
     }
@@ -213,7 +205,7 @@ if(addQrData)
   // console.log("addQrData",addQrData)
   if(addQrData?.success)
   {
-    isFirstScan && checkFirstScan()
+    // isFirstScan && checkFirstScan()
     // isFirstScan && handleWorkflowNavigation("Genuinity","Warranty")
 
   }
@@ -291,21 +283,7 @@ if(addQrData)
 }
 
 
-  useEffect(() => {
-    if (addRegistrationBonusData) {
-      console.log("addRegistrationBonusData", addRegistrationBonusData)
-      if(addRegistrationBonusData?.success)
-      {
-        setSuccess(true)
-        setMessage(addRegistrationBonusData?.message)
-      }
-    }
-    else if (addRegistrationBonusError) {
-      setError(true)
-      setMessage("There was a problem in adding registration bonus")
-      console.log("addRegistrationBonusError", addRegistrationBonusError)
-    }
-  }, [addRegistrationBonusData, addRegistrationBonusError])
+  
 
  
   useEffect(() => {
@@ -338,7 +316,7 @@ if(addQrData)
         {
           if(fetchUserPointsHistoryData?.body?.data?.length===0)
           {
-            setIsFirstScan(true)
+            dispatch(setFirstScan(true))
           }
           else{
             setIsFirstScan(false)

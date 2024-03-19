@@ -29,7 +29,7 @@ import {
 import * as Keychain from "react-native-keychain";
 import PoppinsText from "../../components/electrons/customFonts/PoppinsText";
 import { slug } from "../../utils/Slug";
-import { useExtraPointEnteriesMutation } from "../../apiServices/pointSharing/pointSharingApi";
+import { useAddRegistrationBonusMutation, useExtraPointEnteriesMutation } from "../../apiServices/pointSharing/pointSharingApi";
 import { useAddBulkPointOnProductMutation } from "../../apiServices/bulkScan/BulkScanApi";
 import { setQrIdList } from "../../../redux/slices/qrCodeDataSlice";
 import  Celebrate  from "react-native-vector-icons/MaterialIcons";
@@ -38,6 +38,8 @@ import { useGetActiveMembershipMutation, useGetMembershipMutation, useGetOzoneAc
 import ErrorModal from "../../components/modals/ErrorModal";
 import FastImage from "react-native-fast-image";
 import { useGetMappingDetailsByAppUserIdMutation } from "../../apiServices/userMapping/userMappingApi";
+import { setFirstScan } from "../../../redux/slices/scanningSlice";
+import MessageModal from "../../components/modals/MessageModal";
 
 
 const CongratulateOnScan = ({ navigation, route }) => {
@@ -47,6 +49,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   const [totalPoints, setTotalPoints] = useState(0)
   const [error,setError] = useState(false)
   const [message, setMessage] = useState('')
+  const [success, setSuccess] = useState(false);
   const [calledOnce, setCalledOnce] = useState(false)
   const buttonThemeColor = useSelector(
     (state) => state.apptheme.ternaryThemeColor
@@ -61,7 +64,8 @@ const CongratulateOnScan = ({ navigation, route }) => {
   const productMrp = useSelector((state)=> state.productData.productMrp)
   const productData = useSelector((state) => state.productData.productData);
   const scanningType = useSelector((state) => state.productData.scanningType);
-
+  const firstScan = useSelector((state) => state.scanning.firstScan)
+  const registration_bonus = useSelector((state)=> state.scanning.registrationBonus)
   const pointSharingData = useSelector(
     (state) => state.pointSharing.pointSharing
   );
@@ -88,7 +92,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   // workflow for the given user
   const workflowProgram = route.params.workflowProgram;
   const rewardType = route.params.rewardType;
-  console.log("rewardType", rewardType, workflowProgram, productData,pointPercentage);
+  console.log("rewardType", rewardType, workflowProgram, productData,pointPercentage,firstScan,registration_bonus);
   console.log("qrIDLIST",qrIdList,qrData,scanningType)
   const platform = Platform.OS === "ios" ? "1" : "2";
 
@@ -107,6 +111,16 @@ const CongratulateOnScan = ({ navigation, route }) => {
     //   isLoading:getMappedParentDetailsIsLoading,
     //   isError:getMappedParentDetailsIsError
     // }] =useGetMappingDetailsByAppUserIdMutation()
+
+    const [
+      addRegistrationBonusFunc,
+      {
+        data: addRegistrationBonusData,
+        isLoading: addRegistrationBonusIsLoading,
+        error: addRegistrationBonusError ,
+        isError: addRegistrationBonusIsError,
+      },
+    ] = useAddRegistrationBonusMutation();
 
   const [
     getCouponOnCategoryFunc,
@@ -226,6 +240,24 @@ const CongratulateOnScan = ({ navigation, route }) => {
         console.log("getMembershipError", getMembershipError)
     }
 }, [getMembershipData, getMembershipError])
+
+
+useEffect(() => {
+  if (addRegistrationBonusData) {
+    console.log("addRegistrationBonusData", addRegistrationBonusData)
+    if(addRegistrationBonusData?.success)
+    {
+      setSuccess(true)
+      setMessage(addRegistrationBonusData?.message)
+      dispatch(setFirstScan(false))
+    }
+  }
+  else if (addRegistrationBonusError) {
+    setError(true)
+    setMessage("There was a problem in adding registration bonus")
+    console.log("addRegistrationBonusError", addRegistrationBonusError)
+  }
+}, [addRegistrationBonusData, addRegistrationBonusError])
 
   useEffect(() => {
     if (getActiveMembershipData) {
@@ -488,6 +520,46 @@ const getMembership = async () => {
        
         setTotalPoints(addBulkPointOnProductData.body.total_points)
         setShowBulkScanPoints(bulkPoints);
+        const checkFirstScan=async()=>{
+
+   
+          const credentials = await Keychain.getGenericPassword();
+        if (credentials) {
+          console.log(
+            'Credentials successfully loaded for user ' + credentials.username
+          );
+          console.log("First scan")
+          const token = credentials.username
+          const body = {
+            tenant_id:slug,
+            token: token,
+            data: {
+                    point_earned_through_type: "registration_bonus",
+                    points: registration_bonus,
+                    platform_id: Number(platform),
+                    pincode: location?.postcode===undefined ? "N/A" :location?.postcode,
+                    platform: 'mobile',
+                    state: location?.state===undefined ? "N/A" :location?.state,
+                    district: location?.district===undefined ? "N/A" : location?.district,
+                    city: location?.city===undefined ? "N/A" :location?.city,
+                    area: location?.district===undefined ? "N/A" :location?.district,
+                    known_name: location?.city===undefined ? "N/A" :location?.city,
+                    lat: location?.lat===undefined ? "N/A" :(String(location?.lat)).substring(0,10),
+                    log: location?.lon===undefined ? "N/A" :(String(location?.lon)).substring(0,10),
+                    method_id: "1",
+                    method: "registration bonus",
+            },
+            
+          }
+          console.log("Registration Bouns",body)
+            if(!userData?.is_scanned)
+            {
+             addRegistrationBonusFunc(body)
+            }
+          } 
+       
+      }
+     firstScan && checkFirstScan()
         setTimeout(() => {
           handleWorkflowNavigation();
         }, 5000);
@@ -757,6 +829,47 @@ const getMembership = async () => {
     if (userPointEntryData) {
       console.log("userPointEntryData", userPointEntryData);
       if (userPointEntryData.success) {
+        const checkFirstScan=async()=>{
+
+   
+          const credentials = await Keychain.getGenericPassword();
+        if (credentials) {
+          console.log(
+            'Credentials successfully loaded for user ' + credentials.username
+          );
+          console.log("First scan")
+          const token = credentials.username
+          const body = {
+            tenant_id:slug,
+            token: token,
+            data: {
+                    point_earned_through_type: "registration_bonus",
+                    points: registration_bonus,
+                    platform_id: Number(platform),
+                    pincode: location?.postcode===undefined ? "N/A" :location?.postcode,
+                    platform: 'mobile',
+                    state: location?.state===undefined ? "N/A" :location?.state,
+                    district: location?.district===undefined ? "N/A" : location?.district,
+                    city: location?.city===undefined ? "N/A" :location?.city,
+                    area: location?.district===undefined ? "N/A" :location?.district,
+                    known_name: location?.city===undefined ? "N/A" :location?.city,
+                    lat: location?.lat===undefined ? "N/A" :(String(location?.lat)).substring(0,10),
+                    log: location?.lon===undefined ? "N/A" :(String(location?.lon)).substring(0,10),
+                    method_id: "1",
+                    method: "registration bonus",
+            },
+            
+          }
+          console.log("Registration Bouns",body)
+            if(!userData?.is_scanned)
+            {
+             addRegistrationBonusFunc(body)
+            }
+          } 
+       
+      }
+     firstScan && checkFirstScan()
+
         setTimeout(() => {
           handleWorkflowNavigation();
         }, 3000);
@@ -846,6 +959,15 @@ const getMembership = async () => {
         backgroundColor: buttonThemeColor,
       }}
     >
+    {
+    success && (
+      <MessageModal
+              modalClose={modalClose}
+              title="Success"
+              message={message}
+              openModal={success}></MessageModal>
+    )
+  }
       <View
         style={{
           height: "8%",
