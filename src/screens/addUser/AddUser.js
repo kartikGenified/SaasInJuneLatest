@@ -38,6 +38,7 @@ const AddUser = ({ navigation }) => {
   const [keyboardShow, setKeyboardShow] = useState(false)
   const [removedUser, setRemovedUser] = useState()
   const [emailValid, setIsValidEmail] = useState(true);
+  const [disableButton, setDisableButton] = useState(false)
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -251,9 +252,10 @@ const AddUser = ({ navigation }) => {
       if (data?.value?.length === 10) {
         if(mobReg.test(data?.value))
       {
-      
+        setDisableButton(false)
       }
       else{
+        setDisableButton(true)
         setError(true)
         setMessage("Kindly enter a valid mobile number")
       }
@@ -662,7 +664,7 @@ const AddUser = ({ navigation }) => {
             ></DropDownRegistration>
           }
 
-          {usersList.length != 0 && <TouchableOpacity onPress={() => {
+          {usersList.length != 0 && !disableButton &&  <TouchableOpacity onPress={() => {
             handleSubmission()
           }} style={{ height: 40, width: 120, borderRadius: 4, backgroundColor: ternaryThemeColor, alignItems: "center", justifyContent: "center", marginBottom: 30 }}>
 

@@ -205,12 +205,12 @@ const WarrantyHistory = ({ navigation }) => {
     }
 
     const WarrantyList = (props) => {
-        const warrantyTillDate = props.date
+        const warrantyTillDate = props.date == (null || undefined) ? "Date can't be fetched" : props.date
         const productName = props.productName
         const warrantyStatus = props.warrantyStatus
         const item = props.data
         console.log("WarrantyList",item)
-        const image = item?.product_images[0]
+        const image = item?.product_images!=(null||undefined) ? item?.product_images[0] : undefined
         return (
             <View style={{ width: "90%", height: 150, borderRadius: 20, backgroundColor: '#F2F2F2', elevation: 6, margin: 20 }}>
                 <ImageBackground resizeMode='contain' style={{ position: "absolute", height: 100, width: 100, right: 10, top: -20, alignItems: "center", justifyContent: "center" }} source={require('../../../assets/images/blueEnvelope.png')}>
