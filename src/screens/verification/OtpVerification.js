@@ -92,6 +92,8 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   const type = route.params.type
   const selectedAccount = route.params?.selectedAccount
   const brand_product_code = route.params?.brand_product_code
+
+  
   const handleCashbackRedemption=async()=>{
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {

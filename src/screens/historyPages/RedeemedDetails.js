@@ -281,7 +281,7 @@ const RedeemedDetails = ({ navigation, route }) => {
                 ></PoppinsTextMedium>
               </View>
             )}
-            <PoppinsTextMedium
+            {/* <PoppinsTextMedium
               style={{
                 fontSize: 16,
                 fontWeight: "500",
@@ -289,7 +289,7 @@ const RedeemedDetails = ({ navigation, route }) => {
                 marginTop: 10,
               }}
               content={`Expected Delivery Date : ${expectedDeliveryDate}`}
-            ></PoppinsTextMedium>
+            ></PoppinsTextMedium> */}
             <View
               style={{
                 height: 50,

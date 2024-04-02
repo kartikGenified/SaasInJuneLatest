@@ -94,6 +94,7 @@ export default function GiftCatalogue({ navigation }) {
     const name = props.name;
     const worth = props.worth;
     const coin = props.coin;
+    console.log("schemeComponenimages",image)
     return (
       <View
         style={{
