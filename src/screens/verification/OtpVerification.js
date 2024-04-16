@@ -17,7 +17,7 @@ import OtpInput from "../../components/organisms/OtpInput";
 import { useVerifyOtpForNormalUseMutation } from "../../apiServices/otp/VerifyOtpForNormalUseApi";
 import * as Keychain from 'react-native-keychain';
 import { useRedeemGiftsMutation } from "../../apiServices/gifts/RedeemGifts";
-import { useRedeemCashbackMutation } from "../../apiServices/cashback/CashbackRedeemApi";
+import { useGetWalletBalanceMutation, useRedeemCashbackMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import { useGetLoginOtpForVerificationMutation } from "../../apiServices/otp/GetOtpApi";
 import { useAddCashToBankMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import Geolocation from '@react-native-community/geolocation';
@@ -35,10 +35,10 @@ const OtpVerification = ({navigation,route}) => {
   const [showRedeemButton,setShowRedeemButton] = useState(false)
   const [location,setLocation] = useState()
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
-
+  const walletBalance = useSelector(state=>state.pointWallet.walletBalance)
   const pointsConversion = useSelector(state=>state.redemptionData.pointConversion)
   const cashConversion = useSelector(state=>state.redemptionData.cashConversion)
-console.log("Point conversion and cash conversion data",pointsConversion,cashConversion)
+console.log("Point conversion and cash conversion data",pointsConversion,cashConversion,walletBalance)
   const [
     verifyOtpForNormalUseFunc,
     {
@@ -64,6 +64,8 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
       isError: redeemCashbackIsError,
     },
   ] = useRedeemCashbackMutation();
+
+  
 
   const [addCashToBankFunc,{
     data:addCashToBankData,
@@ -366,19 +368,28 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     
     }
     else if(type==="Cashback"){
-      const params = {
-        data :{ user_type_id: userData.user_type_id,
-         user_type: userData.user_type,
-         platform_id: 1,
-         platform: 'mobile',
-         points: Number(pointsConversion),
-         approved_by_id: 1,
-         app_user_id: userData.id,
-         remarks: 'demo'},
-         token:token
-       };
-       redeemCashbackFunc(params)
-       console.log("Cashbackparams",params)
+      if(walletBalance<cashConversion)
+      {
+        const params = {
+          data :{ 
+            user_type_id: userData.user_type_id,
+           user_type: userData.user_type,
+           platform_id: 1,
+           platform: 'mobile',
+           points: Number(pointsConversion),
+           approved_by_id: 1,
+           app_user_id: userData.id,
+           remarks: 'demo'
+          },
+           token:token
+         };
+         redeemCashbackFunc(params)
+         console.log("Cashbackparams",params)
+      }
+      else{
+        handleCashbackRedemption()
+      }
+      
     }
     else if(type==="Coupon"){
       

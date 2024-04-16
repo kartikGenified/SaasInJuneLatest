@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image, ImageBackground,PermissionsAndroid, Platform } from 'react-native';
+import { View, StyleSheet, Text, Image, ImageBackground,PermissionsAndroid, Platform,Alert,Linking,BackHandler } from 'react-native';
 import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
@@ -17,12 +17,16 @@ import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersA
 import Geolocation from '@react-native-community/geolocation';
 import InternetModal from '../../components/modals/InternetModal';
 import ErrorModal from '../../components/modals/ErrorModal';
+import { setLocation } from '../../../redux/slices/userLocationSlice';
+import {GoogleMapsKey} from "@env"
+
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
   const [connected, setConnected] = useState(true)
   const [isSlowInternet, setIsSlowInternet] = useState(false)
+  const [locationEnabled, setLocationEnabled] = useState(false)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -58,7 +62,145 @@ const Splash = ({ navigation }) => {
   useEffect(()=>{
     getUsers();
   },[])
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Exit App', 'Are you sure you want to exit?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        { text: 'Exit', onPress: () => BackHandler.exitApp() },
+      ]);
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+ 
+  useEffect(() => {
+
+    let lat = ''
+    let lon = ''
+
+    const openSettings = () => {
+      if (Platform.OS === 'android') {
+        Linking.openSettings();
+      } else {
+        Linking.openURL('app-settings:');
+      }
+    };
+    const enableLocation = () => {
+      Alert.alert(
+        'Enable Location Services',
+        'Location services are disabled. Do you want to enable them?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'OK', onPress: openSettings },
+        ],
+      );
+    };
+    try{
+      Geolocation.getCurrentPosition((res) => {
+        setLocationEnabled(true)
+        console.log("res", res)
+        lat = res.coords.latitude
+        lon = res.coords.longitude
+        // getLocation(JSON.stringify(lat),JSON.stringify(lon))
+        console.log("latlong", lat, lon)
+        var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
+            &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
+  
+        fetch(url).then(response => response.json()).then(json => {
+          // console.log("location address=>", JSON.stringify(json));
+          const formattedAddress = json?.results[0]?.formatted_address
+          const formattedAddressArray = formattedAddress?.split(',')
+  
+          let locationJson = {
+  
+            lat: json?.results[0]?.geometry?.location?.lat === undefined ? "N/A" : json?.results[0]?.geometry?.location?.lat,
+            lon: json?.results[0]?.geometry?.location?.lng === undefined ? "N/A" : json?.results[0]?.geometry?.location?.lng,
+            address: formattedAddress === undefined ? "N/A" : formattedAddress
+  
+          }
+  
+          const addressComponent = json?.results[0]?.address_components
+          // console.log("addressComponent", addressComponent)
+          for (let i = 0; i <= addressComponent.length; i++) {
+            if (i === addressComponent.length) {
+              dispatch(setLocation(locationJson))
+  
+            }
+            else {
+              if (addressComponent[i].types.includes("postal_code")) {
+                console.log("inside if")
+  
+                console.log(addressComponent[i]?.long_name)
+                locationJson["postcode"] = addressComponent[i]?.long_name
+              }
+              else if (addressComponent[i]?.types.includes("country")) {
+                console.log(addressComponent[i]?.long_name)
+  
+                locationJson["country"] = addressComponent[i]?.long_name
+              }
+              else if (addressComponent[i]?.types.includes("administrative_area_level_1")) {
+                console.log(addressComponent[i]?.long_name)
+  
+                locationJson["state"] = addressComponent[i]?.long_name
+              }
+              else if (addressComponent[i]?.types.includes("administrative_area_level_3")) {
+                console.log(addressComponent[i]?.long_name)
+  
+                locationJson["district"] = addressComponent[i]?.long_name
+              }
+              else if (addressComponent[i]?.types.includes("locality")) {
+                console.log(addressComponent[i]?.long_name)
+  
+                locationJson["city"] = addressComponent[i]?.long_name
+              }
+            }
+  
+          }
+  
+  
+          console.log("formattedAddressArray", locationJson)
+  
+        })
+      },(error) => {
+        setLocationEnabled(false)
+        console.log("error", error)
+        if (error.code === 1) {
+          // Permission Denied
+          Geolocation.requestAuthorization()
+
+        } else if (error.code === 2) {
+          // Position Unavailable
+          enableLocation()
+
+        } else {
+          // Other errors
+          Alert.alert(
+            "Error",
+            "An error occurred while fetching your location.",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+          );
+        }
+      })
+  
+    }
+    catch(e){
+      console.log("error in fetching location",e)
+    }
+   
+  }, [navigation])
   useEffect(()=>{
     getUsers();
     getAppTheme("ozone")
@@ -98,6 +240,7 @@ const Splash = ({ navigation }) => {
         }
         
       } catch (err) {
+        console.log("err",err)
         return false;
       }
     };
@@ -161,8 +304,8 @@ const Splash = ({ navigation }) => {
           dispatch(setUserData(parsedJsonValue))
           dispatch(setId(parsedJsonValue.id))
           
-          navigation.navigate('Dashboard');
-          navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+         locationEnabled &&  navigation.navigate('Dashboard');
+         locationEnabled && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
 
          
         }
@@ -177,11 +320,11 @@ const Splash = ({ navigation }) => {
         {
           if(value==="Yes")
           {
-            navigation.navigate('SelectUser');
+            locationEnabled && navigation.navigate('SelectUser');
 
           }
           else{
-            navigation.navigate('Introduction')
+            locationEnabled && navigation.navigate('Introduction')
           }
           // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
     

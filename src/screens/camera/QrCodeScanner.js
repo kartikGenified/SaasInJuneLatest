@@ -36,6 +36,8 @@ import RNQRGenerator from 'rn-qr-generator';
 import { useCashPerPointMutation, useFetchUserPointsHistoryMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import FastImage from 'react-native-fast-image';
 import { setFirstScan,setRegistrationBonusFirstScan } from '../../../redux/slices/scanningSlice';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation';
 
 
 const QrCodeScanner = ({navigation}) => {
@@ -55,6 +57,8 @@ const QrCodeScanner = ({navigation}) => {
   const [isFirstScan, setIsFirstScan] = useState(false) 
   const [isReportable, setIsReportable] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [locationPermission, setLocationPermission] = useState(null);
+  const [locationGranted, setLocationGranted] = useState(null)
   const [showProceed, setShowProceed] = useState(false)
   const userId = useSelector(state => state.appusersdata.userId);
   const userData = useSelector(state=>state.appusersdata.userData)
@@ -197,6 +201,52 @@ const QrCodeScanner = ({navigation}) => {
   const toDate = undefined
   var fromDate = undefined
 
+  useEffect(() => {
+    // handleLocationAccess();
+   if(Object.keys(location).length==0)
+   {
+    setLocationGranted(false)
+   }
+   else{
+    setLocationGranted(true)
+   }
+  }, [location]);
+
+  // const handleLocationAccess =()=>{
+  //   const checkLocationStatus = async () => {
+  //     try {
+  //       const enabled = await Geolocation.checkDeviceSettings();
+  //       setLocationEnabled(enabled);
+  //     } catch (error) {
+  //       console.error('Error checking location status:', error);
+  //     }
+  //   };
+  
+  //   const handleLocationStatusCheck = () => {
+  //     if (locationEnabled) {
+  //       Alert.alert('Location services are enabled');
+  //     } else {
+  //       Alert.alert('Location services are disabled');
+  //     }
+  //   };
+  
+  //   const checkLocationPermission = async () => {
+  //     try {
+  //       const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+  //       setLocationPermission(result);
+  //       console.log("locations result",result)
+        
+  //     } catch (error) {
+  //       setLocationGranted(false)
+  //       console.error('Error checking location permission:', error);
+  //     }
+  //   };
+
+  //   checkLocationStatus()
+
+  // }
+
+ 
  
 
   useEffect(() => {
@@ -978,7 +1028,18 @@ const onSuccess = async (e) => {
     )
   }
   return (
-    <QRCodeScanner
+    <>
+    {locationGranted == null ? <View style={{alignItems:'center',justifyContent:'center'}}>
+    <FastImage
+          style={{ width: 100, height: 100, position:'absolute', marginTop: '70%' }}
+          source={{
+            uri: gifUri, // Update the path to your GIF
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        /> 
+    </View>: locationGranted == true ?
+      <QRCodeScanner
       onRead={onSuccess}
       reactivate={true}
       vibrate={true}
@@ -1232,6 +1293,15 @@ const onSuccess = async (e) => {
         </View>
       }
     />
+    :
+    <View style={{height:'100%',width:'100%',alignItems:"center",justifyContent:'center'}}>
+      <PoppinsTextMedium style={{fontSize:20,color:ternaryThemeColor,fontWeight:'bold',marginBottom:20}} content="We are unable to fetch your location"></PoppinsTextMedium>
+
+      <PoppinsTextMedium style={{fontSize:20,color:ternaryThemeColor,fontWeight:'600'}} content="Enable Location to start scanning"></PoppinsTextMedium>
+      </View>
+  }
+    </>
+    
   );
 };
 

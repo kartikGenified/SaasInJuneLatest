@@ -244,38 +244,39 @@ const RedeemedHistory = ({ navigation }) => {
 
     const handleRedeemButtonPress = () => {
       
-      if (Number(userPointData.body.point_balance) <= 0 ) {
-        setError(true)
-        setMessage("Sorry you don't have enough points.")
-      }
+      setModalVisible(true)
+      // if (Number(userPointData.body.point_balance) <= 0 ) {
+      //   setError(true)
+      //   setMessage("Sorry you don't have enough points.")
+      // }
     
-      else if(Number(minRedemptionPoints)>Number(pointBalance))
-      {
-        console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
-        setError(true)
-        setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
-      }
-      else {
+      // else if(Number(minRedemptionPoints)>Number(pointBalance))
+      // {
+      //   console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
+      //   setError(true)
+      //   setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
+      // }
+      // else {
         
-        if((Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) ) &&  ( Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime())) )
-        {
+      //   if((Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) ) &&  ( Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime())) )
+      //   {
           
-          console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
-        if(!showKyc)
-        {
-          setModalVisible(true)
-        }
-        else{
-          setError(true)
-          setMessage("Kyc not completed yet")
-          setNavigateTo("Verification")
-        }
-        }
-        else{
-          setError(true)
-        setMessage("Redemption window starts from "+ moment(redemptionStartData).format("DD-MMM-YYYY") + " and ends on " +  moment(redemptionEndDate).format("DD-MMM-YYYY"))
-        }
-      }
+      //     console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
+      //   if(!showKyc)
+      //   {
+      //     setModalVisible(true)
+      //   }
+      //   else{
+      //     setError(true)
+      //     setMessage("Kyc not completed yet")
+      //     setNavigateTo("Verification")
+      //   }
+      //   }
+      //   else{
+      //     setError(true)
+      //   setMessage("Redemption window starts from "+ moment(redemptionStartData).format("DD-MMM-YYYY") + " and ends on " +  moment(redemptionEndDate).format("DD-MMM-YYYY"))
+      //   }
+      // }
 
     }
     return (

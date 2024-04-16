@@ -574,6 +574,8 @@ console.log("navigation params from basic info",navigationParams)
 
   const handleRegistrationFormSubmission = () => {
     const inputFormData = {}
+    let isFormValid = true; 
+let missingParam = ""
     inputFormData["user_type"] = userType;
     inputFormData["user_type_id"] = userTypeId;
     inputFormData["is_approved_needed"] = isManuallyApproved;
@@ -585,6 +587,16 @@ console.log("navigation params from basic info",navigationParams)
     for (var i = 0; i < responseArray.length; i++) {
 
       inputFormData[responseArray[i].name] = responseArray[i].value
+
+      if (responseArray[i].required && !responseArray[i].value) {
+        isFormValid = false;
+        // Optionally, you can show an error popup here
+        // setError(true);
+        // setMessage(`${responseArray[i].label} is required`);
+        missingParam = responseArray[i].label
+    }
+    console.log("missing params", missingParam)
+    
     }
     const body = inputFormData
 
@@ -595,8 +607,16 @@ console.log("navigation params from basic info",navigationParams)
       if (keys.includes('email')) {
         const index = keys.indexOf('email')
         if (isValidEmail(values[index])) {
+          if(isFormValid){
+          
           registerUserFunc(body)
           setHideButton(true)
+          }
+          else{
+                
+            setError(true)
+            setMessage(`${missingParam} is Required`)
+          }
         }
         else {
           setError(true)
@@ -604,7 +624,14 @@ console.log("navigation params from basic info",navigationParams)
         }
       }
       else {
+        if(isFormValid){
         registerUserFunc(body)
+        }
+        else{
+                
+          setError(true)
+          setMessage(`${missingParam} is Required`)
+        }
       }
 
       // make request according to the login type of user-----------------------
