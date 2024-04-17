@@ -19,6 +19,9 @@ import InternetModal from '../../components/modals/InternetModal';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { setLocation } from '../../../redux/slices/userLocationSlice';
 import {GoogleMapsKey} from "@env"
+import { useCheckVersionSupportMutation } from '../../apiServices/minVersion/minVersionApi';
+import VideoGallery from '../video/VideoGallery';
+import VersionCheck from 'react-native-version-check';
 
 
 const Splash = ({ navigation }) => {
@@ -57,10 +60,22 @@ const Splash = ({ navigation }) => {
     },
   ] = useGetAppUsersDataMutation();
   
-  // }
+  const [
+    getMinVersionSupportFunc,
+    {
+      data : getMinVersionSupportData,
+      error:getMinVersionSupportError,
+      isLoading:getMinVersionSupportIsLoading,
+      isError:getMinVersionSupportIsError
+    }
+  ] = useCheckVersionSupportMutation()
+  
 
   useEffect(()=>{
     getUsers();
+    const currentVersion = VersionCheck.getCurrentVersion();
+    console.log("currentVersion",currentVersion)
+    getMinVersionSupportFunc(currentVersion)
   },[])
   useEffect(() => {
     const backAction = () => {
@@ -83,6 +98,30 @@ const Splash = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
  
+//   function showLocation(position) {
+//     var latitude = position.coords.latitude;
+//     var longitude = position.coords.longitude;
+//     alert("Latitude : " + latitude + " Longitude: " + longitude);
+//  }
+
+//  function errorHandler(err) {
+//   if(err.code == 1) {
+//      alert("Error: Access is denied!");
+//   } else if( err.code == 2) {
+//      alert("Error: Position is unavailable!");
+//   }
+// }
+// var options = {timeout:1000};
+
+//   useEffect(()=>{
+//    const intervalID =  setInterval(() => {
+//     var watchID = Geolocation.watchPosition(showLocation, errorHandler, options);
+//     console.log("watchID",watchID)
+//    }, 10000);
+//   //  return () => clearInterval(intervalID)
+
+//   },[])
+
   useEffect(() => {
 
     let lat = ''
@@ -105,6 +144,7 @@ const Splash = ({ navigation }) => {
         ],
       );
     };
+   const intervalId= setInterval(() => {
     try{
       Geolocation.getCurrentPosition((res) => {
         setLocationEnabled(true)
@@ -199,8 +239,13 @@ const Splash = ({ navigation }) => {
     catch(e){
       console.log("error in fetching location",e)
     }
+   }, 5000);
+      
+    
+   return ()=> clearInterval(intervalId)
    
   }, [navigation])
+
   useEffect(()=>{
     getUsers();
     getAppTheme("ozone")
@@ -247,6 +292,18 @@ const Splash = ({ navigation }) => {
     requestLocationPermission()
     dispatch({ type: 'NETWORK_REQUEST' });
   },[])
+
+
+  useEffect(()=>{
+    if(getMinVersionSupportData)
+    {
+      console.log("getMinVersionSupportData",getMinVersionSupportData)
+    }
+    else if(getMinVersionSupportError)
+    {
+      console.log("getMinVersionSupportError",getMinVersionSupportError)
+    }
+  },[getMinVersionSupportData,getMinVersionSupportError])
 
   useEffect(()=>{
     if(isConnected)
@@ -393,7 +450,7 @@ const Splash = ({ navigation }) => {
       console.log("getAppThemeError", getAppThemeError)
     }
    
-  }, [getAppThemeData,getAppThemeError])
+  }, [getAppThemeData,getAppThemeError,locationEnabled])
 
   const modalClose = () => {
     setError(false);

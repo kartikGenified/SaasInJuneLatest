@@ -15,7 +15,7 @@ import {
 import MessageModal from '../../components/modals/MessageModal';
 import { useSelector } from 'react-redux';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
-import { useListAccountsMutation } from '../../apiServices/bankAccount.js/ListBankAccount';
+import { useListAccountsMutation } from '../../apiServices/bankAccount/ListBankAccount';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Dots from 'react-native-vector-icons/Entypo';
 import Edit from 'react-native-vector-icons/Entypo';
@@ -24,7 +24,7 @@ import Info from 'react-native-vector-icons/Feather';
 import Delete from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Keychain from 'react-native-keychain';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
-import { useDeleteBankMutation } from '../../apiServices/bankAccount.js/DeleteBankAccount';
+import { useDeleteBankMutation } from '../../apiServices/bankAccount/DeleteBankAccount';
 import { useIsFocused } from '@react-navigation/native';
 
 
