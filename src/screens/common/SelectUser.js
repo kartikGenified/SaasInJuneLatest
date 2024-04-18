@@ -11,7 +11,6 @@ import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId} from 
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ErrorModal from '../../components/modals/ErrorModal';
-import { translate } from '@vitalets/google-translate-api';
 
 
 const SelectUser = ({navigation}) => {
@@ -28,14 +27,7 @@ const SelectUser = ({navigation}) => {
   ] = useGetAppUsersDataMutation();
   const dispatch = useDispatch()
   
-  // const transfunc =async()=>{
-  //   const { text } = await translate('my name is khan', { to: 'hi' });
-  //   console.log("Translated text",text) // => 'Hello World! How are you?'
-  //   }
-  //   useEffect(()=>{
-  //   transfunc()
-
-  //   },[])
+  
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
