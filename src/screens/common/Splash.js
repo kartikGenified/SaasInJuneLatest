@@ -31,7 +31,8 @@ const Splash = ({ navigation }) => {
   const [isSlowInternet, setIsSlowInternet] = useState(false)
   const [locationEnabled, setLocationEnabled] = useState(false)
   const [message, setMessage] = useState();
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false); 
+  const [minVersionSupport, setMinVersionSupport] = useState(false)
   const [error, setError] = useState(false);
   const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   const [gotLoginData, setGotLoginData] = useState()
@@ -171,10 +172,10 @@ const Splash = ({ navigation }) => {
   
           const addressComponent = json?.results[0]?.address_components
           // console.log("addressComponent", addressComponent)
-          for (let i = 0; i <= addressComponent.length; i++) {
-            if (i === addressComponent.length) {
+          for (let i = 0; i <= addressComponent?.length; i++) {
+            if (i === addressComponent?.length) {
               dispatch(setLocation(locationJson))
-  
+              clearInterval(intervalId)
             }
             else {
               if (addressComponent[i].types.includes("postal_code")) {
@@ -244,7 +245,7 @@ const Splash = ({ navigation }) => {
     
    return ()=> clearInterval(intervalId)
    
-  }, [])
+  }, [navigation])
 
   useEffect(()=>{
     getUsers();
@@ -298,6 +299,15 @@ const Splash = ({ navigation }) => {
     if(getMinVersionSupportData)
     {
       console.log("getMinVersionSupportData",getMinVersionSupportData)
+      if(getMinVersionSupportData.success)
+      {
+      setMinVersionSupport(getMinVersionSupportData?.body?.data)
+      if(!getMinVersionSupportData?.body?.data)
+      {
+        alert("Kindly update the app to the latest version")
+      }
+
+      }
     }
     else if(getMinVersionSupportError)
     {
@@ -361,8 +371,8 @@ const Splash = ({ navigation }) => {
           dispatch(setUserData(parsedJsonValue))
           dispatch(setId(parsedJsonValue.id))
           
-         locationEnabled &&  navigation.navigate('Dashboard');
-         locationEnabled && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+         locationEnabled && minVersionSupport &&  navigation.navigate('Dashboard');
+         locationEnabled && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
 
          
         }
@@ -377,11 +387,11 @@ const Splash = ({ navigation }) => {
         {
           if(value==="Yes")
           {
-            locationEnabled && navigation.navigate('SelectUser');
+            locationEnabled && minVersionSupport && navigation.navigate('SelectUser');
 
           }
           else{
-            locationEnabled && navigation.navigate('Introduction')
+            locationEnabled && minVersionSupport && navigation.navigate('Introduction')
           }
           // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
     
