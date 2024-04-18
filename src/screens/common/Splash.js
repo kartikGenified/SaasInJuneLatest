@@ -377,7 +377,7 @@ const Splash = ({ navigation }) => {
         {
           if(value==="Yes")
           {
-            locationEnabled && navigation.navigate('SelectUser');
+            locationEnabled &&   navigation.navigate('SelectLanguage');
 
           }
           else{
