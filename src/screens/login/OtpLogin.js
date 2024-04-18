@@ -28,6 +28,7 @@ import Checkbox from '../../components/atoms/checkbox/Checkbox';
 import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalApi';
 import * as Keychain from 'react-native-keychain';
 import FastImage from 'react-native-fast-image';
+import { useTranslation } from 'react-i18next';
 
 const OtpLogin = ({ navigation, route }) => {
   const [mobile, setMobile] = useState("")
@@ -37,6 +38,8 @@ const OtpLogin = ({ navigation, route }) => {
   const [error, setError] = useState(false)
   const [isChecked, setIsChecked] = useState(false);
   const [hideButton, setHideButton] = useState(false)
+
+  const {t} = useTranslation()
   // fetching theme for the screen-----------------------
 
   const primaryThemeColor = useSelector(
@@ -330,7 +333,7 @@ const OtpLogin = ({ navigation, route }) => {
           }}>
           <PoppinsText
             style={{ color: 'white', fontSize: 28 }}
-            content="Tell us your mobile number"></PoppinsText>
+            content={t("tell us number")}></PoppinsText>
 
         </View>
       </View>
@@ -348,7 +351,7 @@ const OtpLogin = ({ navigation, route }) => {
               marginTop: 40,
             }}>
             <TextInputRectangularWithPlaceholder
-              placeHolder="Mobile No"
+              placeHolder={t("mobile no")}
               handleData={getMobile}
               maxLength={10}
               value = {mobile}
@@ -356,7 +359,7 @@ const OtpLogin = ({ navigation, route }) => {
             ></TextInputRectangularWithPlaceholder>
 
             <TextInputRectangularWithPlaceholder
-              placeHolder="Name"
+              placeHolder={t("name")}
               handleData={getName}
               value={name}
               specialCharValidation={true}
@@ -376,7 +379,7 @@ const OtpLogin = ({ navigation, route }) => {
             <TouchableOpacity onPress={() => {
               navigation.navigate('PdfComponent', { pdf: getTermsData?.body?.data?.[0]?.files[0] })
             }}>
-              <PoppinsTextLeftMedium content={"I agree to the Terms & Conditions"} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium content={t("terms and condition")} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
             </TouchableOpacity>
           </View>
 
@@ -388,7 +391,7 @@ const OtpLogin = ({ navigation, route }) => {
             backgroundColor={buttonThemeColor}
             style={{ color: 'white', fontSize: 16 }}
             isLoading={sendOtpIsLoading}
-            content="Login"
+            content={t("login")}
             navigateTo="VerifyOtp"
             navigationParams={navigationParams}
             mobileLength={mobile}

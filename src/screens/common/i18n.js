@@ -4,8 +4,7 @@ import { initReactI18next } from 'react-i18next';
 import enTranslation from '../../../assets/locales/en.json';
 import arTranslation from '../../../assets/locales/hi.json';
 
-i18n
-  .use(initReactI18next)
+i18n.use(initReactI18next)
   .init({
     resources: {
       en: {
@@ -15,7 +14,7 @@ i18n
         translation: arTranslation,
       },
     },
-    lng: 'ar', // Default language
+    lng: 'en', // Default language
     fallbackLng: 'ar', // Fallback language
     interpolation: {
       escapeValue: false,
