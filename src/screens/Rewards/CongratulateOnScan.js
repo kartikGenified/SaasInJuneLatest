@@ -160,6 +160,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
       isError: userPointEntryIsError,
     },
   ] = useUserPointsEntryMutation();
+  
   const [
     extraPointEntryFunc,
     {

@@ -291,10 +291,10 @@ export default function GiftCatalogue({ navigation }) {
               
             }}
           >
-            <FilterComp
+           {giftCatalogueData && <FilterComp
                     handlePress={handlePressAll}
                     title="All"
-                  ></FilterComp>
+                  ></FilterComp>}
             {categories &&
               categories.map((item, index) => {
                 return (

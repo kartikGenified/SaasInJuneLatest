@@ -5,6 +5,7 @@ import { SvgUri } from 'react-native-svg';
 import { useIsFocused } from '@react-navigation/native';
 import Dashboard from '../../screens/dashboard/Dashboard';
 
+
 const SelectUserBox = (props) => {
     const [boxColor, setBoxColor] = useState('white')
     const focused = useIsFocused()
@@ -26,7 +27,7 @@ const SelectUserBox = (props) => {
     },[focused])
    
         
-          
+    
           
    
     const checkRegistrationRequired=()=>{

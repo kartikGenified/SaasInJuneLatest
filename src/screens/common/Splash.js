@@ -37,8 +37,7 @@ const Splash = ({ navigation }) => {
   const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
   
-
-
+  
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
   // generating functions and constants for API use cases---------------------
   const [
@@ -77,6 +76,7 @@ const Splash = ({ navigation }) => {
     console.log("currentVersion",currentVersion)
     getMinVersionSupportFunc(currentVersion)
   },[])
+
   useEffect(() => {
     const backAction = () => {
       Alert.alert('Exit App', 'Are you sure you want to exit?', [
@@ -244,7 +244,7 @@ const Splash = ({ navigation }) => {
     
    return ()=> clearInterval(intervalId)
    
-  }, [navigation])
+  }, [])
 
   useEffect(()=>{
     getUsers();

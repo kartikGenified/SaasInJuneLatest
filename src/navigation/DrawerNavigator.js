@@ -23,6 +23,8 @@ import PoppinsTextLeftMedium from '../components/electrons/customFonts/PoppinsTe
 import { useFetchLegalsMutation } from '../apiServices/fetchLegal/FetchLegalApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ErrorModal from '../components/modals/ErrorModal';
+import VersionCheck from 'react-native-version-check';
+
 
 const Drawer = createDrawerNavigator();
 const CustomDrawer = () => {
@@ -37,7 +39,7 @@ const CustomDrawer = () => {
   const [error, setError] = useState(false);
 
 
-
+  const currentVersion = VersionCheck.getCurrentVersion();
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -546,6 +548,7 @@ const CustomDrawer = () => {
             </View>
           }
         </View>
+        <PoppinsTextMedium content={`Version : ${currentVersion}`} style={{position:'absolute',bottom:4,right:10,color:'white',fontSize:12}}></PoppinsTextMedium>
       </View>
       <ScrollView contentContainerStyle={{}} style={{ width: '100%',height:'100%'}} >
 
@@ -864,15 +867,16 @@ const CustomDrawer = () => {
         </View>
         {/* Knowledge Hub*/}
 
-        <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, height: 50, justifyContent: 'center', width: '100%' }} onPress={() => {
+        <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, height: 70, justifyContent: 'center', width: '100%',alignItems:'center' }} onPress={() => {
          
           handleLogout()
           
           
         }}>
-          <PoppinsTextLeftMedium style={{ color: 'white', marginLeft: 90 }} content="LOG OUT -->"></PoppinsTextLeftMedium>
-        </TouchableOpacity>
+          <PoppinsTextLeftMedium style={{ color: 'white' }} content="LOG OUT -->"></PoppinsTextLeftMedium>
+        <PoppinsTextLeftMedium style={{color:'white',fontSize:10,position:'absolute',bottom:2}} content ="Designed and developed by Genefied"></PoppinsTextLeftMedium>
 
+        </TouchableOpacity>
       </ScrollView>
 
 
