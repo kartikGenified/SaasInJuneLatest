@@ -23,6 +23,7 @@ import Wallet from 'react-native-vector-icons/Entypo'
 const CashbackHistory = ({ navigation }) => {
   const [showNoDataFound, setShowNoDataFound] = useState(false);
   const [totalCashbackEarned, setTotalCashbackEarned] = useState(0)
+  const [displayData, setDisplayData] = useState(false)
   const focused = useIsFocused()
 
   const userId = useSelector((state) => state.appusersdata.userId);
@@ -64,6 +65,23 @@ const CashbackHistory = ({ navigation }) => {
 
 
 
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const credentials = await Keychain.getGenericPassword();
+  //     if (credentials) {
+  //       console.log(
+  //         "Credentials successfully loaded for user " + credentials.username
+  //       );
+  //       const token = credentials.username;
+  //       // const params = { token: token, appUserId: userData.id };
+  //       const params = { token: token, appUserId: userData.id };
+  //       getCashTransactionsFunc(cashparams);
+  //       fetchCashbackEnteriesFunc(params)
+  //     }
+  //   };
+  //   getData();
+  // }, []);
+
   useEffect(() => {
     const getData = async () => {
       const credentials = await Keychain.getGenericPassword();
@@ -73,34 +91,26 @@ const CashbackHistory = ({ navigation }) => {
         );
         const token = credentials.username;
         // const params = { token: token, appUserId: userData.id };
+        const cashparams = {token:token, userId:userData.id}
+
         const params = { token: token, appUserId: userData.id };
 
-        // getCashTransactionsFunc(params);
-        fetchCashbackEnteriesFunc(params)
-      }
-    };
-    getData();
-  }, []);
-
-  useEffect(() => {
-    const getData = async () => {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log(
-          "Credentials successfully loaded for user " + credentials.username
-        );
-        const token = credentials.username;
-        // const params = { token: token, appUserId: userData.id };
-        const params = { token: token, appUserId: userData.id };
-
-        // getCashTransactionsFunc(params);
+        getCashTransactionsFunc(cashparams);
         fetchCashbackEnteriesFunc(params)
       }
     };
     getData();
   }, [focused ]);
 
-
+useEffect(()=>{
+  if(getCashTransactionsData)
+  {
+    console.log("getCashTransactionsData",getCashTransactionsData)
+  }
+  else if(getCashTransactionsError){
+    console.log("getCashTransactionsError",getCashTransactionsError)
+  }
+},[getCashTransactionsData,getCashTransactionsError])
 
   useEffect(() => {
     if (fetchCashbackEnteriesData) {
@@ -298,24 +308,23 @@ const CashbackHistory = ({ navigation }) => {
 
     return (
       <View style={{width:'100%',padding:10,alignItems:'center',justifyContent:'center',backgroundColor:'white',borderBottomWidth:1,borderColor:"#DDDDDD",elevation:2,flexDirection:'row'}}>
-        <View style={{width:'60%',alignItems:'flex-start',justifyContent:'center'}}>
-        <Wallet style={{marginLeft:10}} name="wallet" size={50} color={ternaryThemeColor}></Wallet>
-        <PoppinsTextMedium style={{fontSize:22,fontWeight:"bold",color:'grey',marginLeft:10}} content="Wallet Balance"></PoppinsTextMedium>
-        <PoppinsTextMedium style={{fontSize:20,fontWeight:'bold',color:'black',marginLeft:10}} content={getWalletBalanceData?.body?.cashback_balance}></PoppinsTextMedium>
+        <View style={{width:'60%',alignItems:'flex-start',justifyContent:'center',flexDirection:'row'}}>
+        <PoppinsTextMedium style={{fontSize:18,fontWeight:"bold",color:'grey',marginLeft:10}} content="Wallet Balance"></PoppinsTextMedium>
+        <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'black',marginLeft:10}} content={getWalletBalanceData?.body?.cashback_balance}></PoppinsTextMedium>
 
         </View>
         <View style={{width:'40%',alignItems:'center',justifyContent:'flex-start'}}>
           <TouchableOpacity onPress={()=>{
             navigation.navigate('RedeemCashback')
-          }} style={{height:40,width:120,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:10}}>
-            <PoppinsTextMedium style={{fontSize:20,fontWeight:'bold',color:'white'}} content="Redeem"></PoppinsTextMedium>
+          }} style={{height:30,width:100,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:10}}>
+            <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'white'}} content="Redeem"></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
       </View>
     )
   }
   return (
-    <View style={{ alignItems: "center", justifyContent: "flex-start" }}>
+    <View style={{ alignItems: "center", justifyContent: "flex-start",height:'100%' }}>
       <View
         style={{
           alignItems: "center",
@@ -323,7 +332,7 @@ const CashbackHistory = ({ navigation }) => {
           flexDirection: "row",
           width: "100%",
           marginTop: 10,
-          height: 40,
+          height: '5%',
           marginLeft: 20,
         }}
       >
@@ -361,14 +370,14 @@ const CashbackHistory = ({ navigation }) => {
           alignItems: "flex-start",
           justifyContent: "flex-start",
           width: "100%",
-          elevation:8
+          height:'8%'
         }}
       >
         <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center' }}>
           <Image
             style={{
-              height: 40,
-              width: 40,
+              height: 30,
+              width: 30,
               resizeMode: "contain",
 
             }}
@@ -377,7 +386,7 @@ const CashbackHistory = ({ navigation }) => {
           <PoppinsTextMedium
             style={{
               marginLeft: 10,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: "700",
               color: "#6E6E6E",
             }}
@@ -400,7 +409,24 @@ const CashbackHistory = ({ navigation }) => {
       </View>
       {/* <Header></Header> */}
       <WalletComponent></WalletComponent>
-      {fetchCashbackEnteriesData && <FlatList
+      <View style={{width:'100%',padding:10,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
+        <TouchableOpacity onPress={()=>{
+          setDisplayData(true)
+        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderRightWidth:1,borderColor:ternaryThemeColor}}>
+          <PoppinsTextMedium content="Transactions"></PoppinsTextMedium>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{
+          setDisplayData(false)
+        }} style={{alignItems:"center",justifyContent:'center',width:'50%'}}>
+        <PoppinsTextMedium content="Wallet"></PoppinsTextMedium>
+        </TouchableOpacity>
+      </View>
+      {
+        fetchCashbackEnteriesData?.body?.count === 0 && <View style={{ width: '100%',height:'80%' }}>
+          <DataNotFound></DataNotFound>
+        </View>
+      }
+      {!displayData && fetchCashbackEnteriesData && <FlatList
         initialNumToRender={20}
         contentContainerStyle={{
           alignItems: "flex-start",
@@ -414,12 +440,20 @@ const CashbackHistory = ({ navigation }) => {
         )}
         keyExtractor={(item, index) => index}
       />}
-      {
-        fetchCashbackEnteriesData?.body?.count === 0 && <View style={{ width: '100%',height:'78%' }}>
-          <DataNotFound></DataNotFound>
-        </View>
-      }
-
+      {displayData && getCashTransactionsData && <FlatList
+        initialNumToRender={20}
+        contentContainerStyle={{
+          alignItems: "flex-start",
+          justifyContent: "center",
+          
+        }}
+        style={{ width: "100%"}}
+        data={getCashTransactionsData?.body?.data}
+        renderItem={({ item, index }) => (
+          <CashbackListItem items={item}></CashbackListItem>
+        )}
+        keyExtractor={(item, index) => index}
+      />}
     </View>
   );
 };
