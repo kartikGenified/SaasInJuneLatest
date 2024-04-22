@@ -17,6 +17,7 @@ import ProfileDropDown from '../../components/atoms/dropdown/ProfileDropDown';
 import moment from 'moment';
 import TextInputRectangularWithPlaceholder from '../../components/atoms/input/TextInputRectangularWithPlaceholder';
 import DisplayOnlyTextInput from '../../components/atoms/DisplayOnlyTextInput';
+import { useTranslation } from 'react-i18next';
 
 
 const EditProfile = ({ navigation, route }) => {
@@ -30,9 +31,9 @@ const EditProfile = ({ navigation, route }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [marginB, setMarginB] = useState(0)
-  const [isValidEmail,setIsValidEmail] = useState(true)
+  const [isValidEmail, setIsValidEmail] = useState(true)
   const [isClicked, setIsClicked] = useState(false)
-  const [submitProfile,setSubmitProfile] = useState(false)
+  const [submitProfile, setSubmitProfile] = useState(false)
   // const userData = useSelector(state=>state.appusersdata.userData)
   console.log("saved image", route.params?.savedImage)
   // console.log("route.params.savedImage",route.params.savedImage)
@@ -44,6 +45,8 @@ const EditProfile = ({ navigation, route }) => {
   const formFields = route.params?.formFields
   const formValues = route.params?.formValues
   const height = Dimensions.get('window').height
+
+  const { t } = useTranslation()
   // const manualkyc = ["fabricator","consumer","retailer","dealer"]
   console.log("form fields and values", JSON.stringify(formFields), formValues)
   const [
@@ -99,8 +102,8 @@ const EditProfile = ({ navigation, route }) => {
       if (uploadImageData.success) {
         setFilename(uploadImageData.body.fileLink)
         setModalVisible(false)
-         setMessage(uploadImageData.message)
-         setSuccess(true)
+        setMessage(uploadImageData.message)
+        setSuccess(true)
 
       }
     } else {
@@ -108,7 +111,7 @@ const EditProfile = ({ navigation, route }) => {
     }
   }, [uploadImageData, uploadImageError]);
 
-  const handleData = (data, title,jsonData) => {
+  const handleData = (data, title, jsonData) => {
     // console.log("djnjbdhdndddjj",data, title)
 
     let submissionData = [...changedFormValues]
@@ -117,29 +120,26 @@ const EditProfile = ({ navigation, route }) => {
     })
 
     if (title == "email") {
-      if(jsonData?.required)
-      {
-        console.log("email data", typeof data,data.length)
+      if (jsonData?.required) {
+        console.log("email data", typeof data, data.length)
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         const checkEmail = emailRegex.test(data)
         setIsValidEmail(checkEmail);
-        
+
       }
-      else{
-        if(data.length>0)
-        {
+      else {
+        if (data.length > 0) {
           const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
           const checkEmail = emailRegex.test(data)
           setIsValidEmail(checkEmail);
         }
-        else if(data.length===0)
-        {
+        else if (data.length === 0) {
           setIsValidEmail(true)
         }
       }
     }
-    
-    
+
+
     removedValues.push({
       "value": data,
       "name": title
@@ -163,11 +163,11 @@ const EditProfile = ({ navigation, route }) => {
   };
 
   const handleButtonPress = () => {
-    if(!isClicked){
+    if (!isClicked) {
       updateProfile();
       setIsClicked(true);
     }
-   
+
     console.log("buttonpressed");
   };
 
@@ -199,17 +199,17 @@ const EditProfile = ({ navigation, route }) => {
       const token = credentials.username
       const params = { token: token, data: tempData }
       console.log("params from submitProfile", params)
-      if(isValidEmail){
+      if (isValidEmail) {
         setTimeout(() => {
           updateProfileFunc(params)
         }, 2000);
       }
-      else{
+      else {
         setError(true)
         setMessage("Please enter a valid email")
         setIsClicked(false);
       }
-    
+
     }
   }
 
@@ -228,16 +228,16 @@ const EditProfile = ({ navigation, route }) => {
       };
       const uploadFile = new FormData();
       uploadFile.append('image', imageData);
-      
+
       const getToken = async () => {
         const credentials = await Keychain.getGenericPassword();
         const token = credentials.username;
-        uploadImageFunc({ body: uploadFile,token:token });
-       
-    }
+        uploadImageFunc({ body: uploadFile, token: token });
 
-    getToken()
-      
+      }
+
+      getToken()
+
     }
     else {
       console.log("else")
@@ -297,8 +297,8 @@ const EditProfile = ({ navigation, route }) => {
       )}
       {success && (
         <MessageModal
-          navigateTo={isClicked ? "Profile": undefined}
-          modalClose={modalClose} 
+          navigateTo={isClicked ? "Profile" : undefined}
+          modalClose={modalClose}
           title="Success"
           message={message}
           openModal={success}></MessageModal>
@@ -319,14 +319,14 @@ const EditProfile = ({ navigation, route }) => {
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", backgroundColor: ternaryThemeColor, height: '20%' }}>
         <View style={{ backgroundColor: "white", height: 110, width: 110, borderRadius: 50, alignItems: "center", justifyContent: "center", flexDirection: "row", borderWidth: 1, borderColor: '#DDDDDD', marginBottom: 40, marginLeft: 20 }}>
           {profileImage !== route.params?.savedImage && profileImage !== null && <Image style={{ height: 98, width: 98, borderRadius: 49, resizeMode: "contain" }} source={{ uri: profileImage.uri }}></Image>}
-          {profileImage === route.params?.savedImage && <Image style={{ height: 98, width: 98, borderRadius: 49, resizeMode: "contain" }} source={{ uri:profileImage }}></Image>}
-          {(profileImage === null || profileImage == undefined) && <Image style={{ height: 58, width: 58, resizeMode: "contain", marginRight:'92%' }} source={(require('../../../assets/images/userGrey.png'))}></Image>}
+          {profileImage === route.params?.savedImage && <Image style={{ height: 98, width: 98, borderRadius: 49, resizeMode: "contain" }} source={{ uri: profileImage }}></Image>}
+          {(profileImage === null || profileImage == undefined) && <Image style={{ height: 58, width: 58, resizeMode: "contain", marginRight: '92%' }} source={(require('../../../assets/images/userGrey.png'))}></Image>}
 
         </View>
         <TouchableOpacity onPress={() => {
           setModalVisible(true)
         }} style={{ height: 50, width: 160, padding: 4, backgroundColor: 'white', marginLeft: 40, borderRadius: 30, alignItems: "center", justifyContent: 'center', marginBottom: 40, }}>
-          <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: '600', fontSize: 14, }} content="Change Profile Picture"></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: '600', fontSize: 14, }} content={t("Change Profile Picture")}></PoppinsTextMedium>
         </TouchableOpacity>
 
       </View>
@@ -338,80 +338,79 @@ const EditProfile = ({ navigation, route }) => {
 
             formFields && formValues && formFields.map((item, index) => {
               if (item.type === "text") {
-                if(item.name==="aadhar")
-                {
-                  return(
+                if (item.name === "aadhar") {
+                  return (
                     <DisplayOnlyTextInput
-                    key={index}
-                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
-                    title={item.label}
-                    photo={require('../../../assets/images/eye.png')}>
+                      key={index}
+                      data={formValues[index] === null || formValues[index] === undefined ? 'No data available' : formValues[index]}
+                      title={item.label == "Aadhaar" ? t("Aadhaar") : item.label}
+                      photo={require('../../../assets/images/eye.png')}>
 
-                  </DisplayOnlyTextInput>
+                    </DisplayOnlyTextInput>
                   )
                 }
-                else if(item.name==="pan")
-                {
-                  return(
+                else if (item.name === "pan") {
+                  return (
                     <DisplayOnlyTextInput
-                    key={index}
-                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
-                    title={item.label}
-                    photo={require('../../../assets/images/eye.png')}>
+                      key={index}
+                      data={formValues[index] === null || formValues[index] === undefined ? 'No data available' : formValues[index]}
+                      title={item.label == "Pan" ? t("Aadhaar") : item.label}
+                      photo={require('../../../assets/images/eye.png')}>
 
-                  </DisplayOnlyTextInput>
+                    </DisplayOnlyTextInput>
                   )
                 }
-                else if(item.name==="name")
-                {
-                  return(
+                else if (item.name === "name") {
+                  return (
                     <DisplayOnlyTextInput
-                    key={index}
-                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
-                    title={item.label}
-                    photo={require('../../../assets/images/eye.png')}>
+                      key={index}
+                      data={formValues[index] === null || formValues[index] === undefined ? 'No data available' : formValues[index]}
+                      title={item.label == "Name" ? t("name") : item.label}
+                      photo={require('../../../assets/images/eye.png')}>
 
-                  </DisplayOnlyTextInput>
+                    </DisplayOnlyTextInput>
                   )
                 }
-                else if(item.name==="mobile")
-                {
-                  return(
+                else if (item.name === "mobile") {
+                  return (
                     <DisplayOnlyTextInput
-                    key={index}
-                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
-                    title={item.label}
-                    photo={require('../../../assets/images/eye.png')}>
+                      key={index}
+                      data={formValues[index] === null || formValues[index] === undefined ? 'No data available' : formValues[index]}
+                      title={item.label == "Mobile" ? t("mobile") : item.label}
+                      photo={require('../../../assets/images/eye.png')}>
 
-                  </DisplayOnlyTextInput>
+                    </DisplayOnlyTextInput>
                   )
                 }
-                else if(item.name==="enrollment_date")
-                {
-                  return(
+                else if (item.name === "enrollment_date") {
+                  return (
                     <DisplayOnlyTextInput
-                    key={index}
-                    data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : formValues[index]}
-                    title={item.label}
-                    photo={require('../../../assets/images/eye.png')}>
-
-                  </DisplayOnlyTextInput>
+                      key={index}
+                      data={formValues[index] === null || formValues[index] === undefined ? 'No data available' : formValues[index]}
+                      title={item.label == "Date of Registration" ? t("Date of Registration") : item.label}
+                      photo={require('../../../assets/images/eye.png')}>
+                    </DisplayOnlyTextInput>
                   )
                 }
-                else if(item?.name?.split("_").includes("mobile"))
-                {
-                  return(
-                    <TextInputRectangularWithPlaceholder jsonData = {item} placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
+                else if (item?.name?.split("_").includes("mobile")) {
+                  return (
+                    <TextInputRectangularWithPlaceholder jsonData={item}
+                      placeHolder={formFields?.[index]?.label == "Name" ? t("name") : formFields?.[index]?.label == "Mobile" ? t("mobile") : formFields?.[index]?.label == "Email" ? t("Email") : formFields?.[index]?.label == "DOB" ? t("DOB") : formFields?.[index]?.label == "Gender" ? t("Gender") : formFields?.[index]?.label == "Pincode" ? t("Pincode") : formFields?.[index]?.label == "State" ? t("State") : formFields?.[index]?.label == "District" ? t("District") : formFields?.[index]?.label == "City" ? t("City") : formFields?.[index]?.label == "Aadhaar" ? t("Aadhar") : formFields?.[index]?.label == "Pan" ? t("Pan") : formFields?.[index]?.label == "Salesteam Name" ? t("Salesteam Name") : formFields?.[index]?.label == "Salesteam Mobile" ? t("Salesteam Mobile") : formFields?.[index]?.label == "Dealer Name" ? t("Dealer Name") : formFields?.[index]?.label == "Dealer Mobile" ? t("Dealer Mobile") : formFields?.[index]?.label == "Date of Registration" ? t("Date of Registration") : formFields?.[index]?.label}
+                      pressedSubmit={pressedSubmit} key={index} handleData={handleData}
+                      label={item.label}
+                      title={item.name}
+                      value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
 
                   )
                 }
-                else{
+                else {
                   return (
 
-                    <TextInputRectangularWithPlaceholder jsonData = {item} placeHolder={formFields?.[index]?.label } pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
+                    <TextInputRectangularWithPlaceholder jsonData={item} placeHolder={formFields?.[index]?.label == "Name" ? t("name") : formFields?.[index]?.label == "Mobile" ? t("mobile") : formFields?.[index]?.label == "Email" ? t("Email") : formFields?.[index]?.label == "DOB" ? t("DOB") : formFields?.[index]?.label == "Gender" ? t("Gender") : formFields?.[index]?.label == "Pincode" ? t("Pincode") : formFields?.[index]?.label == "State" ? t("State") : formFields?.[index]?.label == "District" ? t("District") : formFields?.[index]?.label == "City" ? t("City") : formFields?.[index]?.label == "Aadhaar" ? t("Aadhar") : formFields?.[index]?.label == "Pan" ? t("Pan") : formFields?.[index]?.label == "Salesteam Name" ? t("Salesteam Name") : formFields?.[index]?.label == "Salesteam Mobile" ? t("Salesteam Mobile") : formFields?.[index]?.label == "Dealer Name" ? t("Dealer Name") : formFields?.[index]?.label == "Dealer Mobile" ? t("Dealer Mobile") : formFields?.[index]?.label == "Date of Registration" ? t("Date of Registration") : formFields?.[index]?.label}
+                      pressedSubmit={pressedSubmit} key={index} handleData={handleData} label={item.label} title={item.name} value={formValues[index] != undefined ? formValues[index] : ""}></TextInputRectangularWithPlaceholder>
                   )
                 }
-                
+
               }
               else if (item.type === "date") {
                 return (
@@ -422,7 +421,6 @@ const EditProfile = ({ navigation, route }) => {
               else if (item.type === "select") {
                 return (
                   <ProfileDropDown key={index} title={item.name} header={item.label} value={formValues[index]} data={item.options} handleData={handleData}></ProfileDropDown>
-
                 )
               }
             })

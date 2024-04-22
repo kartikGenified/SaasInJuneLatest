@@ -29,6 +29,7 @@ import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Icon from 'react-native-vector-icons/Feather';
 import Close from 'react-native-vector-icons/Ionicons';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
+import { useTranslation } from 'react-i18next';
 
 const VerifyOtp = ({ navigation, route }) => {
   const [mobile, setMobile] = useState(route.params.navigationParams.mobile);
@@ -122,6 +123,8 @@ const VerifyOtp = ({ navigation, route }) => {
   //   const userId = route.params.navigationParams.userId;
 
   // -----------------------------------------
+
+  const {t} = useTranslation()
 
 
   const width = Dimensions.get('window').width;
@@ -372,7 +375,7 @@ const VerifyOtp = ({ navigation, route }) => {
           }}>
           <PoppinsText
             style={{ color: 'white', fontSize: 28 }}
-            content="Enter the OTP sent to"></PoppinsText>
+            content={t("Enter the OTP sent to")}></PoppinsText>
           <PoppinsText
             style={{ color: 'white', fontSize: 28 }}
             content={navigationParams.mobile}></PoppinsText>

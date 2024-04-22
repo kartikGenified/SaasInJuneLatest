@@ -6,12 +6,15 @@ import SelectLanguageBox from '../../components/molecules/SelectLanguageBox';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 import { useSelector } from 'react-redux';
 import { BaseUrlImages } from '../../utils/BaseUrlImages';
-
-
-// import i18n from './i18n';
+import i18n from './i18n';
 
 const SelectLanguage = ({ navigation }) => {
-  const { t, i18n } = useTranslation(); // Initialize useTranslation
+  const { t } = useTranslation(); // Destructure t and i18n directly
+ 
+
+
+  console.log("i18n",i18n);
+
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -29,7 +32,7 @@ const SelectLanguage = ({ navigation }) => {
     console.log("language", language);
     setLanguage(language);
     // Assuming 'english' and 'arabic' are the keys used in your translation files
-    i18n.changeLanguage(language === 'english' ? 'en' : 'ar'); 
+    i18n.changeLanguage(language === 'english' ? 'en' : 'ar');
     navigation.navigate('SelectUser');
   };
 

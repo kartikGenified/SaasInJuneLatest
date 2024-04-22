@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import PoppinsTextMedium from '../electrons/customFonts/PoppinsTextMedium';
 import { SvgUri } from 'react-native-svg';
 import ZoomViewAnimations from '../animations/ZoomViewAnimations';
+import { useTranslation } from 'react-i18next';
 
 const MenuItems = (props) => {
   const colorShades = useSelector(state=>state.apptheme.colorShades)
@@ -11,6 +12,8 @@ const MenuItems = (props) => {
     const content = props.content
     const platformFontSize = Platform.OS === 'ios' ? 10 :12
     const platformFontWeight = Platform.OS === 'ios' ? '500' :'600'
+
+    const {t} = useTranslation()
     console.log("menu item images", image)
     const handlePress=()=>{
         console.log(content)
@@ -26,7 +29,7 @@ const MenuItems = (props) => {
             {/* <SvgUri width={69} height={69} uri={image}></SvgUri> */}
             <Image style={{height:69,width:69}} source={{uri:image}}></Image>
             </TouchableOpacity>
-            <PoppinsTextMedium content={content} style={{width:80,marginTop:6,color:'black',fontSize:platformFontSize,fontWeight:platformFontWeight}}></PoppinsTextMedium>
+            <PoppinsTextMedium content={content == "Scan Qr" || content=="Scan QR" ? t("Scan QR") :content=="Activate Warranty" ? t("Activate Warranty"): content.toLowerCase() == "check genuinity" ? t("Check Genuinity") : content=="Passbook" ? t("Passbook") : content=="Product Catalogue" ? t("Product Catalogue") : content=="Report an Issue" ? t("Report an Issue") : content=="Customer Support" ? t("Customer Support"): content} style={{width:80,marginTop:6,color:'black',fontSize:platformFontSize,fontWeight:platformFontWeight}}></PoppinsTextMedium>
         </View>
             )
        

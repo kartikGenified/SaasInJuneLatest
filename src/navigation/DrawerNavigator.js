@@ -24,6 +24,7 @@ import { useFetchLegalsMutation } from '../apiServices/fetchLegal/FetchLegalApi'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ErrorModal from '../components/modals/ErrorModal';
 import VersionCheck from 'react-native-version-check';
+import { useTranslation } from 'react-i18next';
 
 
 const Drawer = createDrawerNavigator();
@@ -37,6 +38,9 @@ const CustomDrawer = () => {
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+
+  const { t } = useTranslation();
+  
 
 
   const currentVersion = VersionCheck.getCurrentVersion();
@@ -129,54 +133,54 @@ const CustomDrawer = () => {
     fetchFaq()
   }, [])
 
-  useEffect(()=>{
-    if(getTermsData){
-      console.log("getTermsData",getTermsData.body.data?.[0]?.files[0]);
+  useEffect(() => {
+    if (getTermsData) {
+      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
     }
-    else if(getTermsError){
+    else if (getTermsError) {
       console.log("gettermserror", getTermsError)
     }
-  },[getTermsData,getTermsError])
+  }, [getTermsData, getTermsError])
 
-  useEffect(()=>{
-    if(getPolicyData){
-      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>",getPolicyData);
-    
+  useEffect(() => {
+    if (getPolicyData) {
+      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
+
     }
-    else if(getPolicyError){
+    else if (getPolicyError) {
       setError(true)
       setMessage(getPolicyError?.message)
       console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
     }
-  },[getPolicyData,getPolicyError])
+  }, [getPolicyData, getPolicyError])
 
-  useEffect(()=>{
-    if(getFAQData){
-      console.log("getFAQData Here i am ",getFAQData.body.data?.[0]?.files[0]);
+  useEffect(() => {
+    if (getFAQData) {
+      console.log("getFAQData Here i am ", getFAQData.body.data?.[0]?.files[0]);
     }
-    else if(getFAQError){
+    else if (getFAQError) {
       console.log("getFAQError", getFAQError)
     }
-  },[getFAQData,getFAQError]);
+  }, [getFAQData, getFAQError]);
 
-  const handleLogout=async()=>{
-    
-      try {
-        await AsyncStorage.removeItem('loginData')
-        navigation.reset({ index: '0', routes: [{ name: 'SelectUser' }] })
-      } catch(e) {
-        console.log("error deleting loginData",e)
-      }
-    
-      console.log('Done.')
-    
+  const handleLogout = async () => {
+
+    try {
+      await AsyncStorage.removeItem('loginData')
+      navigation.reset({ index: '0', routes: [{ name: 'SelectUser' }] })
+    } catch (e) {
+      console.log("error deleting loginData", e)
+    }
+
+    console.log('Done.')
+
   }
 
   const fetchTerms = async () => {
     // const credentials = await Keychain.getGenericPassword();
     // const token = credentials.username;
     const params = {
-      type:"term-and-condition"
+      type: "term-and-condition"
     }
     getTermsAndCondition(params)
   }
@@ -185,17 +189,17 @@ const CustomDrawer = () => {
     // const credentials = await Keychain.getGenericPassword();
     // const token = credentials.username;
     const params = {
-      type:"privacy-policy"
+      type: "privacy-policy"
     }
     getPolicies(params)
   }
 
-  
+
   const fetchFaq = async () => {
     // const credentials = await Keychain.getGenericPassword();
     // const token = credentials.username;
     const params = {
-      type:"faq"
+      type: "faq"
     }
     getFAQ(params)
   }
@@ -213,7 +217,7 @@ const CustomDrawer = () => {
     }
   }
 
-  
+
 
 
   useEffect(() => {
@@ -252,19 +256,19 @@ const CustomDrawer = () => {
     // fetchTerms();
   }, [])
 
-  useEffect(()=>{
-    if(getTermsData){
-      console.log("getTermsData",getTermsData.body.data?.[0]?.files[0]);
+  useEffect(() => {
+    if (getTermsData) {
+      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
     }
-    else if(getTermsError){
+    else if (getTermsError) {
       console.log("gettermserror", getTermsError)
     }
-  },[getTermsData,getTermsError]);
+  }, [getTermsData, getTermsError]);
 
   const modalClose = () => {
     setError(false);
   };
-  
+
   useEffect(() => {
     if (getAppMenuData) {
       // console.log("usertype", userData.user_type)
@@ -276,7 +280,7 @@ const CustomDrawer = () => {
       setDrawerData(tempDrawerData[0])
     }
     else if (getAppMenuError) {
-      
+
       console.log("getAppMenuError", getAppMenuError)
     }
   }, [getAppMenuData, getAppMenuError])
@@ -293,7 +297,7 @@ const CustomDrawer = () => {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor:"white",
+          backgroundColor: "white",
           marginTop: 1,
           borderBottomWidth: 1,
           borderColor: '#DDDDDD',
@@ -389,8 +393,40 @@ const CustomDrawer = () => {
                   });
               }
             }}>
-              {console.log("props.title", props.title)}
-            <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{props.title == "Passbook" ? "My Loyalty" : props.title == "Profile" ? "My Profile" : props.title == "Rewards" ? "My Rewards" : props.title}</Text>
+            {console.log("props.title", props.title)}
+            <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{
+              props.title == "Passbook" ? `${t('My Loyality')}` :
+                props.title == "My Profile" ? `${t("My Profile")}`
+                  : props.title == "Profile" ? `${t("profile")}`
+                    : props.title == "Scan History" ? `${t("scan history")}`
+                      : props.title == "Scheme" ? `${t("scheme")}`
+                        : props.title == "Help and Support" ? `${t("help and support")}`
+                          : props.title == "Product Catalogue" ? `${t("product catalogue")}`
+                            : props.title == "Videos" ? `${t("videos")}`
+                              : props.title == "Share App" ? `${t("share app")}`
+                                : props.title == "Feedback" ? `${t("feedback")}`
+                                  : props.title == "Rewards" ? `${t("My Rewards")}`
+                                    : props.title == "Gallery" ? `${t("gallery")}`
+                                      : props.title == "Scan List" ? `${t("scan list")}`
+                                        : props.title == "Gift Catalogue" ? `${t("gift catalogue")}`
+                                          : props.title == "My Rewards" ? `${t("My Rewards")}` :
+                                            props.title.toLowerCase().trim() == "refer and earn" ? `${t("Earn Extra Points")}`
+                                              : props.title == "Earn Extra Points" ? `${t("Earn Extra Points")}` :
+                                                props.title == "My Points" ? `${t("My Points")}` : props.title == "Install Product" ? `${t("Install Product")}`
+                                                  : props.title == "Get Technical Support" ? `${t("Get Technical Support")}`
+                                                    : props.title == "Redemption" ? `${t("Redemption")}`
+                                                      : props.title == "My Offers" ? `${t("My Offers")}`
+                                                        : props.title == "Notifications" ? `${t("Notifications")}`
+                                                          : props.title == "About Ultimatrue" ? `${t("About Ultimatrue")}`
+                                                            : props.title == "Products Catalogue" ? `${t("Products Catalogue")}`
+                                                              : props.title == "User Manuals" ? `${t("User Manuals")}`
+                                                                : props.title.toLowerCase() == "request project quotation " ? `${t("Request Project Quotation")}`
+                                                                  : props.title.toLowerCase() == "customer list " ? `${t("Customer List")}`
+                                                                    : props.title.toLowerCase() == "add to inventory" ? `${t("Add to inventory")}`
+                                                                      : props.title.toLowerCase() == "my sales" ? `${t("My Sales")}`
+                                                                        : props.title.toLowerCase() == "bank details" ? `${t("Bank Details")}`
+                                                                         : props.title == "Contact Us" ? `${t("Contact Us")}` : props.title
+            }</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -440,7 +476,7 @@ const CustomDrawer = () => {
 
               }
             }}>
-            <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{props.title}</Text>
+            <Text style={{ color: primaryThemeColor, fontSize: 15   }}>{props.title}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -448,15 +484,15 @@ const CustomDrawer = () => {
   };
 
   return (
-    <View style={{ backgroundColor: '#DDDDDD',alignItems:"center",justifyContent:'center',width:'100%',height:'100%' }}>
-       {error &&  <ErrorModal
-          modalClose={modalClose}
+    <View style={{ backgroundColor: '#DDDDDD', alignItems: "center", justifyContent: 'center', width: '100%', height: '100%' }}>
+      {error && <ErrorModal
+        modalClose={modalClose}
 
-          message={message}
-          openModal={error}></ErrorModal>}
+        message={message}
+        openModal={error}></ErrorModal>}
       <View
         style={{
-          width:'100%',
+          width: '100%',
           height: 125,
           backgroundColor: ternaryThemeColor,
           borderBottomLeftRadius: 30,
@@ -464,7 +500,7 @@ const CustomDrawer = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-      {profileImage ?
+        {profileImage ?
           <Image
             style={{
               height: 60,
@@ -478,7 +514,7 @@ const CustomDrawer = () => {
             source={{ uri: profileImage }}></Image>
           :
           <View style={{
-        
+
             paddingHorizontal: 10,
             paddingVertical: 10,
             borderRadius: 30,
@@ -492,7 +528,7 @@ const CustomDrawer = () => {
               style={{
                 height: 40,
                 width: 40,
-                
+
 
               }}
               source={require('../../assets/images/userGrey.png')}></Image>
@@ -510,7 +546,7 @@ const CustomDrawer = () => {
             }}>
             {userData.name}
           </Text>}
-          {userData && <Text style={{ color: 'white', margin: 0,textTransform:"capitalize" }}>{userData.user_type} Account</Text>}
+          {userData && <Text style={{ color: 'white', margin: 0, textTransform: "capitalize" }}>{userData.user_type} Account</Text>}
 
           {!Object.values(kycData).includes(false) ? <View style={{ flexDirection: 'row', marginTop: 4 }}>
             <View
@@ -548,9 +584,9 @@ const CustomDrawer = () => {
             </View>
           }
         </View>
-        <PoppinsTextMedium content={`Version : ${currentVersion}`} style={{position:'absolute',bottom:4,right:10,color:'white',fontSize:12}}></PoppinsTextMedium>
+        <PoppinsTextMedium content={`Version : ${currentVersion}`} style={{ position: 'absolute', bottom: 4, right: 10, color: 'white', fontSize: 12 }}></PoppinsTextMedium>
       </View>
-      <ScrollView contentContainerStyle={{}} style={{ width: '100%',height:'100%'}} >
+      <ScrollView contentContainerStyle={{}} style={{ width: '100%', height: '100%' }} >
 
         {
           drawerData !== undefined && drawerData.app_menu.map((item, index) => {
@@ -574,11 +610,11 @@ const CustomDrawer = () => {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 1,
-            paddingBottom:10,
+            paddingBottom: 10,
             // zIndex:1,
             borderBottomWidth: 1,
             borderColor: '#DDDDDD',
-            backgroundColor:"white"
+            backgroundColor: "white"
           }}>
           <TouchableOpacity
             onPress={() => {
@@ -589,12 +625,12 @@ const CustomDrawer = () => {
               alignItems: 'center',
               // justifyContent: 'center',
               height: '100%',
-              marginTop:10
+              marginTop: 10
             }}>
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain', transform: [{ rotate: '270deg' }], marginTop: 4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {myProgramVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -610,45 +646,45 @@ const CustomDrawer = () => {
               onPress={() => {
                 setMyProgramVisibile(!myProgramVisible)
               }}>
-              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>My Program</Text>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{t("My Program")}</Text>
             </TouchableOpacity>
 
             {myProgramVisible &&
-            <View style={{marginTop:5}}>
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("Tutorial")}}>
-                <Text onPress={()=>{
+              <View style={{ marginTop: 5 }}>
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => { navigation.navigate("Tutorial") }}>
+                  <Text onPress={() => {
                     navigation.navigate("Tutorial")
-                }} style={{  fontSize:15, color:ternaryThemeColor }}>Tutorial</Text>
-              </TouchableOpacity>
+                  }} style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Tutorial")}</Text>
+                </TouchableOpacity>
 
-              {getPolicyData && getPolicyData?.body.length!==0 && <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>[
-               navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
-              ]}>
-                <Text  style={{  fontSize:15, color:ternaryThemeColor }}>Policies</Text>
-              </TouchableOpacity>}
+                {getPolicyData && getPolicyData?.body.length !== 0 && <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => [
+                  navigation.navigate("PdfComponent", { pdf: getPolicyData?.body?.data?.[0]?.files?.[0] })
+                ]}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>Policies</Text>
+                </TouchableOpacity>}
 
-              {getTermsData && getTermsData.body.data.length!==0 && <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
-                 navigation.navigate('PdfComponent',{pdf:getTermsData.body.data?.[0]?.files[0]})
-              }}>
-                <Text  style={{  fontSize:15, color:ternaryThemeColor }}>T&C</Text>
-              </TouchableOpacity>}
+                {getTermsData && getTermsData.body.data.length !== 0 && <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
+                  navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })
+                }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("T&C")}</Text>
+                </TouchableOpacity>}
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
-                navigation.navigate('FAQ');
-              }}>
-                <Text  style={{  fontSize:15, color:ternaryThemeColor }}>F&Q</Text>
-              </TouchableOpacity>
-              
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
+                  navigation.navigate('FAQ');
+                }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t('FAQ')}</Text>
+                </TouchableOpacity>
+
               </View>
-              
+
             }
 
           </View>
         </View>
         {/* My Program ending*/}
 
-          {/* Ozone Products Starting */}
-          <View
+        {/* Ozone Products Starting */}
+        <View
           style={{
             minHeight: 54,
             width: '100%',
@@ -656,11 +692,11 @@ const CustomDrawer = () => {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 1,
-            paddingBottom:10,
+            paddingBottom: 10,
             // zIndex:1,
             borderBottomWidth: 1,
             borderColor: '#DDDDDD',
-            backgroundColor:"white"
+            backgroundColor: "white"
           }}>
           <TouchableOpacity
             onPress={() => {
@@ -671,12 +707,12 @@ const CustomDrawer = () => {
               alignItems: 'center',
               // justifyContent: 'center',
               height: '100%',
-              marginTop:10
+              marginTop: 10
             }}>
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain', transform: [{ rotate: '270deg' }], marginTop: 4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {ozoneProductVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -692,35 +728,35 @@ const CustomDrawer = () => {
               onPress={() => {
                 setOzoneProductVisible(!ozoneProductVisible)
               }}>
-              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>Ozone Products</Text>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{t("Ozone Products")}</Text>
             </TouchableOpacity>
 
             {ozoneProductVisible &&
-            <View style={{marginTop:5}}>
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
-                navigation.navigate('ProductCatalogue')
+              <View style={{ marginTop: 5 }}>
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
+                  navigation.navigate('ProductCatalogue')
 
-              }}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Product Catalogue</Text> 
-              </TouchableOpacity>    
+                }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Product Catalogue")}</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{Linking.openURL("https://www.ozone-india.com/")}}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Jump to ozone website</Text> 
-              </TouchableOpacity>   
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => { Linking.openURL("https://www.ozone-india.com/") }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("jump to ozone website")}</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("ProductCategory")}}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Category wise product info</Text> 
-              </TouchableOpacity>   
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => { navigation.navigate("ProductCategory") }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Category wise product information")}</Text>
+                </TouchableOpacity>
               </View>
-              
+
             }
 
           </View>
         </View>
         {/* Ozone Products ending*/}
 
-           {/* Community Starting */}
-           <View
+        {/* Community Starting */}
+        <View
           style={{
             minHeight: 54,
             width: '100%',
@@ -728,11 +764,11 @@ const CustomDrawer = () => {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 1,
-            paddingBottom:10,
+            paddingBottom: 10,
             // zIndex:1,
             borderBottomWidth: 1,
             borderColor: '#DDDDDD',
-            backgroundColor:"white"
+            backgroundColor: "white"
           }}>
           <TouchableOpacity
             onPress={() => {
@@ -743,12 +779,12 @@ const CustomDrawer = () => {
               alignItems: 'center',
               // justifyContent: 'center',
               height: '100%',
-              marginTop:10
+              marginTop: 10
             }}>
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain', transform: [{ rotate: '270deg' }], marginTop: 4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {communityVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -764,39 +800,39 @@ const CustomDrawer = () => {
               onPress={() => {
                 setCommunityVisible(!communityVisible)
               }}>
-              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>Community</Text>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{t("Community")}</Text>
             </TouchableOpacity>
 
             {communityVisible &&
-            <View style={{marginTop:5}}>
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
-                navigation.navigate("WhatsNew")
-              }}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>What's New</Text> 
-              </TouchableOpacity>    
+              <View style={{ marginTop: 5 }}>
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
+                  navigation.navigate("WhatsNew")
+                }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("What's New")}</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
-                console.log("images-1700639007902-188225481.pdf")
-                navigation.navigate("PdfComponent",{pdf:"images-1700639007902-188225481.pdf"})
-                
-              //  getPolicyData && navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
+                  console.log("images-1700639007902-188225481.pdf")
+                  navigation.navigate("PdfComponent", { pdf: "images-1700639007902-188225481.pdf" })
 
-              }}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Program Content</Text> 
-              </TouchableOpacity>
+                  //  getPolicyData && navigation.navigate("PdfComponent",{pdf: getPolicyData?.body?.data?.[0]?.files?.[0]})
 
-              <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("TierDetails")}}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Tier Details</Text> 
-              </TouchableOpacity>    
-              </View> 
+                }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Program Content")}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => { navigation.navigate("TierDetails") }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Tier Details")}</Text>
+                </TouchableOpacity>
+              </View>
             }
 
           </View>
         </View>
         {/* Community ending*/}
 
-          {/* Knowledge Hub */}
-          <View
+        {/* Knowledge Hub */}
+        <View
           style={{
             minHeight: 54,
             width: '100%',
@@ -804,11 +840,11 @@ const CustomDrawer = () => {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 1,
-            paddingBottom:10,
+            paddingBottom: 10,
             // zIndex:1,
             borderBottomWidth: 1,
             borderColor: '#DDDDDD',
-            backgroundColor:'white'
+            backgroundColor: 'white'
           }}>
           <TouchableOpacity
             onPress={() => {
@@ -819,12 +855,12 @@ const CustomDrawer = () => {
               alignItems: 'center',
               // justifyContent: 'center',
               height: '100%',
-              marginTop:10
+              marginTop: 10
             }}>
 
             {/* <SvgUri width={40} height={40} uri={image}></SvgUri> */}
             {/* <Icon size={size} name="bars" color={ternaryThemeColor}></Icon> */}
-            {!KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain',transform: [{ rotate: '270deg' }],marginTop:4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
+            {!KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain', transform: [{ rotate: '270deg' }], marginTop: 4 }} source={require('../../assets/images/arrowDown.png')}></Image>}
             {KnowledgeHubVisible && <Image style={{ height: 20, width: 20, resizeMode: 'contain' }} source={require('../../assets/images/arrowDown.png')}></Image>}
           </TouchableOpacity>
 
@@ -840,17 +876,17 @@ const CustomDrawer = () => {
               onPress={() => {
                 setKnowledgeHubVisible(!KnowledgeHubVisible)
               }}>
-              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>Knowledge Hub</Text>
+              <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{t("Knowledge Hub")}</Text>
             </TouchableOpacity>
 
             {KnowledgeHubVisible &&
-            <View style={{marginTop:5}}>
-              <TouchableOpacity onPress={()=>{
-                navigation.navigate("InstallationVideo")
-              }} style={{ marginTop:5,marginBottom:5 }}>
-                <Text style={{  fontSize:15, color:ternaryThemeColor }}>Installation Video</Text> 
-              </TouchableOpacity>    
-{/* 
+              <View style={{ marginTop: 5 }}>
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate("InstallationVideo")
+                }} style={{ marginTop: 5, marginBottom: 5 }}>
+                  <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Installation Video")}</Text>
+                </TouchableOpacity>
+                {/* 
               <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{
                 navigation.navigate("ProductCatalogue")
               }}>
@@ -860,18 +896,18 @@ const CustomDrawer = () => {
                 {/* <TouchableOpacity style={{ marginTop:5,marginBottom:5 }} onPress={()=>{navigation.navigate("ListAddress")}}>
                 <Text style={{  fontSize:15, color:ternaryThemeColor }}>List Address</Text> 
               </TouchableOpacity>     */}
-              </View> 
+              </View>
             }
 
           </View>
         </View>
         {/* Knowledge Hub*/}
 
-        <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, height: 70, justifyContent: 'center', width: '100%',alignItems:'center' }} onPress={() => {
-         
+        <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, height: 70, justifyContent: 'center', width: '100%', alignItems: 'center' }} onPress={() => {
+
           handleLogout()
-          
-          
+
+
         }}>
           <PoppinsTextLeftMedium style={{ color: 'white' }} content="LOG OUT"></PoppinsTextLeftMedium>
         <PoppinsTextLeftMedium style={{color:'white',fontSize:10,position:'absolute',bottom:2}} content ="Designed and developed by Genefied"></PoppinsTextLeftMedium>
@@ -888,7 +924,7 @@ function DrawerNavigator() {
 
   return (
     <Drawer.Navigator drawerContent={() => <CustomDrawer />}>
-     
+
       <Drawer.Screen options={{ headerShown: false }} name="DashboardDrawer" component={BottomNavigator} />
       <Drawer.Screen options={{ headerShown: false }} name="Redeem Reward" component={RedeemRewardHistory} />
       <Drawer.Screen options={{ headerShown: false }} name="Add BankAccount And Upi" component={AddBankAccountAndUpi} />

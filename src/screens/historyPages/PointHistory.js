@@ -12,6 +12,7 @@ import FilterModal from '../../components/modals/FilterModal';
 import { useGetPointSharingDataMutation } from '../../apiServices/pointSharing/pointSharingApi';
 import { dispatchCommand } from 'react-native-reanimated';
 import InputDate from '../../components/atoms/input/InputDate';
+import { useTranslation } from 'react-i18next';
 
 const PointHistory = ({ navigation }) => {
     const [displayList, setDisplayList] = useState([])
@@ -48,6 +49,8 @@ const PointHistory = ({ navigation }) => {
         isLoading: fetchUserPointsHistoryLoading,
         isError: fetchUserPointsHistoryIsError
     }] = useFetchUserPointsHistoryMutation()
+
+    const {t} = useTranslation();
 
 
 
@@ -218,7 +221,9 @@ const PointHistory = ({ navigation }) => {
                     fetchPoints()
                     setType("regular")
                 }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',backgroundColor:type==="regular" ? "#DDDDDD":"white"}}>
-                    <PoppinsTextMedium content="Regular Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                    {/* <PoppinsTextMedium content="Regular Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
+                    <PoppinsTextMedium content={t("regular points")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+
                 </TouchableOpacity>
                 
                 }
@@ -227,7 +232,9 @@ const PointHistory = ({ navigation }) => {
                     getRegistrationPoints("points_sharing")
                     setType("extra")
                 }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',borderLeftWidth:1,borderRightWidth:1,borderColor:'#DDDDDD',backgroundColor:type==="extra" ? "#DDDDDD":"white"}}>
-                    <PoppinsTextMedium content="Extra Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                    {/* <PoppinsTextMedium content="Extra Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
+                    <PoppinsTextMedium content={t("extra points")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+
                 </TouchableOpacity>
                 
                 }
@@ -236,7 +243,9 @@ const PointHistory = ({ navigation }) => {
                     getRegistrationPoints("registration_bonus")
                     setType("registration")
                 }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',backgroundColor:type==="registration" ? "#DDDDDD":"white"}}>
-                    <PoppinsTextMedium content="Registration Bonus" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                    {/* <PoppinsTextMedium content="Registration Bonus" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
+                    <PoppinsTextMedium content={t("registration bonus")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+
                 </TouchableOpacity>
                 
                 }
@@ -394,19 +403,25 @@ const PointHistory = ({ navigation }) => {
                     <Image style={{ height: 24, width: 24, resizeMode: 'contain', marginLeft: 10 }} source={require('../../../assets/images/blackBack.png')}></Image>
 
                 </TouchableOpacity>
-                <PoppinsTextMedium content="Points History" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
+                {/* <PoppinsTextMedium content="Points History" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium> */}
+                <PoppinsTextMedium content={t("points history")} style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
+
                 {/* <TouchableOpacity style={{ marginLeft: 180 }}>
                     <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/notificationOn.png')}></Image>
                 </TouchableOpacity> */}
             </View>
             <View style={{ padding: 14, alignItems: "center", justifyContent: "flex-start", width: "100%", flexDirection: "row",backgroundColor:'white' }}>
                 <View style={{ width: 100 }}>
-                    <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E', }} content="You Have"></PoppinsTextMedium>
+                    {/* <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E', }} content="You Have"></PoppinsTextMedium> */}
+                    <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E', }} content={t("you have")}></PoppinsTextMedium>
+
                     {userPointData &&
                         <PoppinsText style={{ marginLeft: 14, fontSize: 24, fontWeight: '600', color: '#373737', width: 100, width: 150 }} content={userPointData.body.point_balance}></PoppinsText>
 
                     }
-                    <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Points"></PoppinsTextMedium>
+                    {/* <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content="Points"></PoppinsTextMedium> */}
+                    <PoppinsTextMedium style={{ marginLeft: 10, fontSize: 20, fontWeight: '600', color: '#6E6E6E' }} content={t("points")}></PoppinsTextMedium>
+
                 </View>
                 <Image style={{ height: 80, width: 80, resizeMode: 'contain', position: 'absolute', right: 20 }} source={require('../../../assets/images/points.png')}></Image>
             </View>

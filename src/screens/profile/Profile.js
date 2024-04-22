@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import {
   View,
   StyleSheet,
@@ -23,6 +23,7 @@ import FastImage from 'react-native-fast-image';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Close from 'react-native-vector-icons/Ionicons';
 import DeleteModal from '../../components/modals/DeleteModal';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -39,6 +40,8 @@ const Profile = ({ navigation }) => {
 
 
   const kycData = useSelector(state => state.kycDataSlice.kycData)
+
+  const {t} = useTranslation()
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -485,7 +488,7 @@ const Profile = ({ navigation }) => {
                     <DisplayOnlyTextInput
                       key={index}
                       data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : moment(formValues[index]).format("DD-MMM-YYYY")}
-                      title={item.label}
+                      title={item.label == "Date of Registration" ? t("Date of Registration") : item.label}
                       photo={require('../../../assets/images/eye.png')}>
 
                     </DisplayOnlyTextInput>
@@ -498,7 +501,7 @@ const Profile = ({ navigation }) => {
                       <DisplayOnlyTextInput
                         key={index}
                         data={formValues[index] === null || formValues[index] === undefined  ? 'No data available' : moment(formValues[index]).format("DD-MMM-YYYY")}
-                        title={item.label}
+                        title={item.label == "Date of Registration" ? t("Date of Registration") : item.label}
                         photo={require('../../../assets/images/eye.png')}>
   
                       </DisplayOnlyTextInput>
@@ -506,10 +509,10 @@ const Profile = ({ navigation }) => {
                     );
                   }
                   return (
-                    <DisplayOnlyTextInput
+                    <DisplayOnlyTextInput 
                       key={index}
                       data={formValues[index] === null || formValues[index] === undefined   ? 'No data available' : formValues[index]}
-                      title={item.label}
+                      title={item.label == "Name" ? t("name") : item.label == "Mobile" ? t("mobile") : item.label == "Email" ? t("Email") : item.label == "DOB" ? t("DOB") == Gender  : item.label == "Pincode" ? t("Pincode") : item.label == "State" ? t("State") : item.label=="District" ? t("District") : item.label == "City" ? t("City") : item.label =="Aadhaar" ? t("Aadhar") : item.label == "Pan" ? t("Pan") : item.label=="Salesteam Name" ? t("Salesteam Name") : item.label == "Salesteam Mobile" ? t("Salesteam Mobile") : item.label=="Dealer Name" ? t("Dealer Name") : item.label =="Dealer Mobile" ? t("Dealer Mobile") : item.label=="Date of Registration" ? t("Date of Registration") : item.label  }
                       photo={require('../../../assets/images/eye.png')}>
 
                     </DisplayOnlyTextInput>
