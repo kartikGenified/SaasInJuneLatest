@@ -513,9 +513,9 @@ const Dashboard = ({ navigation }) => {
             <View style={{ height: '100%', borderWidth: 0.4, color: "#808080", opacity: 0.3, width: 0.2 }}>
             </View>
 
-            <View style={{ backgroundColor: 'white', paddingLeft: '8%' }}>
-              {userData && !userPointIsLoading && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
-                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content="Redeem"  ></PoppinsTextLeftMedium>
+            <View style={{ backgroundColor: 'white',width:'50%' }}>
+              {userData && !userPointIsLoading && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor,borderBottomRightRadius:5, borderTopRightRadius: 5, width: '100%',height:'100%', alignItems: 'center',justifyContent:'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
+                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800',fontSize:18 }} content="Redeem"  ></PoppinsTextLeftMedium>
               </TouchableOpacity>}
             </View>
 

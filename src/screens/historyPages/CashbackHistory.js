@@ -14,7 +14,7 @@ import * as Keychain from "react-native-keychain";
 import { useFetchCashbackEnteriesOfUserMutation, useFetchUserCashbackByAppUserIdMutation } from "../../apiServices/workflow/rewards/GetCashbackApi";
 import DataNotFound from "../data not found/DataNotFound";
 import AnimatedDots from "../../components/animations/AnimatedDots";
-import { useGetCashTransactionsMutation } from "../../apiServices/cashback/CashbackRedeemApi";
+import { useGetCashTransactionsMutation, useGetRedeemptionListMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import moment from "moment";
 import { useIsFocused } from '@react-navigation/native';
 import { useGetWalletBalanceMutation } from "../../apiServices/cashback/CashbackRedeemApi";
@@ -23,7 +23,7 @@ import Wallet from 'react-native-vector-icons/Entypo'
 const CashbackHistory = ({ navigation }) => {
   const [showNoDataFound, setShowNoDataFound] = useState(false);
   const [totalCashbackEarned, setTotalCashbackEarned] = useState(0)
-  const [displayData, setDisplayData] = useState(false)
+  const [displayData, setDisplayData] = useState(true)
   const focused = useIsFocused()
 
   const userId = useSelector((state) => state.appusersdata.userId);
@@ -54,6 +54,12 @@ const CashbackHistory = ({ navigation }) => {
     },
   ] = useFetchCashbackEnteriesOfUserMutation();
 
+  const [getRedemptionListFunc,{
+    data:getRedemptionListData,
+    error:getRedemptionListError,
+    isError:getRedemptionListIsError,
+    isLoading:getRedemptionListIsLoading
+  }] = useGetRedeemptionListMutation()
   
 
   const [fetchCashbackEnteriesFunc, {
@@ -95,7 +101,7 @@ const CashbackHistory = ({ navigation }) => {
 
         const params = { token: token, appUserId: userData.id };
 
-        getCashTransactionsFunc(cashparams);
+        getRedemptionListFunc(cashparams);
         fetchCashbackEnteriesFunc(params)
       }
     };
@@ -103,14 +109,14 @@ const CashbackHistory = ({ navigation }) => {
   }, [focused ]);
 
 useEffect(()=>{
-  if(getCashTransactionsData)
+  if(getRedemptionListData)
   {
-    console.log("getCashTransactionsData",getCashTransactionsData)
+    console.log("getRedemptionListData",JSON.stringify(getRedemptionListData))
   }
-  else if(getCashTransactionsError){
-    console.log("getCashTransactionsError",getCashTransactionsError)
+  else if(getRedemptionListError){
+    console.log("getRedemptionListError",getRedemptionListError)
   }
-},[getCashTransactionsData,getCashTransactionsError])
+},[getRedemptionListData,getRedemptionListError])
 
   useEffect(() => {
     if (fetchCashbackEnteriesData) {
@@ -267,6 +273,88 @@ useEffect(()=>{
     );
   };
 
+  const WalletBar = (props) => {
+    const amount = props.items.cash;
+    console.log("amount details", props);
+    return (
+      <View
+        style={{
+          alignItems: "flex-start",
+          justifyContent: "center",
+          width: "100%",
+          borderBottomWidth: 1,
+          borderColor: "#DDDDDD",
+          padding: 4,
+          height: 100,
+          flexDirection: 'row'
+        }}
+      >
+        <View
+          style={{
+            width: "80%",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            padding: 8
+          }}
+        >
+          {console.log("item of item", props)}
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              marginTop: 4,
+            }}
+          >
+            <Image
+              style={{ height: 30, width: 30, resizeMode: "contain" }}
+              source={require("../../../assets/images/greenRupee.png")}
+            ></Image>
+            <View
+              style={{
+                alignItems: "flex-start",
+                justifyContent: "center",
+                marginLeft: 10,
+              }}
+            >
+              <PoppinsTextMedium
+                style={{ color: "black", fontWeight: "600", fontSize: 14 }}
+                content={`Points Consumed :  ${props.items?.points} `}
+              ></PoppinsTextMedium>
+              <PoppinsTextMedium
+                style={{ color: "black", fontWeight: "600", fontSize: 14 }}
+                content={`Cashback amount : ₹ ${props.items?.cashbacks} `}
+              ></PoppinsTextMedium>
+              
+
+                {
+                   props.items?.bene_details?.ifsc &&
+                   <PoppinsTextMedium
+                   style={{ color: "black", fontWeight: "600", fontSize: 14 }}
+                   content={`IFSC :  ${props.items?.transfer_mode !== "upi" &&  props.items?.bene_details?.ifsc}  `}
+                 ></PoppinsTextMedium>
+   
+                }
+           
+              <PoppinsTextMedium
+                style={{ color: "black", fontWeight: "600", fontSize: 14 }}
+                content={
+                  moment(props.items.transaction_on).format("DD-MMM-YYYY") +
+                  " " +
+                  moment(props.items.transaction_on).format("HH:mm a")
+                }
+              ></PoppinsTextMedium>
+            </View>
+          </View>
+        </View>
+        <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+          <PoppinsTextMedium style={{ color: 'black' }} content={"₹ " + props.items?.cashbacks}></PoppinsTextMedium>
+        </View>
+      </View>
+    );
+  };
+
   const WalletComponent=()=>{
     const [
       getWalletBalanceFunc,
@@ -409,24 +497,28 @@ useEffect(()=>{
       </View>
       {/* <Header></Header> */}
       <WalletComponent></WalletComponent>
-      <View style={{width:'100%',padding:10,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
+      <View style={{width:'100%',alignItems:'center',justifyContent:'center',flexDirection:'row',height:40}}>
         <TouchableOpacity onPress={()=>{
           setDisplayData(true)
-        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderRightWidth:1,borderColor:ternaryThemeColor}}>
-          <PoppinsTextMedium content="Transactions"></PoppinsTextMedium>
+          console.log("displayData",displayData)
+        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderColor:ternaryThemeColor,borderBottomWidth:displayData == true? 2:0,height:'100%'}}>
+          <PoppinsTextMedium style={{color:'black'}} content="Transactions"></PoppinsTextMedium>
         </TouchableOpacity>
+        {/* <View style={{height:'100%',width:2,backgroundColor:"#DDDDDD"}}></View> */}
         <TouchableOpacity onPress={()=>{
           setDisplayData(false)
-        }} style={{alignItems:"center",justifyContent:'center',width:'50%'}}>
-        <PoppinsTextMedium content="Wallet"></PoppinsTextMedium>
+          console.log("displayData",displayData)
+
+        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderColor:ternaryThemeColor,borderBottomWidth:displayData == false? 2:0,height:'100%'}}>
+        <PoppinsTextMedium style={{color:'black'}} content="Wallet"></PoppinsTextMedium>
         </TouchableOpacity>
       </View>
       {
-        fetchCashbackEnteriesData?.body?.count === 0 && <View style={{ width: '100%',height:'80%' }}>
+        fetchCashbackEnteriesData?.body?.count === 0 && getRedemptionListData?.body?.total===0 && <View style={{ width: '100%',height:'80%' }}>
           <DataNotFound></DataNotFound>
         </View>
       }
-      {!displayData && fetchCashbackEnteriesData && <FlatList
+      {displayData && fetchCashbackEnteriesData && <FlatList
         initialNumToRender={20}
         contentContainerStyle={{
           alignItems: "flex-start",
@@ -440,7 +532,7 @@ useEffect(()=>{
         )}
         keyExtractor={(item, index) => index}
       />}
-      {displayData && getCashTransactionsData && <FlatList
+      {!displayData && getRedemptionListData && <FlatList
         initialNumToRender={20}
         contentContainerStyle={{
           alignItems: "flex-start",
@@ -448,9 +540,9 @@ useEffect(()=>{
           
         }}
         style={{ width: "100%"}}
-        data={getCashTransactionsData?.body?.data}
+        data={getRedemptionListData?.body?.data}
         renderItem={({ item, index }) => (
-          <CashbackListItem items={item}></CashbackListItem>
+          <WalletBar items={item}></WalletBar>
         )}
         keyExtractor={(item, index) => index}
       />}

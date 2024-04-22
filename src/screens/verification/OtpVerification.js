@@ -94,8 +94,10 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   const type = route.params.type
   const selectedAccount = route.params?.selectedAccount
   const brand_product_code = route.params?.brand_product_code
-
+  const couponCart = route.params?.couponCart
   
+
+  console.log("couponCart",couponCart)
   const handleCashbackRedemption=async()=>{
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
@@ -408,7 +410,9 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
          district: location.district,
          city:location.city,
          lat: location.lat,
-         log: location.lon
+         log: location.lon,
+         denomination: cart[0]?.value 
+         
         },
          token:token,
        };
@@ -418,6 +422,8 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   }
 
   }
+
+
 
   const handleOtpResend=()=>{
     if (!timer) {

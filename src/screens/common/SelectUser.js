@@ -179,6 +179,7 @@ const SelectUser = ({navigation}) => {
               );
             })}
         </View>
+        <PoppinsTextMedium style={{color:'black',fontSize:12,marginTop:20,marginBottom:10}} content="Designed and developed by Genefied"></PoppinsTextMedium>
       </ScrollView>
     </LinearGradient>
   );
