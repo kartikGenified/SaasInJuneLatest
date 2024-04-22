@@ -298,7 +298,6 @@ const OtpLogin = ({ navigation, route }) => {
             justifyContent: 'center',
             backgroundColor: ternaryThemeColor,
             flexDirection: 'row',
-
           }}>
 
           <TouchableOpacity

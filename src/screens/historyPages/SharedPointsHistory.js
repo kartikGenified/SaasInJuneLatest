@@ -21,6 +21,7 @@ import FastImage from "react-native-fast-image";
 import PoppinsTextLeftMedium from "../../components/electrons/customFonts/PoppinsTextLeftMedium";
 import FilterModal from "../../components/modals/FilterModal";
 import InputDate from "../../components/atoms/input/InputDate";
+import { t } from "i18next";
 
 const SharedPointsHistory = ({ navigation }) => {
   const [distinctDateArr, setDistinctDateArr] = useState();
@@ -218,7 +219,7 @@ const SharedPointsHistory = ({ navigation }) => {
           )}
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 14 }}
-            content="Reserved Points"
+            content={t("reserved points")}
           ></PoppinsTextMedium>
         </View>
       </View>

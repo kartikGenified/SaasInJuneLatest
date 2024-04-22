@@ -5,6 +5,7 @@ import { useFetchAllPushNotificationDumpListByAppUserIdMutation } from "../../ap
 import PoppinsTextLeftMedium from "../../components/electrons/customFonts/PoppinsTextLeftMedium";
 import HyperlinkText from "../../components/electrons/customFonts/HyperlinkText";
 import DataNotFound from "../data not found/DataNotFound";
+import { useTranslation } from "react-i18next";
 
 const Notification = ({ navigation }) => {
 
@@ -18,6 +19,8 @@ const Notification = ({ navigation }) => {
     const userData = useSelector(state => state.appusersdata.userData)
 
     console.log("userData", userData)
+
+    const {t} = useTranslation()
 
 
     useEffect(() => {
@@ -72,7 +75,7 @@ const Notification = ({ navigation }) => {
                 }}>
                     <Image style={{ height: 30, width: 30, resizeMode: 'contain', marginRight: 8 }} source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
-                <Text style={{ color: 'white', marginLeft: 10, fontWeight: '500' }}>Notification</Text>
+                <Text style={{ color: 'white', marginLeft: 10, fontWeight: '500' }}>{t("Notification")}</Text>
             </View>
             <ScrollView style={{ height: '90%', backgroundColor: buttonThemeColor, width:'100%' }}>
             

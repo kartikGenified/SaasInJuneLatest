@@ -7,6 +7,7 @@ import * as Keychain from 'react-native-keychain';
 import moment from 'moment';
 import DataNotFound from '../data not found/DataNotFound';
 import { dispatchCommand } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 
 const PreviousTransactionHistory = ({navigation}) => {
     const [displayList, setDisplayList] = useState()
@@ -22,6 +23,8 @@ const PreviousTransactionHistory = ({navigation}) => {
     useEffect(()=>{
         getTransaction()
     },[])
+
+    const {t} = useTranslation();
 
     useEffect(()=>{
         if(pervioustransactionData)
@@ -188,7 +191,7 @@ const PreviousTransactionHistory = ({navigation}) => {
               ></Image>
             </TouchableOpacity>
             <PoppinsTextMedium
-              content="Previous Transaction History"
+              content={t("Previous Transaction History")}
               style={{
                 marginLeft: 10,
                 fontSize: 16,

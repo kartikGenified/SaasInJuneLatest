@@ -40,6 +40,7 @@ import messaging from '@react-native-firebase/messaging';
 import Close from 'react-native-vector-icons/Ionicons';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import ErrorModal from '../../components/modals/ErrorModal';
+import { useTranslation } from 'react-i18next';
 
 
 const Dashboard = ({ navigation }) => {
@@ -134,6 +135,7 @@ const Dashboard = ({ navigation }) => {
 
   
   const id = useSelector(state => state.appusersdata.id);
+  const {t} = useTranslation();
 
   const fetchPoints = async () => {
     const credentials = await Keychain.getGenericPassword();
@@ -466,7 +468,7 @@ const Dashboard = ({ navigation }) => {
       <ScrollView style={{ width: '100%', marginBottom: platformMarginScroll, height: '100%' }}>
       <DrawerHeader></DrawerHeader>
       <View style={{width:'100%',alignItems:'center',justifyContent:'flex-start',flexDirection:'row',marginBottom:10}}>
-      <PoppinsTextLeftMedium style={{color:ternaryThemeColor, fontWeight:'bold', fontSize:19,marginLeft:20}} content={`Welcome ${userData?.name}`}></PoppinsTextLeftMedium>
+      <PoppinsTextLeftMedium style={{color:ternaryThemeColor, fontWeight:'bold', fontSize:19,marginLeft:20}} content={`${t("welcome")} ${userData?.name}`}></PoppinsTextLeftMedium>
       {getActiveMembershipData?.body!==null && <View
               style={{
                 flexDirection: 'row',
@@ -506,7 +508,7 @@ const Dashboard = ({ navigation }) => {
             <View style={{ width: "90%", height: 50, backgroundColor: 'white', marginBottom: 20, flexDirection: 'row', alignItems: 'center', borderColor: '#808080', borderWidth: 0.3, borderRadius: 10 }}>
 
             <View style={{ backgroundColor: 'white', width: '42%', marginHorizontal: 20 }}>
-             {userPointData?.body?.point_balance ? <PoppinsText content={`Balance Points ${userPointData?.body?.point_balance ? userPointData?.body?.point_balance : "loading"}`} style={{ color: 'black', fontWeight: 'bold' }}></PoppinsText> : <AnimatedDots color={'black'}/>} 
+             {userPointData?.body?.point_balance ? <PoppinsText content={`${t("balance points")} ${userPointData?.body?.point_balance ? userPointData?.body?.point_balance : "loading"}`} style={{ color: 'black', fontWeight: 'bold' }}></PoppinsText> : <AnimatedDots color={'black'}/>} 
             </View>
 
 
@@ -515,7 +517,7 @@ const Dashboard = ({ navigation }) => {
 
             <View style={{ backgroundColor: 'white', paddingLeft: '8%' }}>
               {userData && !userPointIsLoading && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
-                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content="Redeem"  ></PoppinsTextLeftMedium>
+                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content={t("redeem")} ></PoppinsTextLeftMedium>
               </TouchableOpacity>}
             </View>
 
@@ -539,12 +541,12 @@ const Dashboard = ({ navigation }) => {
         />
       }
           <View style={{ width: '100%', alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
-            {showKyc && <KYCVerificationComponent buttonTitle="Complete Your KYC" title="Your KYC is not completed"></KYCVerificationComponent>}
+            {showKyc && <KYCVerificationComponent buttonTitle={t("Complete Your KYC")} title={t("Your KYC is not completed")}></KYCVerificationComponent>}
           </View>
           <View style={{ flexDirection: "row", width: '100%', alignItems: "center", justifyContent: 'space-evenly' }}>
-            {(userData.user_type).toLowerCase()!=="sales" &&<DashboardSupportBox text="Rewards" backgroundColor="#D9C7B6" borderColor="#FEE8D4" image={require('../../../assets/images/reward_dashboard.png')} ></DashboardSupportBox>}
-            <DashboardSupportBox text="Customer Support" backgroundColor="#BCB5DC" borderColor="#E4E0FC" image={require('../../../assets/images/support.png')} ></DashboardSupportBox>
-            <DashboardSupportBox text="Feedback" backgroundColor="#D8C8C8" borderColor="#FDDADA" image={require('../../../assets/images/feedback.png')} ></DashboardSupportBox>
+            {(userData.user_type).toLowerCase()!=="sales" &&<DashboardSupportBox title={t("rewards")} text="Rewards" backgroundColor="#D9C7B6" borderColor="#FEE8D4" image={require('../../../assets/images/reward_dashboard.png')} ></DashboardSupportBox>}
+            <DashboardSupportBox title={t("customer support")} text="(Customer Support)" backgroundColor="#BCB5DC" borderColor="#E4E0FC" image={require('../../../assets/images/support.png')} ></DashboardSupportBox>
+            <DashboardSupportBox title={t("feedback")} text="Feedback" backgroundColor="#D8C8C8" borderColor="#FDDADA" image={require('../../../assets/images/feedback.png')} ></DashboardSupportBox>
 
           </View>
           {/* <Button

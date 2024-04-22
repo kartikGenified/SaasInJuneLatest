@@ -9,6 +9,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Wave from '../../assets/svg/bottomDrawer.svg'
 import PoppinsTextMedium from '../components/electrons/customFonts/PoppinsTextMedium';
 import BookOpen from 'react-native-vector-icons/Entypo' 
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +18,9 @@ const Tab = createBottomTabNavigator();
 
 
 function BottomNavigator({navigation}) {
+  
+const {t} = useTranslation()
+
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -34,12 +38,12 @@ function BottomNavigator({navigation}) {
     <View style={{alignItems:"center",justifyContent:"center",flexDirection:"row",height:60,backgroundColor:"white",width:'100%'}}>
     <TouchableOpacity onPress={()=>{navigation.navigate('GiftCatalogue')}} style={{alignItems:"center",position:'absolute', left:30}}>
     <Gift name="gift" size={24} color={ternaryThemeColor}></Gift>
-    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Gift Catalogue"></PoppinsTextMedium>
+    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("Gift Catalogue")}></PoppinsTextMedium>
     </TouchableOpacity>
     {/* ozone change */}
     { ((userData.user_type).toLowerCase()!=="dealer"  && (userData.user_type).toLowerCase()!=="sales") ? <TouchableOpacity onPress={()=>{navigation.navigate('QrCodeScanner')}} style={{alignItems:"center",justifyContent:"center",}}>
     <Qrcode name="qrcode" size={24} color={ternaryThemeColor}></Qrcode>
-    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Scan QR Code"></PoppinsTextMedium>
+    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("Scan QR")}></PoppinsTextMedium>
     </TouchableOpacity>
     :
     workflow?.includes("Genuinity") && <TouchableOpacity onPress={()=>{navigation.navigate('ScanAndRedirectToGenuinity')}} style={{alignItems:"center",justifyContent:"center",}}>
@@ -50,7 +54,7 @@ function BottomNavigator({navigation}) {
     {(userData.user_type).toLowerCase()!=="sales" &&
       <TouchableOpacity onPress={()=>{navigation.navigate('Passbook')}} style={{alignItems:"center",justifyContent:"center",position:'absolute',right:30}}>
     <Book name="book" size={24} color={ternaryThemeColor}></Book>
-    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Passbook"></PoppinsTextMedium>
+    <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("passbook")}></PoppinsTextMedium>
     </TouchableOpacity>
     }
     

@@ -9,6 +9,7 @@ import moment from 'moment';
 import { useGetAllRedeemedCouponsMutation } from '../../apiServices/workflow/rewards/GetCouponApi';
 import { useGetAllUserCouponsMutation } from '../../apiServices/coupons/getAllCouponsApi';
 import DataNotFound from '../data not found/DataNotFound';
+import { t } from 'i18next';
 
 const CouponHistory = ({navigation}) => {
     const [showNoData, setShowNoData] = useState(false)
@@ -127,17 +128,17 @@ else if(getAllCouponsError){
             <Image style={{height:24,width:24,resizeMode:'contain',marginLeft:10}} source={require('../../../assets/images/blackBack.png')}></Image>
 
                 </TouchableOpacity>
-            <PoppinsTextMedium content ="Coupon History" style={{marginLeft:10,fontSize:16,fontWeight:'600',color:'#171717'}}></PoppinsTextMedium>
+            <PoppinsTextMedium content ={t("Coupon History")} style={{marginLeft:10,fontSize:16,fontWeight:'600',color:'#171717'}}></PoppinsTextMedium>
             
             </View>
             <View style={{padding:14,alignItems:"center",justifyContent:"flex-start",width:"100%",flexDirection:"row",borderBottomWidth:1,borderColor:'#DDDDDD',borderStyle:'dashed'}}>
                 <View style={{alignItems:"center"}}>
-                <PoppinsTextMedium style={{marginLeft:10,fontSize:18,fontWeight:'600',color:'#6E6E6E'}} content="You Have Redeemed"></PoppinsTextMedium>
+                <PoppinsTextMedium style={{marginLeft:10,fontSize:18,fontWeight:'600',color:'#6E6E6E'}} content={t("You Have Redeemed")}></PoppinsTextMedium>
                 {getAllRedeemedData &&
                 <PoppinsText style={{marginLeft:14,fontSize:34,fontWeight:'600',color:'#373737'}} content={getAllCouponsData?.body.length}></PoppinsText>
 
                 }
-                <PoppinsTextMedium style={{marginLeft:10,fontSize:20,fontWeight:'600',color:'#6E6E6E'}} content="Coupon"></PoppinsTextMedium>
+                <PoppinsTextMedium style={{marginLeft:10,fontSize:20,fontWeight:'600',color:'#6E6E6E'}} content={t("Coupon")}></PoppinsTextMedium>
                 </View>
                 <Image style={{height:80,width:80,resizeMode:'contain',position:'absolute',right:20}} source={require('../../../assets/images/voucher.png')}></Image>
                  </View>

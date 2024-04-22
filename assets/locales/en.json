@@ -16,16 +16,33 @@
   "scan count": "Scan Count",
   "feedback": "feedback",
   "earned points": "Earned Points",
+  "Date Filter":"Date Filter",
   "redeeemed points": "Redeeemed Points",
   "what do you want to do": "What do you want to do ?",
   "points history": "Points History",
   "scanned history": "Scanned History",
   "redeemed history": "Redeemed History",
+  "coupon history" : "coupon history",
   "cashback history": "Cashback History",
+  "shared point history" : "shared point history",
+  "previous transaction history" : "Previous Transaction Histor",
+
+  "Gift Catalogue" :"Gift Catalogue", 
+  "Scan QR":"Scan QR",
+
+
+  "Scan QR Code":"Scan QR Code",
+  "Check Genuinity":"Check Genuinity",
+  "Passbook":"Passbook",
+
+  "wallet balance":"Wallet Balnce",
+
   "list of products scanned by you": "list of products scanned by you",
   "list of points redeemed by you": "list of points redeemed by you",
   "list of products redeemed by you": "list of products redeemed by you",
   "list of cashback claimed by you": "list of cashback claimed by you",
+  "list of wheel spinned by you" : "list of wheel spinned by you",
+
   "warranty history": "warranty history",
   "you have": "you have",
   "lifetime earnings": "Lifetime Earnings",
@@ -66,6 +83,7 @@
   "report an issue": "Report An Issue",
   "customer support": "customer support",
   "rewards": "Rewards",
+  
   "my passbook": "my loyality",
   "profile": "My Profile",
   "My Points": "My Points",
@@ -145,5 +163,72 @@
   "Request Project Quotation": "Request Project Quotation",
   "Add to inventory": "Add to inventory",
   "My Sales": "My Sales",
-  "form name": "1"
+  "form name": "1",
+
+  "Complete Your KYC":"Complete Your KYC",
+  "Your KYC is not completed" : "Your KYC is not completed",
+
+  "Transactions":"Transactions",
+  "Wallet":"Wallet",
+  "Warranty List":"Warranty List",
+  "Activated":"Activated",
+  "Pending":"Pending",
+
+  "Coupon History":"Coupon History",
+  "You Have Redeemed" : "You have Redeeemed",
+  "Coupon" : "Coupon",
+
+  "Previous Transaction History":"Previous Transaction History",
+  "Total Points":"Total Points",
+  "My Loyality" :"My Loyality",
+  "Bank Details" : "Bank Details",
+
+  "MY Program":"My Program",
+  "Ozone Products":"Ozone Products",
+  "Community":"Community",
+  "Knowledge Hub": "Knowledge Hub",
+
+  "Tutorial":"Tutorial",
+  "T&C":"T&C",
+  "FAQ":"FAQ",
+
+  "Product Catalogue":"Product Catalogue",
+  "jump to ozone website":"jump to ozone website",
+  "Category wise product information":"Category wise product information",
+  "What's New":"What's New",
+  "Program Content":"Program Content",
+  "Tier Details":"Tier Details",
+  "Installation Video":"Installation Video",
+
+  "Report an Issue" :"Report an Issue",
+  "Customer Support" : "Customer Support",
+
+  "Email" :"Email",
+  "DOB":"DOB",
+  "Gender":"Gender",
+  "Pincode":"Pincode",
+  "State" : "State",
+  "District":"District",
+  "City" : "City",
+  "Aadhaar" : "Aadhaar",
+  "Pan" : "Pan",
+  "Salesteam Name" : "Salesteam Name",
+  "Salesteam Mobile" :"Salesteam Mobile",
+  "Dealer Name": "Dealer Name",
+  "Dealer Mobile" : "Dealer Mobile",
+  "Date of Registratio":"Date of Registration",
+
+  "Change Profile Picture":"Change Profile Picture"
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -19,6 +19,7 @@ import moment from "moment";
 import { useIsFocused } from '@react-navigation/native';
 import { useGetWalletBalanceMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import Wallet from 'react-native-vector-icons/Entypo'
+import { useTranslation } from "react-i18next";
 
 const CashbackHistory = ({ navigation }) => {
   const [showNoDataFound, setShowNoDataFound] = useState(false);
@@ -36,6 +37,8 @@ const CashbackHistory = ({ navigation }) => {
     : "#FFB533";
 
   console.log(userId);
+  
+  const {t} = useTranslation();
 
   // const [fetchCashbackEnteriesFunc, {
   //     data: fetchCashbackEnteriesData,
@@ -309,7 +312,7 @@ useEffect(()=>{
     return (
       <View style={{width:'100%',padding:10,alignItems:'center',justifyContent:'center',backgroundColor:'white',borderBottomWidth:1,borderColor:"#DDDDDD",elevation:2,flexDirection:'row'}}>
         <View style={{width:'60%',alignItems:'flex-start',justifyContent:'center',flexDirection:'row'}}>
-        <PoppinsTextMedium style={{fontSize:18,fontWeight:"bold",color:'grey',marginLeft:10}} content="Wallet Balance"></PoppinsTextMedium>
+        <PoppinsTextMedium style={{fontSize:18,fontWeight:"bold",color:'grey',marginLeft:10}} content={t("wallet balance")}></PoppinsTextMedium>
         <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'black',marginLeft:10}} content={getWalletBalanceData?.body?.cashback_balance}></PoppinsTextMedium>
 
         </View>
@@ -317,7 +320,7 @@ useEffect(()=>{
           <TouchableOpacity onPress={()=>{
             navigation.navigate('RedeemCashback')
           }} style={{height:30,width:100,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:10}}>
-            <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'white'}} content="Redeem"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'white'}} content={t("redeem")}></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
       </View>
@@ -352,7 +355,7 @@ useEffect(()=>{
           ></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Cashback History"
+          content={t("cashback history")}
           style={{
             marginLeft: 10,
             fontSize: 16,
@@ -390,7 +393,7 @@ useEffect(()=>{
               fontWeight: "700",
               color: "#6E6E6E",
             }}
-            content={"Total cashback earned till date ₹ " + totalCashbackEarned}
+            content={t("total cashback earned") + totalCashbackEarned }
           ></PoppinsTextMedium>
           {/* <PoppinsText style={{ marginLeft: 10, fontSize: 34, fontWeight: '600', color: 'black' }} content={fetchCashbackEnteriesData?.body?.total != undefined ?  `${fetchCashbackEnteriesData?.body?.total}` : <AnimatedDots color={'black'}/>}></PoppinsText> */}
         </View>
@@ -413,12 +416,12 @@ useEffect(()=>{
         <TouchableOpacity onPress={()=>{
           setDisplayData(true)
         }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderRightWidth:1,borderColor:ternaryThemeColor}}>
-          <PoppinsTextMedium content="Transactions"></PoppinsTextMedium>
+          <PoppinsTextMedium content={t("Transactions")}></PoppinsTextMedium>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>{
           setDisplayData(false)
         }} style={{alignItems:"center",justifyContent:'center',width:'50%'}}>
-        <PoppinsTextMedium content="Wallet"></PoppinsTextMedium>
+        <PoppinsTextMedium content={t("Wallet")}></PoppinsTextMedium>
         </TouchableOpacity>
       </View>
       {

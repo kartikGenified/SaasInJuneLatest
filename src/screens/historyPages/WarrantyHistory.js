@@ -10,6 +10,7 @@ import FastImage from 'react-native-fast-image';
 import FilterModal from '../../components/modals/FilterModal';
 import DataNotFound from '../data not found/DataNotFound';
 import InputDate from '../../components/atoms/input/InputDate';
+import { useTranslation } from 'react-i18next';
 
 
 const WarrantyHistory = ({ navigation }) => {
@@ -26,6 +27,8 @@ const WarrantyHistory = ({ navigation }) => {
             isError: getWarrantylistIsError
         }
     ] = useGetWarrantyByAppUserIdMutation()
+
+    const {t} = useTranslation();
 
     const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
     const noData = Image.resolveAssetSource(require('../../../assets/gif/noData.gif')).uri;
@@ -264,7 +267,7 @@ const WarrantyHistory = ({ navigation }) => {
                     <Image style={{ height: 24, width: 24, resizeMode: 'contain', marginLeft: 10 }} source={require('../../../assets/images/blackBack.png')}></Image>
 
                 </TouchableOpacity>
-                <PoppinsTextMedium content="Warranty List" style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
+                <PoppinsTextMedium content={t("Warranty List")} style={{ marginLeft: 10, fontSize: 16, fontWeight: '600', color: '#171717' }}></PoppinsTextMedium>
                 {/* <TouchableOpacity style={{ marginLeft: 160 }}>
                     <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/notificationOn.png')}></Image>
                 </TouchableOpacity> */}
@@ -314,7 +317,7 @@ const WarrantyHistory = ({ navigation }) => {
                 renderItem={({ item, index }) => {
                     console.log(index + 1, item)
                     return (
-                        <WarrantyList data={item} date={item.end_date} warrantyTillDate={item.end_date} productName={item.product_name} warrantyStatus={item.status === "1" ? "Activated" : item.status === "2" ? "Not Activated" : "Claimed"} ></WarrantyList>
+                        <WarrantyList data={item} date={item.end_date} warrantyTillDate={item.end_date} productName={item.product_name} warrantyStatus={item.status === "1" ? t("Activated") : item.status === "2" ? "Not Activated" : "Claimed"} ></WarrantyList>
 
                     )
                 }}

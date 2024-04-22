@@ -22,6 +22,7 @@ import FastImage from "react-native-fast-image";
 import InputDate from "../../components/atoms/input/InputDate";
 import PoppinsTextLeftMedium from "../../components/electrons/customFonts/PoppinsTextLeftMedium";
 import FilterModal from "../../components/modals/FilterModal";
+import { useTranslation } from "react-i18next";
 
 const ScannedHistory = ({ navigation }) => {
   const [distinctDateArr, setDistinctDateArr] = useState();
@@ -64,6 +65,8 @@ const ScannedHistory = ({ navigation }) => {
   const noData = Image.resolveAssetSource(
     require("../../../assets/gif/noData.gif")
   ).uri;
+
+  const {t} = useTranslation()
 
   let startDate, endDate;
   const userData = useSelector((state) => state.appusersdata.userData);
@@ -272,7 +275,7 @@ const ScannedHistory = ({ navigation }) => {
           )}
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 14 }}
-            content="Points Earned"
+            content={t("earned points")}
           ></PoppinsTextMedium>
         </View>
         <View
@@ -290,7 +293,7 @@ const ScannedHistory = ({ navigation }) => {
           )}
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 14 }}
-            content="Points Redeemed"
+            content={t("points redeemed")}
           ></PoppinsTextMedium>
         </View>
         <View
@@ -308,7 +311,8 @@ const ScannedHistory = ({ navigation }) => {
           )}
           <PoppinsTextMedium
             style={{ color: "black", fontSize: 14 }}
-            content="Reserved Points"
+            content={t("reserved points")}
+
           ></PoppinsTextMedium>
         </View>
       </View>
@@ -420,7 +424,7 @@ const ScannedHistory = ({ navigation }) => {
             left: 10,
             color:'black'
           }}
-          content="Date Filter"
+          content={t("Date Filter")}
         ></PoppinsTextMedium>
 
         <TouchableOpacity
@@ -590,7 +594,8 @@ const ScannedHistory = ({ navigation }) => {
               ></Image>
             </TouchableOpacity>
             <PoppinsTextMedium
-              content="Scanned History"
+              content={t("scanned history")}
+            
               style={{
                 marginLeft: 10,
                 fontSize: 16,
@@ -617,7 +622,7 @@ const ScannedHistory = ({ navigation }) => {
                 fontWeight: "600",
                 color: "#6E6E6E",
               }}
-              content="You Have"
+              content={t("you have")}
             ></PoppinsTextMedium>
 
             {userPointData && (
@@ -650,7 +655,8 @@ const ScannedHistory = ({ navigation }) => {
                 fontWeight: "600",
                 color: "#6E6E6E",
               }}
-              content="Point Balance"
+              content={t("point balance")}
+
             ></PoppinsTextMedium>
 
             <DisplayEarnings></DisplayEarnings>
