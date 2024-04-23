@@ -319,16 +319,15 @@ const Splash = ({ navigation }) => {
     if(isConnected)
     {
       console.log("internet status",isConnected)
-      if(!isConnected)
-      {
+      
         setConnected(isConnected.isConnected)
         setIsSlowInternet(isConnected.isInternetReachable ? false : true)
         console.log("is connected",isConnected.isInternetReachable)
-      }
+      
       }
      
 
-  },[isConnected])
+  },[isConnected,getAppThemeError])
   
   useEffect(() => {
     if (getUsersData) {
@@ -387,7 +386,7 @@ const Splash = ({ navigation }) => {
         {
           if(value==="Yes")
           {
-            locationEnabled && minVersionSupport && navigation.navigate('SelectUser');
+            locationEnabled && minVersionSupport && navigation.navigate('SelectLanguage');
 
           }
           else{
@@ -413,10 +412,7 @@ const Splash = ({ navigation }) => {
    
   
   
-    useEffect(() => {
-      // Dispatch the NETWORK_REQUEST action on component mount
-      dispatch({ type: 'NETWORK_REQUEST' });
-    }, []);
+    
   
   
   // calling API to fetch themes for the app
