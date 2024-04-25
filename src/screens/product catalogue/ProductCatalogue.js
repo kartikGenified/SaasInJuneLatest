@@ -20,6 +20,7 @@ import {useSelector} from 'react-redux';
 import { useProductCatalogueMutation } from '../../apiServices/productCatalogue/productCatalogueApi';
 import Pdf from 'react-native-pdf';
 import FastImage from 'react-native-fast-image';
+import { useTranslation } from 'react-i18next';
 
 const ProductCatalogue = ({navigation}) => {
     const [catalogueData, setCatalogueData] = useState()
@@ -41,6 +42,8 @@ const ProductCatalogue = ({navigation}) => {
       isError: productCatalogueIsError,
     }
   ] = useProductCatalogueMutation();
+
+  const {t} = useTranslation()
 
   useEffect(()=>{
     const getToken=async(data)=>{
@@ -145,7 +148,7 @@ const height = Dimensions.get('window').height
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Product Catalogue"
+          content={t("Product Catalogue")}
           style={{
             marginLeft: 10,
             fontSize: 16,

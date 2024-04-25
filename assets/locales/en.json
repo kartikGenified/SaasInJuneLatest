@@ -143,6 +143,7 @@
   "support queries": "Support Queries",
   "notifications": "notifications",
   "redeem rewards": "redeem rewards",
+  "Reserved Points":"Reserved Points",
   "image gallery": "Image Gallery",
   "submit details": "SUBMIT DETAILS",
   "proceed": "proceed",
@@ -260,6 +261,12 @@
 
   "Enter UPI Address":  "Enter UPI Address",
   "Enter UPI ID":"Enter UPI ID",
-  "Don't have UPI": "Don't have UPI",
-  "Add account details": "Add account details"
+  "add account details": "Add account details",
+  "dont have UPI":"dont have UPI ?",
+  "verify":"verify",
+  "Add Bank Details":"Add Bank Details",
+  "OTP has been sent to your registered mobile number":"OTP has been sent to your registered mobile number",
+  "Didn't recieve any Code":"Didn't recieve any Code",
+  "Update Profile":"प्रोफ़ाइल अपडेट"
+  
 }

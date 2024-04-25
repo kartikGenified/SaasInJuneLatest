@@ -431,7 +431,7 @@ const EditProfile = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => {
             handleButtonPress()
           }} style={{ height: 40, width: 200, backgroundColor: ternaryThemeColor, borderRadius: 4, alignItems: 'center', justifyContent: "center" }}>
-            <PoppinsTextMedium style={{ color: 'white', fontWeight: '700', fontSize: 16 }} content="Update Profile"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{ color: 'white', fontWeight: '700', fontSize: 16 }} content={t("Update Profile")}></PoppinsTextMedium>
           </TouchableOpacity>
         </View>}
 

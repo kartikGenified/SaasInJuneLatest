@@ -302,7 +302,7 @@ const RedeemRewardHistory = ({navigation}) => {
         renderItem={({item,index}) => {
             console.log(index+1,item)
             return(
-                <PointsDataBox header="Points Earned" data={moment(item.created_at).format("DD MMM YYYY")} points={item.points}></PointsDataBox>
+                <PointsDataBox header={t("points earned")} data={moment(item.created_at).format("DD MMM YYYY")} points={item.points}></PointsDataBox>
             
                 )
         }}
@@ -378,7 +378,7 @@ const RedeemRewardHistory = ({navigation}) => {
                 <TouchableOpacity onPress={()=>{navigation.goBack()}}>
             <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
-            <PoppinsTextMedium content ={t("Redeem Rewards")} style={{marginLeft:10,fontSize:18,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
+            <PoppinsTextMedium content ={t("redeem rewards")} style={{marginLeft:10,fontSize:18,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
             {/* <TouchableOpacity style={{marginLeft:'50%'}}>
             <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/notificationOn.png')}></Image>
             </TouchableOpacity> */}
@@ -416,15 +416,15 @@ const RedeemRewardHistory = ({navigation}) => {
            {showCoupons &&
             <RedeemRewardDataBox header="My Vouchers"  data="5000" image={require('../../../assets/images/voucher1.png')} ></RedeemRewardDataBox>}
            {showCashback && <RedeemRewardDataBox navigation = {navigation} header="Cashback"  data="5000" image={require('../../../assets/images/cashback.png')} ></RedeemRewardDataBox>}
-            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Earned Points"  data={userPointData.body.point_earned} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header={t("earned points")}  data={userPointData.body.point_earned} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
            {showWheel &&  <RedeemRewardDataBox navigation = {navigation} header="Total Spins"  data="5000" image={require('../../../assets/images/wheel.png')} ></RedeemRewardDataBox>
            }
 
-            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Points Balance"  data={userPointData.body.point_balance} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header={t("points balance")}  data={userPointData.body.point_balance} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 
             {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header={t("Redeem Points")}  data={userPointData.body.point_redeemed} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 
-            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Reserved Points"  data={userPointData.body.point_reserved} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header={t("Reserved Points")}  data={userPointData.body.point_reserved} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 
 
             </ScrollView>

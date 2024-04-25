@@ -329,7 +329,7 @@ const Passbook = ({ navigation }) => {
                     <View style={{ width: '90%', alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: '#EEEEEE', borderRadius: 20, marginTop: 100 }}>
 
                         <View style={{ width: '100%', height: 50, flexDirection: "row", alignItems: "center", justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEEEEE' }}>
-                            {(getPointSharingData?.body?.total !== "0") ? <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: 'bold', position: 'absolute', left: 10 }} content={`Registration Bonus : ${getPointSharingData?.body?.data?.[0]?.points ? getPointSharingData?.body?.data?.[0]?.points + "Points" : "loading"} `}></PoppinsTextMedium >
+                            {(getPointSharingData?.body?.total !== "0") ? <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: 'bold', position: 'absolute', left: 10 }} content={`${t("registration bonus")}: ${getPointSharingData?.body?.data?.[0]?.points ? getPointSharingData?.body?.data?.[0]?.points + "Points" : "loading"} `}></PoppinsTextMedium >
                                 : <PoppinsTextMedium style={{ fontWeight: 'bold', position: 'absolute', left: 10 }} content={t("what do you want to do")}></PoppinsTextMedium>
                             }
                             <View style={{ flexDirection: 'row', position: 'absolute', right: 20 }}>

@@ -377,7 +377,7 @@ console.log("deleteBankError",deleteBankError)
           <View style={{flexDirection: 'row', position: 'absolute', left: 0}}>
             <PoppinsTextMedium
               style={{color: '#919191', marginLeft: 30}}
-              content="don't have UPI?"></PoppinsTextMedium>
+              content={t("dont have UPI")}></PoppinsTextMedium>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AddBankDetails');
@@ -388,7 +388,7 @@ console.log("deleteBankError",deleteBankError)
                   marginLeft: 10,
                   textDecorationLine: 'underline',
                 }}
-                content="add account details"></PoppinsTextMedium>
+                content={t("add account details")}></PoppinsTextMedium>
             </TouchableOpacity>
           </View>
         </View>
@@ -402,7 +402,7 @@ console.log("deleteBankError",deleteBankError)
           }}>
           <ShowLoadingButtonSmall
             handleData={submitUpi}
-            title="Verify"></ShowLoadingButtonSmall>
+            title={t("verify")}></ShowLoadingButtonSmall>
         </View>
         }
       </View>

@@ -7,6 +7,7 @@ import * as Keychain from 'react-native-keychain';
 import ProductCategoryDropDown from '../../components/atoms/dropdown/ProductCategoryDropDown';
 import { useGetProductLevelMutation } from '../../apiServices/productCategory/ProductCategoryApi';
 import FastImage from "react-native-fast-image";
+import { useTranslation } from 'react-i18next';
 
 
 const ProductCategory = ({navigation}) => {
@@ -20,6 +21,8 @@ const ProductCategory = ({navigation}) => {
       )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
+
+        const {t} = useTranslation()
 
    
     
@@ -156,7 +159,7 @@ const ProductCategory = ({navigation}) => {
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Category Wise Product Info"
+          content={t("Category wise product information")}
           style={{
             marginLeft: 10,
             fontSize: 16,

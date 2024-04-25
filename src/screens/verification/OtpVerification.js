@@ -24,6 +24,7 @@ import { useAddCashToBankMutation } from "../../apiServices/cashback/CashbackRed
 import Geolocation from '@react-native-community/geolocation';
 import { useCreateCouponRequestMutation } from "../../apiServices/coupons/getAllCouponsApi";
 import {GoogleMapsKey} from "@env"
+import { useTranslation } from "react-i18next";
 
 
 const OtpVerification = ({navigation,route}) => {
@@ -96,6 +97,8 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   const selectedAccount = route.params?.selectedAccount
   const brand_product_code = route.params?.brand_product_code
   const couponCart = route.params?.couponCart
+
+  const {t} = useTranslation()
   
 
   console.log("couponCart",couponCart)
@@ -499,7 +502,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
 
         <PoppinsTextMedium
           style={{ fontSize: 20, color: "#ffffff", marginLeft: 10 }}
-          content={"Verify OTP"}
+          content={t("Verify OTP")}
         ></PoppinsTextMedium>
 
         {error && (
@@ -521,7 +524,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
         )}
       </View>
       <View style={{alignItems:'center',justifyContent:"center",width:'100%',backgroundColor:ternaryThemeColor,padding:20,marginBottom:60,marginTop:20}}>
-        <PoppinsTextMedium style={{color:'white',fontSize:16}} content="OTP has been sent to your registered mobile number"></PoppinsTextMedium>
+        <PoppinsTextMedium style={{color:'white',fontSize:16}} content={t("OTP has been sent to your registered mobile number")}></PoppinsTextMedium>
       </View>
       <TextInputRectangularWithPlaceholder
         placeHolder="Mobile No"
@@ -542,7 +545,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
           getOtpFromComponent={getOtpFromComponent}
           color={"white"}
         ></OtpInput>
-        <PoppinsTextMedium content = "Enter OTP" style={{color:'black',fontSize:20,fontWeight:'800'}}></PoppinsTextMedium>
+        <PoppinsTextMedium content = {t("Enter OTP")} style={{color:'black',fontSize:20,fontWeight:'800'}}></PoppinsTextMedium>
         <View style={{alignItems:'center',justifyContent:'center'}}>
               <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',marginTop:4}}>
               <Image
@@ -556,7 +559,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
                   <Text style={{color:ternaryThemeColor,marginLeft:4}}>{timer}</Text>
               </View>
               <View style={{alignItems:'center',justifyContent:'center'}}>
-                <Text style={{color:ternaryThemeColor,marginTop:10}}>Didn't recieve any Code?</Text>
+                <Text style={{color:ternaryThemeColor,marginTop:10}}>{t("Didn't recieve any Code")}?</Text>
                 
                   {timer===0 &&
                                   <Text onPress={()=>{handleOtpResend()}} style={{color:ternaryThemeColor,marginTop:6,fontWeight:'600',fontSize:16}}>Resend Code</Text>
@@ -570,7 +573,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
         <TouchableOpacity onPress={()=>{
           finalGiftRedemption()
         }} style={{height:50,width:140,alignItems:'center',justifyContent:'center',backgroundColor:ternaryThemeColor,borderRadius:4}}>
-          <PoppinsTextMedium content = "Redeem" style ={{color:'white',fontSize:20,fontWeight:'700'}}></PoppinsTextMedium>
+          <PoppinsTextMedium content = {t("redeem")} style ={{color:'white',fontSize:20,fontWeight:'700'}}></PoppinsTextMedium>
         </TouchableOpacity>
       </View>}
     </View>

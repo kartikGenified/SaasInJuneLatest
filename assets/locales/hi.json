@@ -257,6 +257,15 @@
   "Cash":"नकद",
   "Enter UPI Address": "UPI पता दर्ज करें।",
   "Enter UPI ID": "UPI आईडी दर्ज करें।",
-  "Don't have UPI": "मेरे पास यह नहीं है।",
-  "Add account details": "उसे खाता विवरण जोड़ें।"
+  "dont have UPI": "मेरे पास UPI नहीं है",
+  "add account details": "खाता विवरण जोड़ें।",
+  "verify":"सत्यापित करें",
+  "Add Bank Details":"बैंक विवरण जोड़ें",
+  "Get OTP":"OTP प्राप्त करें",
+  "OTP has been sent to your registered mobile number":"आपके पंजीकृत मोबाइल नंबर पर ओटीपी भेजा गया है",
+  "Didn't recieve any Code": "कोई कोड प्राप्त नहीं हुआ",
+  "Verify OTP":"ओटीपी सत्यापित करें",
+  "Notification":"सूचना",
+  "points balance":"अंक शेष",
+  "Reserved Points":"आरक्षित अंक"
 }
