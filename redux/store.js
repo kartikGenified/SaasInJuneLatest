@@ -20,6 +20,7 @@ import userMappingSlice from './slices/userMappingSlice';
 import internetSlice from './slices/internetSlice';
 import scanningSlice from './slices/scanningSlice';
 import pointWalletSlice from './slices/pointWalletSlice';
+import dashboardDataSlice from './slices/dashboardDataSlice';
 
 export const store = configureStore({
   reducer: {
@@ -41,7 +42,8 @@ export const store = configureStore({
     userMapping: userMappingSlice,
     internet: internetSlice,
     scanning : scanningSlice,
-    pointWallet:pointWalletSlice
+    pointWallet:pointWalletSlice,
+    dashboardData:dashboardDataSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware, internetMiddleware), // Include networkMiddleware

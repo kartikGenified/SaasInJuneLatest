@@ -14,8 +14,8 @@ i18n.use(initReactI18next)
         translation: arTranslation,
       },
     },
-    lng: 'ar', // Default language
-    fallbackLng: 'ar', // Fallback language
+    lng: 'en', // Default language
+    fallbackLng: 'en', // Fallback language
     interpolation: {
       escapeValue: false,
     },

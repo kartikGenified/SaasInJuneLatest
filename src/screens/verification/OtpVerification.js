@@ -5,7 +5,8 @@ import {
   Image,
   TouchableOpacity,
   Keyboard,
-  Text
+  Text,
+  BackHandler
 } from "react-native";
 import { useGetLoginOtpMutation } from "../../apiServices/login/otpBased/SendOtpApi";
 import PoppinsTextMedium from "../../components/electrons/customFonts/PoppinsTextMedium";
@@ -125,6 +126,8 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     }
 
   }
+
+  
 
   useEffect(() => {
     timer > 0 && setTimeout(timeOutCallback, 1000);
@@ -504,6 +507,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
             modalClose={modalClose}
             message={message}
             openModal={error}
+            navigateTo="Passbook"
           ></ErrorModal>
         )}
         {success && (

@@ -30,6 +30,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import Close from 'react-native-vector-icons/Ionicons';
 import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 import { useTranslation } from 'react-i18next';
+import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
+import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
 
 const VerifyOtp = ({ navigation, route }) => {
   const [mobile, setMobile] = useState(route.params.navigationParams.mobile);
@@ -37,7 +39,7 @@ const VerifyOtp = ({ navigation, route }) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
-
+  
   const [timer, setTimer] = useState(60)
 
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
@@ -92,6 +94,14 @@ const VerifyOtp = ({ navigation, route }) => {
     },
   ] = useGetLoginOtpMutation();
 
+
+  const [getDashboardFunc, {
+    data: getDashboardData,
+    error: getDashboardError,
+    isLoading: getDashboardIsLoading,
+    isError: getDashboardIsError
+  }] = useGetAppDashboardDataMutation()
+
   const [
     verifyLoginOtpFunc,
     {
@@ -138,6 +148,20 @@ const VerifyOtp = ({ navigation, route }) => {
       // console.log(sendOtpError)
     }
   }, [sendOtpData, sendOtpError]);
+
+
+
+  useEffect(() => {
+    if (getDashboardData) {
+      console.log("getDashboardData", getDashboardData)
+      dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
+    }
+    else if (getDashboardError) {
+      setError(true)
+      setMessage("Can't get dashboard data, kindly retry.")
+      console.log("getDashboardError", getDashboardError)
+    }
+  }, [getDashboardData, getDashboardError])
 
 
   //modal close
@@ -204,7 +228,9 @@ const VerifyOtp = ({ navigation, route }) => {
       const user_type_id = navigationParams?.user_type_id;
       const user_type = navigationParams?.user_type;
       const fcm_token = fcmToken
+      const token = verifyLoginOtpData?.body?.token
       if (verifyLoginOtpData?.success) {
+        token && getDashboardFunc(token)
         verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token });
       }
     } else if (verifyLoginOtpError) {

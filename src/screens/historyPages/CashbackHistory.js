@@ -294,7 +294,7 @@ useEffect(()=>{
       >
         <View
           style={{
-            width: "80%",
+            width: "100%",
             alignItems: "flex-start",
             justifyContent: "center",
             padding: 8
@@ -331,29 +331,22 @@ useEffect(()=>{
               ></PoppinsTextMedium>
               
 
-                {
-                   props.items?.bene_details?.ifsc &&
-                   <PoppinsTextMedium
-                   style={{ color: "black", fontWeight: "600", fontSize: 14 }}
-                   content={`IFSC :  ${props.items?.transfer_mode !== "upi" &&  props.items?.bene_details?.ifsc}  `}
-                 ></PoppinsTextMedium>
-   
-                }
+               
            
               <PoppinsTextMedium
                 style={{ color: "black", fontWeight: "600", fontSize: 14 }}
                 content={
-                  moment(props.items.transaction_on).format("DD-MMM-YYYY") +
+                  moment(props.items.created_at).format("DD-MMM-YYYY") +
                   " " +
-                  moment(props.items.transaction_on).format("HH:mm a")
+                  moment(props.items.created_at).format("HH:mm a")
                 }
               ></PoppinsTextMedium>
             </View>
           </View>
         </View>
-        <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        {/* <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
           <PoppinsTextMedium style={{ color: 'black' }} content={"₹ " + props.items?.cashbacks}></PoppinsTextMedium>
-        </View>
+        </View> */}
       </View>
     );
   };
@@ -398,17 +391,17 @@ useEffect(()=>{
     },[getWalletBalanceData,getWalletBalanceError])
 
     return (
-      <View style={{width:'100%',padding:10,alignItems:'center',justifyContent:'center',backgroundColor:'white',borderBottomWidth:1,borderColor:"#DDDDDD",elevation:2,flexDirection:'row'}}>
+      <View style={{width:'100%',padding:12,alignItems:'center',justifyContent:'center',backgroundColor:'white',borderBottomWidth:1,borderColor:"#DDDDDD",elevation:2,flexDirection:'row'}}>
         <View style={{width:'60%',alignItems:'flex-start',justifyContent:'center',flexDirection:'row'}}>
-        <PoppinsTextMedium style={{fontSize:18,fontWeight:"bold",color:'grey',marginLeft:10}} content={t("wallet balance")}></PoppinsTextMedium>
-        <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'black',marginLeft:10}} content={getWalletBalanceData?.body?.cashback_balance}></PoppinsTextMedium>
+        <PoppinsTextMedium style={{fontSize:16,fontWeight:"bold",color:'grey',marginLeft:10}} content={t("wallet balance")}></PoppinsTextMedium>
+        <PoppinsTextMedium style={{fontSize:16,fontWeight:'bold',color:'black',marginLeft:10}} content={getWalletBalanceData?.body?.cashback_balance}></PoppinsTextMedium>
 
         </View>
         <View style={{width:'40%',alignItems:'center',justifyContent:'flex-start'}}>
           <TouchableOpacity onPress={()=>{
             navigation.navigate('RedeemCashback')
           }} style={{height:30,width:100,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:10}}>
-            <PoppinsTextMedium style={{fontSize:18,fontWeight:'bold',color:'white'}} content={t("redeem")}></PoppinsTextMedium>
+            <PoppinsTextMedium style={{fontSize:16,fontWeight:'bold',color:'white'}} content={t("redeem")}></PoppinsTextMedium>
           </TouchableOpacity>
         </View>
       </View>
@@ -464,11 +457,11 @@ useEffect(()=>{
           height:'8%'
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center',marginTop:14 }}>
           <Image
             style={{
-              height: 30,
-              width: 30,
+              height: 24,
+              width: 24,
               resizeMode: "contain",
 
             }}
@@ -477,7 +470,7 @@ useEffect(()=>{
           <PoppinsTextMedium
             style={{
               marginLeft: 10,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: "700",
               color: "#6E6E6E",
             }}
@@ -503,14 +496,14 @@ useEffect(()=>{
       <View style={{width:'100%',alignItems:'center',justifyContent:'center',flexDirection:'row',height:40}}>
         <TouchableOpacity onPress={()=>{
           setDisplayData(true)
-        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderRightWidth:1,borderColor:ternaryThemeColor}}>
-          <PoppinsTextMedium content={t("Transactions")}></PoppinsTextMedium>
+        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderColor:ternaryThemeColor,borderBottomWidth:displayData ? 2: 0,height:'100%'}}>
+          <PoppinsTextMedium style={{color:'black'}} content={t("Transactions")}></PoppinsTextMedium>
         </TouchableOpacity>
-        {/* <View style={{height:'100%',width:2,backgroundColor:"#DDDDDD"}}></View> */}
+        <View style={{height:'100%',width:2,backgroundColor:"#DDDDDD"}}></View>
         <TouchableOpacity onPress={()=>{
           setDisplayData(false)
-        }} style={{alignItems:"center",justifyContent:'center',width:'50%'}}>
-        <PoppinsTextMedium content={t("Wallet")}></PoppinsTextMedium>
+        }} style={{alignItems:"center",justifyContent:'center',width:'50%',borderColor:ternaryThemeColor,borderBottomWidth:!displayData ? 2: 0,height:'100%'}}>
+        <PoppinsTextMedium style={{color:'black'}} content={t("Wallet")}></PoppinsTextMedium>
         </TouchableOpacity>
       </View>
       {

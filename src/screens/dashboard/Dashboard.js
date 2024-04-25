@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Platform, TouchableOpacity,Image, Button,BackHandler} from 'react-native';
 import MenuItems from '../../components/atoms/MenuItems';
 import { BaseUrl } from '../../utils/BaseUrl';
-import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { useGetAppUserBannerDataMutation } from '../../apiServices/dashboard/AppUserBannerApi';
 import * as Keychain from 'react-native-keychain';
 import DashboardMenuBox from '../../components/organisms/DashboardMenuBox';
@@ -42,7 +41,6 @@ import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useTranslation } from 'react-i18next';
 
-
 const Dashboard = ({ navigation }) => {
   const [dashboardItems, setDashboardItems] = useState()
   const [bannerArray, setBannerArray] = useState()
@@ -61,6 +59,9 @@ const Dashboard = ({ navigation }) => {
   const userId = useSelector((state) => state.appusersdata.userId)
   const userData = useSelector(state => state.appusersdata.userData);
   const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
+  const dashboardData = useSelector(state=>state.dashboardData.dashboardData)
+
+  console.log("Dashboard data is",dashboardData )
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -82,12 +83,7 @@ const Dashboard = ({ navigation }) => {
     }] = useGetActiveMembershipMutation()
   
 
-  const [getDashboardFunc, {
-    data: getDashboardData,
-    error: getDashboardError,
-    isLoading: getDashboardIsLoading,
-    isError: getDashboardIsError
-  }] = useGetAppDashboardDataMutation()
+  
 
   
 
@@ -250,18 +246,7 @@ const Dashboard = ({ navigation }) => {
     }
   }, [getKycStatusData, getKycStatusError])
 
-  useEffect(() => {
-    if (getDashboardData) {
-      // console.log("getDashboardData", getDashboardData)
-      setDashboardItems(getDashboardData?.body?.app_dashboard)
-    }
-    else if (getDashboardError) {
-      setError(true)
-      setMessage("Can't get dashboard data, kindly retry.")
-      console.log("getDashboardError", getDashboardError)
-    }
-  }, [getDashboardData, getDashboardError])
-
+  
   
 
  
@@ -331,7 +316,7 @@ const Dashboard = ({ navigation }) => {
           const token = credentials?.username
           const form_type = "2"
           console.log("token from dashboard ", token)
-          token && getDashboardFunc(token)
+          
           token && getKycStatusFunc(token)
           token && getBannerFunc(token)
          
@@ -512,12 +497,12 @@ const Dashboard = ({ navigation }) => {
             </View>
 
 
-            <View style={{ height: '100%', borderWidth: 0.4, color: "#808080", opacity: 0.3, width: 0.2 }}>
+            <View style={{ height: '100%', borderWidth: 0.4, color: "#808080", opacity: 0.3,  }}>
             </View>
 
-            <View style={{ backgroundColor: 'white', paddingLeft: '8%' }}>
-              {userData && !userPointIsLoading && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor, padding: 10, borderRadius: 5, width: 120, alignItems: 'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
-                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800' }} content={t("redeem")} ></PoppinsTextLeftMedium>
+            <View style={{ backgroundColor: 'white',width:'46%' }}>
+              {userData && !userPointIsLoading && <TouchableOpacity style={{ backgroundColor: ternaryThemeColor,height:'100%', borderRadius: 5, width: '100%', alignItems: 'center',justifyContent:'center' }} onPress={() => { navigation.navigate("RedeemedHistory") }}>
+                <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800',fontSize:16 }} content={t("redeem")} ></PoppinsTextLeftMedium>
               </TouchableOpacity>}
             </View>
 
@@ -529,7 +514,7 @@ const Dashboard = ({ navigation }) => {
           <DashboardDataBox header="Total Points"  data="5000" image={require('../../../assets/images/coin.png')} ></DashboardDataBox>
 
           </ScrollView> */}
-          {dashboardItems && !userPointIsLoading && <DashboardMenuBox navigation={navigation} data={dashboardItems}></DashboardMenuBox>}
+          {dashboardData && !userPointIsLoading && <DashboardMenuBox navigation={navigation} data={dashboardData}></DashboardMenuBox>}
           {
         userPointIsLoading && <FastImage
           style={{ width: 100, height: 100, alignSelf: 'center',marginTop:20 }}
@@ -545,7 +530,7 @@ const Dashboard = ({ navigation }) => {
           </View>
           <View style={{ flexDirection: "row", width: '100%', alignItems: "center", justifyContent: 'space-evenly' }}>
             {(userData.user_type).toLowerCase()!=="sales" &&<DashboardSupportBox title={t("rewards")} text="Rewards" backgroundColor="#D9C7B6" borderColor="#FEE8D4" image={require('../../../assets/images/reward_dashboard.png')} ></DashboardSupportBox>}
-            <DashboardSupportBox title={t("customer support")} text="(Customer Support)" backgroundColor="#BCB5DC" borderColor="#E4E0FC" image={require('../../../assets/images/support.png')} ></DashboardSupportBox>
+            <DashboardSupportBox title={t("customer support")} text="Customer Support" backgroundColor="#BCB5DC" borderColor="#E4E0FC" image={require('../../../assets/images/support.png')} ></DashboardSupportBox>
             <DashboardSupportBox title={t("feedback")} text="Feedback" backgroundColor="#D8C8C8" borderColor="#FDDADA" image={require('../../../assets/images/feedback.png')} ></DashboardSupportBox>
 
           </View>

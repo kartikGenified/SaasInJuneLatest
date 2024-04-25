@@ -536,13 +536,14 @@ const CustomDrawer = () => {
 
 
         }
-        <View style={{ justifyContent: 'center', marginLeft: 50 }}>
+        <View style={{ justifyContent: 'center', marginLeft: 50,width:'50%'}}>
           {userData && <Text
             style={{
               color: 'white',
               margin: 0,
               fontWeight: '600',
               fontSize: 16,
+              
             }}>
             {userData.name}
           </Text>}

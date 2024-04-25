@@ -19,7 +19,7 @@ const TextInputRectangularWithPlaceholder = (props) => {
     }, [props.value])
 
     useEffect(() => {
-        if (placeHolder === "Mobile No") {
+        if (placeHolder.toLowerCase() === "mobile no" ) {
             setKeyboardType('numeric')
             setMaxlength(10)
         }

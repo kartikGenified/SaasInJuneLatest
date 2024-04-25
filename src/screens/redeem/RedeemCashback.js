@@ -131,6 +131,7 @@ else{
       dispatch(setCashConversionF(pointsConversion*conversionFactor))
   }
   },[cashPerPointData,pointsConversion])
+  
   useEffect(()=>{
     fetchToken(userData.id)
     console.log("userData from useeffect",userData.id)

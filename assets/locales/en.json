@@ -2,7 +2,7 @@
   "english": "English",
   "Hindi":"Hindi",
   "choose profile": "Choose Your profile",
-  "mobile no": "mobile no",
+  "mobile no": "Mobile no",
   "terms condition": "Terms & Condition",
   "terms and condition": "I agree to the terms and condition",
   "login": "Login",
@@ -22,10 +22,10 @@
   "points history": "Points History",
   "scanned history": "Scanned History",
   "redeemed history": "Redeemed History",
-  "coupon history" : "coupon history",
+  "coupon history" : "Coupon History",
   "cashback history": "Cashback History",
   "shared point history" : "shared point history",
-  "previous transaction history" : "Previous Transaction Histor",
+  "previous transaction history" : "Previous Transaction History",
 
   "Gift Catalogue" :"Gift Catalogue", 
   "Scan QR":"Scan QR",
@@ -35,7 +35,7 @@
   "Check Genuinity":"Check Genuinity",
   "Passbook":"Passbook",
 
-  "wallet balance":"Wallet Balnce",
+  "wallet balance":"Wallet Balance",
 
   "list of products scanned by you": "list of products scanned by you",
   "list of points redeemed by you": "list of points redeemed by you",
@@ -43,7 +43,7 @@
   "list of cashback claimed by you": "list of cashback claimed by you",
   "list of wheel spinned by you" : "list of wheel spinned by you",
 
-  "warranty history": "warranty history",
+  "warranty history": "Warranty History",
   "you have": "you have",
   "lifetime earnings": "Lifetime Earnings",
   "lifetime burns": "Lifetime Burns",
