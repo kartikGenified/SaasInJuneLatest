@@ -38,6 +38,7 @@ import FastImage from 'react-native-fast-image';
 import { setFirstScan,setRegistrationBonusFirstScan } from '../../../redux/slices/scanningSlice';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
+import { useTranslation } from 'react-i18next';
 
 
 const QrCodeScanner = ({navigation}) => {
@@ -79,6 +80,8 @@ const QrCodeScanner = ({navigation}) => {
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram,shouldSharePoints,location,userData);
   let addedqr =[]
+
+  const {t} = useTranslation();
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
 
   // mutations ----------------------------------------
@@ -1237,7 +1240,7 @@ const onSuccess = async (e) => {
                   source={require('../../../assets/images/qrHowTo.png')}></Image>
                 <PoppinsTextMedium
                   style={{color: 'grey', fontWeight: '700', fontSize: 20}}
-                  content="Please start scanning by pointing the camera towards the QR Code"></PoppinsTextMedium>
+                  content={t("Please start scanning by pointing the camera towards the QR Code")}></PoppinsTextMedium>
               </ScrollView>
             </View>
           ) : (

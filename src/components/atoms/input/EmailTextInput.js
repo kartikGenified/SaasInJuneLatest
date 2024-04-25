@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TextInput, Keyboard } from "react-native";
 import PoppinsTextMedium from "../../electrons/customFonts/PoppinsTextMedium";
 import PoppinsTextLeftMedium from "../../electrons/customFonts/PoppinsTextLeftMedium";
+import { useTranslation } from "react-i18next";
 
 const EmailTextInput = (props) => {
   const [value, setValue] = useState(props.value);
@@ -12,8 +13,11 @@ const EmailTextInput = (props) => {
   const [keyboardShow, setKeyboardShow] = useState(false);
   const placeHolder = props.placeHolder;
   const label = props.label;
-  const required =
-    props.required === undefined ? props.jsonData.required : props.required;
+  let displayText = props.displayText
+  const required = props.displayText
+  props.required === undefined ? props.jsonData.required : props.required;
+
+  const {t} =useTranslation()
 
   Keyboard.addListener("keyboardDidShow", () => {
   
@@ -33,6 +37,10 @@ const EmailTextInput = (props) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(text);
   };
+
+  if(displayText=="email" || "Email"){
+      displayText =  "Email"
+  }
   
 const handlekeyboardHide=(text)=>{
     console.log("call form addListner",text)
@@ -129,7 +137,7 @@ const handlekeyboardHide=(text)=>{
         >
           <PoppinsTextMedium
             style={{ color: "#919191", padding: 4, fontSize: 18 }}
-            content={label}
+            content={t(displayText)}
           ></PoppinsTextMedium>
         </View>
         <TextInput

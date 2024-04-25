@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Keychain from 'react-native-keychain';
 import {useSelector} from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const HelpAndSupport = ({navigation}) => {
   const ternaryThemeColor = useSelector(
@@ -24,6 +25,9 @@ const HelpAndSupport = ({navigation}) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
+
+    const {t} = useTranslation()
+
   const supportMobile = useSelector(state=>state.apptheme.customerSupportMobile)
   const supportMail = useSelector(state=>state.apptheme.customerSupportMail)
   console.log(supportMail,supportMobile)
@@ -60,7 +64,7 @@ const HelpAndSupport = ({navigation}) => {
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Help and Support"
+          content={t("Help And SUpport")}
           style={{
             marginLeft: 10,
             fontSize: 16,

@@ -12,6 +12,8 @@ const DashboardSupportBox = (props) => {
     const fontWeight =Platform.OS==='ios' ? '400' : '800'
     const fontSize =Platform.OS==='ios' ? 10 : 12
 
+    console.log("text support",text)
+
 const handleNavigation=()=>{
     if(text==="Feedback"){
         navigation.navigate('Feedback')

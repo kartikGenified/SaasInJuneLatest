@@ -20,6 +20,7 @@ import TextInputRectangle from '../../components/atoms/input/TextInputRectangle'
 import { useRequestAppointmentMutation } from '../../apiServices/requestAppointment/requestAppointmentApi';
 import ErrorModal from '../../components/modals/ErrorModal';
 import MessageModal from '../../components/modals/MessageModal';
+import { useTranslation } from 'react-i18next';
 
 // create a component
 const RequestAppointment = ({ navigation,route }) => {
@@ -158,6 +159,7 @@ const RequestAppointment = ({ navigation,route }) => {
         setMessage("")
     }
 
+    const {t} =useTranslation()
 
 
 
@@ -184,7 +186,7 @@ const RequestAppointment = ({ navigation,route }) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: '3%', position: 'absolute', left: 50 }} content={"Request inquiry"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: '3%', position: 'absolute', left: 50 }} content={t("Request inquiry")}></PoppinsTextMedium>
 
 
             </View>

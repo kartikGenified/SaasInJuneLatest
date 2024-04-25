@@ -9,6 +9,7 @@ import FeedbackModal from '../../components/feedback/FeedbackModal';
 import { useAddFeedbackMutation } from '../../apiServices/feedbackApi/FeedbackApi';
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
+import { useTranslation } from 'react-i18next';
 
 const Feedback = ({ navigation }) => {
 
@@ -20,6 +21,8 @@ const Feedback = ({ navigation }) => {
   const userData = useSelector(state => state.appusersdata.userData)
 
     const userName = useSelector(state => state.appusersdata.name);
+
+    const {t} = useTranslation();
 
     const [feedback, setFeedback] = useState("")
 
@@ -122,7 +125,7 @@ const Feedback = ({ navigation }) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 5, position: 'absolute', left: 60 }} content={"Feedback"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 5, position: 'absolute', left: 60 }} content={t("feedback")}></PoppinsTextMedium>
 
 
             </View>
@@ -141,7 +144,7 @@ const Feedback = ({ navigation }) => {
                 <View>
                     <View style={{ alignItems: 'center' }}>
                         <View>
-                            <PoppinsTextMedium style={{ marginRight: 10, fontSize: 16, color: '#58585a', marginLeft: 30, marginTop: 20 }} content={"Please Rate"}></PoppinsTextMedium>
+                            <PoppinsTextMedium style={{ marginRight: 10, fontSize: 16, color: '#58585a', marginLeft: 30, marginTop: 20 }} content={t("Please Rate")}></PoppinsTextMedium>
                         </View>
 
                         <View style={styles.StarRating}>
@@ -155,7 +158,7 @@ const Feedback = ({ navigation }) => {
                             />
                         </View>
                         <View>
-                            <PoppinsTextMedium style={{ marginRight: 10, fontSize: 16, color: '#58585a', marginLeft: 30 }} content={"Comment/ Suggestions?"}></PoppinsTextMedium>
+                            <PoppinsTextMedium style={{ marginRight: 10, fontSize: 16, color: '#58585a', marginLeft: 30 }} content={t("Comment/ Suggestions?")}></PoppinsTextMedium>
                         </View>
                     </View>
                 </View>
@@ -163,12 +166,12 @@ const Feedback = ({ navigation }) => {
                 
 
                     <View >
-                        <FeedbackTextArea onFeedbackChange={handleFeedbackChange} placeholder="Write your feedback here" />
+                        <FeedbackTextArea onFeedbackChange={handleFeedbackChange} placeholder={t("Write your feedback here") }/>
                         
                     </View>
 
                 <View style={{ marginHorizontal: '20%' }}>
-                            <ButtonWithPlane title="Submit" navigate="" parmas={{}} type={"feedback"} onModalPress={showSuccessModal}></ButtonWithPlane>
+                            <ButtonWithPlane title={t("submit" )}navigate="" parmas={{}} type={"feedback"} onModalPress={showSuccessModal}></ButtonWithPlane>
                         </View>
             </View>
             </ScrollView>

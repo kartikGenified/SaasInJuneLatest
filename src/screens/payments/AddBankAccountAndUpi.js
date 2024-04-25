@@ -7,6 +7,7 @@ import { useFetchGiftsRedemptionsOfUserMutation } from '../../apiServices/workfl
 import * as Keychain from 'react-native-keychain';
 import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 const AddBankAccountAndUpi = ({navigation}) => {
     const ternaryThemeColor = useSelector(
@@ -14,6 +15,8 @@ const AddBankAccountAndUpi = ({navigation}) => {
       )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
+        
+        const {t} = useTranslation()
     return (
         <View style={{alignItems:"center",justifyContent:"flex-start",width:'100%',backgroundColor:ternaryThemeColor,height:'100%'}}>
             <View style={{alignItems:"center",justifyContent:"flex-start",flexDirection:"row",width:'100%',marginTop:10,height:'10%',marginLeft:20}}>
@@ -23,13 +26,13 @@ const AddBankAccountAndUpi = ({navigation}) => {
             <Image style={{height:24,width:24,resizeMode:'contain',marginLeft:10}} source={require('../../../assets/images/blackBack.png')}></Image>
 
                 </TouchableOpacity>
-            <PoppinsTextMedium content ="Add Bank & UPI" style={{marginLeft:10,fontSize:16,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
+            <PoppinsTextMedium content ={t("Add Bank & UPI")} style={{marginLeft:10,fontSize:16,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
             
             </View>
             <View style={{height:'90%',width:'100%',borderTopRightRadius:40,borderTopLeftRadius:40,alignItems:"center",justifyContent:"flexx-start",backgroundColor:"white"}}>
             
             <View style={{borderBottomWidth:1,borderColor:'#DDDDDD',width: '80%',paddingBottom:10}}>
-            <PoppinsTextMedium style={{color:'#292626',marginTop:10,fontWeight:'600'}} content="Select Method"></PoppinsTextMedium>
+            <PoppinsTextMedium style={{color:'#292626',marginTop:10,fontWeight:'600'}} content={t("Select Method")}></PoppinsTextMedium>
             </View>
             <TouchableOpacity onPress={()=>{navigation.navigate('AddBankDetails')}} style={{width:'90%',alignItems:"center",justifyContent:"center",height:80,flexDirection:'row',marginTop:20,borderBottomWidth:0.4,borderColor:'#DDDDDD'}}>
             <View style={{height:60,width:60,alignItems:'center',justifyContent:'center',borderRadius:30,borderWidth:1,borderColor:'#DDDDDD'}}>

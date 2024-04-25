@@ -26,6 +26,7 @@ import * as Keychain from 'react-native-keychain';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import { useDeleteBankMutation } from '../../apiServices/bankAccount/DeleteBankAccount';
 import { useIsFocused } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 
 const BankAccounts = ({ navigation, route }) => {
@@ -42,6 +43,8 @@ const BankAccounts = ({ navigation, route }) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
   const userData = useSelector(state => state.appusersdata.userData)
+
+  const {t} = useTranslation()
 
     const type = route.params?.type
     console.log("navigating to bank page from",type)
@@ -422,7 +425,7 @@ const BankAccounts = ({ navigation, route }) => {
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Bank Account"
+          content={t("Bank Account")}
           style={{
             marginLeft: 10,
             fontSize: 16,
@@ -450,7 +453,7 @@ const BankAccounts = ({ navigation, route }) => {
             marginTop: 20,
 
           }}
-          content="Preferred Method"></PoppinsTextMedium>
+          content={t("Preferred Method")}></PoppinsTextMedium>
         <ScrollView contentContainerStyle={{width: '100%',height:'80%'}} style={{ width: '100%',height:'70%' }}>
           <View style={{ alignItems: "center", justifyContent: "center" }}>
 
@@ -502,7 +505,7 @@ const BankAccounts = ({ navigation, route }) => {
           
         </ScrollView>
         <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 14, right: 20 }}>
-          <PoppinsText content="Add Account" style={{ color: ternaryThemeColor, fontSize: 16 }}></PoppinsText>
+          <PoppinsText content={t("Add Account")} style={{ color: ternaryThemeColor, fontSize: 16 }}></PoppinsText>
           <TouchableOpacity onPress={() => { navigation.navigate('AddBankAccountAndUpi') }} style={{ backgroundColor: '#DDDDDD', height: 60, width: 60, borderRadius: 30, alignItems: "center", justifyContent: 'center', marginLeft: 10 }}>
 
             <Plus name="pluscircle" size={50} color={ternaryThemeColor}></Plus>

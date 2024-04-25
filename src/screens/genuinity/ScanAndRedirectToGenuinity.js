@@ -30,6 +30,7 @@ import { setProductData } from '../../../redux/slices/getProductSlice';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Close from 'react-native-vector-icons/Ionicons';
 import RNQRGenerator from 'rn-qr-generator';
+import { useTranslation } from 'react-i18next';
 
 
 const ScanAndRedirectToGenuinity = ({ navigation }) => {
@@ -51,6 +52,8 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state => state.userLocation.location)
   const dispatch = useDispatch();
+  
+  const {t} = useTranslation()
 
 
   console.log('Workflow Program is ', workflowProgram);
@@ -595,7 +598,7 @@ else{
                   source={require('../../../assets/images/qrHowTo.png')}></Image>
                 <PoppinsTextMedium
                   style={{ color: 'grey', fontWeight: '700', fontSize: 20 }}
-                  content="Please start scanning by pointing the camera towards QR code"></PoppinsTextMedium>
+                  content={t("Please start scanning by pointing the camera towards the QR code")}></PoppinsTextMedium>
               </ScrollView>
             </View>
           ) : (

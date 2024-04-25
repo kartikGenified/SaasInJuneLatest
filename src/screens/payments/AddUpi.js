@@ -23,6 +23,7 @@ import {useVerifyPanMutation} from '../../apiServices/verification/PanVerificati
 import VerifyUpi from '../../apiServices/bankAccount/VerifyUpi';
 import { useDeleteBankMutation } from '../../apiServices/bankAccount/DeleteBankAccount';
 import { useIsFocused } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const AddUpi = ({navigation}) => {
   const [upi, setUpi] = useState();
@@ -59,6 +60,8 @@ const AddUpi = ({navigation}) => {
       isLoading: addBankDetailsIsLoading,
     },
   ] = useAddBankDetailsMutation();
+
+  const {t} = useTranslation()
 
   useEffect(()=>{
     setHideButton(false)
@@ -344,7 +347,7 @@ console.log("deleteBankError",deleteBankError)
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Enter UPI Address"
+          content={t("Enter UPI Address")}
           style={{
             fontSize: 22,
             fontWeight: '700',
@@ -363,7 +366,7 @@ console.log("deleteBankError",deleteBankError)
         }}>
         <TextInputRectangularWithPlaceholder
           handleData={getUpiId}
-          placeHolder="Enter UPI ID"></TextInputRectangularWithPlaceholder>
+          placeHolder={t("Enter UPI ID")}></TextInputRectangularWithPlaceholder>
         <View
           style={{
             width: '100%',

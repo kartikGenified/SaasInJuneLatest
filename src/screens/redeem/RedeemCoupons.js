@@ -25,6 +25,7 @@ import MessageModal from "../../components/modals/MessageModal";
 import PointHistory from "../historyPages/PointHistory";
 import { useGetAllCouponsMutation } from "../../apiServices/coupons/getAllCouponsApi";
 import Expand from "react-native-vector-icons/MaterialIcons";
+import { useTranslation } from "react-i18next";
 
 const RedeemCoupons = ({ navigation, route }) => {
   const [search, setSearch] = useState();
@@ -52,6 +53,8 @@ const RedeemCoupons = ({ navigation, route }) => {
     fetchAllCouponsFunc,
     { data: fetchAllCouponsData, error: fetchAllCouponsError },
   ] = useGetAllCouponsMutation();
+
+  const {t} = useTranslation()
 
   const [
     userPointFunc,
@@ -538,7 +541,7 @@ const RedeemCoupons = ({ navigation, route }) => {
         </TouchableOpacity>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <PoppinsTextMedium
-            content="Redeem Points"
+            content={t("Redeem Points")}
             style={{
               marginLeft: 10,
               fontSize: 16,
@@ -547,7 +550,7 @@ const RedeemCoupons = ({ navigation, route }) => {
             }}
           ></PoppinsTextMedium>
           <PoppinsTextMedium
-            content={`${pointBalance} pts available`}
+            content={`${pointBalance} ${t("pts available")}`}
             style={{
               marginLeft: 10,
               fontSize: 16,
@@ -695,7 +698,7 @@ const RedeemCoupons = ({ navigation, route }) => {
               marginTop: 10,
               marginBottom: 10,
             }}
-            content="Rewards"
+            content={t("rewards")}
           ></PoppinsTextMedium>
           {displayContent && (
             <FlatList
@@ -1137,7 +1140,7 @@ const RedeemCoupons = ({ navigation, route }) => {
         >
           <PoppinsTextMedium
             style={{ color: "white", fontSize: 16, fontWeight: "700" }}
-            content="Continue"
+            content={t("continue")}
           ></PoppinsTextMedium>
         </TouchableOpacity>
       </View>
