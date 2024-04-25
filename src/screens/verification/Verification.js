@@ -29,6 +29,7 @@ import { setKycCompleted } from '../../../redux/slices/userKycStatusSlice';
 import FastImage from 'react-native-fast-image';
 import { gifUri } from '../../utils/GifUrl';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 
 const Verification = ({navigation}) => {
@@ -71,6 +72,9 @@ const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false)
       const manualApproval = useSelector(state => state.appusers.manualApproval)
 
   const width = Dimensions.get('window').width
+
+  const {t} = useTranslation()
+
   
   let temp = {}
 
@@ -375,7 +379,7 @@ console.log(pan)
     if(Object.keys(body).length===0)
     {
 setError(true)
-setMessage("Kindly submit the details to continue")
+setMessage(t("Kindly submit the details to continue"))
     }
 else{
    updateKycStatusFunc(params)
@@ -644,7 +648,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
             }}>
                <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
                 <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Pan Number" > </PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content={t("Enter Pan Number" )}> </PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
                 <TextInput maxLength={10} value={pan ? pan:verifyPanData?.body?.pan} onChangeText={(text)=>{handlePanInput(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholder='DBJUU1234'></TextInput>
@@ -667,7 +671,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
               </View>
                <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
                 <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Your Name" > </PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content={t("Enter Your Name")} > </PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
                 <TextInput value={name!=="" ? name : verifyPanData?.body?.registered_name } onChangeText={(text)=>{setName(text)}} style={{alignItems:'center',justifyContent:'center',width:'82%',height:40,fontSize:16,letterSpacing:1,marginLeft:20,color:'black'}} placeholder='Enter Your Name'></TextInput>
@@ -686,7 +690,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
                
               <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
                 <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter Aadhar Number" > </PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content={t("Enter Aadhar Number")}> </PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
                 <TextInput ref={inpref} maxLength={12} value={ aadhar} onChangeText={(text)=>{
@@ -714,7 +718,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
               </View>}
               <View style={{height:70,width:'90%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"flex-start",marginTop:20}}>
                 <View style={{alignItems:"center",justifyContent:"center",backgroundColor:"white",bottom:10,left:20}}>
-                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content="Enter OTP" > </PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:'#919191',fontSize:16,marginLeft:4,marginRight:4}} content={t("Enter OTP" )}> </PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:'flex-start',flexDirection:"row",width:'100%',height:40}}>
                 <TextInput textContentType='oneTimeCode' value={otp} onChangeText={(text)=>{
@@ -784,7 +788,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
           
         }}>
           
-          <PoppinsTextMedium style={{alignSelf:'center', fontWeight:'bold', fontSize:20, color:'white'}} content={"Proceed"}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{alignSelf:'center', fontWeight:'bold', fontSize:20, color:'white'}} content={t("proceed")}></PoppinsTextMedium>
         </TouchableOpacity>
         </View>
         

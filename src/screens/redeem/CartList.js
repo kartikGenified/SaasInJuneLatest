@@ -21,6 +21,7 @@ import SuccessModal from '../../components/modals/SuccessModal';
 import MessageModal from '../../components/modals/MessageModal';
 import { useDispatch } from 'react-redux';
 import { additem } from '../../../redux/slices/rewardCartSlice';
+import { useTranslation } from 'react-i18next';
 
 const CartList = ({ navigation, route }) => {
   const [cart, setCart] = useState(route.params.cart);
@@ -32,6 +33,8 @@ const CartList = ({ navigation, route }) => {
   const [success, setSuccess] = useState(false)
 
   const dispatch = useDispatch();
+
+  const {t} =useTranslation();
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -474,7 +477,7 @@ const CartList = ({ navigation, route }) => {
         </TouchableOpacity>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <PoppinsTextMedium
-            content="Redeem Points"
+            content={t("Redeem Points")}
             style={{
               marginLeft: 10,
               fontSize: 16,

@@ -17,6 +17,7 @@ import RedeemRewardDataBoxWithoutImage from '../../components/molecules/RedeemRe
 import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import PlatinumModal from '../../components/platinum/PlatinumModal';
 import { useGetActiveMembershipMutation } from '../../apiServices/membership/AppMembershipApi';
+import { t } from 'i18next';
 
 const RedeemRewardHistory = ({navigation}) => {
     const [showCoupons, setShowCoupons] = useState(false)
@@ -377,7 +378,7 @@ const RedeemRewardHistory = ({navigation}) => {
                 <TouchableOpacity onPress={()=>{navigation.goBack()}}>
             <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
-            <PoppinsTextMedium content ="Redeem Rewards" style={{marginLeft:10,fontSize:18,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
+            <PoppinsTextMedium content ={t("Redeem Rewards")} style={{marginLeft:10,fontSize:18,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
             {/* <TouchableOpacity style={{marginLeft:'50%'}}>
             <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/notificationOn.png')}></Image>
             </TouchableOpacity> */}
@@ -421,7 +422,7 @@ const RedeemRewardHistory = ({navigation}) => {
 
             {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Points Balance"  data={userPointData.body.point_balance} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 
-            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Redeem Points"  data={userPointData.body.point_redeemed} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
+            {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header={t("Redeem Points")}  data={userPointData.body.point_redeemed} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 
             {showPoints && userPointData &&  <RedeemRewardDataBox navigation = {navigation} header="Reserved Points"  data={userPointData.body.point_reserved} image={require('../../../assets/images/points.png')} ></RedeemRewardDataBox>}
 

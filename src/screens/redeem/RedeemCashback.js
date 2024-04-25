@@ -22,6 +22,7 @@ import MessageModal from '../../components/modals/MessageModal';
 import { setPointConversionF,setCashConversionF } from '../../../redux/slices/redemptionDataSlice';
 import { useGetWalletBalanceMutation } from '../../apiServices/cashback/CashbackRedeemApi';
 import { setWalletBalance } from '../../../redux/slices/pointWalletSlice';
+import { useTranslation } from 'react-i18next';
 
 const RedeemCashback = ({navigation}) => {
   const [message, setMessage] = useState();
@@ -46,6 +47,8 @@ const RedeemCashback = ({navigation}) => {
   const modalClose = () => {
     setError(false);
   };
+
+  const {t} = useTranslation()
 
   const [userPointFunc,{
     data:userPointData,
@@ -230,7 +233,7 @@ else{
         </TouchableOpacity>
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <PoppinsTextMedium
-            content="Redeem Cashback"
+            content={t("Redeem Cashback")}
             style={{
               marginLeft: 10,
               fontSize: 16,
@@ -251,7 +254,7 @@ else{
           style={{fontSize: 24, color: 'black', marginTop: 20}}
           content={points}></PoppinsText>
         <PoppinsTextMedium
-          content="Available Points"
+          content={t("Available Points")}
           style={{
             color: 'black',
             fontWeight: '600',
@@ -263,7 +266,7 @@ else{
           style={{fontSize: 24, color: 'black', marginTop: 20}}
           content={getWalletBalanceData?.body?.cashback_balance}></PoppinsText>
         <PoppinsTextMedium
-          content="Wallet Balance"
+          content={t("Wallet Balance")}
           style={{
             color: 'black',
             fontWeight: '600',
@@ -272,7 +275,7 @@ else{
           </View>
         </View>
         <PoppinsTextMedium
-          content="Convert your Points to Cash"
+          content={t("Convert your Points to Cash")}
           style={{
             color: '#909090',
             fontWeight: '600',
@@ -291,7 +294,7 @@ else{
           paddingTop: 20,
         }}>
         <PoppinsTextMedium
-          content="ENTER POINTS"
+          content={t("Enter Points")}
           style={{
             color: '#909090',
             fontWeight: '600',
@@ -323,7 +326,7 @@ else{
               height:60
             }}>
             <PoppinsTextMedium
-              content="Points"
+              content={t("points")}
               style={{
                 color: '#909090',
                 fontWeight: '600',
@@ -343,7 +346,7 @@ else{
               height:60
             }}>
             <PoppinsTextMedium
-              content="Cash"
+              content={t("Cash")}
               style={{
                 color: '#909090',
                 fontWeight: '600',
@@ -364,7 +367,7 @@ else{
             marginBottom:20
           }}>
           <PoppinsTextMedium
-            content={`You need minimum ${minPointsRedeemed} points to redeem`}
+            content={`${t("You need minimum")} ${minPointsRedeemed} ${t("points to redeem")}`}
             style={{
               color: 'black',
               fontWeight: '600',
@@ -391,7 +394,7 @@ else{
           marginTop:20
         }}>
         <PoppinsTextMedium
-          content="Redeem Now"
+          content={t("redeem now")}
           style={{color: 'white', fontWeight: '600'}}></PoppinsTextMedium>
         <Image
           style={{height: 24, width: 24, resizeMode: 'contain', marginLeft: 10}}

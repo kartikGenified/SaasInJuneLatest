@@ -27,6 +27,8 @@ import PoppinsTextLeftMedium from '../../components/electrons/customFonts/Poppin
 import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalApi';
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
+import { useTranslation } from 'react-i18next';
+// import * as Keychain from 'react-native-keychain';  
 
 const PasswordLogin = ({ navigation, route }) => {
   const [username, setUsername] = useState("influencer_2")
@@ -75,6 +77,7 @@ const PasswordLogin = ({ navigation, route }) => {
 
   const fcmToken = useSelector(state=> state.fcmToken.fcmToken)
 
+  const {t} = useTranslation();
   // ------------------------------------------
 
   // initializing mutations --------------------------------
@@ -383,7 +386,7 @@ const PasswordLogin = ({ navigation, route }) => {
               // handleOperation={handleAppointment}
               backgroundColor="#353535"
               style={{ color: 'white', fontSize: 12, }}
-              content="Enquiry"
+              content={t("Enquiry")}
               navigateTo="RequestAppointment"
               properties={{ needsApproval: needsApproval, userType: userType, userId: userId,navigatingFrom:"PasswordLogin" }}
             >
@@ -416,7 +419,7 @@ const PasswordLogin = ({ navigation, route }) => {
           }}>
           <PoppinsText
             style={{ color: 'white', fontSize: 28 }}
-            content="Login To Your Account"></PoppinsText>
+            content={t("Login To Your Account")}></PoppinsText>
 
         </View>
       </View>
@@ -445,7 +448,7 @@ const PasswordLogin = ({ navigation, route }) => {
 
 
           <TextInputRectangularWithPlaceholder
-            placeHolder="UserName"
+            placeHolder={t("UserName")}
             handleData={getUserId}
           // maxLength={10}
           ></TextInputRectangularWithPlaceholder>
@@ -453,7 +456,7 @@ const PasswordLogin = ({ navigation, route }) => {
 
 
           <TextInputRectangularWithPlaceholder
-            placeHolder="Password"
+            placeHolder={t("Password")}
             handleData={getPassword}
             keyboardType = "password"
           // maxLength={10}
@@ -467,7 +470,7 @@ const PasswordLogin = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => {
             navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })
           }}>
-            <PoppinsTextLeftMedium content={"I agree to the Terms & Conditions"} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
+            <PoppinsTextLeftMedium content={t("I agree to the Terms & Conditions")} style={{ color: '#808080', marginHorizontal: 30, marginBottom: 20, fontSize: 15, marginLeft: 8, marginTop: 16 }}></PoppinsTextLeftMedium>
           </TouchableOpacity>
         </View>
 
@@ -485,7 +488,7 @@ const PasswordLogin = ({ navigation, route }) => {
               backgroundColor={buttonThemeColor}
               style={{ color: 'white', fontSize: 16 }}
               isChecked={isChecked}
-              content="Login">
+              content={t("login")}>
             </ButtonNavigateArrow>
           </View>
 

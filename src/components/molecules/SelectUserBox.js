@@ -4,11 +4,13 @@ import PoppinsTextMedium from '../electrons/customFonts/PoppinsTextMedium';
 import { SvgUri } from 'react-native-svg';
 import { useIsFocused } from '@react-navigation/native';
 import Dashboard from '../../screens/dashboard/Dashboard';
+import { useTranslation } from 'react-i18next';
 
 
 const SelectUserBox = (props) => {
     const [boxColor, setBoxColor] = useState('white')
     const focused = useIsFocused()
+    const {t} = useTranslation()
    
     const image = props.image
     // const image = 'https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/atom.svg'
@@ -83,7 +85,7 @@ const SelectUserBox = (props) => {
             </View>}
 
             
-            <PoppinsTextMedium style={{color:'#B0B0B0',marginTop:20,fontSize:18,fontWeight:'700'}} content ={(props.content).toUpperCase()}></PoppinsTextMedium>
+            <PoppinsTextMedium style={{color:'#B0B0B0',marginTop:20,fontSize:18,fontWeight:'700'}} content ={(props.content).toUpperCase() == "CARPENTER" ? t("CARPENTER") : (props.content).toUpperCase() == "CONTRACTOR" ? t("CONTRACTOR") : (props.content).toUpperCase() == "FABRICATOR" ? t("FABRICATOR") : props.content.toUpperCase() == "DEALER" ? t("DEALER") : props.content.toUpperCase() == "SALES" ? t("SALES") : props.content.toUpperCase() }></PoppinsTextMedium>
         </TouchableOpacity>
     );
 }

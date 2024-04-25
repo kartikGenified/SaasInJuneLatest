@@ -1,15 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
+import { useTranslation } from 'react-i18next';
 const TextInputNumericRectangle = props => {
   const [value, setValue] = useState(props.value);
   const placeHolder = props.placeHolder;
   const maxLength = props.maxLength;
   const label = props.label
   const required = props.required ===undefined ? props.jsonData.required : props.required
+  let displayText = props.displayText
 
   const isEditable = props.isEditable
   console.log("label",isEditable)
+
+  const {t} = useTranslation()
+
+  if(displayText == "mobile"){
+      displayText = t("mobile no")
+  }
 
   useEffect(()=>{
     if(props.value!==undefined)
@@ -53,7 +61,7 @@ const TextInputNumericRectangle = props => {
         }}>
         <PoppinsTextMedium
           style={{color: '#919191', padding: 4,fontSize:18}}
-          content={label}></PoppinsTextMedium>
+          content={displayText}></PoppinsTextMedium>
       </View>
       <TextInput
         maxLength={maxLength}
@@ -76,7 +84,7 @@ const TextInputNumericRectangle = props => {
           handleInput(text);
         }}
         value={value}
-        placeholder={required ? `${placeHolder} *` : `${placeHolder}`}></TextInput>
+        placeholder={required ? `${displayText} *` : `${displayText}`}></TextInput>
     </View>
   );
 };

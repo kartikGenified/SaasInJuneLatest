@@ -30,6 +30,7 @@ import { setProductData } from '../../../redux/slices/getProductSlice';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import Close from 'react-native-vector-icons/Ionicons';
 import RNQRGenerator from 'rn-qr-generator';
+import { useTranslation } from 'react-i18next';
 
 
 const ScanAndRedirectToWarranty = ({ navigation }) => {
@@ -53,6 +54,7 @@ const ScanAndRedirectToWarranty = ({ navigation }) => {
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram);
   
+  const {t} = useTranslation()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -572,7 +574,7 @@ else{
                   source={require('../../../assets/images/qrHowTo.png')}></Image>
                 <PoppinsTextMedium
                   style={{ color: 'grey', fontWeight: '700', fontSize: 20 }}
-                  content="Please start scanning by pointing the camera towards QR code"></PoppinsTextMedium>
+                  content={t("Please start scanning by pointing the camera towards the QR Code")}></PoppinsTextMedium>
               </ScrollView>
             </View>
           ) : (

@@ -8,22 +8,21 @@ import {
   ScrollView,
 } from "react-native";
 import PoppinsTextMedium from "../../components/electrons/customFonts/PoppinsTextMedium";
-import StatusBox from "../../components/atoms/StatusBox";
 import moment from "moment";
-import PoppinsText from "../../components/electrons/customFonts/PoppinsText";
 import { useSelector } from "react-redux";
 import Location from "react-native-vector-icons/EvilIcons";
 import Message from "react-native-vector-icons/Feather";
-import Edit from "react-native-vector-icons/Entypo";
-import ButtonNavigate from "../../components/atoms/buttons/ButtonNavigate";
 import { useGetRedeemedGiftsStatusMutation } from "../../apiServices/gifts/RedeemGifts";
 import * as Keychain from 'react-native-keychain';
 import TrackDeliveryModal from "../../components/redeemDetails/TrackDeliveryModal";
+import { useTranslation } from "react-i18next";
 
 const RedeemedDetails = ({ navigation, route }) => {
   const [status, setStatus] = useState("")
   const height = Dimensions.get("window").height;
   const data = route.params.data;
+
+  const { t } = useTranslation();
 
   const[trackModal, setTrackModal] = useState(false);
     
@@ -106,7 +105,7 @@ const RedeemedDetails = ({ navigation, route }) => {
       >
         <PoppinsTextMedium
           style={{ color: "black", fontSize: 16, fontWeight: "700" }}
-          content="Issue with this ?"
+          content={t("Issue with this ?")}
         ></PoppinsTextMedium>
         <TouchableOpacity
           onPress={() => {
@@ -124,7 +123,7 @@ const RedeemedDetails = ({ navigation, route }) => {
         >
           <PoppinsTextMedium
             style={{ color: "white", fontSize: 16 }}
-            content="Click here to report"
+            content={t("Click here to report")}
           ></PoppinsTextMedium>
         </TouchableOpacity>
       </View>
@@ -167,7 +166,7 @@ const RedeemedDetails = ({ navigation, route }) => {
           ></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Redeemed Details"
+          content={t("Redeemed Details")}
           style={{
             marginLeft: 10,
             fontSize: 16,
@@ -200,7 +199,7 @@ const RedeemedDetails = ({ navigation, route }) => {
           >
             <PoppinsTextMedium
               style={{ fontSize: 16, fontWeight: "600", color: "#171717" }}
-              content={`Redeem Date ${redeemedDate}`}
+              content={`${t("Redeem Date")} ${redeemedDate}`}
             ></PoppinsTextMedium>
             <View
               style={{
@@ -253,7 +252,7 @@ const RedeemedDetails = ({ navigation, route }) => {
           >
             <PoppinsTextMedium
               style={{ fontSize: 20, fontWeight: "600", color: "#171717" }}
-              content={`Redeemption Mode: ${redemptionMode}`}
+              content={`${t("Redemption Mode")}: ${redemptionMode}`}
             ></PoppinsTextMedium>
 
             {data.redemption_type !== "1" && (
@@ -346,7 +345,7 @@ const RedeemedDetails = ({ navigation, route }) => {
               <Location name="location" size={30} color="white" />
               <PoppinsTextMedium
                 style={{ color: "white", fontSize: 14, marginLeft: 4 }}
-                content="Track Delivery Status "
+                content={t("Track Delivery Status")}
               ></PoppinsTextMedium>
               
             </TouchableOpacity>
@@ -369,7 +368,7 @@ const RedeemedDetails = ({ navigation, route }) => {
               <Message name="message-square" size={24} color="white" />
               <PoppinsTextMedium
                 style={{ color: "white", fontSize: 14, marginLeft: 10 }}
-                content="Share Feedback "
+                content={t("Share Feedback")}
               ></PoppinsTextMedium>
             </TouchableOpacity>
           </View>

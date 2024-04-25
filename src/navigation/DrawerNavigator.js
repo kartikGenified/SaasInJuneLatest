@@ -910,7 +910,7 @@ const CustomDrawer = () => {
 
 
         }}>
-          <PoppinsTextLeftMedium style={{ color: 'white' }} content="LOG OUT"></PoppinsTextLeftMedium>
+          <PoppinsTextLeftMedium style={{ color: 'white' }} content={t("LOG OUT")}></PoppinsTextLeftMedium>
         <PoppinsTextLeftMedium style={{color:'white',fontSize:10,position:'absolute',bottom:2}} content ="Designed and developed by Genefied"></PoppinsTextLeftMedium>
 
         </TouchableOpacity>

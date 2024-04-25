@@ -45,6 +45,7 @@ import { validatePathConfig } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {GoogleMapsKey} from "@env"
+import { useTranslation } from 'react-i18next';
 
 
 const BasicInfo = ({ navigation, route }) => {
@@ -105,6 +106,7 @@ console.log("navigation params from basic info",navigationParams)
   console.log("appUsers", userType, userTypeId, isManuallyApproved, name, mobile)
   const width = Dimensions.get('window').width
   const height = Dimensions.get('window').height
+  const {t} = useTranslation()
   const gifUri = Image.resolveAssetSource(
     require("../../../assets/gif/loader.gif")
   ).uri;
@@ -652,7 +654,7 @@ let missingParam = ""
     }
     else {
       setError(true)
-      setMessage("Otp isn't verified yet")
+      setMessage(t("Otp isn't verified yet"))
     }
     console.log("responseArraybody", body)
   }
@@ -728,7 +730,7 @@ let missingParam = ""
         </TouchableOpacity>
         <View style={{ alignItems: 'center', justifyContent: 'center', position: "absolute", top: 20, left: 50 }}>
           <PoppinsTextMedium
-            content="Registration"
+            content={t("registration")}
             style={{
               marginLeft: 10,
               fontSize: 16,
@@ -740,7 +742,7 @@ let missingParam = ""
       <ScrollView style={{ width: '100%' }}>
 
         <View style={{ width: width, backgroundColor: "white", alignItems: "center", justifyContent: 'flex-start', paddingTop: 20 }}>
-          {formFound ? <PoppinsTextMedium style={{ color: 'black', fontWeight: '700', fontSize: 18, marginBottom: 40 }} content="Please Fill The Following Form To Register"></PoppinsTextMedium> : <PoppinsTextMedium style={{ color: 'black', fontWeight: '700', fontSize: 18, marginBottom: 40 }} content="No Form Available !!"></PoppinsTextMedium>}
+          {formFound ? <PoppinsTextMedium style={{ color: 'black', fontWeight: '700', fontSize: 18, marginBottom: 40 }} content={t("Please Fill The Following Form To Register")}></PoppinsTextMedium> : <PoppinsTextMedium style={{ color: 'black', fontWeight: '700', fontSize: 18, marginBottom: 40 }} content="No Form Available !!"></PoppinsTextMedium>}
 
           {/* <RegistrationProgress data={["Basic Info","Business Info","Manage Address","Other Info"]}></RegistrationProgress> */}
           {registrationForm &&
@@ -761,6 +763,7 @@ let missingParam = ""
                             handleData={handleChildComponentData}
                             placeHolder={item.name}
                             value={userMobile}
+                            displayText ={item.name}
                             label={item.label}
                             isEditable={false}
                           >
@@ -784,7 +787,7 @@ let missingParam = ""
                         </View> : <TouchableOpacity style={{ flex: 0.15, marginTop: 6, backgroundColor: ternaryThemeColor, alignItems: 'center', justifyContent: 'center', height: 50, borderRadius: 5 }} onPress={()=>{
                           handleTimer()
                         }}>
-                          <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }} content="Get OTP"></PoppinsTextLeftMedium>
+                          <PoppinsTextLeftMedium style={{ color: 'white', fontWeight: '800', padding: 5 }}content={t("get otp")}></PoppinsTextLeftMedium>
                         </TouchableOpacity>}
                         {sendOtpIsLoading && <FastImage
                 style={{
@@ -848,9 +851,11 @@ let missingParam = ""
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
+                      displayText = {t(item.name.toLowerCase().trim())}
                       value={userName}
                       label={item.label}
                       isEditable={false}
+                 
                     ></PrefilledTextInput>
                   )
                 }
@@ -863,7 +868,7 @@ let missingParam = ""
                       key={index}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
-
+                      displayText = {t(item.name.trim())}
                       label={item.label}
                     // isValidEmail = {isValidEmail}
                     ></EmailTextInput>
@@ -881,6 +886,7 @@ let missingParam = ""
                       notVerified={addharVerified}
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
+                      displayText = {t(item.name.toLowerCase().trim())}
                       label={item.label}
                     >
                       {' '}
@@ -897,6 +903,7 @@ let missingParam = ""
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       label={item.label}
+                      displayText={item.name}
                     >
                       {' '}
                     </TextInputPan>
@@ -924,6 +931,7 @@ let missingParam = ""
                       handleData={handleChildComponentData}
                       placeHolder={item.name}
                       value={location?.city}
+                      displayText = {item.name}
                       label={item.label}
                     ></PrefilledTextInput>
                   )
@@ -942,6 +950,7 @@ let missingParam = ""
                         placeHolder={item.name}
                         value={location?.postcode}
                         label={item.label}
+                        displayText = {item.name}
                         maxLength={6}
                       ></PincodeTextInput>
                     )
@@ -972,6 +981,7 @@ let missingParam = ""
                       placeHolder={item.name}
                       value={location?.state}
                       label={item.label}
+                      displayText = {item.name}
                     ></PrefilledTextInput>
                   )
                 }
@@ -985,6 +995,8 @@ let missingParam = ""
                       placeHolder={item.name}
                       value={location?.district}
                       label={item.label}
+                      displayText = {item.name}
+
                     ></PrefilledTextInput>
                   )
 
@@ -1041,7 +1053,7 @@ let missingParam = ""
             handleOperation={() => {
               handleRegistrationFormSubmission();
             }}
-            content="Submit"
+            content={t("submit")}
             style={{
               paddingLeft: 30,
               paddingRight: 30,

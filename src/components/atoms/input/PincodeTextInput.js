@@ -1,13 +1,21 @@
 import React,{useState,useEffect} from 'react';
 import {View, StyleSheet,TextInput,Keyboard} from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
+import { useTranslation } from 'react-i18next';
 
 const PincodeTextInput = (props) => {
     const [value,setValue] = useState(props.value)
     const [maxLength, setMaxLength] = useState(props.maxLength ? props.maxLength : 100)
     const [keyboardShow, setKeyboardShow] = useState(false)
+    let displayText =props.displayText
+
+    if(displayText == "pincode" || displayText == "Pincode"){
+        displayText = "Pincode"
+    }
+    console.log("pinnn", displayText)
    
     const required = props.required ===undefined ? props.jsonData.required : props.required
+    const {t} = useTranslation()
 
     const placeHolder = props.placeHolder
     const label = props.label
@@ -49,9 +57,9 @@ const PincodeTextInput = (props) => {
     return (
         <View style={{height:60,width:'86%',borderWidth:1,borderColor:'#DDDDDD',alignItems:"center",justifyContent:"center",backgroundColor:'white',margin:10}}>
             <View style={{alignItems:"center",justifyContent:'center',backgroundColor:'white',position:"absolute",top:-15,left:16}}>
-                <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = {label}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{color:"#919191",padding:4,fontSize:18}} content = {t(displayText)}></PoppinsTextMedium>
             </View>
-            <TextInput keyboardType='numeric' maxLength={maxLength} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ? `${placeHolder} *` : `${placeHolder}`}></TextInput>
+            <TextInput keyboardType='numeric' maxLength={maxLength} onSubmitEditing={(text)=>{handleInputEnd()}} onEndEditing={(text)=>{handleInputEnd()}} style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{handleInput(text)}} value={value} placeholder={required ? `${label} *` : `${label}`}></TextInput>
         </View>
     );
 }

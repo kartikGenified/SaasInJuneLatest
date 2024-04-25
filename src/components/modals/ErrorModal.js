@@ -3,6 +3,7 @@ import { Alert, Modal, StyleSheet, Text, Pressable, View, Image } from 'react-na
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const ErrorModal = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -18,6 +19,8 @@ const ErrorModal = (props) => {
   const navigateTo = props.navigateTo
 
   console.log("product data in report an issue", productData)
+
+  const {t} = useTranslation()
 
   
   useEffect(() => {
@@ -67,13 +70,13 @@ const ErrorModal = (props) => {
           <View style={{ ...styles.modalView, borderWidth: 2, borderColor: ternaryThemeColor }}>
             {/* <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={require('../../../assets/images/failed.png')}></Image> */}
             {title && <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>{title}</Text>}
-            {!title && <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>Sorry</Text>}
+            {!title && <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>{t("Sorry")}</Text>}
 
             <Text style={{ ...styles.modalText, fontSize: 20, fontWeight: '600', color: 'black' }}>{props.message}</Text>
             <Pressable
               style={{ ...styles.button, backgroundColor: '#FF5D5D', width: 100 }}
               onPress={() => closeModal()}>
-              <Text style={styles.textStyle}>Close</Text>
+              <Text style={styles.textStyle}>{t("Close")}</Text>
             </Pressable>
 
             {props.isReportable &&
