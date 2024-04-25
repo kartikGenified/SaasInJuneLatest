@@ -8,6 +8,7 @@ import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTex
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -29,6 +30,8 @@ const TierDetails = ({navigation}) => {
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
 
+    
+    const {t} = useTranslation()
 
 
     const getMembership = async () => {
@@ -95,7 +98,7 @@ const TierDetails = ({navigation}) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff',marginLeft:10 }} content={"Tier Details"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff',marginLeft:10 }} content={t("Tier Details")}></PoppinsTextMedium>
 
 
             </View>

@@ -8,12 +8,14 @@ import { useProductInstallationVideoMutation } from '../../apiServices/installat
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import DataNotFound from '../data not found/DataNotFound';
 import FastImage from 'react-native-fast-image';
+import { useTranslation } from 'react-i18next';
 
 // create a component
 const InstallationVideo = ({ navigation }) => {
 
     const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
+    const {t} = useTranslation()
 
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
@@ -75,7 +77,7 @@ const InstallationVideo = ({ navigation }) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 10, position: 'absolute', left: 50 }} content={"Installation Video"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 10, position: 'absolute', left: 50 }} content={t("Installation Video")}></PoppinsTextMedium>
 
             </View>
             {/* navigator */}

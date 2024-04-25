@@ -204,7 +204,7 @@ const AddBankDetails = ({navigation}) => {
             <Image style={{height:24,width:24,resizeMode:'contain',marginLeft:20}} source={require('../../../assets/images/blackBack.png')}></Image>
 
                 </TouchableOpacity>
-            <PoppinsTextMedium content ="Add Bank Details" style={{marginLeft:10,fontSize:16,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
+            <PoppinsTextMedium content ={t("Add Bank Details")} style={{marginLeft:10,fontSize:16,fontWeight:'700',color:'white'}}></PoppinsTextMedium>
             
             </View>
             

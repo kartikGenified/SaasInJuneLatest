@@ -497,7 +497,7 @@ const BankAccounts = ({ navigation, route }) => {
             }
 
             {(listAccountData?.body?.length == 0  || listAccountData == undefined ) && <View style={{ alignItems: 'center', marginTop:"60%"}}>
-              <PoppinsTextMedium style ={{fontSize:16,color:'black'}}content="No Bank Account has been added yet !"></PoppinsTextMedium>
+              <PoppinsTextMedium style ={{fontSize:16,color:'black'}} content={`${t("No bank account has been added yet")}`}></PoppinsTextMedium>
             </View>}
 
 
@@ -518,7 +518,7 @@ const BankAccounts = ({ navigation, route }) => {
             navigation.navigate("OtpVerification",{type:"Cashback",selectedAccount:hasSelectedPaymentMethod})
             }
             }} style={{width:100,alignItems:'center',justifyContent:'center',backgroundColor:ternaryThemeColor,padding:8, position: 'absolute', bottom: 14, left: 20 }}>
-              <PoppinsText content ="Get OTP" style={{color:'white',fontSize:16}}></PoppinsText>
+              <PoppinsText content ={t("Get OTP")} style={{color:'white',fontSize:16}}></PoppinsText>
             </TouchableOpacity>
             }
         {/* {Platform.OS=='android'  && <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 10, right: 20 }}>

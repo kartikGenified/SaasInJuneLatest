@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import PoppinsTextLeftMedium from '../../components/electrons/customFonts/PoppinsTextLeftMedium';
 import FastImage from 'react-native-fast-image';
 import DataNotFound from '../data not found/DataNotFound';
+import { useTranslation } from 'react-i18next';
 
 // create a component
 const WhatsNew = ({ navigation }) => {
@@ -22,6 +23,8 @@ const WhatsNew = ({ navigation }) => {
     )
         ? useSelector(state => state.apptheme.ternaryThemeColor)
         : 'grey';
+
+        const {t} = useTranslation()
 
     const [getMediafunc, {
         data: getMediaData,
@@ -194,7 +197,7 @@ const WhatsNew = ({ navigation }) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 10, position: 'absolute', left: 60 }} content={"What's New"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 10, position: 'absolute', left: 60 }} content={t("What's New")}></PoppinsTextMedium>
 
 
             </View>
