@@ -77,7 +77,8 @@ const CouponCartList = ({ navigation, route }) => {
      
         navigation.navigate("OtpVerification", {
           type: "Coupon",
-          brand_product_code: cart[0].brand_product_code
+          brand_product_code: cart[0].brand_product_code,
+          couponCart: cart
         })
     }
        // const credentials = await Keychain.getGenericPassword();
