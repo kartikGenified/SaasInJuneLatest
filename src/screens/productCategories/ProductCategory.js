@@ -170,7 +170,7 @@ const ProductCategory = ({navigation}) => {
 
       <View style={{height:'90%',width:'100%',alignItems:"center",justifyContent:'flex-start',backgroundColor:"white",paddingTop:30}}>
         <View style={{width:"100%",alignItems:"center",justifyContent:'center'}}>
-        <PoppinsTextMedium style={{color:'black',marginLeft:30,fontSize:16,fontWeight:'700'}}  content="Product Heirarchy"></PoppinsTextMedium>
+        <PoppinsTextMedium style={{color:'black',marginLeft:30,fontSize:16,fontWeight:'700'}}  content={t("Product Heirarchy")}></PoppinsTextMedium>
         </View>
       {/* {productLevel && <ProductCategoryDropDown header="Select Level" data={productLevel} handleData={getLevel}></ProductCategoryDropDown>}
 

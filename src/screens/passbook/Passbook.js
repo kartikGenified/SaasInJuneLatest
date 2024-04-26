@@ -287,7 +287,7 @@ const Passbook = ({ navigation }) => {
                         <TouchableOpacity onPress={() => { navigation.goBack() }}>
                             <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={require('../../../assets/images/blackBack.png')}></Image>
                         </TouchableOpacity>
-                        <PoppinsTextMedium content="Passbook" style={{ marginLeft: 10, fontSize: 18, fontWeight: '700', color: 'white' }}></PoppinsTextMedium>
+                        <PoppinsTextMedium content={t("Passbook" )}style={{ marginLeft: 10, fontSize: 18, fontWeight: '700', color: 'white' }}></PoppinsTextMedium>
                         {/* <TouchableOpacity style={{marginLeft:'50%'}}>
             <Image style={{height:30,width:30,resizeMode:'contain'}} source={require('../../../assets/images/notificationOn.png')}></Image>
             </TouchableOpacity> */}
