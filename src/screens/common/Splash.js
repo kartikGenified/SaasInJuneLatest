@@ -22,6 +22,11 @@ import {GoogleMapsKey} from "@env"
 import { useCheckVersionSupportMutation } from '../../apiServices/minVersion/minVersionApi';
 import VideoGallery from '../video/VideoGallery';
 import VersionCheck from 'react-native-version-check';
+import LocationPermission from '../../components/organisms/LocationPermission';
+import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
+import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
+
 
 
 const Splash = ({ navigation }) => {
@@ -32,6 +37,7 @@ const Splash = ({ navigation }) => {
   const [locationEnabled, setLocationEnabled] = useState(false)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false); 
+  const [parsedJsonValue, setParsedJsonValue] = useState()
   const [minVersionSupport, setMinVersionSupport] = useState(false)
   const [error, setError] = useState(false);
   const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
@@ -60,6 +66,13 @@ const Splash = ({ navigation }) => {
     },
   ] = useGetAppUsersDataMutation();
   
+  const [getDashboardFunc, {
+    data: getDashboardData,
+    error: getDashboardError,
+    isLoading: getDashboardIsLoading,
+    isError: getDashboardIsError
+  }] = useGetAppDashboardDataMutation()
+
   const [
     getMinVersionSupportFunc,
     {
@@ -77,6 +90,31 @@ const Splash = ({ navigation }) => {
     console.log("currentVersion",currentVersion)
     getMinVersionSupportFunc(currentVersion)
   },[])
+
+
+  useEffect(() => {
+    if (getDashboardData) {
+      console.log("getDashboardData", getDashboardData)
+      console.log("Trying to dispatch",parsedJsonValue.user_type_id)
+          dispatch(setAppUserId(parsedJsonValue.user_type_id))
+          dispatch(setAppUserName(parsedJsonValue.name))
+          dispatch(setAppUserType(parsedJsonValue.user_type))
+          dispatch(setUserData(parsedJsonValue))
+          dispatch(setId(parsedJsonValue.id))
+          dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
+          Platform.OS== 'android' && locationEnabled && minVersionSupport &&  navigation.navigate('Dashboard');
+          Platform.OS== 'ios' && minVersionSupport &&  navigation.navigate('Dashboard');
+  
+          Platform.OS== 'android' &&locationEnabled && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+          Platform.OS== 'ios' && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+           
+    }
+    else if (getDashboardError) {
+      // setError(true)
+      // setMessage("Can't get dashboard data, kindly retry.")
+      console.log("getDashboardError", getDashboardError)
+    }
+  }, [getDashboardData, getDashboardError])
 
   useEffect(() => {
     const backAction = () => {
@@ -135,112 +173,145 @@ const Splash = ({ navigation }) => {
         Linking.openURL('app-settings:');
       }
     };
-    const enableLocation = () => {
+    const getLocationPermission = async () => {
+
+if(Platform.OS=='ios')
+{
+      console.log("getLocationPermissions")
       Alert.alert(
-        'Enable Location Services',
-        'Location services are disabled. Do you want to enable them?',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'OK', onPress: openSettings },
-        ],
-      );
-    };
+  'GPS Disabled',
+  'Please enable GPS/Location to use this feature. You can open it from the top sliding setting menu of your phone or from the setting section of your phone.',
+  [
+    {
+      text: 'Cancel',
+      style: 'cancel',
+    },
+    { text: 'Settings', onPress: () => Platform.OS == 'android' ?  Linking.openSettings() : Linking.openURL('app-settings:') },
+  ],
+  { cancelable: false }
+);
+}
+if(Platform.OS=='android')
+{
+  LocationServicesDialogBox.checkLocationServicesIsEnabled({
+    message: "<h2 style='color: #0af13e'>Use Location ?</h2>This app wants to change your device settings:<br/><br/>Use GPS, Wi-Fi, and cell network for location<br/><br/><a href='#'>Learn more</a>",
+    ok: "YES",
+    cancel: "NO",
+    enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+    showDialog: true, // false => Opens the Location access page directly
+    openLocationServices: true, // false => Directly catch method is called if location services are turned off
+    preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
+    preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
+    providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
+  }).then(function(success) {
+    console.log(success); // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
+  }).catch((error) => {
+    console.log(error.message); // error.message => "disabled"
+  });
+}
+
+  }
    const intervalId= setInterval(() => {
-    try{
-      Geolocation.getCurrentPosition((res) => {
-        setLocationEnabled(true)
-        console.log("res", res)
-        lat = res.coords.latitude
-        lon = res.coords.longitude
-        // getLocation(JSON.stringify(lat),JSON.stringify(lon))
-        console.log("latlong", lat, lon)
-        var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
-            &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
-  
-        fetch(url).then(response => response.json()).then(json => {
-          // console.log("location address=>", JSON.stringify(json));
-          const formattedAddress = json?.results[0]?.formatted_address
-          const formattedAddressArray = formattedAddress?.split(',')
-  
+   
+      try{
+        Geolocation.getCurrentPosition((res) => {
+          console.log("res", res)
+          lat = res.coords.latitude
+          lon = res.coords.longitude
+          // getLocation(JSON.stringify(lat),JSON.stringify(lon))
           let locationJson = {
-  
-            lat: json?.results[0]?.geometry?.location?.lat === undefined ? "N/A" : json?.results[0]?.geometry?.location?.lat,
-            lon: json?.results[0]?.geometry?.location?.lng === undefined ? "N/A" : json?.results[0]?.geometry?.location?.lng,
-            address: formattedAddress === undefined ? "N/A" : formattedAddress
-  
+    
+            lat: lat === undefined ? "N/A" : lat,
+            lon: lon === undefined ? "N/A" : lon,
           }
-  
-          const addressComponent = json?.results[0]?.address_components
-          // console.log("addressComponent", addressComponent)
-          for (let i = 0; i <= addressComponent?.length; i++) {
-            if (i === addressComponent?.length) {
-              dispatch(setLocation(locationJson))
-              clearInterval(intervalId)
+
+          console.log("latlong", lat, lon)
+          var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
+              &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
+    
+          fetch(url).then(response => response.json()).then(json => {
+            console.log("location address=>", JSON.stringify(json));
+            if(json.status=="OK")
+            {
+              const formattedAddress = json?.results[0]?.formatted_address
+    
+            locationJson["address"] = formattedAddress === undefined ? "N/A" : formattedAddress
+            const addressComponent = json?.results[0]?.address_components
+            console.log("addressComponent", addressComponent)
+            for (let i = 0; i <= addressComponent?.length; i++) {
+              if (i === addressComponent?.length) {
+                clearInterval(intervalId)
+                dispatch(setLocation(locationJson))
+                setLocationEnabled(true)
+
+              }
+              else {
+                if (addressComponent[i].types.includes("postal_code")) {
+                  console.log("inside if")
+    
+                  console.log(addressComponent[i]?.long_name)
+                  locationJson["postcode"] = addressComponent[i]?.long_name
+                }
+                else if (addressComponent[i]?.types.includes("country")) {
+                  console.log(addressComponent[i]?.long_name)
+    
+                  locationJson["country"] = addressComponent[i]?.long_name
+                }
+                else if (addressComponent[i]?.types.includes("administrative_area_level_1")) {
+                  console.log(addressComponent[i]?.long_name)
+    
+                  locationJson["state"] = addressComponent[i]?.long_name
+                }
+                else if (addressComponent[i]?.types.includes("administrative_area_level_3")) {
+                  console.log(addressComponent[i]?.long_name)
+    
+                  locationJson["district"] = addressComponent[i]?.long_name
+                }
+                else if (addressComponent[i]?.types.includes("locality")) {
+                  console.log(addressComponent[i]?.long_name)
+    
+                  locationJson["city"] = addressComponent[i]?.long_name
+                }
+              }
+    
             }
-            else {
-              if (addressComponent[i].types.includes("postal_code")) {
-                console.log("inside if")
-  
-                console.log(addressComponent[i]?.long_name)
-                locationJson["postcode"] = addressComponent[i]?.long_name
-              }
-              else if (addressComponent[i]?.types.includes("country")) {
-                console.log(addressComponent[i]?.long_name)
-  
-                locationJson["country"] = addressComponent[i]?.long_name
-              }
-              else if (addressComponent[i]?.types.includes("administrative_area_level_1")) {
-                console.log(addressComponent[i]?.long_name)
-  
-                locationJson["state"] = addressComponent[i]?.long_name
-              }
-              else if (addressComponent[i]?.types.includes("administrative_area_level_3")) {
-                console.log(addressComponent[i]?.long_name)
-  
-                locationJson["district"] = addressComponent[i]?.long_name
-              }
-              else if (addressComponent[i]?.types.includes("locality")) {
-                console.log(addressComponent[i]?.long_name)
-  
-                locationJson["city"] = addressComponent[i]?.long_name
-              }
             }
+            
+    
+            console.log("formattedAddressArray", locationJson)
+    
+          })
+        },(error) => {
+          setLocationEnabled(false)
+          console.log("error", error)
+          if (error.code === 1) {
+            // Permission Denied
+            Geolocation.requestAuthorization()
   
+          } else if (error.code === 2) {
+            // Position Unavailable
+            getLocationPermission()
+  
+          } else {
+            // Other errors
+            Alert.alert(
+              "Error",
+              "An error occurred while fetching your location.",
+              [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+              ],
+              { cancelable: false }
+            );
           }
-  
-  
-          console.log("formattedAddressArray", locationJson)
-  
         })
-      },(error) => {
-        setLocationEnabled(false)
-        console.log("error", error)
-        if (error.code === 1) {
-          // Permission Denied
-          Geolocation.requestAuthorization()
-
-        } else if (error.code === 2) {
-          // Position Unavailable
-          enableLocation()
-
-        } else {
-          // Other errors
-          Alert.alert(
-            "Error",
-            "An error occurred while fetching your location.",
-            [
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ],
-            { cancelable: false }
-          );
-        }
-      })
-  
+    
+      }
+      catch(e){
+        console.log("error in fetching location",e)
+      }
     }
-    catch(e){
-      console.log("error in fetching location",e)
-    }
-   }, 5000);
+    
+   , 5000);
       
     
    return ()=> clearInterval(intervalId)
@@ -336,7 +407,8 @@ const Splash = ({ navigation }) => {
         return item.name
       })
       const appUsersData = getUsersData?.body.map((item,index)=>{
-        return {"name":item.name,
+        return {
+      "name":item.name,
       "id":item.user_type_id
       }
       })
@@ -353,27 +425,23 @@ const Splash = ({ navigation }) => {
   
  
     const getData = async () => {
-      try {
+      
         const jsonValue = await AsyncStorage.getItem('loginData');
-        const parsedJsonValue = JSON.parse(jsonValue)
+        
+        const parsedJsonValues = JSON.parse(jsonValue)
 
         const value = await AsyncStorage.getItem('isAlreadyIntroduced');
+        console.log("Login data recieved after auto login",jsonValue,value)
 
       if (value != null && jsonValue!=null ) {
         // value previously stored
         console.log("asynch value",value,jsonValue)
         try{
-          console.log("Trying to dispatch",parsedJsonValue.user_type_id)
-          dispatch(setAppUserId(parsedJsonValue.user_type_id))
-          dispatch(setAppUserName(parsedJsonValue.name))
-          dispatch(setAppUserType(parsedJsonValue.user_type))
-          dispatch(setUserData(parsedJsonValue))
-          dispatch(setId(parsedJsonValue.id))
+          setParsedJsonValue(parsedJsonValues)
+          getDashboardFunc(parsedJsonValues?.token)
           
-         locationEnabled && minVersionSupport &&  navigation.navigate('Dashboard');
-         locationEnabled && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
-
-         
+          
+       
         }
         catch(e)
         {
@@ -386,11 +454,12 @@ const Splash = ({ navigation }) => {
         {
           if(value==="Yes")
           {
-            locationEnabled && minVersionSupport && navigation.navigate('SelectLanguage');
-
+            Platform.OS== 'android' &&  locationEnabled && minVersionSupport && navigation.navigate('SelectUser');
+            Platform.OS== 'ios' &&  minVersionSupport && navigation.navigate('SelectUser');
           }
           else{
-            locationEnabled && minVersionSupport && navigation.navigate('Introduction')
+            Platform.OS== 'android' &&  locationEnabled && minVersionSupport && navigation.navigate('Introduction')
+            Platform.OS== 'ios' && minVersionSupport && navigation.navigate('Introduction')
           }
           // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
     
@@ -400,14 +469,12 @@ const Splash = ({ navigation }) => {
     
         }
 
-      }
+      
         
        
         
         
-       catch (e) {
-        console.log("Error is reading loginData",e)
-      }
+       
     };
    
   
@@ -483,7 +550,7 @@ const Splash = ({ navigation }) => {
       <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
       {!connected &&  <InternetModal comp = {NoInternetComp} />}
       {isSlowInternet && <InternetModal comp = {SlowInternetComp} /> }
-      
+     
       {error &&  <ErrorModal
           modalClose={modalClose}
 

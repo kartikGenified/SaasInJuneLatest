@@ -64,6 +64,7 @@ const ErrorModal = (props) => {
         onRequestClose={() => {
           props.modalClose()
           setModalVisible(!modalVisible);
+          navigation.navigate(navigateTo)
         }}>
         <View style={styles.centeredView}>
           <View style={{ ...styles.modalView, borderWidth: 2, borderColor: ternaryThemeColor }}>

@@ -186,33 +186,42 @@ const RedeemGifts = ({navigation,route}) => {
     let tempCount=0
     let temp=cart
     console.log("data",data)
-   
-    if(operation==="plus")
+    if(cart.length<=1)
     {
-      
-      temp.push(data)
-      setCart(temp)
-      
-    }
-    else {
-      // setPointBalance(pointBalance+Number(data.points))
-      for(var i =0;i<temp.length;i++)
+      if(operation==="plus")
       {
-        if(temp[i].id===data.id)
-        {
-        tempCount++
-        if(tempCount===1)
-        {
-          temp.splice(i,1)
-        }
         
-        }       
+        temp.push(data)
+        setCart(temp)
         
       }
-      
-      setCart(temp)
-
+      else  {
+        // setPointBalance(pointBalance+Number(data.points))
+        for(var i =0;i<temp.length;i++)
+        {
+          if(temp[i].id===data.id)
+          {
+          tempCount++
+          if(tempCount===1)
+          {
+            temp.splice(i,1)
+          }
+          
+          }       
+          
+        }
+        
+        setCart(temp)
+  
+      }
     }
+    else{
+      alert("You can redeem one gift at a time")
+    }
+
+      
+    
+    console.log("cart issahdashdghashgd",cart)
     
     console.log(temp)
 
@@ -242,11 +251,14 @@ const RedeemGifts = ({navigation,route}) => {
     {
       if(Number(pointBalance)>=Number(data.points))
     {
-      tempPoints =  tempPoints+data.points
-      let temp =count
-      temp++
-      setCount(temp)
-      props.handleOperation(data,operation,temp)
+      if(count ==0 && cart.length==0)
+      {
+        tempPoints =  tempPoints+data.points
+        let temp =count
+        temp++
+        setCount(temp)
+        props.handleOperation(data,operation,temp)
+      }
       
     }
     else{
@@ -262,11 +274,15 @@ const RedeemGifts = ({navigation,route}) => {
      
     }
     else{
-      let temp =count
+      if(count ==1)
+      {
+        let temp =count
       temp--
       setCount(temp)
       props.handleOperation(data,operation,temp)
       tempPoints = tempPoints-data.points
+      }
+      
 
       // setPointBalance(pointBalance+data.points)
 

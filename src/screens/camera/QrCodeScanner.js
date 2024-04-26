@@ -78,7 +78,7 @@ const QrCodeScanner = ({navigation}) => {
       require("../../../assets/gif/loader.gif")
     ).uri;
   const dispatch = useDispatch();
-  console.log('Workflow Program is ', workflowProgram,shouldSharePoints,location,userData);
+  console.log('Workflow Program is ',location);
   let addedqr =[]
 
   const {t} = useTranslation();
@@ -495,11 +495,12 @@ if(addQrData)
 //   };
 const onSuccess = async (e) => {
   console.log('Qr data is ------', e?.data);
-
+  
   if (e?.data === undefined) {
     setError(true);
     setMessage("Please scan a valid QR");
   } else {
+
     const qrData = e?.data?.split('=')[1];
     console.log("qrData", qrData);
 
@@ -1032,16 +1033,7 @@ const onSuccess = async (e) => {
   }
   return (
     <>
-    {locationGranted == null ? <View style={{alignItems:'center',justifyContent:'center'}}>
-    <FastImage
-          style={{ width: 100, height: 100, position:'absolute', marginTop: '70%' }}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        /> 
-    </View>: locationGranted == true ?
+    
       <QRCodeScanner
       onRead={onSuccess}
       reactivate={true}
@@ -1296,13 +1288,7 @@ const onSuccess = async (e) => {
         </View>
       }
     />
-    :
-    <View style={{height:'100%',width:'100%',alignItems:"center",justifyContent:'center'}}>
-      <PoppinsTextMedium style={{fontSize:20,color:ternaryThemeColor,fontWeight:'bold',marginBottom:20}} content="We are unable to fetch your location"></PoppinsTextMedium>
-
-      <PoppinsTextMedium style={{fontSize:20,color:ternaryThemeColor,fontWeight:'600'}} content="Enable Location to start scanning"></PoppinsTextMedium>
-      </View>
-  }
+    
     </>
     
   );

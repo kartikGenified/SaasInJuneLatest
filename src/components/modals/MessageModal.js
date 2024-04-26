@@ -14,6 +14,7 @@ const MessageModal = (props) => {
     const navigateTo = props.navigateTo
     const params = props.params
     console.log(navigateTo,params)
+    
   useEffect(()=>{
     if(props.openModal===true)
     {
@@ -34,12 +35,14 @@ const MessageModal = (props) => {
   return (
     <View style={styles.centeredView}>
       <Modal
+      
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
             props.modalClose()
           setModalVisible(!modalVisible);
+          navigation.navigate(navigateTo)
         }}>
         <View style={styles.centeredView}>
           <View style={{...styles.modalView,borderWidth:2,borderColor:ternaryThemeColor}}>
