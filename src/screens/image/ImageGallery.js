@@ -10,6 +10,8 @@ import Left from 'react-native-vector-icons/AntDesign'
 import Right from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image';
 import DataNotFound from '../data not found/DataNotFound';
+import { useTranslation } from 'react-i18next';
+
 const ImageGallery = ({navigation}) => {
   const [imageData, setImageData] = useState({})
   const gifUri = Image.resolveAssetSource(
@@ -21,6 +23,8 @@ const ImageGallery = ({navigation}) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
     const height = Dimensions.get('window').height
+
+    const {t} = useTranslation()
 
     const [appGalleryFun, {
       data:appGalleryData, 
@@ -156,7 +160,7 @@ setIndexImage(indexImage +1)
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Image Gallery"
+          content={t("Image Gallery")}
           style={{
             marginLeft: 10,
             fontSize: 16,

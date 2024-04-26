@@ -127,7 +127,7 @@ const FAQ = ({ navigation }) => {
                         source={require('../../../assets/images/blackBack.png')}></Image>
                 </TouchableOpacity>
 
-                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 10, position: 'absolute', left: 50 }} content={"FAQ"}></PoppinsTextMedium>
+                <PoppinsTextMedium style={{ fontSize: 20, color: '#ffffff', marginTop: 10, position: 'absolute', left: 50 }} content={t("FAQ")}></PoppinsTextMedium>
 
 
             </View>

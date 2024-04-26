@@ -16,6 +16,7 @@ import * as Keychain from "react-native-keychain";
 import Logo from "react-native-vector-icons/AntDesign";
 import moment from "moment";
 import { useFetchGiftCatalogueByUserTypeAndCatalogueTypeMutation } from "../../apiServices/gifts/GiftApi";
+import { useTranslation } from "react-i18next";
 
 export default function GiftCatalogue({ navigation }) {
   const [scheme, setScheme] = useState([]);
@@ -34,6 +35,8 @@ export default function GiftCatalogue({ navigation }) {
     fetchGiftCatalogue,
     { data: giftCatalogueData, error: giftCatalogueError },
   ] = useFetchGiftCatalogueByUserTypeAndCatalogueTypeMutation();
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     const getToken = async () => {
@@ -247,7 +250,7 @@ export default function GiftCatalogue({ navigation }) {
           ></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Gift Catalogue"
+          content={t("Gift Catalogue")}
           style={{
             marginLeft: 10,
             fontSize: 16,

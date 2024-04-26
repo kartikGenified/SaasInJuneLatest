@@ -9,6 +9,7 @@ import Logo from 'react-native-vector-icons/AntDesign'
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import DataNotFound from '../data not found/DataNotFound';
+import { useTranslation } from 'react-i18next';
 
 const VideoGallery = ({ navigation }) => {
   const [videoData, setVideoData] = useState([])
@@ -20,6 +21,8 @@ const VideoGallery = ({ navigation }) => {
   const height = Dimensions.get('window').height
 
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+  
+  const {t} = useTranslation()
 
 
   const [appVideoFunc, {
@@ -113,7 +116,7 @@ const VideoGallery = ({ navigation }) => {
             source={require('../../../assets/images/blackBack.png')}></Image>
         </TouchableOpacity>
         <PoppinsTextMedium
-          content="Videos"
+          content={t("Videos")}
           style={{
             marginLeft: 10,
             fontSize: 16,
