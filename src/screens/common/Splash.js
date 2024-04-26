@@ -35,6 +35,7 @@ const Splash = ({ navigation }) => {
   const [connected, setConnected] = useState(true)
   const [isSlowInternet, setIsSlowInternet] = useState(false)
   const [locationEnabled, setLocationEnabled] = useState(false)
+  const [locationBoxEnabled, setLocationBoxEnabled] = useState(false)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false); 
   const [parsedJsonValue, setParsedJsonValue] = useState()
@@ -110,8 +111,7 @@ const Splash = ({ navigation }) => {
            
     }
     else if (getDashboardError) {
-      // setError(true)
-      // setMessage("Can't get dashboard data, kindly retry.")
+     
       console.log("getDashboardError", getDashboardError)
     }
   }, [getDashboardData, getDashboardError])
@@ -137,29 +137,7 @@ const Splash = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
  
-//   function showLocation(position) {
-//     var latitude = position.coords.latitude;
-//     var longitude = position.coords.longitude;
-//     alert("Latitude : " + latitude + " Longitude: " + longitude);
-//  }
 
-//  function errorHandler(err) {
-//   if(err.code == 1) {
-//      alert("Error: Access is denied!");
-//   } else if( err.code == 2) {
-//      alert("Error: Position is unavailable!");
-//   }
-// }
-// var options = {timeout:1000};
-
-//   useEffect(()=>{
-//    const intervalID =  setInterval(() => {
-//     var watchID = Geolocation.watchPosition(showLocation, errorHandler, options);
-//     console.log("watchID",watchID)
-//    }, 10000);
-//   //  return () => clearInterval(intervalID)
-
-//   },[])
 
   useEffect(() => {
 
@@ -194,25 +172,39 @@ if(Platform.OS=='ios')
 if(Platform.OS=='android')
 {
   LocationServicesDialogBox.checkLocationServicesIsEnabled({
-    message: "<h2 style='color: #0af13e'>Use Location ?</h2>This app wants to change your device settings:<br/><br/>Use GPS, Wi-Fi, and cell network for location<br/><br/><a href='#'>Learn more</a>",
+    message: "<h2 style='color: #0af13e'>Use Location ?</h2>Ozostars wants to change your device settings:<br/><br/>Enable location to use the application.<br/><br/><a href='#'>Learn more</a>",
     ok: "YES",
     cancel: "NO",
     enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
     showDialog: true, // false => Opens the Location access page directly
     openLocationServices: true, // false => Directly catch method is called if location services are turned off
     preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
-    preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
-    providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
+    preventBackClick: true, // true => To prevent the location services popup from closing when it is clicked back button
+    providerListener: false, // true ==> Trigger locationProviderStatusChange listener when the location state changes
+    style:{
+    backgroundColor:"#DDDDDD",
+    positiveButtonTextColor: 'white',
+    positiveButtonBackgroundColor: "#298d7b",
+    negativeButtonTextColor: 'white',
+    negativeButtonBackgroundColor: '#ba5f5f',
+    
+  
+}
   }).then(function(success) {
-    console.log(success); // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
+    console.log("location  prompt box success", success);
+    setLocationEnabled(true) // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
   }).catch((error) => {
-    console.log(error.message); // error.message => "disabled"
+    console.log("location  prompt box error", error.message);
+    getLocationPermission()
+    // error.message => "disabled"
   });
 }
 
   }
-   const intervalId= setInterval(() => {
+
    
+    if(!locationBoxEnabled)
+    {
       try{
         Geolocation.getCurrentPosition((res) => {
           console.log("res", res)
@@ -240,7 +232,7 @@ if(Platform.OS=='android')
             console.log("addressComponent", addressComponent)
             for (let i = 0; i <= addressComponent?.length; i++) {
               if (i === addressComponent?.length) {
-                clearInterval(intervalId)
+                
                 dispatch(setLocation(locationJson))
                 setLocationEnabled(true)
 
@@ -290,6 +282,8 @@ if(Platform.OS=='android')
   
           } else if (error.code === 2) {
             // Position Unavailable
+            console.log("locationBoxEnabled",locationBoxEnabled)
+            if(!locationBoxEnabled)
             getLocationPermission()
   
           } else {
@@ -310,11 +304,11 @@ if(Platform.OS=='android')
         console.log("error in fetching location",e)
       }
     }
+     
     
-   , 5000);
       
     
-   return ()=> clearInterval(intervalId)
+   
    
   }, [navigation])
 

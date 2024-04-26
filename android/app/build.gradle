@@ -80,8 +80,8 @@ android {
         applicationId "com.netcarrots.ozone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 70007
-        versionName "70007"
+        versionCode 70008
+        versionName "70008"
         missingDimensionStrategy 'react-native-camera', 'general'
         
     }
