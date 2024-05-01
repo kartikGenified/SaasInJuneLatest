@@ -448,8 +448,8 @@ if(Platform.OS=='android')
         {
           if(value==="Yes")
           {
-            Platform.OS== 'android' &&  locationEnabled && minVersionSupport && navigation.navigate('SelectUser');
-            Platform.OS== 'ios' &&  minVersionSupport && navigation.navigate('SelectUser');
+            Platform.OS== 'android' &&  locationEnabled && minVersionSupport && navigation.navigate('SelectLanguage');
+            Platform.OS== 'ios' &&  minVersionSupport && navigation.navigate('SelectLanguage');
           }
           else{
             Platform.OS== 'android' &&  locationEnabled && minVersionSupport && navigation.navigate('Introduction')

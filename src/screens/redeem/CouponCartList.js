@@ -50,7 +50,7 @@ const CouponCartList = ({ navigation, route }) => {
     : '#FFB533';
   const userData = useSelector(state => state.appusersdata.userData);
 
-  console.log('userdata', route.params.cart);
+  console.log('userdata', JSON.stringify(route.params.cart));
   const height = Dimensions.get('window').height
 
   console.log("cart is",route.params.cart)

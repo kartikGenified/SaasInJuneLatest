@@ -176,10 +176,10 @@ const RedeemCoupons = ({ navigation, route }) => {
       </TouchableOpacity>
     );
   };
-  const addItemToCart = (data, operation, count, points) => {
+  const addItemToCart = (data, operation, count) => {
     let tempCount = 0;
     let temp = cart;
-    console.log("data", data);
+    console.log("data qwerty",data);
 
     if (operation === "plus") {
       temp.push(data);
@@ -204,14 +204,16 @@ const RedeemCoupons = ({ navigation, route }) => {
   const RewardsBox = (props) => {
     const [count, setCount] = useState(0);
     const [pointsSelected, setPointsSelected] = useState();
+    const [denominationSelected, setDenominationSelected] = useState()
     const [showDropdown, setShowDropDown] = useState(false);
     const image = props.image;
     const points = props.points;
     const product = props.product;
     const category = props.category;
     const data = props.data;
-    console.log("data", data);
+    // console.log("data", data);
     const cleanCategory = category.replace(/-API/g, "");
+    console.log("pointsSelected sdansjajda",pointsSelected)
 
     const changeCounter = (operation) => {
       // console.log(pointBalance, "tempPoints", tempPoints, data.value,pointsSelected);
@@ -231,8 +233,10 @@ const RedeemCoupons = ({ navigation, route }) => {
                 let temp = count;
                 temp++;
                 setCount(temp);
-                const selectedValueData = data;
-                selectedValueData["value"] = pointsSelected;
+                let selectedValueData = data;
+                selectedValueData = {...selectedValueData,"value":pointsSelected,"denomination":denominationSelected }
+                // selectedValueData["valuess"] = Number(pointsSelected);
+                console.log("selectedValueData",selectedValueData)
                 props.handleOperation(selectedValueData, operation, temp);
               } else {
                 alert("Kindly redeem one coupon at a time");
@@ -243,8 +247,7 @@ const RedeemCoupons = ({ navigation, route }) => {
             }
           }
         } else {
-          setError(true);
-          setMessage("Kindly select a value");
+          alert("Kindly select a value")
         }
       } else {
         let temp = count;
@@ -390,7 +393,9 @@ const RedeemCoupons = ({ navigation, route }) => {
                     item.value != 0 && (
                       <TouchableOpacity
                         onPress={() => {
+                          console.log("item.value",item)
                           setPointsSelected(item.value);
+                          setDenominationSelected(item.denomination)
                           setShowDropDown(false);
                         }}
                         style={{
