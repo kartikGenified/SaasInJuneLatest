@@ -223,6 +223,10 @@ if(Platform.OS=='android')
     
           fetch(url).then(response => response.json()).then(json => {
             console.log("location address=>", JSON.stringify(json));
+            if(__DEV__)
+            {
+              setLocationEnabled(true)
+            }
             if(json.status=="OK")
             {
               const formattedAddress = json?.results[0]?.formatted_address

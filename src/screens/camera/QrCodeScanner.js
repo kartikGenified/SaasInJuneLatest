@@ -78,7 +78,7 @@ const QrCodeScanner = ({navigation}) => {
       require("../../../assets/gif/loader.gif")
     ).uri;
   const dispatch = useDispatch();
-  console.log('Workflow Program is ',location);
+  // console.log('Workflow Program is ',location);
   let addedqr =[]
 
   const {t} = useTranslation();
@@ -157,7 +157,7 @@ const QrCodeScanner = ({navigation}) => {
 
   useEffect(()=>{
     if(addBulkQrData){
-      console.log("addBulkQrData",addBulkQrData)
+      // console.log("addBulkQrData",addBulkQrData)
       if(addBulkQrData.success)
       {
         // isFirstScan && checkFirstScan()
@@ -170,7 +170,7 @@ const QrCodeScanner = ({navigation}) => {
     }
 
     else if(addBulkQrError){
-      console.log("addBulkQrError",addBulkQrError)
+      // console.log("addBulkQrError",addBulkQrError)
       if(addBulkQrError.data)
       {
         setError(true)
@@ -300,10 +300,10 @@ if(addQrData)
    
     const credentials = await Keychain.getGenericPassword();
   if (credentials) {
-    console.log(
-      'Credentials successfully loaded for user ' + credentials.username
-    );
-    console.log("First scan")
+    // console.log(
+    //   'Credentials successfully loaded for user ' + credentials.username
+    // );
+    // console.log("First scan")
     const token = credentials.username
     const body = {
       tenant_id:slug,
@@ -326,7 +326,7 @@ if(addQrData)
       },
       
     }
-    console.log("Registration Bouns",body)
+    // console.log("Registration Bouns",body)
       if(!userData?.is_scanned)
       {
        addRegistrationBonusFunc(body)
@@ -341,28 +341,28 @@ if(addQrData)
  
   useEffect(() => {
     if (checkGenuinityData) {
-      console.log('genuinity check', checkGenuinityData);
+      // console.log('genuinity check', checkGenuinityData);
     } else if (checkGenuinityError) {
       setError(true)
       setMessage("Unable to check warranty status of this QR")
-      console.log('Error', checkGenuinityError);
+      // console.log('Error', checkGenuinityError);
     }
   }, [checkGenuinityData, checkGenuinityError]);
 
   useEffect(() => {
     if (checkWarrantyData) {
-      console.log('warranty check', checkWarrantyData);
+      // console.log('warranty check', checkWarrantyData);
     } else if (checkWarrantyError) {
       setError(true)
       setMessage("Unable to check warranty status of this QR")
-      console.log('warranty Error', checkWarrantyError);
+      // console.log('warranty Error', checkWarrantyError);
     }
   }, [checkWarrantyData, checkWarrantyError]);
 
 
   useEffect(() => {
     if (fetchUserPointsHistoryData) {
-        console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
+        // console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
         
 
         if(fetchUserPointsHistoryData.success)
@@ -379,7 +379,7 @@ if(addQrData)
     else if (fetchUserPointsHistoryError) {
       setError(true)
       setMessage("Can't fetch scanned QR list")
-        console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
+        // console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
     }
 
 }, [fetchUserPointsHistoryData, fetchUserPointsHistoryError])
@@ -399,7 +399,7 @@ if(addQrData)
       }
       else{
         const body = {product_id: productDataData?.body?.products[0].product_id, qr_id: qr_id};
-        console.log("productdata", token,body)
+        // console.log("productdata",body)
         dispatch(setProductData(productDataData?.body?.products[0]));
         setProductId(productDataData?.body?.product_id);
         
@@ -425,7 +425,7 @@ if(addQrData)
    
 
     } else if (productDataError) {
-      console.log('pr Error', productDataError);
+      // console.log('pr Error', productDataError);
       setError(true)
       setMessage(productDataError?.data?.Error?.message)
     }
@@ -494,7 +494,7 @@ if(addQrData)
    
 //   };
 const onSuccess = async (e) => {
-  console.log('Qr data is ------', e?.data);
+  // console.log('Qr data is ------', e?.data);
   
   if (e?.data === undefined) {
     setError(true);
@@ -502,10 +502,10 @@ const onSuccess = async (e) => {
   } else {
 
     const qrData = e?.data?.split('=')[1];
-    console.log("qrData", qrData);
+    // console.log("qrData", qrData);
 
     let requestData = { unique_code: qrData };
-    console.log("qrDataArray", qrData?.split("-"));
+    // console.log("qrDataArray", qrData?.split("-"));
 
     if (qrData?.split("-").length === 1) {
       requestData = { unique_code: "ozone-" + qrData };
@@ -519,9 +519,9 @@ const onSuccess = async (e) => {
         // Retrieve the credentials
         const credentials = await Keychain.getGenericPassword();
           if (credentials) {
-            console.log(
-              'Credentials successfully loaded for user ' + credentials?.username, data
-            );
+            // console.log(
+            //   'Credentials successfully loaded for user ' + credentials?.username, data
+            // );
             setSavedToken(credentials?.username);
             const token = credentials?.username;
 
@@ -530,7 +530,7 @@ const onSuccess = async (e) => {
           const response = await verifyQrFunc({ token, data })
           // console.log("verifyQrFunc",response)
           if (response?.data) {
-            console.log('Verify qr data', JSON.stringify(response));
+            // console.log('Verify qr data', JSON.stringify(response));
             if(response?.data?.body==null)
             {
               setError(true)
@@ -575,14 +575,14 @@ const onSuccess = async (e) => {
               setError(true);
               setMessage(response.error.data?.message);
             }
-            console.log('Verify qr error', response.error?.data?.Error);
+            // console.log('Verify qr error', response.error?.data?.Error);
           }
         } else {
-          console.log('No credentials stored');
+          // console.log('No credentials stored');
         }
       } catch (error) {
         // Handle errors within verifyQR
-        console.log("Keychain couldn't be accessed!", error);
+        // console.log("Keychain couldn't be accessed!", error);
       }
     };
 
@@ -591,7 +591,7 @@ const onSuccess = async (e) => {
       await verifyQR(requestData);
     } catch (error) {
       // Handle errors thrown during verifyQR function call
-      console.log("Exception in verifying the QR", error);
+      // console.log("Exception in verifying the QR", error);
     }
   }
 };
@@ -609,16 +609,16 @@ const onSuccess = async (e) => {
     
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
-      console.log(
-        'Credentials successfully loaded for user ' + credentials?.username, data
-      );
+      // console.log(
+      //   'Credentials successfully loaded for user ' + credentials?.username, data
+      // );
       const token = credentials?.username;
       checkGenuinityFunc({qrId, token});
     productDataFunc({productCode, userType, token});
-    console.log("ProductDataFunc",{productCode, userType, token})
+    // console.log("ProductDataFunc",{productCode, userType, token})
     }
     addedqr = addedQrList
-    console.log("addQrDataToList",addedqr,data)
+    // console.log("addQrDataToList",addedqr,data)
 
     if (addedqr.length === 0) {
       //  setAddedQrList([...addedqr, data]);
@@ -627,7 +627,7 @@ const onSuccess = async (e) => {
       const existingObject = addedqr.find(
         obj => obj?.unique_code === data?.unique_code,
       );
-      console.log("existingObject",existingObject,data)
+      // console.log("existingObject",existingObject,data)
       if (!existingObject) {
         // setAddedQrList([...addedqr, data]);
         addedqr.push(data)
@@ -661,47 +661,47 @@ const onSuccess = async (e) => {
     else{
      dispatch(setScanningType("Single"))
     }
-    console.log('success');
-    console.log("Items are",item1, item2, item3);
+    // console.log('success');
+    // console.log("Items are",item1, item2, item3);
 
     const itemsToRemove = [item1, item2, item3];
     const updatedWorkflowProgram = workflowProgram.filter(item => !itemsToRemove.includes(item));
 
     if (updatedWorkflowProgram[0] === 'Static Coupon') {
-        console.log(updatedWorkflowProgram.slice(1));
+        // console.log(updatedWorkflowProgram.slice(1));
         navigation.navigate('CongratulateOnScan', {
             workflowProgram: updatedWorkflowProgram.slice(1),
             rewardType:updatedWorkflowProgram[0]
         });
     } else if (updatedWorkflowProgram[0] === 'Warranty') {
-        console.log(updatedWorkflowProgram.slice(1));
+        // console.log(updatedWorkflowProgram.slice(1));
         navigation.navigate('ActivateWarranty', {
             workflowProgram: updatedWorkflowProgram.slice(1),
             rewardType:updatedWorkflowProgram[0]
 
         });
     } else if (updatedWorkflowProgram[0] === 'Points On Product' || updatedWorkflowProgram[0] === 'Cashback' || updatedWorkflowProgram[0] === 'Wheel') {
-        console.log(updatedWorkflowProgram.slice(1));
+        // console.log(updatedWorkflowProgram.slice(1));
         navigation.navigate('CongratulateOnScan', {
             workflowProgram: updatedWorkflowProgram.slice(1),
             rewardType:updatedWorkflowProgram[0]
             
         });
     } else if (updatedWorkflowProgram[0] === 'Genuinity+') {
-        console.log(updatedWorkflowProgram.slice(1));
+        // console.log(updatedWorkflowProgram.slice(1));
         navigation.navigate('GenuinityScratch', {
             workflowProgram: updatedWorkflowProgram.slice(1),
             rewardType:updatedWorkflowProgram[0]
         });
     } else if (updatedWorkflowProgram[0] === 'Genuinity'){
-        console.log(updatedWorkflowProgram.slice(1));
+        // console.log(updatedWorkflowProgram.slice(1));
         navigation.navigate('Genuinity', {
             workflowProgram: updatedWorkflowProgram.slice(1),
             rewardType:updatedWorkflowProgram[0]
         });
     }
     else{
-      console.log("You have completed the workflow")
+      // console.log("You have completed the workflow")
     }
 };
 
@@ -770,7 +770,7 @@ const onSuccess = async (e) => {
         setError(true);
         setMessage(verifyQrError.data?.message);
       }
-      console.log('Verify qr error', verifyQrError?.data?.Error);
+      // console.log('Verify qr error', verifyQrError?.data?.Error);
     }
   }, [verifyQrData, verifyQrError]);
   // --------------------------------------------------------
@@ -778,15 +778,15 @@ const onSuccess = async (e) => {
   //getting add qr data ------------------------------------
   useEffect(() => {
     if (addQrData) {
-      console.log('Add qr data', addQrData?.body);
+      // console.log('Add qr data', addQrData?.body);
       if (addQrData?.success) {
         dispatch(setQrData(addQrData?.body));
-        console.log("check Genuinity and warranty",checkGenuinityData,checkWarrantyData)
+        // console.log("check Genuinity and warranty",checkGenuinityData,checkWarrantyData)
 
         if(checkGenuinityData){
           
           if(checkGenuinityData?.body){
-          console.log("check warranty data",checkWarrantyData)
+          // console.log("check warranty data",checkWarrantyData)
           if(checkWarrantyError)
           {
           if(checkWarrantyError?.data?.body)
@@ -891,7 +891,7 @@ const onSuccess = async (e) => {
       }
       }
       else{
-        console.log("else")
+        // console.log("else")
         isFirstScan && 
         setTimeout(() => {
           handleWorkflowNavigation()
@@ -928,13 +928,13 @@ const onSuccess = async (e) => {
   
   const handleOpenImageGallery = async () => {
     const result = await launchImageLibrary({ selectionLimit: 20 });
-    console.log("result", result);
+    // console.log("result", result);
     setIsLoading(true)
     if (result?.assets) {
       const detectedQRCodes = [];
   
       for (let i = 0; i < result?.assets.length; i++) {
-        console.log("RNQRGenerator", result?.assets[i]?.uri);
+        // console.log("RNQRGenerator", result?.assets[i]?.uri);
   
         try {
           const response = await RNQRGenerator.detect({
@@ -945,13 +945,13 @@ const onSuccess = async (e) => {
           const requestData = values.length > 0 ? values[0] : null;
   
           if (requestData) {
-            console.log(requestData);
+            // console.log(requestData);
             detectedQRCodes.push(requestData);
           } else {
-            console.log('No QR code detected in the image');
+            // console.log('No QR code detected in the image');
           }
         } catch (error) {
-          console.log('Error detecting QR code in image', error);
+          // console.log('Error detecting QR code in image', error);
         }
       }
   
@@ -987,7 +987,7 @@ const onSuccess = async (e) => {
       }
       addBulkQrFunc(params)
       dispatch(setQrIdList(addedQrID))
-      console.log(addedQrID,params)
+      // console.log(addedQrID,params)
     }
     else
     {

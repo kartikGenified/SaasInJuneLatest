@@ -71,7 +71,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
   );
   const qrIdList = useSelector((state) => state.qrData.qrIdList);
   const userData = useSelector((state) => state.appusersdata.userData);
-  console.log("userData", `${userData.user_type}_points`, JSON.stringify(pointSharingData));
+  // console.log("userData", `${userData.user_type}_points`, JSON.stringify(pointSharingData));
   const pointPercentage = useSelector(
     (state) => state.pointSharing.percentagePoints
   );
@@ -86,14 +86,14 @@ const CongratulateOnScan = ({ navigation, route }) => {
   // getting location from redux state
   const location = useSelector((state) => state.userLocation.location);
   // console.log("shouldSharePoints", shouldSharePoints, JSON.stringify(productData));
-  console.log("location", location);
+  // console.log("location", location);
   // console.log('Location', location, userData, productData, qrData);
   const height = Dimensions.get("window").height;
   // workflow for the given user
   const workflowProgram = route.params.workflowProgram;
   const rewardType = route.params.rewardType;
-  console.log("rewardType", rewardType, workflowProgram, productData,pointPercentage,firstScan,registration_bonus);
-  console.log("qrIDLIST",qrIdList,qrData,scanningType)
+  // console.log("rewardType", rewardType, workflowProgram, productData,pointPercentage,firstScan,registration_bonus);
+  // console.log("qrIDLIST",qrIdList,qrData,scanningType)
   const platform = Platform.OS === "ios" ? "1" : "2";
 
   const [getMemberShipFunc,
@@ -223,7 +223,7 @@ const CongratulateOnScan = ({ navigation, route }) => {
 
   useEffect(() => {
     if (getMembershipData) {
-        console.log("getMembershipData", JSON.stringify(getMembershipData))
+        // console.log("getMembershipData", JSON.stringify(getMembershipData))
         const getActiveMembership = async () => {
           const credentials = await Keychain.getGenericPassword();
           if (credentials) {
@@ -238,14 +238,14 @@ const CongratulateOnScan = ({ navigation, route }) => {
         getActiveMembership()
     }
     else if (getMembershipError) {
-        console.log("getMembershipError", getMembershipError)
+        // console.log("getMembershipError", getMembershipError)
     }
 }, [getMembershipData, getMembershipError])
 
 
 useEffect(() => {
   if (addRegistrationBonusData) {
-    console.log("addRegistrationBonusData", addRegistrationBonusData)
+    // console.log("addRegistrationBonusData", addRegistrationBonusData)
     if(addRegistrationBonusData?.success)
     {
       setSuccess(true)
@@ -256,14 +256,14 @@ useEffect(() => {
   else if (addRegistrationBonusError) {
     setError(true)
     setMessage("There was a problem in adding registration bonus")
-    console.log("addRegistrationBonusError", addRegistrationBonusError)
+    // console.log("addRegistrationBonusError", addRegistrationBonusError)
   }
 }, [addRegistrationBonusData, addRegistrationBonusError])
 
   useEffect(() => {
     if (getActiveMembershipData) {
-        console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
-        console.log("getMembershipData", JSON.stringify(getMembershipData))
+        // console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
+        // console.log("getMembershipData", JSON.stringify(getMembershipData))
         if(getActiveMembershipData.success)
         {
           const stats = Number(getActiveMembershipData.body?.stats?.total) + Number(productMrp?.mrp)
@@ -275,7 +275,7 @@ useEffect(() => {
             if((Number(range.range_start)<stats) && (stats<Number(range.range_end)))
             {
               setMembershipPercent(Number(range.points))
-              console.log("setMembershipPercent",range.points,stats)
+              // console.log("setMembershipPercent",range.points,stats)
               setTimeout(() => {
               fetchRewardsAccToWorkflow(Number(range.points));
 
@@ -287,7 +287,7 @@ useEffect(() => {
         }
     }
     else if (getActiveMembershipError) {
-        console.log("getActiveMembershipError", getActiveMembershipError)
+        // console.log("getActiveMembershipError", getActiveMembershipError)
     }
 }, [getActiveMembershipData, getActiveMembershipError])
 
@@ -296,21 +296,21 @@ const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif'
 const getMembership = async () => {
   const credentials = await Keychain.getGenericPassword();
   if (credentials) {
-      console.log(
-          'Credentials successfully loaded for user ' + credentials.username
-      );
+      // console.log(
+      //     'Credentials successfully loaded for user ' + credentials.username
+      // );
       const token = credentials.username
       getMemberShipFunc(token)
   }
 }
   const fetchRewardsAccToWorkflow = async (percent) => {
-    console.log("fetchRewardsAccToWorkflow",rewardType)
+    // console.log("fetchRewardsAccToWorkflow",rewardType)
     let token;
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
-      console.log(
-        "Credentials successfully loaded for user " + credentials.username
-      );
+      // console.log(
+      //   "Credentials successfully loaded for user " + credentials.username
+      // );
 
        token = credentials.username;
       }
@@ -322,7 +322,7 @@ const getMembership = async () => {
         };
         getCouponOnCategoryFunc(params);
       } else if (rewardType === "Points On Product") {
-        console.log("fetchRewardsAccToWorkflowpop")
+        // console.log("fetchRewardsAccToWorkflowpop")
         if (scanningType=="Single") {
           const params = {
             token: token,
@@ -330,7 +330,7 @@ const getMembership = async () => {
           };
 
         
-          console.log("shouldSharePoints", shouldSharePoints,percent);
+          // console.log("shouldSharePoints", shouldSharePoints,percent);
 
             if (pointSharingData.flat_points === true) {
               if (shouldSharePoints) {
@@ -340,7 +340,7 @@ const getMembership = async () => {
                   const memberShipBonus = (points * Number(percent !==undefined ? percent : 0))/100
                   const totalPoints = points + memberShipBonus
                  
-                console.log("extra flat points", points,pointPercentage);
+                // console.log("extra flat points", points,pointPercentage);
                 const body = {
                   data: {
                     // app_user_id: userData.id.toString(),
@@ -375,7 +375,7 @@ const getMembership = async () => {
                   token: token,
                 };
                 extraPointEntryFunc(body);
-                console.log("extraPointEntryFunc",body)
+                // console.log("extraPointEntryFunc",body)
 
               } else if (!shouldSharePoints) {
                 alert("Points can't be shared for this tenant");
@@ -392,7 +392,7 @@ const getMembership = async () => {
                 productMrp?.mrp
                  memberShipBonus = (point * Number(percent!==undefined ? percent : 0))/100
                 totalPoints = memberShipBonus
-                console.log("memberShipBonus recieved",percent)
+                // console.log("memberShipBonus recieved",percent)
               }
               else{
                  point =
@@ -443,7 +443,7 @@ const getMembership = async () => {
                   token: token,
                 };
                 extraPointEntryFunc(body);
-                console.log("extraPointEntryFunc",body)
+                // console.log("extraPointEntryFunc",body)
               } else if (!shouldSharePoints) {
                 alert("Points can't be shared for this tenant");
               }
@@ -475,7 +475,7 @@ const getMembership = async () => {
             },
             token: token,
           };
-          console.log("addBulkPointOnProductFunc",JSON.stringify(params))
+          // console.log("addBulkPointOnProductFunc",JSON.stringify(params))
           addBulkPointOnProductFunc(params);
         }
       } else if (rewardType === "Wheel") {
@@ -507,10 +507,10 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (addBulkPointOnProductData) {
-      console.log(
-        "addBulkPointOnProductData",
-        JSON.stringify(addBulkPointOnProductData)
-      );
+      // console.log(
+      //   "addBulkPointOnProductData",
+      //   JSON.stringify(addBulkPointOnProductData)
+      // );
       if (addBulkPointOnProductData.success) {
         let tp =0
         dispatch(setQrIdList([]));
@@ -521,15 +521,16 @@ const getMembership = async () => {
        
         setTotalPoints(addBulkPointOnProductData.body.total_points)
         setShowBulkScanPoints(bulkPoints);
+        
         const checkFirstScan=async()=>{
 
    
           const credentials = await Keychain.getGenericPassword();
         if (credentials) {
-          console.log(
-            'Credentials successfully loaded for user ' + credentials.username
-          );
-          console.log("First scan")
+          // console.log(
+          //   'Credentials successfully loaded for user ' + credentials.username
+          // );
+          // console.log("First scan")
           const token = credentials.username
           const body = {
             tenant_id:slug,
@@ -552,7 +553,7 @@ const getMembership = async () => {
             },
             
           }
-          console.log("Registration Bouns",body)
+          // console.log("Registration Bouns",body)
             if(!userData?.is_scanned)
             {
              addRegistrationBonusFunc(body)
@@ -566,43 +567,43 @@ const getMembership = async () => {
         }, 5000);
       }
     } else if (addBulkPointOnProductError) {
-      console.log("addBulkPointOnProductError", addBulkPointOnProductError);
+      // console.log("addBulkPointOnProductError", addBulkPointOnProductError);
     }
   }, [addBulkPointOnProductData, addBulkPointOnProductError]);
   useEffect(() => {
     if (addCashbackEnteriesData) {
-      console.log("addCashbackEnteriesData", addCashbackEnteriesData);
+      // console.log("addCashbackEnteriesData", addCashbackEnteriesData);
       if (addCashbackEnteriesData.success) {
         setTimeout(() => {
           handleWorkflowNavigation();
         }, 1000);
       }
     } else if (addCashbackEnteriesError) {
-      console.log("addCashbackEnteriesError", addCashbackEnteriesError);
+      // console.log("addCashbackEnteriesError", addCashbackEnteriesError);
     }
   }, [addCashbackEnteriesData, addCashbackEnteriesError]);
 
   useEffect(() => {
     if (getAllWheelsByUserIdData) {
-      console.log(
-        "getAllWheelsByUserIdData",
-        getAllWheelsByUserIdData.body.data
-      );
+      // console.log(
+      //   "getAllWheelsByUserIdData",
+      //   getAllWheelsByUserIdData.body.data
+      // );
       createWheelHistory(getAllWheelsByUserIdData.body.data);
     } else if (getAllWheelsByUserIdError) {
-      console.log("getAllWheelsByUserIdError", getAllWheelsByUserIdError);
+      // console.log("getAllWheelsByUserIdError", getAllWheelsByUserIdError);
     }
   }, [getAllWheelsByUserIdData, getAllWheelsByUserIdError]);
 
   useEffect(() => {
     if (extraPointEntryData) {
-      console.log("extraPointEntryData", extraPointEntryData);
+      // console.log("extraPointEntryData", extraPointEntryData);
     } else if (extraPointEntryError) {
-      console.log("extraPointEntryError", extraPointEntryError);
+      // console.log("extraPointEntryError", extraPointEntryError);
     }
   }, [extraPointEntryError, extraPointEntryData]);
   const createWheelHistory = async (data) => {
-    console.log("wheel history data", data);
+    // console.log("wheel history data", data);
     const credentials = await Keychain.getGenericPassword();
     const token = credentials.username;
     const params = {
@@ -618,7 +619,7 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (createWheelHistoryData) {
-      console.log("createWheelHistoryData", createWheelHistoryData);
+      // console.log("createWheelHistoryData", createWheelHistoryData);
       // if(createWheelHistoryData.success)
       // {
       //   setTimeout(() => {
@@ -626,7 +627,7 @@ const getMembership = async () => {
       //   }, 1000);
       // }
     } else if (createWheelHistoryError) {
-      console.log("createWheelHistoryError", createWheelHistoryError);
+      // console.log("createWheelHistoryError", createWheelHistoryError);
       // if(createWheelHistoryError.status===409)
       // {
       //   setTimeout(() => {
@@ -638,14 +639,14 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (checkQrCodeAlreadyRedeemedData) {
-      console.log(
-        "checkQrCodeAlreadyRedeemedData",
-        checkQrCodeAlreadyRedeemedData
-      );
+      // console.log(
+      //   "checkQrCodeAlreadyRedeemedData",
+      //   checkQrCodeAlreadyRedeemedData
+      // );
       if (!checkQrCodeAlreadyRedeemedData.body) {
         addCashbackEnteries();
       } else if (checkQrCodeAlreadyRedeemedError) {
-        console.log(checkQrCodeAlreadyRedeemedError);
+        // console.log(checkQrCodeAlreadyRedeemedError);
       }
     }
   }, [checkQrCodeAlreadyRedeemedData, checkQrCodeAlreadyRedeemedError]);
@@ -683,14 +684,14 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (getCouponOnCategoryData) {
-      console.log("getCouponOnCategoryData", getCouponOnCategoryData);
+      // console.log("getCouponOnCategoryData", getCouponOnCategoryData);
       if (getCouponOnCategoryData.success) {
         setTimeout(() => {
           handleWorkflowNavigation();
         }, 3000);
       }
     } else if (getCouponOnCategoryError) {
-      console.log("getCouponOnCategoryError", getCouponOnCategoryError);
+      // console.log("getCouponOnCategoryError", getCouponOnCategoryError);
       if (getCouponOnCategoryError.status === 409) {
         setTimeout(() => {
           handleWorkflowNavigation();
@@ -707,10 +708,10 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (checkUserPointData) {
-      console.log("checkUserPointData", checkUserPointData);
+      // console.log("checkUserPointData", checkUserPointData);
 
       if (!checkUserPointData.body) {
-        console.log("check user point data is false")
+        // console.log("check user point data is false")
      
             
         if (pointSharingData.flat_points) {
@@ -752,7 +753,7 @@ const getMembership = async () => {
               tenant_id: slug,
               token: token,
             };
-            console.log("userPointEntryFunc", body);
+            // console.log("userPointEntryFunc", body);
             userPointEntryFunc(body);
           };
           submitPoints();
@@ -813,7 +814,7 @@ const getMembership = async () => {
               tenant_id: slug,
               token: token,
             };
-            console.log("userPointEntryFunc", body);
+            // console.log("userPointEntryFunc", body);
             userPointEntryFunc(body);
           };
           submitPoints();
@@ -822,23 +823,23 @@ const getMembership = async () => {
       
       }
     } else if (checkUserPointError) {
-      console.log("checkUserPointError", checkUserPointError);
+      // console.log("checkUserPointError", checkUserPointError);
     }
   }, [checkUserPointData, checkUserPointError]);
 
   useEffect(() => {
     if (userPointEntryData) {
-      console.log("userPointEntryData", userPointEntryData);
+      // console.log("userPointEntryData", userPointEntryData);
       if (userPointEntryData.success) {
         const checkFirstScan=async()=>{
 
    
           const credentials = await Keychain.getGenericPassword();
         if (credentials) {
-          console.log(
-            'Credentials successfully loaded for user ' + credentials.username
-          );
-          console.log("First scan")
+          // console.log(
+          //   'Credentials successfully loaded for user ' + credentials.username
+          // );
+          // console.log("First scan")
           const token = credentials.username
           const body = {
             tenant_id:slug,
@@ -861,7 +862,7 @@ const getMembership = async () => {
             },
             
           }
-          console.log("Registration Bouns",body)
+          // console.log("Registration Bouns",body)
             if(!userData?.is_scanned)
             {
              addRegistrationBonusFunc(body)
@@ -886,14 +887,14 @@ const getMembership = async () => {
         setError(true)
         setMessage(userPointEntryError.data.message)
       }
-      console.log("userPointEntryError", userPointEntryError);
+      // console.log("userPointEntryError", userPointEntryError);
     }
   }, [userPointEntryData, userPointEntryError]);
 
-  console.log("workflowProgram", workflowProgram);
+  // console.log("workflowProgram", workflowProgram);
   const handleWorkflowNavigation = () => {
-    console.log("WorkflowProgram Left", workflowProgram);
-    console.log("scccess");
+    // console.log("WorkflowProgram Left", workflowProgram);
+    // console.log("scccess");
 
     if (workflowProgram[0] === "Static Coupon") {
       navigation.navigate("CongratulateOnScan", {
@@ -906,31 +907,31 @@ const getMembership = async () => {
         rewardType: workflowProgram[0],
       });
     } else if (workflowProgram[0] === "Points On Product") {
-      console.log(workflowProgram.slice(1));
+      // console.log(workflowProgram.slice(1));
       navigation.navigate("CongratulateOnScan", {
         workflowProgram: workflowProgram.slice(1),
         rewardType: workflowProgram[0],
       });
     } else if (workflowProgram[0] === "Cashback") {
-      console.log(workflowProgram.slice(1));
+      // console.log(workflowProgram.slice(1));
       navigation.navigate("CongratulateOnScan", {
         workflowProgram: workflowProgram.slice(1),
         rewardType: workflowProgram[0],
       });
     } else if (workflowProgram[0] === "Wheel") {
-      console.log(workflowProgram.slice(1));
+      // console.log(workflowProgram.slice(1));
       navigation.navigate("CongratulateOnScan", {
         workflowProgram: workflowProgram.slice(1),
         rewardType: workflowProgram[0],
       });
     } else if (workflowProgram[0] === "Genuinity") {
-      console.log(workflowProgram.slice(1));
+      // console.log(workflowProgram.slice(1));
       navigation.navigate("Genuinity", {
         workflowProgram: workflowProgram.slice(1),
         rewardType: workflowProgram[0],
       });
     } else if (workflowProgram[0] === "Genuinity+") {
-      console.log(workflowProgram.slice(1));
+      // console.log(workflowProgram.slice(1));
       navigation.navigate("GenuinityScratch", {
         workflowProgram: workflowProgram.slice(1),
         rewardType: workflowProgram[0],
