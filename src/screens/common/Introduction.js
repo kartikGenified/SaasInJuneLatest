@@ -45,7 +45,7 @@ const Introduction = ({navigation}) => {
             if(imageIndex==descriptionImages?.length-1)
             {
                 storeData();
-                navigation.navigate('SelectUser');
+                navigation.navigate('SelectLanguage');
             }
             else{
                 setImageIndex(imageIndex+1)
@@ -58,7 +58,7 @@ const Introduction = ({navigation}) => {
     const handleSkip=()=>{
         // navigation.navigate('SelectLanguage')
         storeData();
-        navigation.navigate('SelectUser')
+        navigation.navigate('SelectLanguage')
 
     }
 

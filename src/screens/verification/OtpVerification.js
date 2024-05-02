@@ -417,7 +417,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
          city:location.city,
          lat: location.lat,
          log: location.lon,
-         denomination: cart[0]?.value 
+         denomination: cart[0]?.denomination 
          
         },
          token:token,
