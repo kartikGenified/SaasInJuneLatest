@@ -10,11 +10,8 @@ import i18n from './i18n';
 
 const SelectLanguage = ({ navigation }) => {
   const { t } = useTranslation(); // Destructure t and i18n directly
- 
 
-
-  console.log("i18n",i18n);
-
+  console.log("i18n", i18n);
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -22,12 +19,12 @@ const SelectLanguage = ({ navigation }) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : '#FFB533';
 
-    const icon = useSelector(state => state.apptheme.icon)
+  const icon = useSelector(state => state.apptheme.icon)
     ? useSelector(state => state.apptheme.icon)
     : require('../../../assets/images/demoIcon.png');
 
   const [language, setLanguage] = useState('');
-  
+
   const setSelectedLanguage = (language) => {
     console.log("language", language);
     setLanguage(language);
@@ -38,36 +35,48 @@ const SelectLanguage = ({ navigation }) => {
 
 
   return (
-    <LinearGradient colors={['#ddd', '#fff']} style={{ flex: 1 , backgroundColor:ternaryThemeColor}}>
-      <View style={[styles.logoContainer,]}>
-      <Image
-            style={{
-              height: 140,
-              width: 300,
-              resizeMode:'contain'
-            }}
-            
-            source={{uri:BaseUrlImages+icon}}></Image>
-
+    <LinearGradient colors={['#ddd', '#fff']} style={{ flex: 1, backgroundColor: ternaryThemeColor }}>
+      <View style={[styles.logoContainer]}>
+        <Image
+          style={{
+            height: 100,
+            width: 300,
+            resizeMode: 'contain'
+          }}
+          source={{ uri: BaseUrlImages + icon }}></Image>
       </View>
       <View style={styles.textContainer}>
-        <PoppinsText style={styles.title} content={t('choose')} />
-        <PoppinsText style={styles.subtitle} content={t('yourLanguage')} />
+        <PoppinsText style={styles.title} content={t('Choose')} />
+        <PoppinsText style={styles.subtitle} content={t('Your Language')} />
       </View>
       <View style={styles.languageContainer}>
         <SelectLanguageBox
           selectedLanguage={language}
-          setSelectedLanguage={()=>setSelectedLanguage('hindi')}
-          languageHindi={'hindi'}
-          languageEnglish={t('Hindi')}
+          setSelectedLanguage={() => setSelectedLanguage('hindi')}
+          languageHindi={'Hindi'}
+          languageEnglish={t('हिंदी')}
           image={require('../../../assets/images/languageHindi.png')}
         />
         <SelectLanguageBox
           selectedLanguage={language}
-          setSelectedLanguage={()=>setSelectedLanguage('english')}
+          setSelectedLanguage={() => setSelectedLanguage('english')}
           languageHindi={t('english')}
           languageEnglish={t('english')}
           image={require('../../../assets/images/languageEnglish.png')}
+        />
+        <SelectLanguageBox
+          selectedLanguage={language}
+          setSelectedLanguage={() => setSelectedLanguage('english')}
+          languageHindi={t('Tamil')}
+          languageEnglish={t('தமிழ்')}
+          image={require('../../../assets/images/tamilLanguage.png')}
+        />
+            <SelectLanguageBox
+          selectedLanguage={language}
+          setSelectedLanguage={() => setSelectedLanguage('english')}
+          languageHindi={t('Telugu')}
+          languageEnglish={t('தெலுங்கு')}
+          image={require('../../../assets/images/teluguLanguage.png')}
         />
       </View>
     </LinearGradient>
@@ -76,10 +85,11 @@ const SelectLanguage = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   logoContainer: {
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-},
+    // justifyContent: 'center',
+    marginTop: 70
+  },
   logo: {
     height: 200,
     width: 240,
@@ -88,16 +98,16 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
   },
   title: {
     color: 'black',
-    fontSize: 24,
+    fontSize: 28,
   },
   subtitle: {
     color: 'black',
     fontSize: 28,
-    marginTop: 8,
+    // marginTop: 8,
   },
   languageContainer: {
     flex: 3,
