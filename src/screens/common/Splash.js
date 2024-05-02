@@ -225,7 +225,7 @@ if(Platform.OS=='android')
             console.log("location address=>", JSON.stringify(json));
 
             if(__DEV__){
-              setLocationEnabled(true)
+              setLocationEnabled(tru)
             }
 
             if(json.status=="OK")
