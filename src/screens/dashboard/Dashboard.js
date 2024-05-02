@@ -61,7 +61,7 @@ const Dashboard = ({ navigation }) => {
   const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
   const dashboardData = useSelector(state=>state.dashboardData.dashboardData)
 
-  console.log("Dashboard data is",dashboardData )
+  // console.log("Dashboard data is",dashboardData )
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -71,9 +71,9 @@ const Dashboard = ({ navigation }) => {
     const gifUri = Image.resolveAssetSource(
       require("../../../assets/gif/loader.gif")
     ).uri;
-  console.log("pointSharingData", JSON.stringify(pointSharingData), userData)
-  console.log("user id is from dashboard", userId)
-    console.log(focused)
+  // console.log("pointSharingData", JSON.stringify(pointSharingData), userData)
+  // console.log("user id is from dashboard", userId)
+  //   console.log(focused)
     let startDate,endDate
     const [getActiveMembershipFunc, {
       data: getActiveMembershipData,
@@ -155,7 +155,7 @@ const Dashboard = ({ navigation }) => {
     dispatch({ type: 'NETWORK_REQUEST' });
     return () => {
       // Ensure backHandler exists and remove the listener
-      console.log("unmounting compionent sajkdahjsdhsaghd")
+      // console.log("unmounting compionent sajkdahjsdhsaghd")
 
       if (backHandler) {
         BackHandler.addEventListener('hardwareBackPress', () => false)
@@ -168,7 +168,7 @@ const Dashboard = ({ navigation }) => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
      setNotifModal(true)
   setNotifData(remoteMessage?.notification)
-  console.log("remote message",remoteMessage)
+  // console.log("remote message",remoteMessage)
     });
     
     return unsubscribe;
@@ -185,7 +185,7 @@ const Dashboard = ({ navigation }) => {
     else if(userPointError){
       setError(true)
       setMessage("Can't get user user point data, kindly retry.")
-      console.log("userPointError",userPointError)
+      // console.log("userPointError",userPointError)
     }
   },[userPointData])
  
@@ -202,7 +202,7 @@ const Dashboard = ({ navigation }) => {
     else if (fetchUserPointsHistoryError) {
       setError(true)
       setMessage("Unable to fetch user point history.")
-        console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
+        // console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
     }
   
 
@@ -220,7 +220,7 @@ const Dashboard = ({ navigation }) => {
     else if (getActiveMembershipError) {
       setError(true)
       setMessage("problem in fetching membership, kindly retry.")
-      console.log("getActiveMembershipError", getActiveMembershipError)
+      // console.log("getActiveMembershipError", getActiveMembershipError)
     }
   }, [getActiveMembershipData, getActiveMembershipError])
 
@@ -242,7 +242,7 @@ const Dashboard = ({ navigation }) => {
     else if (getKycStatusError) {
       setError(true)
       setMessage("Can't get KYC status kindly retry after sometime.")
-      console.log("getKycStatusError", getKycStatusError)
+      // console.log("getKycStatusError", getKycStatusError)
     }
   }, [getKycStatusData, getKycStatusError])
 
@@ -268,7 +268,7 @@ const Dashboard = ({ navigation }) => {
         if(percentageKeys.includes(eligibleUser))
         {
           dispatch(setPercentagePoints(pointSharingPercent))
-          console.log("On", userData.user_type, "scan", pointSharingPercent, "% Points would be shared with", eligibleUser)
+          // console.log("On", userData.user_type, "scan", pointSharingPercent, "% Points would be shared with", eligibleUser)
         
         }
         dispatch(setShouldSharePoints())
@@ -284,21 +284,21 @@ const Dashboard = ({ navigation }) => {
         // Retrieve the credentials
         const credentials = await Keychain.getGenericPassword();
         if (credentials) {
-          console.log(
-            'Credentials successfully loaded for user ' + credentials?.username
-          );
+          // console.log(
+          //   'Credentials successfully loaded for user ' + credentials?.username
+          // );
           const token = credentials?.username
           const form_type = "2"
-          console.log("token from dashboard ", token)
+          // console.log("token from dashboard ", token)
           
           token && getWorkflowFunc({ userId, token })
           token && getFormFunc({ form_type, token })
-        console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
+        // console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
         } else {
-          console.log('No credentials stored');
+          // console.log('No credentials stored');
         }
       } catch (error) {
-        console.log("Keychain couldn't be accessed!", error);
+        // console.log("Keychain couldn't be accessed!", error);
       }
     }
     getDashboardData()
@@ -310,23 +310,23 @@ const Dashboard = ({ navigation }) => {
         // Retrieve the credentials
         const credentials = await Keychain.getGenericPassword();
         if (credentials) {
-          console.log(
-            'Credentials successfully loaded for user ' + credentials?.username
-          );
+          // console.log(
+          //   'Credentials successfully loaded for user ' + credentials?.username
+          // );
           const token = credentials?.username
           const form_type = "2"
-          console.log("token from dashboard ", token)
+          // console.log("token from dashboard ", token)
           
           token && getKycStatusFunc(token)
           token && getBannerFunc(token)
          
          getMembership()
-        console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
+        // console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
         } else {
-          console.log('No credentials stored');
+          // console.log('No credentials stored');
         }
       } catch (error) {
-        console.log("Keychain couldn't be accessed!", error);
+        // console.log("Keychain couldn't be accessed!", error);
       }
     }
     fetchOnPageActive()
@@ -346,7 +346,7 @@ const Dashboard = ({ navigation }) => {
     else if(getBannerError){
       setError(true)
       setMessage("Unable to fetch app banners")
-      console.log(getBannerError)
+      // console.log(getBannerError)
     }
   }, [getBannerError, getBannerData])
 
@@ -360,26 +360,26 @@ const Dashboard = ({ navigation }) => {
       const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
         return item !== "Warranty"
       })
-      console.log("getWorkflowData", getWorkflowData)
+      // console.log("getWorkflowData", getWorkflowData)
       dispatch(setProgram(removedWorkFlow))
       dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
 
     }
     else if(getWorkflowError) {
-      console.log("getWorkflowError",getWorkflowError)
+      // console.log("getWorkflowError",getWorkflowError)
       setError(true)
       setMessage("Oops something went wrong")
     }
   }, [getWorkflowData, getWorkflowError])
   useEffect(() => {
     if (getFormData) {
-      console.log("Form Fields", getFormData?.body)
+      // console.log("Form Fields", getFormData?.body)
       dispatch(setWarrantyForm(getFormData?.body?.template))
       dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
 
     }
     else if(getFormError) {
-      console.log("Form Field Error", getFormError)
+      // console.log("Form Field Error", getFormError)
       setError(true)
       setMessage("Can't fetch forms for warranty.")
     }
@@ -390,9 +390,9 @@ const Dashboard = ({ navigation }) => {
   const getMembership = async () => {
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
-      console.log(
-        'Credentials successfully loaded for user ' + credentials?.username
-      );
+      // console.log(
+      //   'Credentials successfully loaded for user ' + credentials?.username
+      // );
       const token = credentials?.username
       getActiveMembershipFunc(token)
     }
@@ -404,7 +404,7 @@ const Dashboard = ({ navigation }) => {
 
   const showSuccessModal = () => {
     setIsSuccessModalVisible(true);
-    console.log("hello")
+    // console.log("hello")
   };
   const modalClose = () => {
     setError(false);

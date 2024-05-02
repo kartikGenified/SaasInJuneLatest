@@ -577,7 +577,7 @@ console.log("navigation params from basic info",navigationParams)
   const handleRegistrationFormSubmission = () => {
     const inputFormData = {}
     let isFormValid = true; 
-let missingParam = ""
+    let missingParam = ""
     inputFormData["user_type"] = userType;
     inputFormData["user_type_id"] = userTypeId;
     inputFormData["is_approved_needed"] = isManuallyApproved;

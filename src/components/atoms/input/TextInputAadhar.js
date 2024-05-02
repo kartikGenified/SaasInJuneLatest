@@ -17,7 +17,7 @@ const TextInputAadhar = (props) => {
     const [aadharVerified, setAadharVerified] =  useState(false)
     const [aadharExists, setAadharExists] = useState(false)
     const [keyboardShow, setKeyboardShow] = useState(false)
-
+    const [showLoading, setShowLoading] = useState(false)
     const {t}  = useTranslation() 
 
     const placeHolder = props.placeHolder
@@ -67,6 +67,7 @@ const TextInputAadhar = (props) => {
         const data = {
           "aadhaar_number":value
       }
+      setShowLoading(true)
       sendAadharOtpFunc(data)
         
        
@@ -89,6 +90,7 @@ const TextInputAadhar = (props) => {
                   "otp":otp
                   }
                   verifyAadharFunc(data)
+                  setShowLoading(true)
             }
         }
      },[otp])
@@ -102,14 +104,15 @@ const TextInputAadhar = (props) => {
           console.log("success")
           setOtpSent(true)
           setShowOtp(true)
-          props.notVerified(true)
+          setShowLoading(false)
+          props.notVerified(false)
         }
         }
         else if(sendAadharOtpError)
         {
           props.notVerified(false)
         console.log("sendAadharOtpError",sendAadharOtpError)
-        
+          setShowLoading(false)
           setAadharExists(true)
         
         }
@@ -122,6 +125,7 @@ const TextInputAadhar = (props) => {
               if(verifyAadharData.success)
               {
               setModalVisible(true)
+              setShowLoading(false)
               setAadharVerified(true)
               props.notVerified(true)
               }
@@ -129,6 +133,7 @@ const TextInputAadhar = (props) => {
             else if(verifyAadharError){
               console.log("verifyAadharError",verifyAadharError)
               props.notVerified(false)
+              setShowLoading(false)
 
             }
             },[verifyAadharError,verifyAadharData])
@@ -203,7 +208,7 @@ const TextInputAadhar = (props) => {
         </View>
         <TextInput maxLength={6} keyboardType='numeric'  style={{height:50,width:'100%',alignItems:"center",justifyContent:"flex-start",fontWeight:'500',marginLeft:24,color:'black',fontSize:16}} placeholderTextColor="grey" onChangeText={(text)=>{setOtp(text)}} value={otp} placeholder={`One time password *`}></TextInput>
     
-      {verifyAadharIsLoading && <FastImage
+      {(verifyAadharIsLoading || sendAadharOtpIsLoading || showLoading) && <FastImage
           style={{ width: 30, height: 30, alignSelf: 'center',position:'absolute',right:10 }}
           source={{
             uri: gifUri, // Update the path to your GIF

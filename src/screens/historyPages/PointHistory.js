@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
 import PoppinsText from '../../components/electrons/customFonts/PoppinsText';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import { useFetchUserPointsMutation, useFetchUserPointsHistoryMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
@@ -205,7 +205,7 @@ const PointHistory = ({ navigation }) => {
     const PointCategoryTab=()=>{
         const [type, setType] = useState("")
         return(
-            <View style={{width:'100%',backgroundColor:'white',height:60,elevation:1,flexDirection:'row',opacity:0.8,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:"grey"}}>
+            <ScrollView horizontal={true} contentContainerStyle={{alignItems:'center',justifyContent:'center'}} style={{backgroundColor:'white',height:60,elevation:1,opacity:0.8,borderWidth:1,borderColor:"grey"}}>
                 {registrationRequired.includes(userData.user_type) && 
                 <TouchableOpacity  onPress={()=>{
                     (async () => {
@@ -220,7 +220,7 @@ const PointHistory = ({ navigation }) => {
                       })();
                     fetchPoints()
                     setType("regular")
-                }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',backgroundColor:type==="regular" ? "#DDDDDD":"white"}}>
+                }} style={{height:'100%',width:120,alignItems:"center",justifyContent:'center',backgroundColor:type==="regular" ? "#DDDDDD":"white"}}>
                     {/* <PoppinsTextMedium content="Regular Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
                     <PoppinsTextMedium content={t("regular points")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
 
@@ -231,7 +231,7 @@ const PointHistory = ({ navigation }) => {
                 <TouchableOpacity onPress={()=>{
                     getRegistrationPoints("points_sharing")
                     setType("extra")
-                }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',borderLeftWidth:1,borderRightWidth:1,borderColor:'#DDDDDD',backgroundColor:type==="extra" ? "#DDDDDD":"white"}}>
+                }} style={{height:'100%',width:120,alignItems:"center",justifyContent:'center',borderLeftWidth:1,borderRightWidth:1,borderColor:'#DDDDDD',backgroundColor:type==="extra" ? "#DDDDDD":"white"}}>
                     {/* <PoppinsTextMedium content="Extra Points" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
                     <PoppinsTextMedium content={t("extra points")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
 
@@ -241,15 +241,35 @@ const PointHistory = ({ navigation }) => {
                  {registrationRequired.includes(userData.user_type) && 
                 <TouchableOpacity onPress={()=>{
                     getRegistrationPoints("registration_bonus")
-                    setType("registration")
-                }} style={{height:60,width:'33%',alignItems:"center",justifyContent:'center',backgroundColor:type==="registration" ? "#DDDDDD":"white"}}>
+                    setType("registration_bonus")
+                }} style={{height:'100%',width:120,alignItems:"center",justifyContent:'center',backgroundColor:type==="registration" ? "#DDDDDD":"white"}}>
                     {/* <PoppinsTextMedium content="Registration Bonus" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
-                    <PoppinsTextMedium content={t("registration bonus")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+                    <PoppinsTextMedium content={t("Registration Bonus")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+
+                </TouchableOpacity>    
+                }
+
+                {registrationRequired.includes(userData.user_type) && 
+                <TouchableOpacity onPress={()=>{
+                    getRegistrationPoints("annual_kitty_2024_25")
+                    setType("Annual Kitty")
+                }} style={{height:'100%',width:120,alignItems:"center",justifyContent:'center',backgroundColor:type==="Annual Kitty" ? "#DDDDDD":"white"}}>
+                    {/* <PoppinsTextMedium content="Registration Bonus" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
+                    <PoppinsTextMedium content={t("Annual Kitty")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
+
+                </TouchableOpacity>    
+                }
+
+                <TouchableOpacity onPress={()=>{
+                    getRegistrationPoints("tds_deducted_2024_25")
+                    setType("TDS Deducted")
+                }} style={{height:'100%',width:120,alignItems:"center",justifyContent:'center',backgroundColor:type==="TDS Deducted" ? "#DDDDDD":"white",borderLeftWidth:1,borderColor:'#DDDDDD'}}>
+                    {/* <PoppinsTextMedium content="Registration Bonus" style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium> */}
+                    <PoppinsTextMedium content={t("TDS Deducted")} style={{color:'black',fontWeight:'700',fontSize:14}}></PoppinsTextMedium>
 
                 </TouchableOpacity>
                 
-                }
-            </View>
+            </ScrollView>
         )
     }
     //header
@@ -434,7 +454,7 @@ const PointHistory = ({ navigation }) => {
                 displayList.length==0 && !isLoading &&
                 <View>
                     <FastImage
-                        style={{ width: 180, height: 180, alignSelf: 'center', marginTop: '30%' }}
+                        style={{ width: 180, height: 180 }}
                         source={{
                             uri: noData, // Update the path to your GIF
                             priority: FastImage.priority.normal,
