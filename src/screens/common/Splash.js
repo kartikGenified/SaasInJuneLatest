@@ -234,6 +234,8 @@ if(Platform.OS=='android')
             locationJson["address"] = formattedAddress === undefined ? "N/A" : formattedAddress
             const addressComponent = json?.results[0]?.address_components
             console.log("addressComponent", addressComponent)
+
+            
             for (let i = 0; i <= addressComponent?.length; i++) {
               if (i === addressComponent?.length) {
                 
