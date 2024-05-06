@@ -396,6 +396,10 @@ const Splash = ({ navigation }) => {
       setConnected(isConnected.isConnected)
       setIsSlowInternet(isConnected.isInternetReachable ? false : true)
       console.log("is connected", isConnected.isInternetReachable)
+      getUsers();
+        getMinVersionSupportFunc(currentVersion)
+        getAppTheme("ozone")
+        getData()
 
     }
 
@@ -519,7 +523,7 @@ const Splash = ({ navigation }) => {
       console.log("getAppThemeError", getAppThemeError)
     }
    
-  }, [getAppThemeData,getAppThemeError,locationEnabled])
+  }, [getAppThemeData,getAppThemeError,locationEnabled,connected])
 
   const modalClose = () => {
     setError(false);
