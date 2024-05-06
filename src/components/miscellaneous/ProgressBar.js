@@ -57,7 +57,7 @@ const ProgressBar = (props) => {
       {data && data.map((item, index) => {
         const achieved = item.achieved;
         const image = item.image;
-        console.log(image)
+        // console.log(image)
         return (
           <View
             key={index}

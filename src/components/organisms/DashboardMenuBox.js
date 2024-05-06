@@ -74,9 +74,10 @@ import { BaseUrl } from '../../utils/BaseUrl';
 
 
 const DashboardMenuBox=(props)=>{
-    const data = props.data
+    const data = props?.data
     const navigation = props.navigation
     const width = Dimensions.get('window').width
+    // console.log("DashboardMenuBox",data)
     const handleMenuItemPress=(data)=>{
         if(data.substring(0,4).toLowerCase()==="scan" )
         {

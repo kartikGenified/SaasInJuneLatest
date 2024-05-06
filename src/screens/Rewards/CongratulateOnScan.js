@@ -475,7 +475,7 @@ const getMembership = async () => {
             },
             token: token,
           };
-          // console.log("addBulkPointOnProductFunc",JSON.stringify(params))
+          console.log("addBulkPointOnProductFunc",JSON.stringify(params))
           addBulkPointOnProductFunc(params);
         }
       } else if (rewardType === "Wheel") {
@@ -507,10 +507,10 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (addBulkPointOnProductData) {
-      // console.log(
-      //   "addBulkPointOnProductData",
-      //   JSON.stringify(addBulkPointOnProductData)
-      // );
+      console.log(
+        "addBulkPointOnProductData",
+        JSON.stringify(addBulkPointOnProductData)
+      );
       if (addBulkPointOnProductData.success) {
         let tp =0
         dispatch(setQrIdList([]));

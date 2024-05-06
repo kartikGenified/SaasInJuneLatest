@@ -631,7 +631,7 @@ const AadharDataBox = ({ dob, name,gender,address }) => {
               modalClose={modalClose}
               message={message}
               openModal={error}
-              navigateTo="Verification"></ErrorModal>
+              navigateTo="Passbook"></ErrorModal>
           )}
           {success && (
             <MessageModal

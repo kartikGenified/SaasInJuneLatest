@@ -19,7 +19,7 @@ export const GetGenuinityApi = baseApi.injectEndpoints({
     }),
     checkGenuinity: builder.mutation({
       query({qrId,token}) {
-        console.log("Qr id and token is",qrId,token)
+        // console.log("Qr id and token is",qrId,token)
         return {
           method: 'GET',
           url: `api/tenant/genunityclaim/check?qr_id=${qrId}`,

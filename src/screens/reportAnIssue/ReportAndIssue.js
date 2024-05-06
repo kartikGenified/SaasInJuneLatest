@@ -119,11 +119,11 @@ const ReportAndIssue = ({ navigation, route }) => {
     addIssueFunc(obj);
   }
 
-  console.log(imageArray)
+  // console.log(imageArray)
 
   const ShowImage = (props) => {
     const image = props.image
-    console.log(image)
+    // console.log(image)
     return (
       <View style={{ alignItems: "center", justifyContent: 'center', height: 200, width: 180, backgroundColor: 'white', elevation: 8, margin: 10, borderRadius: 10 }}>
         <TouchableOpacity style={{ position: "absolute", top: -10, right: -10, height: 40, width: 40 }} onPress={() => { deleteImages(image) }}>

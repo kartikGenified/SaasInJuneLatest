@@ -81,7 +81,7 @@ const CustomDrawer = () => {
   }] = useFetchLegalsMutation();
 
 
-  console.log("kycCompleted", kycData)
+  // console.log("kycCompleted", kycData)
 
 
 
@@ -288,7 +288,7 @@ const CustomDrawer = () => {
   const DrawerItems = (props) => {
     const image = props.image
     const size = props.size
-    console.log("image", image)
+    // console.log("image", image)
     return (
       <View
         style={{
@@ -393,7 +393,7 @@ const CustomDrawer = () => {
                   });
               }
             }}>
-            {console.log("props.title", props.title)}
+            {/* {console.log("props.title", props.title)} */}
             <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{
               props.title == "Passbook" ? `${t('My Loyality')}` :
                 props.title == "My Profile" ? `${t("My Profile")}`
@@ -436,7 +436,7 @@ const CustomDrawer = () => {
   const DrawerSections = (props) => {
     const image = props.image
     const size = props.size
-    console.log("image", image)
+    // console.log("image", image)
     return (
       <View
         style={{

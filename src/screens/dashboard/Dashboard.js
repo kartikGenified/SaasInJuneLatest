@@ -40,12 +40,14 @@ import Close from 'react-native-vector-icons/Ionicons';
 import ModalWithBorder from '../../components/modals/ModalWithBorder';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Dashboard = ({ navigation }) => {
   const [dashboardItems, setDashboardItems] = useState()
   const [bannerArray, setBannerArray] = useState()
   const [showKyc, setShowKyc] = useState(true)
   const [CampainVideoVisible, setCmpainVideoVisible] = useState(true);
+  const [logoutStatus, setLogoutStatus] = useState(false)
   const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false)
   const [membership, setMembership] = useState()
   const [scanningDetails, seScanningDetails] = useState()
@@ -61,7 +63,7 @@ const Dashboard = ({ navigation }) => {
   const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
   const dashboardData = useSelector(state=>state.dashboardData.dashboardData)
 
-  // console.log("Dashboard data is",dashboardData )
+  console.log("Dashboard data is",dashboardData )
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -194,14 +196,30 @@ const Dashboard = ({ navigation }) => {
         // console.log("fetchUserPointsHistoryData", JSON.stringify(fetchUserPointsHistoryData))
         
 
-        if(fetchUserPointsHistoryData.success)
+        if(fetchUserPointsHistoryData?.success)
         {
-          seScanningDetails(fetchUserPointsHistoryData.body)
+          seScanningDetails(fetchUserPointsHistoryData?.body)
         }
     }
     else if (fetchUserPointsHistoryError) {
+      if(fetchUserPointsHistoryError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
       setError(true)
       setMessage("Unable to fetch user point history.")
+      }
         // console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
     }
   
@@ -218,9 +236,26 @@ const Dashboard = ({ navigation }) => {
       }
     }
     else if (getActiveMembershipError) {
-      setError(true)
+      if(getActiveMembershipError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
+        setError(true)
       setMessage("problem in fetching membership, kindly retry.")
-      // console.log("getActiveMembershipError", getActiveMembershipError)
+      console.log("getActiveMembershipError", getActiveMembershipError)
+      }
+      
     }
   }, [getActiveMembershipData, getActiveMembershipError])
 
@@ -240,8 +275,24 @@ const Dashboard = ({ navigation }) => {
       }
     }
     else if (getKycStatusError) {
+      if(getKycStatusError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
       setError(true)
       setMessage("Can't get KYC status kindly retry after sometime.")
+      }
       // console.log("getKycStatusError", getKycStatusError)
     }
   }, [getKycStatusData, getKycStatusError])
@@ -444,9 +495,10 @@ const Dashboard = ({ navigation }) => {
             message={"message"}
             openModal={notifModal}
             comp={notifModalFunc}></ModalWithBorder>}
+
             {error &&  <ErrorModal
           modalClose={modalClose}
-
+          
           message={message}
           openModal={error}></ErrorModal>}
       

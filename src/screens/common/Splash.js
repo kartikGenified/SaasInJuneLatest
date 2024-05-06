@@ -26,6 +26,7 @@ import LocationPermission from '../../components/organisms/LocationPermission';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
+import * as Progress from 'react-native-progress';
 
 
 
@@ -41,12 +42,13 @@ const Splash = ({ navigation }) => {
   const [parsedJsonValue, setParsedJsonValue] = useState()
   const [minVersionSupport, setMinVersionSupport] = useState(false)
   const [error, setError] = useState(false);
-  const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
-  const [gotLoginData, setGotLoginData] = useState()
+  // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
+  // const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
-  
-  
-  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
+  const currentVersion = VersionCheck.getCurrentVersion();
+  const gifUri = Image.resolveAssetSource(
+    require("../../../assets/gif/loader.gif")
+  ).uri;
   // generating functions and constants for API use cases---------------------
   const [
     getAppTheme,
@@ -87,11 +89,16 @@ const Splash = ({ navigation }) => {
 
   useEffect(()=>{
     getUsers();
-    const currentVersion = VersionCheck.getCurrentVersion();
+    
     console.log("currentVersion",currentVersion)
     getMinVersionSupportFunc(currentVersion)
   },[])
 
+
+  const removerTokenData =async()=>{
+    await AsyncStorage.removeItem('loginData');
+    navigation.navigate("Splash")
+  } 
 
   useEffect(() => {
     if (getDashboardData) {
@@ -106,13 +113,17 @@ const Splash = ({ navigation }) => {
           Platform.OS== 'android' && locationEnabled && minVersionSupport &&  navigation.navigate('Dashboard');
           Platform.OS== 'ios' && minVersionSupport &&  navigation.navigate('Dashboard');
   
-          Platform.OS== 'android' &&locationEnabled && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+          Platform.OS== 'android' && locationEnabled && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
           Platform.OS== 'ios' && minVersionSupport &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
            
     }
     else if (getDashboardError) {
      
       console.log("getDashboardError", getDashboardError)
+      if(getDashboardError?.data?.message =="Invalid JWT" && getDashboardError?.status == 401 )
+      {
+        removerTokenData()
+      }
     }
   }, [getDashboardData, getDashboardError])
 
@@ -216,6 +227,7 @@ if(Platform.OS=='android')
             lat: lat === undefined ? "N/A" : lat,
             lon: lon === undefined ? "N/A" : lon,
           }
+          setLocationEnabled(true)
 
           console.log("latlong", lat, lon)
           var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
@@ -223,10 +235,7 @@ if(Platform.OS=='android')
     
           fetch(url).then(response => response.json()).then(json => {
             console.log("location address=>", JSON.stringify(json));
-            if(__DEV__)
-            {
-              setLocationEnabled(true)
-            }
+            
             if(json.status=="OK")
             {
               const formattedAddress = json?.results[0]?.formatted_address
@@ -240,7 +249,6 @@ if(Platform.OS=='android')
               if (i === addressComponent?.length) {
                 
                 dispatch(setLocation(locationJson))
-                setLocationEnabled(true)
 
               }
               else {
@@ -394,11 +402,15 @@ if(Platform.OS=='android')
         setConnected(isConnected.isConnected)
         setIsSlowInternet(isConnected.isInternetReachable ? false : true)
         console.log("is connected",isConnected.isInternetReachable)
-      
+        getUsers();
+        getMinVersionSupportFunc(currentVersion)
+        getAppTheme("ozone")
+        getData()
+
       }
      
 
-  },[isConnected,getAppThemeError])
+  },[isConnected,locationEnabled])
   
   useEffect(() => {
     if (getUsersData) {
@@ -461,11 +473,6 @@ if(Platform.OS=='android')
             Platform.OS== 'android' &&  locationEnabled && minVersionSupport && navigation.navigate('Introduction')
             Platform.OS== 'ios' && minVersionSupport && navigation.navigate('Introduction')
           }
-          // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
-    
-          
-           
-       
     
         }
 
@@ -515,7 +522,6 @@ if(Platform.OS=='android')
           dispatch(setIsOnlineVeriification())
         }
       }
-      console.log("isAlreadyIntro", isAlreadyIntroduced)
       getData()
     }
     else if(getAppThemeError){
@@ -523,7 +529,7 @@ if(Platform.OS=='android')
       console.log("getAppThemeError", getAppThemeError)
     }
    
-  }, [getAppThemeData,getAppThemeError,locationEnabled])
+  }, [getAppThemeData,getAppThemeError,locationEnabled,connected])
 
   const modalClose = () => {
     setError(false);
@@ -546,8 +552,10 @@ if(Platform.OS=='android')
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
+    <View style={{ height:'100%',width:'100%',alignItems:'center',justifyContent:'center' }}>
+      <ImageBackground resizeMode='stretch' style={{ height: '100%', width: '100%',alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash2.png')}>
+
+
       {!connected &&  <InternetModal comp = {NoInternetComp} />}
       {isSlowInternet && <InternetModal comp = {SlowInternetComp} /> }
      
@@ -557,15 +565,10 @@ if(Platform.OS=='android')
           message={message}
           openModal={error}></ErrorModal>}
         {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
-        {/* <FastImage
-          style={{ width: 250, height: 250, marginTop:'auto',alignSelf:'center' }}
-          source={{
-            uri: gifUri, // Update the path to your GIF
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        /> */}
-
+        {
+      getAppThemeIsLoading ||  getUsersDataIsLoading && 
+      <Progress.Circle color='yellow' size={100} indeterminate={true} />
+        }
       </ImageBackground>
 
     </View>

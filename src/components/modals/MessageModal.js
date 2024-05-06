@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import {Alert, Modal, StyleSheet, Text, Pressable, View,BackHandler} from 'react-native';
 import { useSelector } from 'react-redux';
 import  Icon  from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +14,10 @@ const MessageModal = (props) => {
     const navigateTo = props.navigateTo
     const params = props.params
     console.log(navigateTo,params)
-    
+    useEffect(() => {
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
+      return () => backHandler.remove()
+    }, [])
   useEffect(()=>{
     if(props.openModal===true)
     {

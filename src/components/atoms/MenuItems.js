@@ -14,13 +14,13 @@ const MenuItems = (props) => {
     const platformFontWeight = Platform.OS === 'ios' ? '500' :'600'
 
     const {t} = useTranslation()
-    console.log("menu item images", image)
+    // console.log("menu item images", image)
     const handlePress=()=>{
-        console.log(content)
+        // console.log(content)
         props.handlePress(content)
     }
 
-    console.log(image)
+    // console.log(image)
     return (
             
                 <View style={{alignItems:"center",justifyContent:"center",width:100,margin:6}}>

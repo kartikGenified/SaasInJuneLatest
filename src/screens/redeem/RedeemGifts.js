@@ -197,21 +197,23 @@ const RedeemGifts = ({navigation,route}) => {
       }
       else  {
         // setPointBalance(pointBalance+Number(data.points))
-        for(var i =0;i<temp.length;i++)
+        const tempcart = [...cart]
+        console.log("Deleted the data from cart",tempcart)
+        for(var i =0;i<tempcart.length;i++)
         {
-          if(temp[i].id===data.id)
+          if(tempcart[i].id===data.id)
           {
           tempCount++
           if(tempCount===1)
           {
-            temp.splice(i,1)
+            tempcart.splice(i,1)
           }
           
           }       
           
         }
         
-        setCart(temp)
+        setCart(tempcart)
   
       }
     }

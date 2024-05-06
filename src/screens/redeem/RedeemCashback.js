@@ -24,12 +24,13 @@ import { useGetWalletBalanceMutation } from '../../apiServices/cashback/Cashback
 import { setWalletBalance } from '../../../redux/slices/pointWalletSlice';
 import { useTranslation } from 'react-i18next';
 
-const RedeemCashback = ({navigation}) => {
+const RedeemCashback = ({navigation,route}) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
   const [cashConversion,setCashConversion] = useState()
   const [pointsConversion, setPointsConversion] = useState(1)
+  const [walletConversion, setWalletConversion] = useState()
   const dispatch = useDispatch()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -43,6 +44,7 @@ const RedeemCashback = ({navigation}) => {
     ? useSelector(state => state.apptheme.secondaryThemeColor)
     : '#FFB533';
   const userData = useSelector(state => state.appusersdata.userData);
+  const redemptionFrom = route?.params?.redemptionFrom
   console.log("userData",userData)
   const modalClose = () => {
     setError(false);
@@ -81,23 +83,46 @@ const RedeemCashback = ({navigation}) => {
 
 
   const redeemCashback = async () => {
-if(Number(minPointsRedeemed)<=(pointsConversion))
-{
-  console.log("shjadjhashgdhjgasjgd", pointsConversion,points)
-  if(Number(pointsConversion)>=Number(points))
+  if(redemptionFrom != "Wallet")
   {
-    setError(true)
-  setMessage("You only have "+points+" points")
+        if(Number(minPointsRedeemed)<=(pointsConversion))
+    {
+      console.log("shjadjhashgdhjgasjgd", pointsConversion,points)
+      if(Number(pointsConversion)>=Number(points))
+      {
+        setError(true)
+      setMessage("You only have "+points+" points")
+      }
+      else
+      {
+        navigation.navigate('BankAccounts',{type:"Cashback"})
+      }
+    }
+    else{
+      setError(true)
+      setMessage("Min Points required to redeem is "+minPointsRedeemed)
+    }
   }
   else{
-    navigation.navigate('BankAccounts',{type:"Cashback"})
+    if(cashConversion<=getWalletBalanceData?.body?.cashback_balance)
+    {
+      if(cashConversion == 0)
+      {
+        setError(true)
+        setMessage("Cannot redeem 0 amount")
+      }
+      else{
+      navigation.navigate('BankAccounts',{type:"Cashback"})
 
+      }
+    }
+    else{
+      // console.log("cashConversionqwerty",cashConversion)
+      setError(true)
+      setMessage("You don't have enough wallet balance kindly redeem using your point")
+    }
   }
-}
-else{
-  setError(true)
-  setMessage("Min Points required to redeem is "+minPointsRedeemed)
-}
+
    
 
     // const credentials = await Keychain.getGenericPassword();
@@ -130,8 +155,8 @@ else{
     {
      
       const conversionFactor = cashPerPointData.body.cash_per_point
-      setCashConversion(pointsConversion*conversionFactor)  
-      dispatch(setCashConversionF(pointsConversion*conversionFactor))
+      redemptionFrom == "Wallet" ? setCashConversion(pointsConversion) :  setCashConversion(pointsConversion*conversionFactor)  
+      redemptionFrom == "Wallet" ? dispatch(setCashConversionF(pointsConversion)) : dispatch(setCashConversionF(pointsConversion*conversionFactor))
   }
   },[cashPerPointData,pointsConversion])
   
@@ -192,12 +217,19 @@ else{
       }}>
       <ScrollView style={{width:'100%',height:'100%'}}>
 
-      {error && (
+      {error && redemptionFrom!="Wallet" && (
         <ErrorModal
           modalClose={modalClose}
           message={message}
           openModal={error}
-          navigateTo="RedeemCashback"></ErrorModal>
+          navigateTo="Passbook"></ErrorModal>
+      )}
+      {error && redemptionFrom=="Wallet" && (
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+          navigateTo="CashbackHistory"></ErrorModal>
       )}
 
       
@@ -285,6 +317,7 @@ else{
           style={{color: 'black', fontWeight: '600'}}
           content={`${pointsConversion} Points = ${cashConversion} Rupees`}></PoppinsTextMedium>
       </View>
+      {redemptionFrom !="Wallet" ? 
       <View
         style={{
           alignItems: 'center',
@@ -377,7 +410,105 @@ else{
               top: 4,
             }}></PoppinsTextMedium>
         </View>
+      </View> 
+
+      :
+
+      <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        marginTop: 20,
+        paddingTop: 20,
+      }}>
+      <PoppinsTextMedium
+        content={t("Enter Amount")}
+        style={{
+          color: '#909090',
+          fontWeight: '600',
+          marginBottom: 20,
+          position: 'absolute',
+          left: 20,
+          top: 0,
+        }}></PoppinsTextMedium>
+      <View
+        style={{
+          width: '90%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: 0.8,
+          borderColor: '#DDDDDD',
+          height: 80,
+          borderRadius: 10,
+          backgroundColor: '#F5F7F9',
+          flexDirection: 'row',
+          marginTop: 10,
+        }}>
+        <View
+          style={{
+            width: '60%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRightWidth: 1,
+            borderColor: '#DDDDDD',
+            height:60
+          }}>
+          <PoppinsTextMedium
+            content={t("Amount")}
+            style={{
+              color: '#909090',
+              fontWeight: '600',
+              fontSize: 14,
+            }}></PoppinsTextMedium>
+         <TextInput value={pointsConversion + ""} style={{color:'black',height:60, fontWeight:'bold', fontSize:14,width:'50%'}} onChangeText={(text)=>{setPointsConversion(text),dispatch(setPointConversionF(text))}} placeholder='Enter Amount'></TextInput>
+        </View>
+        <Image
+          style={{height: 24, width: 24, resizeMode: 'contain', right: 12}}
+          source={require('../../../assets/images/goNext.png')}></Image>
+        <View
+          style={{
+            width: '40%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderColor: '#DDDDDD',
+            height:60
+          }}>
+          <PoppinsTextMedium
+            content={t("Cash")}
+            style={{
+              color: '#909090',
+              fontWeight: '600',
+              fontSize: 14,
+              marginBottom:12
+            }}></PoppinsTextMedium>
+          <PoppinsText
+            style={{fontSize: 20, color: 'black'}}
+            content={Math.round(cashConversion * 10) / 10}></PoppinsText>
+        </View>
       </View>
+
+      <View
+        style={{
+          width: '90%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom:20
+        }}>
+        <PoppinsTextMedium
+          content={`Your wallet balance is ${getWalletBalanceData?.body?.cashback_balance}`}
+          style={{
+            color: 'black',
+            fontWeight: '600',
+            marginBottom: 20,
+            position: 'absolute',
+            left: 0,
+            top: 4,
+          }}></PoppinsTextMedium>
+      </View>
+    </View>
+      
+      }
       <View style={{alignItems:"center", justifyContent:"center", width:"100%",marginTop:20,marginBottom:20}}>
       <TouchableOpacity
         onPress={() => {

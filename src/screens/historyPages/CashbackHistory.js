@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 const CashbackHistory = ({ navigation }) => {
   const [showNoDataFound, setShowNoDataFound] = useState(false);
   const [totalCashbackEarned, setTotalCashbackEarned] = useState(0)
-  const [displayData, setDisplayData] = useState(true)
+  const [displayData, setDisplayData] = useState(false)
   const focused = useIsFocused()
 
   const userId = useSelector((state) => state.appusersdata.userId);
@@ -131,7 +131,7 @@ useEffect(()=>{
       if (fetchCashbackEnteriesData.body) {
         for (var i = 0; i < fetchCashbackEnteriesData.body?.data?.length; i++) {
 
-          if (fetchCashbackEnteriesData.body.data[i].status === "1") {
+          if (fetchCashbackEnteriesData.body.data[i].approval_status === "1") {
             cashback = cashback + Number(fetchCashbackEnteriesData.body.data[i].cash)
             console.log("fetchCashbackEnteriesData", fetchCashbackEnteriesData.body.data[i].cash)
           }
@@ -206,12 +206,12 @@ useEffect(()=>{
         >
           {console.log("item of item", props)}
           <PoppinsTextMedium
-            style={{ color:   props.items.status === "0"? "red" : props.items.status === "2" ? "orange" : "green", fontWeight: "600", fontSize: 18 }}
+            style={{ color:   props.items.approval_status === "2" ? "red" : props.items.approval_status === "3" ? "orange" : "green", fontWeight: "600", fontSize: 18 }}
             
             content={
-             props.items.status === "0"
+             props.items.approval_status === "2"
                 ? "Declined from the panel"
-                :    props.items.status === "2" ? "Pending from the panel" : "Credited to cash balance"
+                :    props.items.approval_status === "3" ? "Pending from the panel" : "Credited to cash balance"
 
              
             }
@@ -399,7 +399,7 @@ useEffect(()=>{
         </View>
         <View style={{width:'40%',alignItems:'center',justifyContent:'flex-start'}}>
           <TouchableOpacity onPress={()=>{
-            navigation.navigate('RedeemCashback')
+            navigation.navigate('RedeemCashback',{redemptionFrom:"Wallet"})
           }} style={{height:30,width:100,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:10}}>
             <PoppinsTextMedium style={{fontSize:16,fontWeight:'bold',color:'white'}} content={t("redeem")}></PoppinsTextMedium>
           </TouchableOpacity>
@@ -507,7 +507,7 @@ useEffect(()=>{
         </TouchableOpacity>
       </View>
       {
-        fetchCashbackEnteriesData?.body?.count === 0 && getRedemptionListData?.body?.total===0 && <View style={{ width: '100%',height:'80%' }}>
+        fetchCashbackEnteriesData?.body?.count === 0  && getRedemptionListData?.body?.total===0 && <View style={{ width: '100%',height:'80%' }}>
           <DataNotFound></DataNotFound>
         </View>
       }

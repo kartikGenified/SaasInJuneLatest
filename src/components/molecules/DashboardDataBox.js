@@ -7,7 +7,7 @@ const DashboardDataBox = (props) => {
     const image = props.image
     const header = props.header
     const data=props.data
-    console.log(image,props.type)
+    // console.log(image,props.type)
     return (
         <View style={{height:64,flexDirection:"row",alignItems:"center",justifyContent:"center",padding:10,margin:10,borderWidth:1,borderColor:'#DDDDDD',width:150,borderRadius:14,elevation:2,backgroundColor:"white"}}>
             <View style={{width:'30%',height:'100%'}}>

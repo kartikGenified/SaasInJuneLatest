@@ -49,7 +49,7 @@ const Profile = ({ navigation }) => {
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
   const userData = useSelector(state => state.appusersdata.userData)
-
+  console.log("userdata is",userData)
   const focused = useIsFocused()
   const [
     fetchProfileFunc,
@@ -523,13 +523,15 @@ const Profile = ({ navigation }) => {
 
 
           </View>
-          <View style={{ width: '100%', backgroundColor: "white", alignItems: "center", justifyContent: 'center' }}>
+          {/* ozone specific changes */}
+         {userData?.user_type != "sales" && <View style={{ width: '100%', backgroundColor: "white", alignItems: "center", justifyContent: 'center' }}>
             <View style={{ height: 100, width: '90%', backgroundColor: "white", alignItems: "flex-start", justifyContent: 'center', flexDirection: 'row', marginTop: 20 }}>
 
               <ProfileBox buttonTitle="+ Add" title="Payment Methods" image={require('../../../assets/images/money.png')}></ProfileBox>
               <ProfileBox buttonTitle="View" title="Check Passbook" image={require('../../../assets/images/passbook_icon.png')}></ProfileBox>
             </View>
-          </View>
+          </View>}
+          {/* ------------------------------- */}
         </>}
         {formFields === undefined && formValues === undefined &&
           <View>

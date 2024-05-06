@@ -39,7 +39,7 @@ import { setFirstScan,setRegistrationBonusFirstScan } from '../../../redux/slice
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import { useTranslation } from 'react-i18next';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const QrCodeScanner = ({navigation}) => {
   const [zoom, setZoom] = useState(0);
@@ -343,8 +343,24 @@ if(addQrData)
     if (checkGenuinityData) {
       // console.log('genuinity check', checkGenuinityData);
     } else if (checkGenuinityError) {
+      if(checkGenuinityError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
       setError(true)
       setMessage("Unable to check warranty status of this QR")
+      }
       // console.log('Error', checkGenuinityError);
     }
   }, [checkGenuinityData, checkGenuinityError]);
@@ -353,8 +369,24 @@ if(addQrData)
     if (checkWarrantyData) {
       // console.log('warranty check', checkWarrantyData);
     } else if (checkWarrantyError) {
+      if(checkWarrantyError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
       setError(true)
       setMessage("Unable to check warranty status of this QR")
+      }
       // console.log('warranty Error', checkWarrantyError);
     }
   }, [checkWarrantyData, checkWarrantyError]);
@@ -377,8 +409,24 @@ if(addQrData)
         }
     }
     else if (fetchUserPointsHistoryError) {
+      if(getActiveMembershipError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
       setError(true)
       setMessage("Can't fetch scanned QR list")
+      }
         // console.log("fetchUserPointsHistoryError", fetchUserPointsHistoryError)
     }
 
@@ -425,9 +473,25 @@ if(addQrData)
    
 
     } else if (productDataError) {
+      if(getActiveMembershipError.status == 401)
+      {
+        const handleLogout = async () => {
+          try {
+            
+            await AsyncStorage.removeItem('loginData');
+            navigation.navigate("Splash")
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] }); // Navigate to Splash screen
+          } catch (e) {
+            console.log("error deleting loginData", e);
+          }
+        };
+        handleLogout();
+      }
+      else{
       // console.log('pr Error', productDataError);
       setError(true)
       setMessage(productDataError?.data?.Error?.message)
+      }
     }
   }, [productDataData, productDataError]);
 
@@ -530,7 +594,7 @@ const onSuccess = async (e) => {
           const response = await verifyQrFunc({ token, data })
           // console.log("verifyQrFunc",response)
           if (response?.data) {
-            // console.log('Verify qr data', JSON.stringify(response));
+            console.log('Verify qr data', JSON.stringify(response));
             if(response?.data?.body==null)
             {
               setError(true)
