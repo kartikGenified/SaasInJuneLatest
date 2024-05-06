@@ -17,7 +17,7 @@ const ScannedDetailsBox = (props) => {
         const {t} = useTranslation()
       
     return (
-        <View style={{height:60,width:'90%',alignItems:'center',justifyContent:'center',flexDirection:'row',backgroundColor:"#EEEEEE",borderRadius:10,marginBottom:20,borderWidth:1,borderColor:'#DDDDDD'}}>
+        <View style={{height:70,width:'90%',alignItems:'center',justifyContent:'center',flexDirection:'row',backgroundColor:"#EEEEEE",borderRadius:10,marginBottom:20,borderWidth:1,borderColor:'#DDDDDD'}}>
         <View style={{width:'50%',alignItems:'center',justifyContent:'center',borderRightWidth:2,borderColor:'#DDDDDD'}}>
         <PoppinsTextMedium style={{color:'black',fontSize:16,fontWeight:'600'}} content={t("Last Scanned Date")}></PoppinsTextMedium>
         <PoppinsTextMedium style={{color:'black',fontSize:16,fontWeight:'600'}} content={lastScannedDate}></PoppinsTextMedium>

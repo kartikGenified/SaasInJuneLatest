@@ -11,6 +11,7 @@ import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId} from 
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ErrorModal from '../../components/modals/ErrorModal';
+import { t } from 'i18next';
 
 
 
@@ -149,9 +150,9 @@ const SelectUser = ({navigation}) => {
             }}
             source={{uri: icon}}></Image>
 
-            <View style={{width:'80%',alignItems:"center",justifyContent:'center',borderColor:ternaryThemeColor,borderTopWidth:1,borderBottomWidth:1,height:40,marginTop:40}}>
+            <View style={{width:'80%',alignItems:"center",justifyContent:'center',borderColor:ternaryThemeColor,borderTopWidth:1,borderBottomWidth:1,height:60,marginTop:40}}>
               {/* <PoppinsTextMedium style={{color:'#171717',fontSize:20,fontWeight:'700'}} ></PoppinsTextMedium> */}
-              <PoppinsTextMedium style={{ color: '#171717', fontSize: 20, fontWeight: '700' }} content='choose profile' />
+              <PoppinsTextMedium style={{ color: '#171717', fontSize: 20, fontWeight: '700' }} content={t('choose profile')} />
 
             </View>
         {/* </View> */}
