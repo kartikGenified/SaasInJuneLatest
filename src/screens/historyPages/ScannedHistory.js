@@ -274,7 +274,7 @@ const ScannedHistory = ({ navigation }) => {
             ></PoppinsText>
           )}
           <PoppinsTextMedium
-            style={{ color: "black", fontSize: 14 }}
+            style={{ color: "black", fontSize: 14, width:100 }}
             content={t("earned points")}
           ></PoppinsTextMedium>
         </View>
@@ -287,12 +287,12 @@ const ScannedHistory = ({ navigation }) => {
         >
           {userPointData && (
             <PoppinsText
-              style={{ color: "black" }}
+              style={{ color: "black", }}
               content={userPointData.body.point_redeemed}
             ></PoppinsText>
           )}
           <PoppinsTextMedium
-            style={{ color: "black", fontSize: 14 }}
+            style={{ color: "black", fontSize: 14 , width:100}}
             content={t("points redeemed")}
           ></PoppinsTextMedium>
         </View>
@@ -310,7 +310,7 @@ const ScannedHistory = ({ navigation }) => {
             ></PoppinsText>
           )}
           <PoppinsTextMedium
-            style={{ color: "black", fontSize: 14 }}
+            style={{ color: "black", fontSize: 14, width:100 }}
             content={t("reserved points")}
 
           ></PoppinsTextMedium>

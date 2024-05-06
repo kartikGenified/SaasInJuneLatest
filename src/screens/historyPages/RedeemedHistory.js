@@ -330,12 +330,12 @@ const RedeemedHistory = ({ navigation }) => {
         </Modal>
         {userPointData && <View style={{ alignItems: "center", justifyContent: "center" }}>
           <PoppinsText style={{ color: "black" }} content={userPointData.body.point_earned}></PoppinsText>
-          <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content={t("lifetime earnings")}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: "black", fontSize: 14, width:100 }} content={t("lifetime earnings")}></PoppinsTextMedium>
         </View>
   }
         {userPointData  && <View style={{ alignItems: "center", justifyContent: "center", marginLeft: 20 }}>
           <PoppinsText style={{ color: "black" }} content={userPointData.body.point_redeemed}></PoppinsText>
-          <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content={t("lifetime burns")}></PoppinsTextMedium>
+          <PoppinsTextMedium style={{ color: "black", fontSize: 14, width:100 }} content={t("lifetime burns")}></PoppinsTextMedium>
         </View>
   } 
         {userPointData && <TouchableOpacity onPress={() => {

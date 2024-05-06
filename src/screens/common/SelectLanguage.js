@@ -29,7 +29,7 @@ const SelectLanguage = ({ navigation }) => {
     console.log("language", language);
     setLanguage(language);
     // Assuming 'english' and 'arabic' are the keys used in your translation files
-    i18n.changeLanguage(language === 'english' ? 'en' : 'ar');
+    i18n.changeLanguage(language === 'english' ? 'en' : language === "hindi" ? 'ar' : language === "tamil" ? "tm" : language === "telugu" ? "tl" : 'en'); // Corrected the logic for Tamil and Telugu
     navigation.navigate('SelectUser');
   };
 
@@ -66,14 +66,14 @@ const SelectLanguage = ({ navigation }) => {
         />
         <SelectLanguageBox
           selectedLanguage={language}
-          setSelectedLanguage={() => setSelectedLanguage('english')}
+          setSelectedLanguage={() => setSelectedLanguage('tamil')}
           languageHindi={t('Tamil')}
           languageEnglish={t('தமிழ்')}
           image={require('../../../assets/images/tamilLanguage.png')}
         />
             <SelectLanguageBox
           selectedLanguage={language}
-          setSelectedLanguage={() => setSelectedLanguage('english')}
+          setSelectedLanguage={() => setSelectedLanguage('telugu')}
           languageHindi={t('Telugu')}
           languageEnglish={t('தெலுங்கு')}
           image={require('../../../assets/images/teluguLanguage.png')}

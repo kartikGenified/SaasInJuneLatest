@@ -195,11 +195,11 @@ const WarrantyHistory = ({ navigation }) => {
 
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
                         {getWarrantylistData && <PoppinsText style={{ color: "black" }} content={activated}></PoppinsText>}
-                        <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content="Activated"></PoppinsTextMedium>
+                        <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content={t("Activated")}></PoppinsTextMedium>
                     </View>
                     <View style={{ alignItems: "center", justifyContent: "center", marginLeft: 40 }}>
                         {getWarrantylistData && <PoppinsText style={{ color: "black" }} content={pending}></PoppinsText>}
-                        <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content="Pending"></PoppinsTextMedium>
+                        <PoppinsTextMedium style={{ color: "black", fontSize: 14 }} content={t("Pending")}></PoppinsTextMedium>
                     </View>
                     <Image style={{ height: 80, width: 80, resizeMode: "contain", marginLeft: 40 }} source={require('../../../assets/images/boxReward.png')}></Image>
                 </View>

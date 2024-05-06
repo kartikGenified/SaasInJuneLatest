@@ -26,23 +26,17 @@
   "cashback history": "Cashback History",
   "shared point history" : "shared point history",
   "previous transaction history" : "Previous Transaction History",
-
   "Gift Catalogue" :"Gift Catalogue", 
   "Scan QR":"Scan QR",
-
-
   "Scan QR Code":"Scan QR Code",
   "Check Genuinity":"Check Genuinity",
   "Passbook":"Passbook",
-
   "wallet balance":"Wallet Balance",
-
   "list of products scanned by you": "list of products scanned by you",
   "list of points redeemed by you": "list of points redeemed by you",
   "list of products redeemed by you": "list of products redeemed by you",
   "list of cashback claimed by you": "list of cashback claimed by you",
   "list of wheel spinned by you" : "list of wheel spinned by you",
-
   "warranty history": "Warranty History",
   "you have": "you have",
   "lifetime earnings": "Lifetime Earnings",
@@ -258,7 +252,6 @@
   "Enter Points": "ENTER POINTS",
   "You need to minimum": "You need minimum",
   "Cash":"Cash",
-
   "Enter UPI Address":  "Enter UPI Address",
   "Enter UPI ID":"Enter UPI ID",
   "add account details": "Add account details",
@@ -269,6 +262,5 @@
   "Didn't recieve any Code":"Didn't recieve any Code",
   "Update Profile":"Update Profile",
   "Image Gallery":"Image Gallary",
-  "Videos":"Videos"
-  
+  "Videos":"Videos"   
 }
