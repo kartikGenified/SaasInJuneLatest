@@ -45,7 +45,7 @@ const Splash = ({ navigation }) => {
   // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   // const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
-  
+  const currentVersion = VersionCheck.getCurrentVersion();
   
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
   // generating functions and constants for API use cases---------------------
@@ -88,7 +88,7 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     getUsers();
-    const currentVersion = VersionCheck.getCurrentVersion();
+    
     console.log("currentVersion",currentVersion)
     getMinVersionSupportFunc(currentVersion)
   }, [])
@@ -96,7 +96,7 @@ const Splash = ({ navigation }) => {
 
   const removerTokenData =async()=>{
     await AsyncStorage.removeItem('loginData');
-    navigation.navigate("Splash")
+    navigation.navigate("SelectUser")
   } 
 
   useEffect(() => {
@@ -456,11 +456,13 @@ const Splash = ({ navigation }) => {
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced)
     }
     else {
-      if (value === "Yes") {
-        Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.navigate('SelectLanguage');
-        Platform.OS == 'ios' && minVersionSupport && navigation.navigate('SelectLanguage');
+      if (value === "Yes") 
+      {
+        Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.navigate('SelectUser');
+        Platform.OS == 'ios' && minVersionSupport && navigation.navigate('SelectUser');
       }
-      else {
+      else 
+      {
         Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.navigate('Introduction')
         Platform.OS == 'ios' && minVersionSupport && navigation.navigate('Introduction')
       }
