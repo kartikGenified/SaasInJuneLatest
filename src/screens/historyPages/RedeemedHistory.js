@@ -91,19 +91,16 @@ const RedeemedHistory = ({ navigation }) => {
     if (getKycStatusData) {
       console.log("getKycStatusData", getKycStatusData)
       if (getKycStatusData.success) {
-        const tempStatus = Object.values(getKycStatusData.body)
-        
+        const tempStatus = Object.values(getKycStatusData.body)        
         setShowKyc(tempStatus.includes(false))
-
-       
-
-
       }
     }
     else if (getKycStatusError) {
       console.log("getKycStatusError", getKycStatusError)
     }
   }, [getKycStatusData, getKycStatusError])
+
+
   useEffect(() => {
     fetchPoints()
     if(appUserData!==undefined)
@@ -247,39 +244,43 @@ const RedeemedHistory = ({ navigation }) => {
 
     const handleRedeemButtonPress = () => {
       
-      setModalVisible(true)
-      // if (Number(userPointData.body.point_balance) <= 0 ) {
-      //   setError(true)
-      //   setMessage("Sorry you don't have enough points.")
-      // }
+      if (Number(userPointData.body.point_balance) <= 0 ) {
+        setError(true)
+        setMessage("Sorry you don't have enough points.")
+        setNavigateTo("RedeemedHistory")
+      }
     
-      // else if(Number(minRedemptionPoints)>Number(pointBalance))
-      // {
-      //   console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
-      //   setError(true)
-      //   setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
-      // }
-      // else {
+      else if(Number(minRedemptionPoints)>Number(pointBalance))
+      {
+        console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
+        setError(true)
+        setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
+        setNavigateTo("RedeemedHistory")
+
+      }
+      else {
         
-      //   if((Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) ) &&  ( Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime())) )
-      //   {
+        if((Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) ) &&  ( Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime())) )
+        {
           
-      //     console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
-      //   if(!showKyc)
-      //   {
-      //     setModalVisible(true)
-      //   }
-      //   else{
-      //     setError(true)
-      //     setMessage("Kyc not completed yet")
-      //     setNavigateTo("Verification")
-      //   }
-      //   }
-      //   else{
-      //     setError(true)
-      //   setMessage("Redemption window starts from "+ moment(redemptionStartData).format("DD-MMM-YYYY") + " and ends on " +  moment(redemptionEndDate).format("DD-MMM-YYYY"))
-      //   }
-      // }
+          console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
+        if(!showKyc)
+        {
+          setModalVisible(true)
+        }
+        else{
+          setError(true)
+          setMessage("Kyc not completed yet")
+          setNavigateTo("Verification")
+        }
+        }
+        else{
+          setError(true)
+        setMessage("Redemption window starts from "+ moment(redemptionStartData).format("DD-MMM-YYYY") + " and ends on " +  moment(redemptionEndDate).format("DD-MMM-YYYY"))
+        setNavigateTo("RedeemedHistory")
+
+        }
+      }
 
     }
     return (
@@ -472,7 +473,6 @@ const RedeemedHistory = ({ navigation }) => {
           modalClose={modalClose}
           message={message}
           openModal={error}
-          navigateTo={navigateTo}
           ></ErrorModal>
       )}
       {error && navigateTo && (

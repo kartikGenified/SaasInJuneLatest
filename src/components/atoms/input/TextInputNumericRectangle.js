@@ -2,16 +2,18 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import PoppinsTextMedium from '../../electrons/customFonts/PoppinsTextMedium';
 import { useTranslation } from 'react-i18next';
+
+
 const TextInputNumericRectangle = props => {
   const [value, setValue] = useState(props.value);
   const placeHolder = props.placeHolder;
   const maxLength = props.maxLength;
   const label = props.label
   const required = props.required ===undefined ? props.jsonData.required : props.required
-  let displayText = props.displayText
+  let displayText = props.placeHolder
 
   const isEditable = props.isEditable
-  console.log("label",isEditable)
+  console.log("label",isEditable,displayText)
 
   const {t} = useTranslation()
 

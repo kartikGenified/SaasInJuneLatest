@@ -181,21 +181,24 @@ const RedeemCoupons = ({ navigation, route }) => {
     let temp = cart;
     console.log("data qwerty",data);
 
-    if (operation === "plus") {
+    if (operation === "plus") 
+    {
       temp.push(data);
       setCart(temp);
-    } else {
+    } 
+    else {
       // setPointBalance(pointBalance+Number(data.points))
-      for (var i = 0; i < temp.length; i++) {
-        if (temp[i].id === data.id) {
+      const tempCart = [...cart]
+      for (var i = 0; i < tempCart.length; i++) {
+        if (tempCart[i].id === data.id) {
           tempCount++;
           if (tempCount === 1) {
-            temp.splice(i, 1);
+            tempCart.splice(i, 1);
           }
         }
       }
 
-      setCart(temp);
+      setCart(tempCart);
     }
 
     console.log(temp);

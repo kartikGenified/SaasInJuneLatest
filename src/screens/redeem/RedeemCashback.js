@@ -281,7 +281,7 @@ const RedeemCashback = ({navigation,route}) => {
           style={{height: 140, width: 140}}
           source={require('../../../assets/images/redeemCashback.png')}></Image>
         <View style={{width:'100%',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
-          <View style={{width:'50%',alignItems:'center',justifyContent:'center'}}>
+         {redemptionFrom!="Wallet" ?  <View style={{width:'50%',alignItems:'center',justifyContent:'center'}}>
           <PoppinsText
           style={{fontSize: 24, color: 'black', marginTop: 20}}
           content={points}></PoppinsText>
@@ -292,8 +292,15 @@ const RedeemCashback = ({navigation,route}) => {
             fontWeight: '600',
             marginBottom: 20,
           }}></PoppinsTextMedium>
+          </View> : 
+          <View style={{width:'60%',alignItems:'center',justifyContent:'center'}}>
+          <PoppinsText
+          style={{fontSize: 24, color: 'black', marginTop: 20}}
+          content="Wallet Balance"></PoppinsText>
+        
           </View>
-          <View style={{width:'50%',alignItems:'center',justifyContent:'center'}}>
+          }
+         {redemptionFrom!="Wallet"  ? <View style={{width:'50%',alignItems:'center',justifyContent:'center'}}>
           <PoppinsText
           style={{fontSize: 24, color: 'black', marginTop: 20}}
           content={getWalletBalanceData?.body?.cashback_balance}></PoppinsText>
@@ -304,9 +311,16 @@ const RedeemCashback = ({navigation,route}) => {
             fontWeight: '600',
             marginBottom: 20,
           }}></PoppinsTextMedium>
+          </View> : 
+          <View style={{width:'40%',alignItems:'center',justifyContent:'center'}}>
+          <PoppinsText
+          style={{fontSize: 24, color: 'black', marginTop: 20}}
+          content={getWalletBalanceData?.body?.cashback_balance}></PoppinsText>
+        
           </View>
+          }
         </View>
-        <PoppinsTextMedium
+       {redemptionFrom!=="Wallet" &&  <View><PoppinsTextMedium
           content={t("Convert your Points to Cash")}
           style={{
             color: '#909090',
@@ -315,7 +329,7 @@ const RedeemCashback = ({navigation,route}) => {
           }}></PoppinsTextMedium>
         <PoppinsTextMedium
           style={{color: 'black', fontWeight: '600'}}
-          content={`${pointsConversion} Points = ${cashConversion} Rupees`}></PoppinsTextMedium>
+          content={`${pointsConversion} Points = ${cashConversion} Rupees`}></PoppinsTextMedium></View>}
       </View>
       {redemptionFrom !="Wallet" ? 
       <View
@@ -422,16 +436,7 @@ const RedeemCashback = ({navigation,route}) => {
         marginTop: 20,
         paddingTop: 20,
       }}>
-      <PoppinsTextMedium
-        content={t("Enter Amount")}
-        style={{
-          color: '#909090',
-          fontWeight: '600',
-          marginBottom: 20,
-          position: 'absolute',
-          left: 20,
-          top: 0,
-        }}></PoppinsTextMedium>
+      
       <View
         style={{
           width: '90%',
@@ -455,13 +460,15 @@ const RedeemCashback = ({navigation,route}) => {
             height:60
           }}>
           <PoppinsTextMedium
-            content={t("Amount")}
+            content={t("Enter Amount")}
             style={{
               color: '#909090',
               fontWeight: '600',
               fontSize: 14,
+              marginTop:10
+              
             }}></PoppinsTextMedium>
-         <TextInput value={pointsConversion + ""} style={{color:'black',height:60, fontWeight:'bold', fontSize:14,width:'50%'}} onChangeText={(text)=>{setPointsConversion(text),dispatch(setPointConversionF(text))}} placeholder='Enter Amount'></TextInput>
+         <TextInput value={pointsConversion + ""} style={{color:'black',height:60, fontWeight:'bold', fontSize:20,width:'50%'}} onChangeText={(text)=>{setPointsConversion(text),dispatch(setPointConversionF(text))}} placeholder='Enter Amount'></TextInput>
         </View>
         <Image
           style={{height: 24, width: 24, resizeMode: 'contain', right: 12}}
@@ -483,29 +490,12 @@ const RedeemCashback = ({navigation,route}) => {
               marginBottom:12
             }}></PoppinsTextMedium>
           <PoppinsText
-            style={{fontSize: 20, color: 'black'}}
+            style={{fontSize: 18, color: '#A9A9A9'}}
             content={Math.round(cashConversion * 10) / 10}></PoppinsText>
         </View>
       </View>
 
-      <View
-        style={{
-          width: '90%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom:20
-        }}>
-        <PoppinsTextMedium
-          content={`Your wallet balance is ${getWalletBalanceData?.body?.cashback_balance}`}
-          style={{
-            color: 'black',
-            fontWeight: '600',
-            marginBottom: 20,
-            position: 'absolute',
-            left: 0,
-            top: 4,
-          }}></PoppinsTextMedium>
-      </View>
+      
     </View>
       
       }

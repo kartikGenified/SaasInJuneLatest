@@ -72,11 +72,11 @@ const CouponDetails = ({navigation,route}) => {
             fontWeight: '600',
             color: '#171717',
           }}></PoppinsTextMedium>
-        <TouchableOpacity style={{marginLeft: 160}}>
+        {/* <TouchableOpacity style={{marginLeft: 160}}>
           <Image
             style={{height: 30, width: 30, resizeMode: 'contain'}}
             source={require('../../../assets/images/notificationOn.png')}></Image>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View
         style={{alignItems: 'center', justifyContent: 'center', width: '100%'}}>

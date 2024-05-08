@@ -364,7 +364,7 @@ const AddAddress = ({ navigation }) => {
               navigateTo="ListAddress"
               ></MessageModal>
           )}
-      {location && (
+      {(
         <View style={{ marginTop: 20, alignItems: "center" }}>
           <PrefilledTextInput
             jsonData={{

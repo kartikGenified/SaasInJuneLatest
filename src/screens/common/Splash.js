@@ -109,11 +109,9 @@ const Splash = ({ navigation }) => {
       dispatch(setUserData(parsedJsonValue))
       dispatch(setId(parsedJsonValue.id))
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
-      Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.navigate('Dashboard');
-      Platform.OS == 'ios' && minVersionSupport && navigation.navigate('Dashboard');
-
-      Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
-      Platform.OS == 'ios' && minVersionSupport && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+        minVersionSupport && navigation.navigate('Dashboard');
+        minVersionSupport && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+      
 
     }
     else if (getDashboardError) {
@@ -297,8 +295,8 @@ const Splash = ({ navigation }) => {
           } else if (error.code === 2) {
             // Position Unavailable
             console.log("locationBoxEnabled", locationBoxEnabled)
-            if (!locationBoxEnabled)
-              getLocationPermission()
+            // if (!locationBoxEnabled)
+            //   getLocationPermission()
 
           } else {
             // Other errors
@@ -458,13 +456,13 @@ const Splash = ({ navigation }) => {
     else {
       if (value === "Yes") 
       {
-        Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.navigate('SelectUser');
-        Platform.OS == 'ios' && minVersionSupport && navigation.navigate('SelectUser');
+        
+         minVersionSupport && navigation.navigate('SelectUser');
       }
       else 
       {
-        Platform.OS == 'android' && locationEnabled && minVersionSupport && navigation.navigate('Introduction')
-        Platform.OS == 'ios' && minVersionSupport && navigation.navigate('Introduction')
+         minVersionSupport && navigation.navigate('Introduction')
+        
       }
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
 

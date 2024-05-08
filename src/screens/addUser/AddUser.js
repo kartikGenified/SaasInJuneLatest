@@ -437,6 +437,7 @@ const AddUser = ({ navigation }) => {
                       placeHolder={item.name}
                       label={item.label}
                       required={item.required}
+                      disp={item.name}
                     >
                       {' '}
                     </TextInputNumericRectangle>
