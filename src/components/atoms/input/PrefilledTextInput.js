@@ -11,7 +11,7 @@ const PrefilledTextInput = (props) => {
     const label = props.label
     const isEditable = props.isEditable
     const required = props.required ===undefined ? props.jsonData.required : props.required
-    let displayText = props.displayText
+    let displayText = props.placeHolder
 
     const {t} = useTranslation()
 

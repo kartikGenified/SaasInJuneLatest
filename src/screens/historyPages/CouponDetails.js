@@ -132,11 +132,11 @@ const CouponDetails = ({navigation,route}) => {
           </View>
         </View>
         {/* ----------------------------------------- */}
-        <View style={{alignItems:"center",justifyContent:'center',marginTop:20}}>
+        {/* <View style={{alignItems:"center",justifyContent:'center',marginTop:20}}>
             <PoppinsTextMedium style={{color:'black',fontSize:18}} content ="How to use"></PoppinsTextMedium>
             <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:18,textDecorationLine: 'underline'}} content ="Term & Condition"></PoppinsTextMedium>
             
-        </View>
+        </View> */}
         
       </View>
       <View style={{alignItems:"center",justifyContent:"center",marginTop:20,position:"absolute",bottom:10,borderTopWidth:1,borderColor:'#DDDDDD',width:'90%',paddingTop:10}}>

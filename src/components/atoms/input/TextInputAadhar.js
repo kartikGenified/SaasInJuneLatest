@@ -22,7 +22,7 @@ const TextInputAadhar = (props) => {
 
     const placeHolder = props.placeHolder
     const required = props.required
-    let displayText = props.displayText
+    let displayText = props.placeHolder
 
     if(displayText == "Aadhar" || displayText== "aadhar"){
       displayText = "Aadhar"

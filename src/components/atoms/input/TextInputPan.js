@@ -14,7 +14,7 @@ const TextInputPan = (props) => {
   const [error, setError] = useState(false);
   const placeHolder = props.placeHolder
   const required = props.required
-  let displayText = props.displayText
+  let displayText = props.placeHolder
 
   const label = props.label
   const [verifyPanFunc, {

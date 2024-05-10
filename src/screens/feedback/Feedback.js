@@ -10,7 +10,7 @@ import { useAddFeedbackMutation } from '../../apiServices/feedbackApi/FeedbackAp
 import * as Keychain from 'react-native-keychain';
 import ErrorModal from '../../components/modals/ErrorModal';
 import { useTranslation } from 'react-i18next';
-
+import FastImage from 'react-native-fast-image';
 const Feedback = ({ navigation }) => {
 
     //states
@@ -21,6 +21,7 @@ const Feedback = ({ navigation }) => {
   const userData = useSelector(state => state.appusersdata.userData)
 
     const userName = useSelector(state => state.appusersdata.name);
+    const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
     const {t} = useTranslation();
 
@@ -177,7 +178,16 @@ const Feedback = ({ navigation }) => {
             </ScrollView>
 
             <FeedbackModal isVisible={isSuccessModalVisible} user={userData.name} onClose={hideSuccessModal} />
-
+            {
+            addFeedbackIsLoading &&  <FastImage
+            style={{ width: 100, height: 100, alignSelf: 'center', marginTop: '60%' }}
+            source={{
+              uri: gifUri, // Update the path to your GIF
+              priority: FastImage.priority.normal
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+          }
             {error && <ErrorModal modalClose={()=>{setError(false)}} message={message} openModal={error}></ErrorModal>}
         </View>
     );

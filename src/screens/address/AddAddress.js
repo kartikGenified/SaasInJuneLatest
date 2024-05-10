@@ -152,6 +152,8 @@ const AddAddress = ({ navigation }) => {
         });
     });
   }, []);
+
+  
   useEffect(() => {
     if (getLocationFormPincodeData) {
       console.log("getLocationFormPincodeData", getLocationFormPincodeData);
@@ -168,11 +170,11 @@ const AddAddress = ({ navigation }) => {
           lat: "N/A",
           lon: "N/A",
           address: address,
-          city: getLocationFormPincodeData.body[0].district,
-          district: getLocationFormPincodeData.body[0].division,
-          state: getLocationFormPincodeData.body[0].state,
+          city: getLocationFormPincodeData?.body[0]?.district,
+          district: getLocationFormPincodeData?.body[0]?.division,
+          state: getLocationFormPincodeData?.body[0]?.state,
           country: "N/A",
-          postcode: getLocationFormPincodeData.body[0].pincode,
+          postcode: getLocationFormPincodeData?.body[0]?.pincode,
         };
         console.log(locationJson);
         setLocation(locationJson);
@@ -261,23 +263,23 @@ const AddAddress = ({ navigation }) => {
       for (var i = 0; i < responseArray.length; i++) {
         if(responseArray[i].name ==="state")
         {
-          data["state"] = responseArray[i].value
+          data["state"] = responseArray[i]?.value
         }
         else if(responseArray[i].name ==="city")
         {
-          data["city"] = responseArray[i].value
+          data["city"] = responseArray[i]?.value
         }
         else if(responseArray[i].name ==="district")
         {
-          data["district"] = responseArray[i].value
+          data["district"] = responseArray[i]?.value
         }
         else if(responseArray[i].name ==="postCode")
         {
-          data["pincode"] = responseArray[i].value
+          data["pincode"] = responseArray[i]?.value
         }
         else if(responseArray[i].name==="houseNumber")
         {
-          if(responseArray[i].value===undefined)
+          if(responseArray[i]?.value===undefined)
 {
   check =true
 }
@@ -405,7 +407,7 @@ const AddAddress = ({ navigation }) => {
             }}
             handleData={handleChildComponentData}
             placeHolder={"City"}
-            value={location.city}
+            value={location?.city}
             label={"City"}
           ></PrefilledTextInput>
 

@@ -270,7 +270,7 @@ const dispatch = useDispatch()
           <View style={styles.box1}>
             <Image style={styles.boxImage} source={require('../../../assets/images/total_influencer.png')}></Image>
             <View style={{ alignItems: 'center' }}>
-              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 20, }} content={` ${totalCount}`} ></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 18, }} content={` ${totalCount && totalCount}`} ></PoppinsTextLeftMedium>
 
               <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total ${selectUsers ? selectUsers : "Users"}`} ></PoppinsTextLeftMedium>
 
@@ -280,7 +280,7 @@ const dispatch = useDispatch()
           <View style={styles.box2}>
             <Image style={styles.boxImage2} source={require('../../../assets/images/total_active.png')}></Image>
             <View style={{ alignItems: 'center' }}>
-              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 20, }} content={`${active}`}></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 18, }} content={`${active!=undefined ? active:"Loading"}`}></PoppinsTextLeftMedium>
 
 
               <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '600' }} content={`Total Verified`} ></PoppinsTextLeftMedium>
@@ -291,7 +291,7 @@ const dispatch = useDispatch()
           <View style={styles.box3}>
             <Image style={styles.boxImage2} source={require('../../../assets/images/total_inactive.png')}></Image>
             <View style={{ alignItems: 'center' }}>
-              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 20, }} content={` ${inactive}`}></PoppinsTextLeftMedium>
+              <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize: 18, }} content={` ${inactive!=undefined ? inactive:"Loading"}`}></PoppinsTextLeftMedium>
 
               {/* <PoppinsTextLeftMedium style={{ marginLeft: 5, color: 'black', fontWeight: '800', fontSize:20, }} content={` ${totalCount}`} ></PoppinsTextLeftMedium> */}
 

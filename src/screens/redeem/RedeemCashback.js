@@ -77,8 +77,9 @@ const RedeemCashback = ({navigation,route}) => {
   ] = useGetWalletBalanceMutation();
   
 
-  const points =userPointData?.body.point_balance;
-  const minPointsRedeemed = cashPerPointData?.body.min_point_redeem
+  const points =userPointData?.body?.point_balance;
+  const minPointsRedeemed = cashPerPointData?.body?.min_point_redeem
+  const maxCashConverted = cashPerPointData?.body?.min_cash_redeem
   const height = Dimensions.get('window').height
 
 
@@ -95,7 +96,14 @@ const RedeemCashback = ({navigation,route}) => {
       }
       else
       {
+        if(Number(cashConversion)>=Number(maxCashConverted))
+        {
         navigation.navigate('BankAccounts',{type:"Cashback"})
+        }
+        else{
+          setError(true)
+          setMessage(`Minimum cash redemption value is ${maxCashConverted}`)
+        }
       }
     }
     else{
@@ -414,7 +422,26 @@ const RedeemCashback = ({navigation,route}) => {
             marginBottom:20
           }}>
           <PoppinsTextMedium
-            content={`${t("You need minimum")} ${minPointsRedeemed} ${t("points to redeem")}`}
+            content={`${t("* You need minimum")} ${minPointsRedeemed} ${t("points to redeem.")}`}
+            style={{
+              color: 'black',
+              fontWeight: '600',
+              marginBottom: 20,
+              position: 'absolute',
+              left: 0,
+              top: 4,
+            }}></PoppinsTextMedium>
+        </View>
+        <View
+          style={{
+            width: '90%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom:20,
+            marginTop:4
+          }}>
+          <PoppinsTextMedium
+            content={`${t(" * Minimum cash redemption value is")} ${maxCashConverted}. `}
             style={{
               color: 'black',
               fontWeight: '600',

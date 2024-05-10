@@ -13,7 +13,7 @@ const EmailTextInput = (props) => {
   const [keyboardShow, setKeyboardShow] = useState(false);
   const placeHolder = props.placeHolder;
   const label = props.label;
-  let displayText = props.displayText
+  let displayText = props.placeHolder
   const required = props.displayText
   props.required === undefined ? props.jsonData.required : props.required;
 

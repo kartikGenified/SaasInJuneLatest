@@ -212,6 +212,7 @@ console.log("navigation params from basic info",navigationParams)
       setMessage("Please Enter Correct OTP")
     }
   }, [verifyOtpData, verifyOtpError])
+  
   useEffect(() => {
     let lat = ''
     let lon = ''

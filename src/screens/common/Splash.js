@@ -109,8 +109,11 @@ const Splash = ({ navigation }) => {
       dispatch(setUserData(parsedJsonValue))
       dispatch(setId(parsedJsonValue.id))
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
+      setTimeout(() => {
         minVersionSupport && navigation.navigate('Dashboard');
         minVersionSupport && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+      }, 1000);
+       
       
 
     }

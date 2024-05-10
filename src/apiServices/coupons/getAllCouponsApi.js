@@ -17,6 +17,7 @@ export const getAllCouponsApi = baseApi.injectEndpoints({
           }),
           createCouponRequest: builder.mutation({
             query: (body) => {
+            // alert("hello")
                 return {
                     method: 'POST',
                     url: `/api/tenant/oopl/create`,

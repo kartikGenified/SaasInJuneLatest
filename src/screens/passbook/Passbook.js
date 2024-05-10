@@ -55,7 +55,7 @@ const Passbook = ({ navigation }) => {
     console.log('userdata', userData)
     const workflowProgram = useSelector(state => state.appWorkflow.program);
     const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
-    console.log("pointSharingData", pointSharingData, userData)
+    console.log("pointSharingData", JSON.stringify(pointSharingData))
     const name = userData.name
     const membership = getActiveMembershipData && getActiveMembershipData.body?.tier.name;
 
@@ -361,15 +361,15 @@ const Passbook = ({ navigation }) => {
 
                         <NavigateTO visibleTitle={t("redeemed history")} title="Redeemed History" discription={t("list of products redeemed by you")} image={require('../../../assets/images/redeemed_icon.png')}></NavigateTO>
                         <NavigateTO visibleTitle={t("cashback history")} title="Cashback History" discription={t("list of cashback claimed by you")} image={require('../../../assets/images/cashbackBlack.png')}></NavigateTO>
-
-                        {/* {
-                warrantyOptionEnabled &&  */}
-                        <NavigateTO visibleTitle = {t("warranty history")} title={"Warranty History"} discription={t("list of warranty claimed by you")} image={require('../../../assets/images/warranty_icon.png')}></NavigateTO>
-                        {/* } */}
                         {
                             // couponOptionEnabled &&
                             <NavigateTO visibleTitle={t("coupon history")} title="Coupon History" discription={t("list of coupons redeemed by you")} image={require('../../../assets/images/scannedHistory.png')}></NavigateTO>
                         }
+                        {/* {
+                warrantyOptionEnabled &&  */}
+                        <NavigateTO visibleTitle = {t("warranty history")} title={"Warranty History"} discription={t("list of warranty claimed by you")} image={require('../../../assets/images/warranty_icon.png')}></NavigateTO>
+                        {/* } */}
+                       
                         {
                             cashbackOptionEnabled &&
                             <NavigateTO visibleTitle={t("cashback history")} title="Cashback History" discription={t("list of cashback claimed by you")}  image={require('../../../assets/images/cashbackBlack.png')}></NavigateTO>
@@ -429,15 +429,15 @@ const Passbook = ({ navigation }) => {
                             {userData.user_type !== "dealer" && <GridVIew title={t("scanned history")} discription="" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>}
                             <GridVIew title={t("redeemed history")}  discription=" list of products redeemed by you" image={require('../../../assets/images/redeemed_icon.png')}></GridVIew>
                             <GridVIew title={t("cashback history")} discription=" list of cashback redeemed by you" image={require('../../../assets/images/cashbackBlack.png')}></GridVIew>
-
-                            {/* {
-                warrantyOptionEnabled &&  */}
-                            <GridVIew title={t("warranty history")} discription=" list of warranty redeemed by you" image={require('../../../assets/images/warranty_icon.png')}></GridVIew>
-                            {/* } */}
                             {
                                 couponOptionEnabled &&
                                 <GridVIew title={t("Coupon History")} discription=" list of coupons redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
                             }
+                            {/* {
+                warrantyOptionEnabled &&  */}
+                            <GridVIew title={t("warranty history")} discription=" list of warranty redeemed by you" image={require('../../../assets/images/warranty_icon.png')}></GridVIew>
+                            {/* } */}
+                           
                             {
                                 cashbackOptionEnabled &&
                                 <GridVIew title={t("cashback history")} discription=" list of cashback redeemed by you" image={require('../../../assets/images/scannedHistory.png')}></GridVIew>
