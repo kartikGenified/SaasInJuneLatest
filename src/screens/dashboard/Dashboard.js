@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Platform, TouchableOpacity,Image, Button,BackHandler} from 'react-native';
 import MenuItems from '../../components/atoms/MenuItems';
 import { BaseUrl } from '../../utils/BaseUrl';
-import { useGetAppUserBannerDataMutation } from '../../apiServices/dashboard/AppUserBannerApi';
 import * as Keychain from 'react-native-keychain';
 import DashboardMenuBox from '../../components/organisms/DashboardMenuBox';
 import Banner from '../../components/organisms/Banner';
@@ -13,9 +12,6 @@ import DashboardSupportBox from '../../components/molecules/DashboardSupportBox'
 import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowByTenant';
 import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
 import { useSelector, useDispatch } from 'react-redux';
-import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
-import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
-import Geolocation from '@react-native-community/geolocation';
 import { useGetkycStatusMutation } from '../../apiServices/kyc/KycStatusApi';
 import { setKycData } from '../../../redux/slices/userKycStatusSlice';
 import { useIsFocused } from '@react-navigation/native';
@@ -44,7 +40,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Dashboard = ({ navigation }) => {
   const [dashboardItems, setDashboardItems] = useState()
-  const [bannerArray, setBannerArray] = useState()
   const [showKyc, setShowKyc] = useState(true)
   const [CampainVideoVisible, setCmpainVideoVisible] = useState(true);
   const [logoutStatus, setLogoutStatus] = useState(false)
@@ -62,7 +57,7 @@ const Dashboard = ({ navigation }) => {
   const userData = useSelector(state => state.appusersdata.userData);
   const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
   const dashboardData = useSelector(state=>state.dashboardData.dashboardData)
-
+  const bannerArray = useSelector(state=>state.dashboardData.banner)
   console.log("Dashboard data is",dashboardData )
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -83,11 +78,6 @@ const Dashboard = ({ navigation }) => {
       isLoading: getActiveMembershipIsLoading,
       isError: getActiveMembershipIsError
     }] = useGetActiveMembershipMutation()
-  
-
-  
-
-  
 
   const [getKycStatusFunc, {
     data: getKycStatusData,
@@ -103,26 +93,6 @@ const Dashboard = ({ navigation }) => {
     isError: userPointIsError
   }] = useFetchUserPointsMutation()
 
-  const [getBannerFunc, {
-    data: getBannerData,
-    error: getBannerError,
-    isLoading: getBannerIsLoading,
-    isError: getBannerIsError
-  }] = useGetAppUserBannerDataMutation()
-
-  const [getWorkflowFunc, {
-    data: getWorkflowData,
-    error: getWorkflowError,
-    isLoading: getWorkflowIsLoading,
-    isError: getWorkflowIsError
-  }] = useGetWorkflowMutation()
-  
-  const [getFormFunc, {
-    data: getFormData,
-    error: getFormError,
-    isLoading: getFormIsLoading,
-    isError: getFormIsError
-  }] = useGetFormMutation()
 
   const [fetchUserPointsHistoryFunc, {
     data: fetchUserPointsHistoryData,
@@ -339,11 +309,10 @@ const Dashboard = ({ navigation }) => {
           //   'Credentials successfully loaded for user ' + credentials?.username
           // );
           const token = credentials?.username
-          const form_type = "2"
+          
+
           // console.log("token from dashboard ", token)
           
-          token && getWorkflowFunc({ userId, token })
-          token && getFormFunc({ form_type, token })
         // console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
         } else {
           // console.log('No credentials stored');
@@ -369,7 +338,6 @@ const Dashboard = ({ navigation }) => {
           // console.log("token from dashboard ", token)
           
           token && getKycStatusFunc(token)
-          token && getBannerFunc(token)
          
          getMembership()
         // console.log("fetching getDashboardFunc, getKycStatusFunc, getBannerFunc, getWorkflowFunc, getFormFunc")
@@ -385,56 +353,12 @@ const Dashboard = ({ navigation }) => {
 
 
 
-  useEffect(() => {
-    if (getBannerData) {
-      // console.log("getBannerData", getBannerData?.body)
-      const images = Object.values(getBannerData?.body).map((item) => {
-        return item.image[0]
-      })
-      // console.log("imagesBanner", images)
-      setBannerArray(images)
-    }
-    else if(getBannerError){
-      setError(true)
-      setMessage("Unable to fetch app banners")
-      // console.log(getBannerError)
-    }
-  }, [getBannerError, getBannerData])
+ 
 
   // ozone change
 
-  useEffect(() => {
-    if (getWorkflowData) {
-      if (getWorkflowData.length === 1 && getWorkflowData[0] === "Genuinity") {
-        dispatch(setIsGenuinityOnly())
-      }
-      const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
-        return item !== "Warranty"
-      })
-      // console.log("getWorkflowData", getWorkflowData)
-      dispatch(setProgram(removedWorkFlow))
-      dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
-
-    }
-    else if(getWorkflowError) {
-      // console.log("getWorkflowError",getWorkflowError)
-      setError(true)
-      setMessage("Oops something went wrong")
-    }
-  }, [getWorkflowData, getWorkflowError])
-  useEffect(() => {
-    if (getFormData) {
-      // console.log("Form Fields", getFormData?.body)
-      dispatch(setWarrantyForm(getFormData?.body?.template))
-      dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
-
-    }
-    else if(getFormError) {
-      // console.log("Form Field Error", getFormError)
-      setError(true)
-      setMessage("Can't fetch forms for warranty.")
-    }
-  }, [getFormData, getFormError])
+  
+  
 
   const platformMarginScroll = Platform.OS === 'ios' ? 0 : 0
 

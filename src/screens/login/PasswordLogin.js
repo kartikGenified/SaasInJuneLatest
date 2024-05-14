@@ -28,6 +28,14 @@ import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalA
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
 import { useTranslation } from 'react-i18next';
+import { setBannerData } from '../../../redux/slices/dashboardDataSlice';
+import { useGetAppUserBannerDataMutation } from '../../apiServices/dashboard/AppUserBannerApi';
+import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowByTenant';
+import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
+import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
+import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
+
+
 // import * as Keychain from 'react-native-keychain';  
 
 const PasswordLogin = ({ navigation, route }) => {
@@ -82,6 +90,27 @@ const PasswordLogin = ({ navigation, route }) => {
 
   // initializing mutations --------------------------------
 
+  const [getBannerFunc, {
+    data: getBannerData,
+    error: getBannerError,
+    isLoading: getBannerIsLoading,
+    isError: getBannerIsError
+  }] = useGetAppUserBannerDataMutation()
+
+  const [getFormFunc, {
+    data: getFormData,
+    error: getFormError,
+    isLoading: getFormIsLoading,
+    isError: getFormIsError
+  }] = useGetFormMutation()
+
+  const [getWorkflowFunc, {
+    data: getWorkflowData,
+    error: getWorkflowError,
+    isLoading: getWorkflowIsLoading,
+    isError: getWorkflowIsError
+  }] = useGetWorkflowMutation()
+
   const [getDashboardFunc, {
     data: getDashboardData,
     error: getDashboardError,
@@ -119,12 +148,34 @@ const PasswordLogin = ({ navigation, route }) => {
     }
   }, [getDashboardData, getDashboardError])
 
+
+  useEffect(() => {
+    if (getWorkflowData) {
+      if (getWorkflowData.length === 1 && getWorkflowData[0] === "Genuinity") {
+        dispatch(setIsGenuinityOnly())
+      }
+      const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
+        return item !== "Warranty"
+      })
+      // console.log("getWorkflowData", getWorkflowData)
+      dispatch(setProgram(removedWorkFlow))
+      dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
+
+    }
+    else if(getWorkflowError) {
+      // console.log("getWorkflowError",getWorkflowError)
+      setError(true)
+      setMessage("Oops something went wrong")
+    }
+  }, [getWorkflowData, getWorkflowError])
+
   useEffect(() => {
     if (passwordLoginData) {
       console.log("Password Login Data", passwordLoginData)
       const token = passwordLoginData?.body?.token
       if (passwordLoginData.success) {
         token && getDashboardFunc(token)
+        token && getBannerFunc(token)
         storeData(passwordLoginData.body)
         saveUserDetails(passwordLoginData.body)
         saveToken(passwordLoginData.body.token)
@@ -179,6 +230,36 @@ const PasswordLogin = ({ navigation, route }) => {
   useEffect(() => {
     fetchTerms();
   }, [])
+
+  useEffect(() => {
+    if (getFormData) {
+      // console.log("Form Fields", getFormData?.body)
+      dispatch(setWarrantyForm(getFormData?.body?.template))
+      dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
+
+    }
+    else if(getFormError) {
+      // console.log("Form Field Error", getFormError)
+      setError(true)
+      setMessage("Can't fetch forms for warranty.")
+    }
+  }, [getFormData, getFormError])
+
+  useEffect(() => {
+    if (getBannerData) {
+      // console.log("getBannerData", getBannerData?.body)
+      const images = Object.values(getBannerData?.body).map((item) => {
+        return item.image[0]
+      })
+      // console.log("imagesBanner", images)
+      dispatch(setBannerData(images))
+    }
+    else if(getBannerError){
+      setError(true)
+      setMessage("Unable to fetch app banners")
+      // console.log(getBannerError)
+    }
+  }, [getBannerError, getBannerData])
 
 
   useEffect(() => {

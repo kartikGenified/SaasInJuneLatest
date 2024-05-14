@@ -15,7 +15,6 @@ import Win from "../../components/molecules/Win";
 import ButtonSquare from "../../components/atoms/buttons/ButtonSquare";
 import { useGetCouponOnCategoryMutation } from "../../apiServices/workflow/rewards/GetCouponApi";
 import {
-  useCheckUserPointMutation,
   useUserPointsEntryMutation,
 } from "../../apiServices/workflow/rewards/GetPointsApi";
 import {
@@ -43,14 +42,11 @@ import MessageModal from "../../components/modals/MessageModal";
 
 
 const CongratulateOnScan = ({ navigation, route }) => {
-  const [showPoints, setShowPoints] = useState();
   const [showBulkScanPoints, setShowBulkScanPoints] = useState();
-  const [membershipPercent, setMembershipPercent] = useState()
   const [totalPoints, setTotalPoints] = useState(0)
   const [error,setError] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false);
-  const [calledOnce, setCalledOnce] = useState(false)
   const buttonThemeColor = useSelector(
     (state) => state.apptheme.ternaryThemeColor
   )
@@ -59,58 +55,34 @@ const CongratulateOnScan = ({ navigation, route }) => {
 
   //  data from scanning qr code
   const dispatch = useDispatch();
-  const qrData = useSelector((state) => state.qrData.qrData);
   // product data recieved from scanned product
-  const productMrp = useSelector((state)=> state.productData.productMrp)
   const productData = useSelector((state) => state.productData.productData);
-  const scanningType = useSelector((state) => state.productData.scanningType);
   const firstScan = useSelector((state) => state.scanning.firstScan)
   const registration_bonus = useSelector((state)=> state.scanning.registrationBonus)
   const pointSharingData = useSelector(
     (state) => state.pointSharing.pointSharing
   );
   const qrIdList = useSelector((state) => state.qrData.qrIdList);
+  const qrData = useSelector((state) => state.qrData.qrData)[0];
+
   const userData = useSelector((state) => state.appusersdata.userData);
   // console.log("userData", `${userData.user_type}_points`, JSON.stringify(pointSharingData));
-  const pointPercentage = useSelector(
-    (state) => state.pointSharing.percentagePoints
-  );
+  
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : 'grey';
-  const shouldSharePoints = useSelector(
-    (state) => state.pointSharing.shouldSharePoints
-  );
+  
   // getting location from redux state
   const location = useSelector((state) => state.userLocation.location);
-  // console.log("shouldSharePoints", shouldSharePoints, JSON.stringify(productData));
-  // console.log("location", location);
-  // console.log('Location', location, userData, productData, qrData);
+ 
   const height = Dimensions.get("window").height;
   // workflow for the given user
   const workflowProgram = route.params.workflowProgram;
   const rewardType = route.params.rewardType;
-  // console.log("rewardType", rewardType, workflowProgram, productData,pointPercentage,firstScan,registration_bonus);
-  // console.log("qrIDLIST",qrIdList,qrData,scanningType)
+ 
   const platform = Platform.OS === "ios" ? "1" : "2";
-
-  const [getMemberShipFunc,
-    {
-      data:getMembershipData,
-      error:getMembershipError,
-      isLoading:getMembershipIsLoading,
-      isError:getMembershipIsError
-    }] = useGetMembershipMutation()
-
-
-    // const [getMappedParentDetailsFunc,{
-    //   data:getMappedParentDetailsData,
-    //   error:getMappedParentDetailError,
-    //   isLoading:getMappedParentDetailsIsLoading,
-    //   isError:getMappedParentDetailsIsError
-    // }] =useGetMappingDetailsByAppUserIdMutation()
 
     const [
       addRegistrationBonusFunc,
@@ -142,36 +114,6 @@ const CongratulateOnScan = ({ navigation, route }) => {
   ] = useAddBulkPointOnProductMutation();
 
   const [
-    checkUserPointFunc,
-    {
-      data: checkUserPointData,
-      error: checkUserPointError,
-      isLoading: checkUserPointIsLoading,
-      isError: checkUserPointIsError,
-    },
-  ] = useCheckUserPointMutation();
-
-  const [
-    userPointEntryFunc,
-    {
-      data: userPointEntryData,
-      error: userPointEntryError,
-      isLoading: userPointEntryIsLoading,
-      isError: userPointEntryIsError,
-    },
-  ] = useUserPointsEntryMutation();
-  
-  const [
-    extraPointEntryFunc,
-    {
-      data: extraPointEntryData,
-      error: extraPointEntryError,
-      isLoading: extraPointEntryIsLoading,
-      isError: extraPointEntryIsError,
-    },
-  ] = useExtraPointEnteriesMutation();
-
-  const [
     getAllWheelsByUserIdFunc,
     {
       data: getAllWheelsByUserIdData,
@@ -190,13 +132,6 @@ const CongratulateOnScan = ({ navigation, route }) => {
       isError: createWheelHistoryIsError,
     },
   ] = useCreateWheelHistoryMutation();
-
-  const [getActiveMembershipFunc, {
-    data: getActiveMembershipData,
-    error: getActiveMembershipError,
-    isLoading: getActiveMembershipIsLoading,
-    isError: getActiveMembershipIsError
-}] = useGetOzoneActiveMembershipMutation();
 
   const [
     checkQrCodeAlreadyRedeemedFunc,
@@ -217,30 +152,11 @@ const CongratulateOnScan = ({ navigation, route }) => {
       isError: addCashbackEnteriesIsError,
     },
   ] = useAddCashbackEnteriesMutation();
+
+
   useEffect(()=>{
-    getMembership()
-  },[rewardType])
-
-  useEffect(() => {
-    if (getMembershipData) {
-        // console.log("getMembershipData", JSON.stringify(getMembershipData))
-        const getActiveMembership = async () => {
-          const credentials = await Keychain.getGenericPassword();
-          if (credentials) {
-              console.log(
-                  'Credentials successfully loaded for user ' + credentials.username
-              );
-              const token = credentials.username
-              getActiveMembershipFunc(token)
-
-          }
-        }
-        getActiveMembership()
-    }
-    else if (getMembershipError) {
-        // console.log("getMembershipError", getMembershipError)
-    }
-}, [getMembershipData, getMembershipError])
+    fetchRewardsAccToWorkflow()
+  },[])
 
 
 useEffect(() => {
@@ -260,50 +176,12 @@ useEffect(() => {
   }
 }, [addRegistrationBonusData, addRegistrationBonusError])
 
-  useEffect(() => {
-    if (getActiveMembershipData) {
-        // console.log("getActiveMembershipData", JSON.stringify(getActiveMembershipData))
-        // console.log("getMembershipData", JSON.stringify(getMembershipData))
-        if(getActiveMembershipData.success)
-        {
-          const stats = Number(getActiveMembershipData.body?.stats?.total) + Number(productMrp?.mrp)
-          const membershiparr = getMembershipData.body
-
-          for(var i=0; i<membershiparr.length;i++)
-          {
-            const range = membershiparr[i]
-            if((Number(range.range_start)<stats) && (stats<Number(range.range_end)))
-            {
-              setMembershipPercent(Number(range.points))
-              // console.log("setMembershipPercent",range.points,stats)
-              setTimeout(() => {
-              fetchRewardsAccToWorkflow(Number(range.points));
-
-              }, 1000);
-
-            }
-          }
-
-        }
-    }
-    else if (getActiveMembershipError) {
-        // console.log("getActiveMembershipError", getActiveMembershipError)
-    }
-}, [getActiveMembershipData, getActiveMembershipError])
+  
 
 const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
 
-const getMembership = async () => {
-  const credentials = await Keychain.getGenericPassword();
-  if (credentials) {
-      // console.log(
-      //     'Credentials successfully loaded for user ' + credentials.username
-      // );
-      const token = credentials.username
-      getMemberShipFunc(token)
-  }
-}
-  const fetchRewardsAccToWorkflow = async (percent) => {
+
+  const fetchRewardsAccToWorkflow = async () => {
     // console.log("fetchRewardsAccToWorkflow",rewardType)
     let token;
     const credentials = await Keychain.getGenericPassword();
@@ -321,138 +199,7 @@ const getMembership = async () => {
           qr_code: qrData.unique_code,
         };
         getCouponOnCategoryFunc(params);
-      } else if (rewardType === "Points On Product") {
-        // console.log("fetchRewardsAccToWorkflowpop")
-        if (scanningType=="Single") {
-          const params = {
-            token: token,
-            qr_code: qrData.id,
-          };
-
-        
-          // console.log("shouldSharePoints", shouldSharePoints,percent);
-
-            if (pointSharingData.flat_points === true) {
-              if (shouldSharePoints) {
-                const points =
-                  Number(productData[`${userData.user_type}_points`]) *
-                  (Number(pointPercentage) / 100) 
-                  const memberShipBonus = (points * Number(percent !==undefined ? percent : 0))/100
-                  const totalPoints = points + memberShipBonus
-                 
-                // console.log("extra flat points", points,pointPercentage);
-                const body = {
-                  data: {
-                    // app_user_id: userData.id.toString(),
-                    // user_type_id: userData.user_type_id,
-                    // user_type: userData.user_type,
-                    product_id: productData.product_id,
-                    product_code: productData.product_code,
-                    platform_id: Number(platform),
-                    pincode:
-                      location.postcode === undefined ? "N/A" : location.postcode,
-                    platform: "mobile",
-                    state: location.state === undefined ? "N/A" : location.state,
-                    district:
-                      location.district === undefined ? "N/A" : location.district,
-                    city: location.city === undefined ? "N/A" : location.city,
-                    area:
-                      location.district === undefined ? "N/A" : location.district,
-                    known_name:
-                      location.city === undefined ? "N/A" : location.city,
-                    lat:
-                      location.lat === undefined ? "N/A" : String(location.lat),
-                    log:
-                      location.lon === undefined ? "N/A" : String(location.lon),
-                    method_id: 1,
-                    method: "point on product",
-                    points: totalPoints,
-                    type: "points_sharing",
-                    point_earned_through_type: "points_sharing",
-                  },
-                  qrId: Number(qrData.id),
-                  tenant_id: slug,
-                  token: token,
-                };
-                extraPointEntryFunc(body);
-                // console.log("extraPointEntryFunc",body)
-
-              } else if (!shouldSharePoints) {
-                alert("Points can't be shared for this tenant");
-              }
-            } else if (pointSharingData.percentage_points === true) {
-              let point; 
-              let totalPoints;
-              let memberShipBonus
-              if(percent)
-              {
-                if(Number(pointSharingData["percentage_points_value"])===0)
-              {
-                 point =
-                productMrp?.mrp
-                 memberShipBonus = (point * Number(percent!==undefined ? percent : 0))/100
-                totalPoints = memberShipBonus
-                // console.log("memberShipBonus recieved",percent)
-              }
-              else{
-                 point =
-                productMrp?.mrp *
-                (pointSharingData["percentage_points_value"] / 100);
-                 memberShipBonus = (point * Number(percent !==undefined ? percent : 0))/100
-                 totalPoints = point + memberShipBonus
-              }
-              }
-             
-              const points =
-                totalPoints *
-                (Number(pointPercentage) / 100);
-                
-              console.log("mrp points", points,point,memberShipBonus, totalPoints, pointPercentage);
-              if (shouldSharePoints) {
-                const body = {
-                  data: {
-                    // app_user_id: userData.id.toString(),
-                    // user_type_id: userData.user_type_id,
-                    // user_type: userData.user_type,
-                    product_id: productData.product_id,
-                    product_code: productData.product_code,
-                    platform_id: Number(platform),
-                    pincode:
-                      location.postcode === undefined ? "N/A" : location.postcode,
-                    platform: "mobile",
-                    state: location.state === undefined ? "N/A" : location.state,
-                    district:
-                      location.district === undefined ? "N/A" : location.district,
-                    city: location.city === undefined ? "N/A" : location.city,
-                    area:
-                      location.district === undefined ? "N/A" : location.district,
-                    known_name:
-                      location.city === undefined ? "N/A" : location.city,
-                    lat:
-                      location.lat === undefined ? "N/A" : String(location.lat),
-                    log:
-                      location.lon === undefined ? "N/A" : String(location.lon),
-                    method_id: 1,
-                    method: "point on product",
-                    points: points,
-                    type: "points_sharing",
-                    point_earned_through_type: "points_sharing",
-                  },
-                  qrId: Number(qrData.id),
-                  tenant_id: slug,
-                  token: token,
-                };
-                extraPointEntryFunc(body);
-                // console.log("extraPointEntryFunc",body)
-              } else if (!shouldSharePoints) {
-                alert("Points can't be shared for this tenant");
-              }
-            }
-          
-          
-
-          checkUserPointFunc(params);
-        } else {
+      } else if (rewardType === "Points On Product") {      
           const params = {
             data: {
               qrs: qrIdList,
@@ -477,7 +224,7 @@ const getMembership = async () => {
           };
           console.log("addBulkPointOnProductFunc",JSON.stringify(params))
           addBulkPointOnProductFunc(params);
-        }
+        
       } else if (rewardType === "Wheel") {
         const params = {
           token: token,
@@ -567,9 +314,11 @@ const getMembership = async () => {
         }, 5000);
       }
     } else if (addBulkPointOnProductError) {
-      // console.log("addBulkPointOnProductError", addBulkPointOnProductError);
+      console.log("addBulkPointOnProductError", addBulkPointOnProductError);
     }
   }, [addBulkPointOnProductData, addBulkPointOnProductError]);
+
+
   useEffect(() => {
     if (addCashbackEnteriesData) {
       // console.log("addCashbackEnteriesData", addCashbackEnteriesData);
@@ -585,23 +334,14 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (getAllWheelsByUserIdData) {
-      // console.log(
-      //   "getAllWheelsByUserIdData",
-      //   getAllWheelsByUserIdData.body.data
-      // );
+      
       createWheelHistory(getAllWheelsByUserIdData.body.data);
     } else if (getAllWheelsByUserIdError) {
       // console.log("getAllWheelsByUserIdError", getAllWheelsByUserIdError);
     }
   }, [getAllWheelsByUserIdData, getAllWheelsByUserIdError]);
 
-  useEffect(() => {
-    if (extraPointEntryData) {
-      // console.log("extraPointEntryData", extraPointEntryData);
-    } else if (extraPointEntryError) {
-      // console.log("extraPointEntryError", extraPointEntryError);
-    }
-  }, [extraPointEntryError, extraPointEntryData]);
+  
   const createWheelHistory = async (data) => {
     // console.log("wheel history data", data);
     const credentials = await Keychain.getGenericPassword();
@@ -639,10 +379,6 @@ const getMembership = async () => {
 
   useEffect(() => {
     if (checkQrCodeAlreadyRedeemedData) {
-      // console.log(
-      //   "checkQrCodeAlreadyRedeemedData",
-      //   checkQrCodeAlreadyRedeemedData
-      // );
       if (!checkQrCodeAlreadyRedeemedData.body) {
         addCashbackEnteries();
       } else if (checkQrCodeAlreadyRedeemedError) {
@@ -706,195 +442,8 @@ const getMembership = async () => {
     }
   }, [getCouponOnCategoryData, getCouponOnCategoryError]);
 
-  useEffect(() => {
-    if (checkUserPointData) {
-      // console.log("checkUserPointData", checkUserPointData);
 
-      if (!checkUserPointData.body) {
-        // console.log("check user point data is false")
-     
-            
-        if (pointSharingData.flat_points) {
-          const points = productData[`${userData.user_type}_points`]
-          
-          const memberShipBonus = (points * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
-          
-          const totalPoints = points + memberShipBonus
-          setShowPoints(totalPoints);
-          const submitPoints = async () => {
-            const credentials = await Keychain.getGenericPassword();
-            const token = credentials.username;
-            const body = {
-              data: {
-                app_user_id: userData.id.toString(),
-                user_type_id: userData.user_type_id,
-                user_type: userData.user_type,
-                product_id: productData.product_id,
-                product_code: productData.product_code,
-                platform_id: Number(platform),
-                pincode:
-                  location.postcode === undefined ? "N/A" : location.postcode,
-                platform: "mobile",
-                state: location.state === undefined ? "N/A" : location.state,
-                district:
-                  location.district === undefined ? "N/A" : location.district,
-                city: location.city === undefined ? "N/A" : location.city,
-                area:
-                  location.district === undefined ? "N/A" : location.district,
-                known_name: location.city === undefined ? "N/A" : location.city,
-                lat: location.lat === undefined ? "N/A" : String(location.lat),
-                log: location.lon === undefined ? "N/A" : String(location.lon),
-                method_id: 1,
-                method: "point on product",
-                points: totalPoints,
-                type: "point on product",
-              },
-              qrId: Number(qrData.id),
-              tenant_id: slug,
-              token: token,
-            };
-            // console.log("userPointEntryFunc", body);
-            userPointEntryFunc(body);
-          };
-          submitPoints();
-        } else if (pointSharingData.percentage_points) {
-          console.log("using percentage points for this",productMrp?.mrp)
-          const submitPoints = async () => {
-            const credentials = await Keychain.getGenericPassword();
-            const token = credentials.username;
-            let totalPoints ;
-            let points;
-            let memberShipBonus;
-            if(Number(pointSharingData["percentage_points_value"])==0)
-            {
-               points =
-              productMrp?.mrp
-               memberShipBonus = (points * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
-              totalPoints = memberShipBonus
-
-            }
-            else{
-              points =
-              productMrp?.mrp *
-              (pointSharingData["percentage_points_value"] / 100);
-               memberShipBonus = (points * Number(membershipPercent !==undefined ? membershipPercent : 0))/100
-          
-           totalPoints = points + memberShipBonus
-            }
-            
-          setShowPoints(totalPoints);
-          console.log("Simple points Recieved",totalPoints,points,memberShipBonus,membershipPercent)
-           
-            const body = {
-              data: {
-                app_user_id: userData.id.toString(),
-                user_type_id: userData.user_type_id,
-                user_type: userData.user_type,
-                product_id: productData.product_id,
-                product_code: productData.product_code,
-                platform_id: Number(platform),
-                pincode:
-                  location.postcode === undefined ? "N/A" : location.postcode,
-                platform: "mobile",
-                state: location.state === undefined ? "N/A" : location.state,
-                district:
-                  location.district === undefined ? "N/A" : location.district,
-                city: location.city === undefined ? "N/A" : location.city,
-                area:
-                  location.district === undefined ? "N/A" : location.district,
-                known_name: location.city === undefined ? "N/A" : location.city,
-                lat: location.lat === undefined ? "N/A" : String(location.lat),
-                log: location.lon === undefined ? "N/A" : String(location.lon),
-                method_id: 1,
-                method: "point on product",
-                points: totalPoints,
-                type: "point on product",
-              },
-              qrId: Number(qrData.id),
-              tenant_id: slug,
-              token: token,
-            };
-            // console.log("userPointEntryFunc", body);
-            userPointEntryFunc(body);
-          };
-          submitPoints();
-        }
-      
-      
-      }
-    } else if (checkUserPointError) {
-      // console.log("checkUserPointError", checkUserPointError);
-    }
-  }, [checkUserPointData, checkUserPointError]);
-
-  useEffect(() => {
-    if (userPointEntryData) {
-      // console.log("userPointEntryData", userPointEntryData);
-      if (userPointEntryData.success) {
-        const checkFirstScan=async()=>{
-
-   
-          const credentials = await Keychain.getGenericPassword();
-        if (credentials) {
-          // console.log(
-          //   'Credentials successfully loaded for user ' + credentials.username
-          // );
-          // console.log("First scan")
-          const token = credentials.username
-          const body = {
-            tenant_id:slug,
-            token: token,
-            data: {
-                    point_earned_through_type: "registration_bonus",
-                    points: registration_bonus,
-                    platform_id: Number(platform),
-                    pincode: location?.postcode===undefined ? "N/A" :location?.postcode,
-                    platform: 'mobile',
-                    state: location?.state===undefined ? "N/A" :location?.state,
-                    district: location?.district===undefined ? "N/A" : location?.district,
-                    city: location?.city===undefined ? "N/A" :location?.city,
-                    area: location?.district===undefined ? "N/A" :location?.district,
-                    known_name: location?.city===undefined ? "N/A" :location?.city,
-                    lat: location?.lat===undefined ? "N/A" :(String(location?.lat)).substring(0,10),
-                    log: location?.lon===undefined ? "N/A" :(String(location?.lon)).substring(0,10),
-                    method_id: "1",
-                    method: "registration bonus",
-            },
-            
-          }
-          // console.log("Registration Bouns",body)
-            if(!userData?.is_scanned)
-            {
-             addRegistrationBonusFunc(body)
-            }
-          } 
-       
-      }
-     firstScan && checkFirstScan()
-
-        setTimeout(() => {
-          handleWorkflowNavigation();
-        }, 3000);
-      }
-    } else if (userPointEntryError) {
-      if (userPointEntryError.status === 409) {
-        setTimeout(() => {
-          handleWorkflowNavigation();
-        }, 3000);
-      }
-      else if(userPointEntryError.status === 400)
-      {
-        setError(true)
-        setMessage(userPointEntryError.data.message)
-      }
-      // console.log("userPointEntryError", userPointEntryError);
-    }
-  }, [userPointEntryData, userPointEntryError]);
-
-  // console.log("workflowProgram", workflowProgram);
   const handleWorkflowNavigation = () => {
-    // console.log("WorkflowProgram Left", workflowProgram);
-    // console.log("scccess");
 
     if (workflowProgram[0] === "Static Coupon") {
       navigation.navigate("CongratulateOnScan", {
@@ -1222,9 +771,8 @@ const getMembership = async () => {
                   title={getCouponOnCategoryData.body.brand}
                 ></Win>
               )}
-              {userPointEntryData && (
-                <Win data="Points Earned" title={String(showPoints).substring(0,5)}></Win>
-              )}
+             
+            
               {createWheelHistoryData && (
                 <Win data="Wheel" title="You have got a spin wheel"></Win>
               )}
@@ -1234,7 +782,7 @@ const getMembership = async () => {
                   title={addCashbackEnteriesData.body.cashback}
                 ></Win>
               )}
-             {(userPointEntryIsLoading || addBulkPointOnProductIsLoading) && checkUserPointIsLoading && extraPointEntryIsLoading || <FastImage
+             {( addBulkPointOnProductIsLoading) && <FastImage
                    style={{ width: 40, height: 40, alignSelf: 'center',justifyContent:'center' }}
                    source={{
                        uri: gifUri, // Update the path to your GIF
@@ -1242,16 +790,7 @@ const getMembership = async () => {
                    }}
                    resizeMode={FastImage.resizeMode.contain}
                />}
-              {/* {getCouponOnCategoryError && (
-                <PoppinsText
-                  content={`Coupons For This ${getCouponOnCategoryError.data.message}`}
-                ></PoppinsText>
-              )}
-              {userPointEntryError && (
-                <PoppinsText
-                  content={`Points For This ${userPointEntryError.data.message}`}
-                ></PoppinsText>
-              )} */}
+
             </View>
           </View>
         </ScrollView>

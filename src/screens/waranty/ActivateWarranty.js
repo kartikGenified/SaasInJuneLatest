@@ -216,7 +216,7 @@ const ActivateWarranty = ({ navigation, route }) => {
 
 
   const warrantyForm =  form ?  Object.values(form) : [];
-  // console.log(Object.keys(form))
+  console.log("warrantyForm",warrantyForm)
   console.log(warrantyForm);
 
  

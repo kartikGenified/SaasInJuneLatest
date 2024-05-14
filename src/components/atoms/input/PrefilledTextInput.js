@@ -21,7 +21,9 @@ const PrefilledTextInput = (props) => {
     else if(displayText =="district" || displayText == "District"){
         displayText = t("District")
     }
-   
+    else if(displayText =="city" || displayText == "City"){
+        displayText = t("City")
+    }
    
     Keyboard.addListener('keyboardDidShow',()=>{
             setKeyboardShow(true)

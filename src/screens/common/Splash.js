@@ -27,7 +27,12 @@ import LocationServicesDialogBox from "react-native-android-location-services-di
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
 import * as Progress from 'react-native-progress';
-
+import { useGetAppUserBannerDataMutation } from '../../apiServices/dashboard/AppUserBannerApi';
+import { setBannerData } from '../../../redux/slices/dashboardDataSlice';
+import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowByTenant';
+import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
+import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
+import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
 
 
 const Splash = ({ navigation }) => {
@@ -58,6 +63,28 @@ const Splash = ({ navigation }) => {
       isError: getAppThemeIsError,
     }
   ] = useGetAppThemeDataMutation();
+
+  const [getWorkflowFunc, {
+    data: getWorkflowData,
+    error: getWorkflowError,
+    isLoading: getWorkflowIsLoading,
+    isError: getWorkflowIsError
+  }] = useGetWorkflowMutation()
+
+  const [getFormFunc, {
+    data: getFormData,
+    error: getFormError,
+    isLoading: getFormIsLoading,
+    isError: getFormIsError
+  }] = useGetFormMutation()
+
+  const [getBannerFunc, {
+    data: getBannerData,
+    error: getBannerError,
+    isLoading: getBannerIsLoading,
+    isError: getBannerIsError
+  }] = useGetAppUserBannerDataMutation()
+
   const [
     getUsers,
     {
@@ -126,6 +153,57 @@ const Splash = ({ navigation }) => {
       }
     }
   }, [getDashboardData, getDashboardError])
+
+  useEffect(() => {
+    if (getFormData) {
+      // console.log("Form Fields", getFormData?.body)
+      dispatch(setWarrantyForm(getFormData?.body?.template))
+      dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
+
+    }
+    else if(getFormError) {
+      // console.log("Form Field Error", getFormError)
+      setError(true)
+      setMessage("Can't fetch forms for warranty.")
+    }
+  }, [getFormData, getFormError])
+
+  useEffect(() => {
+    if (getWorkflowData) {
+      if (getWorkflowData.length === 1 && getWorkflowData[0] === "Genuinity") {
+        dispatch(setIsGenuinityOnly())
+      }
+      const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
+        return item !== "Warranty"
+      })
+      // console.log("getWorkflowData", getWorkflowData)
+      dispatch(setProgram(removedWorkFlow))
+      dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
+
+    }
+    else if(getWorkflowError) {
+      console.log("getWorkflowError",getWorkflowError)
+      setError(true)
+      setMessage("Oops something went wrong")
+    }
+  }, [getWorkflowData, getWorkflowError])
+
+
+  useEffect(() => {
+    if (getBannerData) {
+      // console.log("getBannerData", getBannerData?.body)
+      const images = Object.values(getBannerData?.body).map((item) => {
+        return item.image[0]
+      })
+      // console.log("imagesBanner", images)
+      dispatch(setBannerData(images))
+    }
+    else if(getBannerError){
+      setError(true)
+      setMessage("Unable to fetch app banners")
+      // console.log(getBannerError)
+    }
+  }, [getBannerError, getBannerData])
 
   useEffect(() => {
     const backAction = () => {
@@ -444,8 +522,14 @@ const Splash = ({ navigation }) => {
       // value previously stored
       console.log("asynch value", value, jsonValue)
       try {
+        console.log("parsedJsonValues",parsedJsonValues)
         setParsedJsonValue(parsedJsonValues)
-        getDashboardFunc(parsedJsonValues?.token)
+        parsedJsonValues && getDashboardFunc(parsedJsonValues?.token)
+        parsedJsonValues && getBannerFunc(parsedJsonValues?.token)
+         
+        parsedJsonValues && getWorkflowFunc({userId:parsedJsonValues?.user_type_id, token:parsedJsonValues?.token })
+        const form_type = "2"
+        parsedJsonValues && getFormFunc({ form_type:form_type, token:parsedJsonValues?.token })
 
 
 

@@ -46,19 +46,16 @@ const QrCodeScanner = ({navigation}) => {
   const [zoomText, setZoomText] = useState('1');
   const [flash, setFlash] = useState(false);
   const [addedQrList, setAddedQrList] = useState([]);
-  const [addedQrProductId, setAddedQrProductId] = useState([])
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [savedToken, setSavedToken] = useState();
-  const [productId, setProductId] = useState();
   const [qr_id, setQr_id] = useState();
   const [registrationBonus, setRegistrationBonus] = useState()
   const [helpModal, setHelpModal] = useState(false);
   const [isFirstScan, setIsFirstScan] = useState(false) 
   const [isReportable, setIsReportable] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [locationPermission, setLocationPermission] = useState(null);
   const [locationGranted, setLocationGranted] = useState(null)
   const [showProceed, setShowProceed] = useState(false)
   const userId = useSelector(state => state.appusersdata.userId);
@@ -67,8 +64,7 @@ const QrCodeScanner = ({navigation}) => {
   const userName = useSelector(state => state.appusersdata.name);
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state=>state.userLocation.location)
-  const shouldSharePoints = useSelector(state=>state.pointSharing.shouldSharePoints)
-  const appUserData = useSelector(state=>state.appusers.value)
+  
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -101,16 +97,6 @@ const QrCodeScanner = ({navigation}) => {
     isLoading:cashPerPointIsLoading,
     isError:cashPerPointIsError
   }] = useCashPerPointMutation()
-
-  const [
-    addQrFunc,
-    {
-      data: addQrData,
-      error: addQrError,
-      isLoading: addQrIsLoading,
-      isError: addQrIsError,
-    },
-  ] = useAddQrMutation();
 
   const [
     checkGenuinityFunc,
@@ -161,10 +147,122 @@ const QrCodeScanner = ({navigation}) => {
       if(addBulkQrData.success)
       {
         // isFirstScan && checkFirstScan()
-        isFirstScan && setTimeout(() => {
-          handleWorkflowNavigation("Genuinity","Warranty")
-        }, 3000);
-        !isFirstScan && handleWorkflowNavigation("Genuinity","Warranty")
+        if(checkGenuinityData){
+          
+          if(checkGenuinityData?.body){
+          // console.log("check warranty data",checkWarrantyData)
+          if(checkWarrantyError)
+          {
+          if(checkWarrantyError?.data?.body)
+          {
+            isFirstScan && setTimeout(() => {
+              handleWorkflowNavigation("Genuinity+","Warranty") 
+            }, 3000); 
+            !isFirstScan && handleWorkflowNavigation("Genuinity+","Warranty")
+          }
+          else{
+            isFirstScan && setTimeout(() => {
+              handleWorkflowNavigation("Genuinity+")
+
+            }, 3000); 
+            !isFirstScan && handleWorkflowNavigation("Genuinity+")
+
+          }
+        }
+        else if(checkWarrantyData)
+        {
+          if(checkWarrantyData?.body)
+        {
+          isFirstScan && setTimeout(() => {
+            handleWorkflowNavigation("Genuinity+","Warranty")
+          }, 3000); 
+          !isFirstScan && handleWorkflowNavigation("Genuinity+","Warranty")
+        }
+        else{
+          isFirstScan && setTimeout(() => {
+            handleWorkflowNavigation("Genuinity+")
+
+          }, 3000); 
+          !isFirstScan && handleWorkflowNavigation("Genuinity+")
+        }
+        }
+        }
+        else
+        {
+          if(checkWarrantyError)
+          {
+          if(checkWarrantyError?.data?.body)
+          {
+            isFirstScan && setTimeout(() => {
+              handleWorkflowNavigation("Warranty")
+
+            }, 3000); 
+            !isFirstScan && handleWorkflowNavigation("Warranty")
+          }
+          else{
+            handleWorkflowNavigation()
+          }
+        }
+        else if(checkWarrantyData)
+        {
+          if(checkWarrantyData?.body)
+        {
+          isFirstScan && setTimeout(() => {
+            handleWorkflowNavigation("Warranty")
+
+          }, 3000); 
+          !isFirstScan && handleWorkflowNavigation("Warranty")
+        }
+        else{
+          isFirstScan && 
+          setTimeout(() => {
+            handleWorkflowNavigation()
+
+          }, 3000); 
+          !isFirstScan && handleWorkflowNavigation()
+        }
+        }
+        else{
+          isFirstScan && 
+          setTimeout(() => {
+            handleWorkflowNavigation()
+
+          }, 3000); 
+          !isFirstScan && handleWorkflowNavigation()
+        }
+        }
+      }
+        else if(checkWarrantyError){
+          if(checkWarrantyError?.data?.body){
+            if(checkGenuinityData)
+          {
+          if(checkGenuinityData?.body)
+          {
+            isFirstScan && setTimeout(() => {
+              handleWorkflowNavigation("Genuinity+","Warranty")
+            }, 3000); 
+            !isFirstScan && handleWorkflowNavigation("Genuinity+","Warranty")
+          }
+          else{
+            isFirstScan && setTimeout(() => {
+              handleWorkflowNavigation("Warranty")
+  
+            }, 3000); 
+            !isFirstScan && handleWorkflowNavigation("Warranty")
+          }
+        }
+        
+      }
+      }
+      else{
+        // console.log("else")
+        isFirstScan && 
+        setTimeout(() => {
+          handleWorkflowNavigation()
+
+        }, 3000); 
+        !isFirstScan && handleWorkflowNavigation()
+      }
        
       }
     }
@@ -252,20 +350,7 @@ const QrCodeScanner = ({navigation}) => {
  
  
 
-  useEffect(() => {
-if(addQrData)
-{
-  // console.log("addQrData",addQrData)
-  if(addQrData?.success)
-  {
-    // isFirstScan && checkFirstScan()
-    // isFirstScan && handleWorkflowNavigation("Genuinity","Warranty")
-
-  }
  
-}
-    
-  }, [addQrData]);
 
   useEffect(()=>{
 
@@ -288,55 +373,6 @@ if(addQrData)
      
     })();
   },[verifyQrData])
-
-  useEffect(() => {
-   
-  }, []);
-
-  
-
-  const checkFirstScan=async()=>{
-
-   
-    const credentials = await Keychain.getGenericPassword();
-  if (credentials) {
-    // console.log(
-    //   'Credentials successfully loaded for user ' + credentials.username
-    // );
-    // console.log("First scan")
-    const token = credentials.username
-    const body = {
-      tenant_id:slug,
-      token: token,
-      data: {
-              point_earned_through_type: "registration_bonus",
-              points: registrationBonus,
-              platform_id: Number(platform),
-              pincode: location?.postcode===undefined ? "N/A" :location?.postcode,
-              platform: 'mobile',
-              state: location?.state===undefined ? "N/A" :location?.state,
-              district: location?.district===undefined ? "N/A" : location?.district,
-              city: location?.city===undefined ? "N/A" :location?.city,
-              area: location?.district===undefined ? "N/A" :location?.district,
-              known_name: location?.city===undefined ? "N/A" :location?.city,
-              lat: location?.lat===undefined ? "N/A" :(String(location?.lat)).substring(0,10),
-              log: location?.lon===undefined ? "N/A" :(String(location?.lon)).substring(0,10),
-              method_id: "1",
-              method: "registration bonus",
-      },
-      
-    }
-    // console.log("Registration Bouns",body)
-      if(!userData?.is_scanned)
-      {
-       addRegistrationBonusFunc(body)
-      }
-    } 
- 
-}
-
-
-  
 
  
   useEffect(() => {
@@ -409,7 +445,7 @@ if(addQrData)
         }
     }
     else if (fetchUserPointsHistoryError) {
-      if(getActiveMembershipError.status == 401)
+      if(fetchUserPointsHistoryError.status == 401)
       {
         const handleLogout = async () => {
           try {
@@ -449,7 +485,6 @@ if(addQrData)
         const body = {product_id: productDataData?.body?.products[0].product_id, qr_id: qr_id};
         // console.log("productdata",body)
         dispatch(setProductData(productDataData?.body?.products[0]));
-        setProductId(productDataData?.body?.product_id);
         
         checkWarrantyFunc({form_type, token, body})
         setTimeout(() => {
@@ -473,7 +508,7 @@ if(addQrData)
    
 
     } else if (productDataError) {
-      if(getActiveMembershipError.status == 401)
+      if(productDataError.status == 401)
       {
         const handleLogout = async () => {
           try {
@@ -501,62 +536,7 @@ if(addQrData)
     setIsReportable(false)
   };
 
-  // function called on successfull scan --------------------------------------
-//   const onSuccess = e => {
-//     console.log('Qr data is ------', e?.data);
-    
-// if(e?.data===undefined)
-// {
-//   setError(true)
-//   setMessage("Please scan a valid QR")
-// }
-// else{
-//   const qrData = e?.data?.split('=')[1];
-//     console.log ("qrData",qrData);
-//     let requestData = {unique_code: qrData};
-//   console.log("qrDataArray",qrData?.split("-"))
-//     if(qrData?.split("-").length===1)
-//     {
-//       requestData = {unique_code: "ozone-"+qrData};
-
-//     }
-//     else if(qrData?.split("-").length===2){
-//       requestData = {unique_code: qrData};
-
-
-
-//     }
-
-//   const verifyQR = async data => {
-//     console.log('qrDataVerifyQR', data);
-//     try {
-//       // Retrieve the credentials
-
-//       const credentials = await Keychain.getGenericPassword();
-//       if (credentials) {
-//         console.log(
-//           'Credentials successfully loaded for user ' + credentials?.username, data
-//         );
-//         setSavedToken(credentials?.username);
-//         const token = credentials?.username;
-
-//         data && await verifyQrFunc({token, data});
-//       } else {
-//         console.log('No credentials stored');
-//       }
-//     } catch (error) {
-//       console.log("Keychain couldn't be accessed!", error);
-//     }
-//   };
-//   try{
-//     await verifyQR(requestData);
-//   }
-//   catch(e){
-//     console.log("exception in verifying the qr",e)
-//   }
-// }
-   
-//   };
+ 
 const onSuccess = async (e) => {
   // console.log('Qr data is ------', e?.data);
   
@@ -589,8 +569,7 @@ const onSuccess = async (e) => {
             setSavedToken(credentials?.username);
             const token = credentials?.username;
 
-          // Call verifyQrFunc with the token and data
-          // data && (await verifyQrFunc({ token, data }));
+          
           const response = await verifyQrFunc({ token, data })
           // console.log("verifyQrFunc",response)
           if (response?.data) {
@@ -600,15 +579,7 @@ const onSuccess = async (e) => {
               setError(true)
               setMessage("Can't get product data")
             }
-            // if(response?.data.success)
-            // {
-            //   if(response?.data?.body?.qr?.mrp==undefined || verifyQrData?.body?.qr?.mrp==undefined)
-            // {
-            //   setError(true)
-            //   setMessage("Cannot get mrp for the product")
-            // }
-            // }
-            
+           
             
             
             const qrStatus = response?.data.body?.qr?.qr_status == undefined ?  response?.data.body?.qr_status :  response?.data.body?.qr?.qr_status
@@ -639,23 +610,18 @@ const onSuccess = async (e) => {
               setError(true);
               setMessage(response.error.data?.message);
             }
-            // console.log('Verify qr error', response.error?.data?.Error);
+           
           }
         } else {
-          // console.log('No credentials stored');
         }
       } catch (error) {
-        // Handle errors within verifyQR
-        // console.log("Keychain couldn't be accessed!", error);
       }
     };
 
     try {
-      // Call verifyQR function asynchronously
       await verifyQR(requestData);
     } catch (error) {
-      // Handle errors thrown during verifyQR function call
-      // console.log("Exception in verifying the QR", error);
+      console.log("Exception in verifying the QR", error);
     }
   }
 };
@@ -679,7 +645,6 @@ const onSuccess = async (e) => {
       const token = credentials?.username;
       checkGenuinityFunc({qrId, token});
     productDataFunc({productCode, userType, token});
-    // console.log("ProductDataFunc",{productCode, userType, token})
     }
     addedqr = addedQrList
     // console.log("addQrDataToList",addedqr,data)
@@ -839,139 +804,7 @@ const onSuccess = async (e) => {
   }, [verifyQrData, verifyQrError]);
   // --------------------------------------------------------
 
-  //getting add qr data ------------------------------------
-  useEffect(() => {
-    if (addQrData) {
-      // console.log('Add qr data', addQrData?.body);
-      if (addQrData?.success) {
-        dispatch(setQrData(addQrData?.body));
-        // console.log("check Genuinity and warranty",checkGenuinityData,checkWarrantyData)
-
-        if(checkGenuinityData){
-          
-          if(checkGenuinityData?.body){
-          // console.log("check warranty data",checkWarrantyData)
-          if(checkWarrantyError)
-          {
-          if(checkWarrantyError?.data?.body)
-          {
-            isFirstScan && setTimeout(() => {
-              handleWorkflowNavigation("Genuinity+","Warranty") 
-            }, 3000); 
-            !isFirstScan && handleWorkflowNavigation("Genuinity+","Warranty")
-          }
-          else{
-            isFirstScan && setTimeout(() => {
-              handleWorkflowNavigation("Genuinity+")
-
-            }, 3000); 
-            !isFirstScan && handleWorkflowNavigation("Genuinity+")
-
-          }
-        }
-        else if(checkWarrantyData)
-        {
-          if(checkWarrantyData?.body)
-        {
-          isFirstScan && setTimeout(() => {
-            handleWorkflowNavigation("Genuinity+","Warranty")
-          }, 3000); 
-          !isFirstScan && handleWorkflowNavigation("Genuinity+","Warranty")
-        }
-        else{
-          isFirstScan && setTimeout(() => {
-            handleWorkflowNavigation("Genuinity+")
-
-          }, 3000); 
-          !isFirstScan && handleWorkflowNavigation("Genuinity+")
-        }
-        }
-        }
-        else
-        {
-          if(checkWarrantyError)
-          {
-          if(checkWarrantyError?.data?.body)
-          {
-            isFirstScan && setTimeout(() => {
-              handleWorkflowNavigation("Warranty")
-
-            }, 3000); 
-            !isFirstScan && handleWorkflowNavigation("Warranty")
-          }
-          else{
-            handleWorkflowNavigation()
-          }
-        }
-        else if(checkWarrantyData)
-        {
-          if(checkWarrantyData?.body)
-        {
-          isFirstScan && setTimeout(() => {
-            handleWorkflowNavigation("Warranty")
-
-          }, 3000); 
-          !isFirstScan && handleWorkflowNavigation("Warranty")
-        }
-        else{
-          isFirstScan && 
-          setTimeout(() => {
-            handleWorkflowNavigation()
-
-          }, 3000); 
-          !isFirstScan && handleWorkflowNavigation()
-        }
-        }
-        else{
-          isFirstScan && 
-          setTimeout(() => {
-            handleWorkflowNavigation()
-
-          }, 3000); 
-          !isFirstScan && handleWorkflowNavigation()
-        }
-        }
-      }
-        else if(checkWarrantyError){
-          if(checkWarrantyError?.data?.body){
-            if(checkGenuinityData)
-          {
-          if(checkGenuinityData?.body)
-          {
-            isFirstScan && setTimeout(() => {
-              handleWorkflowNavigation("Genuinity+","Warranty")
-            }, 3000); 
-            !isFirstScan && handleWorkflowNavigation("Genuinity+","Warranty")
-          }
-          else{
-            isFirstScan && setTimeout(() => {
-              handleWorkflowNavigation("Warranty")
-  
-            }, 3000); 
-            !isFirstScan && handleWorkflowNavigation("Warranty")
-          }
-        }
-        
-      }
-      }
-      else{
-        // console.log("else")
-        isFirstScan && 
-        setTimeout(() => {
-          handleWorkflowNavigation()
-
-        }, 3000); 
-        !isFirstScan && handleWorkflowNavigation()
-      }
-       
-      }
-    } else if(addQrError) {
-      setError(true)
-      setMessage("Problem while adding QR.")
-      // console.log("addQrError",addQrError);
-    }
-  }, [addQrData, addQrError]);
-  // --------------------------------------------------------
+ 
 
   // handle camera functions --------------------------------------
 
@@ -1035,8 +868,7 @@ const onSuccess = async (e) => {
   const handleAddQr = () => {
 
     const token = savedToken;
-    if(addedQrList?.length>1)
-    {
+   
 
       const addedQrID = addedQrList.map((item,index)=>{
         return item.id
@@ -1051,35 +883,9 @@ const onSuccess = async (e) => {
       }
       addBulkQrFunc(params)
       dispatch(setQrIdList(addedQrID))
+      dispatch(setQrData(addedQrList))
       // console.log(addedQrID,params)
-    }
-    else
-    {
-      if(productDataData)
-      {
-        addedQrList.length !== 0 &&
-      addedQrList.map((item, index) => {
-        const requestData = {
-          qr_id: item.id,
-          user_type_id: userId,
-          user_type: userType,
-          platform_id: platform,
-          scanned_by_name: userName,
-          address:location.address,
-          state:location.state,
-          district:location.district,
-          city:location.city,
-          lat:location.lat,
-          log:location.lon
-        };
-        token && addQrFunc({token, requestData});
-      });
-      }
-      
-    }
-
-
-    
+ 
   };
   // --------------------------------------------------------
   const helpModalComp = () => {

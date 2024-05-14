@@ -32,6 +32,14 @@ import ButtonOval from '../../components/atoms/buttons/ButtonOval';
 import { useTranslation } from 'react-i18next';
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
+import { useGetAppUserBannerDataMutation } from '../../apiServices/dashboard/AppUserBannerApi';
+import { setBannerData } from '../../../redux/slices/dashboardDataSlice';
+import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowByTenant';
+import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
+import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
+import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
+
+
 
 const VerifyOtp = ({ navigation, route }) => {
   const [mobile, setMobile] = useState(route.params.navigationParams.mobile);
@@ -95,12 +103,34 @@ const VerifyOtp = ({ navigation, route }) => {
   ] = useGetLoginOtpMutation();
 
 
+  const [getBannerFunc, {
+    data: getBannerData,
+    error: getBannerError,
+    isLoading: getBannerIsLoading,
+    isError: getBannerIsError
+  }] = useGetAppUserBannerDataMutation()
+
+
+  const [getFormFunc, {
+    data: getFormData,
+    error: getFormError,
+    isLoading: getFormIsLoading,
+    isError: getFormIsError
+  }] = useGetFormMutation()
+
   const [getDashboardFunc, {
     data: getDashboardData,
     error: getDashboardError,
     isLoading: getDashboardIsLoading,
     isError: getDashboardIsError
   }] = useGetAppDashboardDataMutation()
+
+  const [getWorkflowFunc, {
+    data: getWorkflowData,
+    error: getWorkflowError,
+    isLoading: getWorkflowIsLoading,
+    isError: getWorkflowIsError
+  }] = useGetWorkflowMutation()
 
   const [
     verifyLoginOtpFunc,
@@ -150,6 +180,40 @@ const VerifyOtp = ({ navigation, route }) => {
   }, [sendOtpData, sendOtpError]);
 
 
+  useEffect(() => {
+    if (getFormData) {
+      // console.log("Form Fields", getFormData?.body)
+      dispatch(setWarrantyForm(getFormData?.body?.template))
+      dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
+
+    }
+    else if(getFormError) {
+      // console.log("Form Field Error", getFormError)
+      setError(true)
+      setMessage("Can't fetch forms for warranty.")
+    }
+  }, [getFormData, getFormError])
+
+  useEffect(() => {
+    if (getWorkflowData) {
+      if (getWorkflowData.length === 1 && getWorkflowData[0] === "Genuinity") {
+        dispatch(setIsGenuinityOnly())
+      }
+      const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
+        return item !== "Warranty"
+      })
+      // console.log("getWorkflowData", getWorkflowData)
+      dispatch(setProgram(removedWorkFlow))
+      dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
+
+    }
+    else if(getWorkflowError) {
+      // console.log("getWorkflowError",getWorkflowError)
+      setError(true)
+      setMessage("Oops something went wrong")
+    }
+  }, [getWorkflowData, getWorkflowError])
+
 
   useEffect(() => {
     if (getDashboardData) {
@@ -198,6 +262,23 @@ const VerifyOtp = ({ navigation, route }) => {
     }
   }
 
+
+  useEffect(() => {
+    if (getBannerData) {
+      // console.log("getBannerData", getBannerData?.body)
+      const images = Object.values(getBannerData?.body).map((item) => {
+        return item.image[0]
+      })
+      // console.log("imagesBanner", images)
+      dispatch(setBannerData(images))
+    }
+    else if(getBannerError){
+      setError(true)
+      setMessage("Unable to fetch app banners")
+      // console.log(getBannerError)
+    }
+  }, [getBannerError, getBannerData])
+
   useEffect(() => {
     if (verifyOtpData) {
       console.log("user Login Data", verifyOtpData)
@@ -231,6 +312,8 @@ const VerifyOtp = ({ navigation, route }) => {
       const token = verifyLoginOtpData?.body?.token
       if (verifyLoginOtpData?.success) {
         token && getDashboardFunc(token)
+        token && getBannerFunc(token)
+
         verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token });
       }
     } else if (verifyLoginOtpError) {
