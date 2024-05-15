@@ -67,7 +67,7 @@ const ErrorModal = (props) => {
           navigation.navigate(navigateTo)
         }}>
         <View style={styles.centeredView}>
-          <View style={{ ...styles.modalView, borderWidth: 2, borderColor: ternaryThemeColor }}>
+          <View style={{ ...styles.modalView, borderColor: ternaryThemeColor }}>
             {/* <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={require('../../../assets/images/failed.png')}></Image> */}
             {title && <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>{title}</Text>}
             {!title && <Text style={{ color: '#FF5D5D', fontSize: 24, fontWeight: '700' }}>{t("Sorry")}</Text>}
@@ -81,7 +81,7 @@ const ErrorModal = (props) => {
 
             {props.isReportable &&
               <Pressable
-                style={{ ...styles.button, backgroundColor: '#FF5D5D', width: 100, marginTop: 10 }}
+                style={{ ...styles.button, backgroundColor: 'red', width: 100, marginTop: 10 }}
                 onPress={() => reportAndNavigate()}>
                 <Text style={styles.textStyle}>Report</Text>
               </Pressable>
@@ -99,12 +99,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: '#f37b7b'
   },
   modalView: {
 
     backgroundColor: 'white',
     borderRadius: 20,
+    width:'90%',
     padding: 60,
     alignItems: 'center',
     shadowColor: '#000',

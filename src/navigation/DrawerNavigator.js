@@ -88,14 +88,7 @@ const CustomDrawer = () => {
     },
   ] = useFetchProfileMutation();
 
-  const [getAppMenuFunc, {
-    data: getAppMenuData,
-    error: getAppMenuError,
-    isLoading: getAppMenuIsLoading,
-    isError: getAppMenuIsError
-  }] = useGetAppMenuDataMutation()
-
-  // console.log("getAppMenuData", getAppMenuData)
+ 
 
   const [getActiveMembershipFunc, {
     data: getActiveMembershipData,
@@ -128,7 +121,7 @@ const CustomDrawer = () => {
 
   useEffect(() => {
     if (getFAQData) {
-      console.log("getFAQData Here i am ", getFAQData.body.data?.[0]?.files[0]);
+      console.log("getFAQData Here i am ", getFAQData);
     }
     else if (getFAQError) {
       console.log("getFAQError", getFAQError)
@@ -194,21 +187,7 @@ const CustomDrawer = () => {
     }
   }, [getActiveMembershipData, getActiveMembershipError])
 
-  useEffect(() => {
-    const fetchMenu = async () => {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log(
-          'Credentials successfully loaded for user ' + credentials.username
-        );
-        const token = credentials.username
-        getAppMenuFunc(token)
-      }
-
-    }
-    fetchMenu()
-    // fetchTerms();
-  }, [])
+  
 
   
 

@@ -538,7 +538,7 @@ const QrCodeScanner = ({navigation}) => {
 
  
 const onSuccess = async (e) => {
-  // console.log('Qr data is ------', e?.data);
+  console.log('Qr data is ------', e?.data);
   
   if (e?.data === undefined) {
     setError(true);
@@ -559,63 +559,72 @@ const onSuccess = async (e) => {
 
     const verifyQR = async (data) => {
       console.log('qrDataVerifyQR', data);
-      try {
-        // Retrieve the credentials
-        const credentials = await Keychain.getGenericPassword();
-          if (credentials) {
-            // console.log(
-            //   'Credentials successfully loaded for user ' + credentials?.username, data
-            // );
-            setSavedToken(credentials?.username);
-            const token = credentials?.username;
-
-          
-          const response = await verifyQrFunc({ token, data })
-          // console.log("verifyQrFunc",response)
-          if (response?.data) {
-            console.log('Verify qr data', JSON.stringify(response));
-            if(response?.data?.body==null)
-            {
-              setError(true)
-              setMessage("Can't get product data")
-            }
-           
+      if(data?.unique_code != undefined)
+      {
+        try {
+          // Retrieve the credentials
+          const credentials = await Keychain.getGenericPassword();
+            if (credentials) {
+              // console.log(
+              //   'Credentials successfully loaded for user ' + credentials?.username, data
+              // );
+              setSavedToken(credentials?.username);
+              const token = credentials?.username;
+  
             
-            
-            const qrStatus = response?.data.body?.qr?.qr_status == undefined ?  response?.data.body?.qr_status :  response?.data.body?.qr?.qr_status
-            const statusCode = response?.data?.status;
-            const verifiedQrData = response?.data.body.qr == undefined ? response?.data.body : response?.data.body.qr
-            if (qrStatus === "1") {
-              await addQrDataToList(verifiedQrData);
-            }
-        
-            if (qrStatus === "2") {
-              if (statusCode === 201) {
-                setError(true);
-                setMessage(response?.data.message);
-              } else if (statusCode === 202) {
-                setIsReportable(true);
-                setError(true);
-                setMessage(response?.data.message);
-              } else if (statusCode === 200) {
-                setError(true);
-                setMessage(response?.data.message);
+            const response = await verifyQrFunc({ token, data })
+            // console.log("verifyQrFunc",response)
+            if (response?.data) {
+              console.log('Verify qr data', JSON.stringify(response));
+              if(response?.data?.body==null)
+              {
+                setError(true)
+                setMessage("Can't get product data")
               }
+             
+              
+              
+              const qrStatus = response?.data.body?.qr?.qr_status == undefined ?  response?.data.body?.qr_status :  response?.data.body?.qr?.qr_status
+              const statusCode = response?.data?.status;
+              const verifiedQrData = response?.data.body.qr == undefined ? response?.data.body : response?.data.body.qr
+              if (qrStatus === "1") {
+                await addQrDataToList(verifiedQrData);
+              }
+          
+              if (qrStatus === "2") {
+                if (statusCode === 201) {
+                  setError(true);
+                  setMessage(response?.data.message);
+                } else if (statusCode === 202) {
+                  setIsReportable(true);
+                  setError(true);
+                  setMessage(response?.data.message);
+                } else if (statusCode === 200) {
+                  setError(true);
+                  setMessage(response?.data.message);
+                }
+              }
+            } else if (response.error) {
+              if (response.error === undefined) {
+                setError(true);
+                setMessage("This QR is not activated yet");
+              } else {
+                setError(true);
+                setMessage(response.error.data?.message);
+              }
+             
             }
-          } else if (response.error) {
-            if (response.error === undefined) {
-              setError(true);
-              setMessage("This QR is not activated yet");
-            } else {
-              setError(true);
-              setMessage(response.error.data?.message);
-            }
-           
+          } else {
+
           }
-        } else {
+        } catch (error) {
         }
-      } catch (error) {
       }
+      else{
+        setError(true)
+        setMessage("Invalid QR")
+      }
+      
     };
 
     try {

@@ -4,7 +4,7 @@ export const AppUserBannerApi = baseApi.injectEndpoints({
     endpoints:(builder) =>({
         getAppUserBannerData : builder.mutation({
             query(token){
-                console.log(token)
+                console.log("Banner data getAppUserBannerData",token)
                 return {
                     url:`api/tenant/appBanner`,
                     method:'get',

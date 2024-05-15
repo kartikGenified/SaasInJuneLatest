@@ -48,6 +48,7 @@ const Splash = ({ navigation }) => {
   const [success, setSuccess] = useState(false);
   const [parsedJsonValue, setParsedJsonValue] = useState()
   const [minVersionSupport, setMinVersionSupport] = useState(false)
+  const [dashboardDataLoaded, setDashboardDataLoaded] = useState(false)
   const [error, setError] = useState(false);
   // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   // const [gotLoginData, setGotLoginData] = useState()
@@ -145,7 +146,7 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
     getUsers();
     
-    console.log("currentVersion",currentVersion)
+    // console.log("currentVersion",currentVersion)
     getMinVersionSupportFunc(currentVersion)
 
     const fetchTerms = async () => {
@@ -169,12 +170,12 @@ const Splash = ({ navigation }) => {
     }
     fetchPolicies()
     const fetchMenu = async () => {
-      console.log("fetching app menu getappmenufunc")
+      // console.log("fetching app menu getappmenufunc")
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
-        console.log(
-          'Credentials successfully loaded for user ' + credentials.username
-        );
+        // console.log(
+        //   'Credentials successfully loaded for user ' + credentials.username
+        // );
         const token = credentials.username
         getAppMenuFunc(token)
       }
@@ -187,11 +188,11 @@ const Splash = ({ navigation }) => {
   
   useEffect(() => {
     if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+      // console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
       dispatch(setTerms(getTermsData.body.data?.[0]?.files[0]))
     }
     else if (getTermsError) {
-      console.log("gettermserror", getTermsError)
+      // console.log("gettermserror", getTermsError)
     }
   }, [getTermsData, getTermsError])
 
@@ -202,10 +203,10 @@ const Splash = ({ navigation }) => {
     navigation.navigate("SelectUser")
   } 
 
+
   useEffect(() => {
     if (getDashboardData) {
-      console.log("getDashboardData", getDashboardData)
-      console.log("Trying to dispatch", parsedJsonValue.user_type_id)
+      // console.log("getDashboardData", getDashboardData)
       dispatch(setAppUserId(parsedJsonValue.user_type_id))
       dispatch(setAppUserName(parsedJsonValue.name))
       dispatch(setAppUserType(parsedJsonValue.user_type))
@@ -213,8 +214,10 @@ const Splash = ({ navigation }) => {
       dispatch(setId(parsedJsonValue.id))
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
       setShowLoading(false)
-        minVersionSupport && getAppMenuData && navigation.navigate('Dashboard');
-        minVersionSupport&& getAppMenuData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+      
+      console.log("all data in one console",{getFormData,getAppMenuData,getDashboardData,getWorkflowData,getBannerData,minVersionSupport})
+      
+      getFormData && minVersionSupport && getAppMenuData && getDashboardData && getWorkflowData && getBannerData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
       
        
       
@@ -222,7 +225,7 @@ const Splash = ({ navigation }) => {
     }
     else if (getDashboardError) {
 
-      console.log("getDashboardError", getDashboardError)
+      // console.log("getDashboardError", getDashboardError)
       if(getDashboardError?.data?.message =="Invalid JWT" && getDashboardError?.status == 401 )
       {
         removerTokenData()
@@ -232,45 +235,45 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     if (getAppMenuData) {
-      // console.log("usertype", userData.user_type)
-      console.log("getAppMenuData", JSON.stringify(getAppMenuData))
+      // console.log("getAppMenuData", JSON.stringify(getAppMenuData))
       if(parsedJsonValue)
       {
         const tempDrawerData = getAppMenuData.body.filter((item) => {
           return item.user_type === parsedJsonValue.user_type
         })
-        // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
         tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
       }
       
     }
     else if (getAppMenuError) {
 
-      console.log("getAppMenuError", getAppMenuError)
+      // console.log("getAppMenuError", getAppMenuError)
     }
   }, [getAppMenuData, getAppMenuError])
 
   useEffect(() => {
     if (getPolicyData) {
-      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
+      // console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
       dispatch(setPolicy(getPolicyData?.body?.data?.[0]?.files?.[0]))
     }
     else if (getPolicyError) {
       setError(true)
       setMessage(getPolicyError?.message)
-      console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
+      // console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
     }
   }, [getPolicyData, getPolicyError])
 
   useEffect(() => {
     if (getFormData) {
-      // console.log("Form Fields", getFormData?.body)
+      // console.log("getFormData", getFormData?.body)
       dispatch(setWarrantyForm(getFormData?.body?.template))
       dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
+      parsedJsonValue && getDashboardFunc(parsedJsonValue?.token)
+
 
     }
     else if(getFormError) {
-      // console.log("Form Field Error", getFormError)
+      // console.log("getFormError", getFormError)
       setError(true)
       setMessage("Can't fetch forms for warranty.")
     }
@@ -287,10 +290,12 @@ const Splash = ({ navigation }) => {
       // console.log("getWorkflowData", getWorkflowData)
       dispatch(setProgram(removedWorkFlow))
       dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
+      const form_type = "2"
+        parsedJsonValue && getFormFunc({ form_type:form_type, token:parsedJsonValue?.token })
 
     }
     else if(getWorkflowError) {
-      console.log("getWorkflowError",getWorkflowError)
+      // console.log("getWorkflowError",getWorkflowError)
       setError(true)
       setMessage("Oops something went wrong")
     }
@@ -303,13 +308,14 @@ const Splash = ({ navigation }) => {
       const images = Object.values(getBannerData?.body).map((item) => {
         return item.image[0]
       })
-      // console.log("imagesBanner", images)
       dispatch(setBannerData(images))
+      setShowLoading(false)
+      parsedJsonValue && getWorkflowFunc({userId:parsedJsonValue?.user_type_id, token:parsedJsonValue?.token })
     }
     else if(getBannerError){
       setError(true)
       setMessage("Unable to fetch app banners")
-      // console.log(getBannerError)
+      // console.log("getBannerError",getBannerError)
     }
   }, [getBannerError, getBannerData])
 
@@ -351,7 +357,6 @@ const Splash = ({ navigation }) => {
     const getLocationPermission = async () => {
 
       if (Platform.OS == 'ios') {
-        console.log("getLocationPermissions")
         Alert.alert(
           'GPS Disabled',
           'Please enable GPS/Location to use this feature. You can open it from the top sliding setting menu of your phone or from the setting section of your phone.',
@@ -386,10 +391,8 @@ const Splash = ({ navigation }) => {
 
           }
         }).then(function (success) {
-          console.log("location  prompt box success", success);
           setLocationEnabled(true) // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
         }).catch((error) => {
-          console.log("location  prompt box error", error.message);
           getLocationPermission()
           // error.message => "disabled"
         });
@@ -404,7 +407,6 @@ const Splash = ({ navigation }) => {
     if (!locationBoxEnabled) {
       try {
         Geolocation.getCurrentPosition((res) => {
-          console.log("res", res)
           lat = res.coords.latitude
           lon = res.coords.longitude
           // getLocation(JSON.stringify(lat),JSON.stringify(lon))
@@ -415,12 +417,10 @@ const Splash = ({ navigation }) => {
           }
           setLocationEnabled(true)
 
-          console.log("latlong", lat, lon)
           var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
               &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
 
           fetch(url).then(response => response.json()).then(json => {
-            console.log("location address=>", JSON.stringify(json));
 
 
             if (json.status == "OK") {
@@ -428,7 +428,6 @@ const Splash = ({ navigation }) => {
 
               locationJson["address"] = formattedAddress === undefined ? "N/A" : formattedAddress
               const addressComponent = json?.results[0]?.address_components
-              console.log("addressComponent", addressComponent)
 
             
             for (let i = 0; i <= addressComponent?.length; i++) {
@@ -440,28 +439,22 @@ const Splash = ({ navigation }) => {
                 }
                 else {
                   if (addressComponent[i].types.includes("postal_code")) {
-                    console.log("inside if")
 
-                    console.log(addressComponent[i]?.long_name)
                     locationJson["postcode"] = addressComponent[i]?.long_name
                   }
                   else if (addressComponent[i]?.types.includes("country")) {
-                    console.log(addressComponent[i]?.long_name)
 
                     locationJson["country"] = addressComponent[i]?.long_name
                   }
                   else if (addressComponent[i]?.types.includes("administrative_area_level_1")) {
-                    console.log(addressComponent[i]?.long_name)
 
                     locationJson["state"] = addressComponent[i]?.long_name
                   }
                   else if (addressComponent[i]?.types.includes("administrative_area_level_3")) {
-                    console.log(addressComponent[i]?.long_name)
 
                     locationJson["district"] = addressComponent[i]?.long_name
                   }
                   else if (addressComponent[i]?.types.includes("locality")) {
-                    console.log(addressComponent[i]?.long_name)
 
                     locationJson["city"] = addressComponent[i]?.long_name
                   }
@@ -471,19 +464,16 @@ const Splash = ({ navigation }) => {
             }
 
 
-            console.log("formattedAddressArray", locationJson)
 
           })
         }, (error) => {
           setLocationEnabled(false)
-          console.log("error", error)
           if (error.code === 1) {
             // Permission Denied
             Geolocation.requestAuthorization()
 
           } else if (error.code === 2) {
             // Position Unavailable
-            console.log("locationBoxEnabled", locationBoxEnabled)
             // if (!locationBoxEnabled)
             //   getLocationPermission()
 
@@ -502,7 +492,6 @@ const Splash = ({ navigation }) => {
 
       }
       catch (e) {
-        console.log("error in fetching location", e)
       }
     }
 
@@ -519,7 +508,6 @@ const Splash = ({ navigation }) => {
     const checkToken = async () => {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
-        console.log("fcmToken", fcmToken);
         dispatch(setFcmToken(fcmToken))
       }
     }
@@ -537,12 +525,9 @@ const Splash = ({ navigation }) => {
               buttonPositive: 'OK',
             },
           );
-          console.log('granted', granted);
           if (granted === 'granted') {
-            console.log('You can use Geolocation');
             return true;
           } else {
-            console.log('You cannot use Geolocation');
             return false;
           }
         }
@@ -551,7 +536,6 @@ const Splash = ({ navigation }) => {
         }
 
       } catch (err) {
-        console.log("err", err)
         return false;
       }
     };
@@ -562,7 +546,7 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     if (getMinVersionSupportData) {
-      console.log("getMinVersionSupportData", getMinVersionSupportData)
+      // console.log("getMinVersionSupportData", getMinVersionSupportData)
       if (getMinVersionSupportData.success) {
         setMinVersionSupport(getMinVersionSupportData?.body?.data)
         if (!getMinVersionSupportData?.body?.data) {
@@ -572,17 +556,16 @@ const Splash = ({ navigation }) => {
       }
     }
     else if (getMinVersionSupportError) {
-      console.log("getMinVersionSupportError", getMinVersionSupportError)
+      // console.log("getMinVersionSupportError", getMinVersionSupportError)
     }
   }, [getMinVersionSupportData, getMinVersionSupportError])
 
   useEffect(() => {
     if (isConnected) {
-      console.log("internet status", isConnected)
+      // console.log("internet status", isConnected)
 
       setConnected(isConnected.isConnected)
       setIsSlowInternet(isConnected.isInternetReachable ? false : true)
-      console.log("is connected", isConnected.isInternetReachable)
       getUsers();
         getMinVersionSupportFunc(currentVersion)
         getAppTheme("ozone")
@@ -595,7 +578,7 @@ const Splash = ({ navigation }) => {
   
   useEffect(() => {
     if (getUsersData) {
-      console.log("type of users", getUsersData?.body);
+      // console.log("getUsersData", getUsersData?.body);
       const appUsers = getUsersData?.body.map((item, index) => {
         return item.name
       })
@@ -605,12 +588,11 @@ const Splash = ({ navigation }) => {
           "id": item.user_type_id
         }
       })
-      // console.log("appUsers",appUsers,appUsersData)
       dispatch(setAppUsers(appUsers))
       dispatch(setAppUsersData(appUsersData))
 
     } else if (getUsersError) {
-      console.log("getUsersError", getUsersError);
+      // console.log("getUsersError", getUsersError);
     }
   }, [getUsersData, getUsersError]);
 
@@ -624,26 +606,23 @@ const Splash = ({ navigation }) => {
     const parsedJsonValues = JSON.parse(jsonValue)
 
     const value = await AsyncStorage.getItem('isAlreadyIntroduced');
-    console.log("Login data recieved after auto login", jsonValue, value)
 
     if (value != null && jsonValue != null) {
       // value previously stored
-      console.log("asynch value", value, jsonValue)
       try {
-        console.log("parsedJsonValues",parsedJsonValues)
+        // console.log("parsedJsonValues",parsedJsonValues)
         setParsedJsonValue(parsedJsonValues)
-        parsedJsonValues && getDashboardFunc(parsedJsonValues?.token)
         parsedJsonValues && getBannerFunc(parsedJsonValues?.token)
          
-        parsedJsonValues && getWorkflowFunc({userId:parsedJsonValues?.user_type_id, token:parsedJsonValues?.token })
-        const form_type = "2"
-        parsedJsonValues && getFormFunc({ form_type:form_type, token:parsedJsonValues?.token })
+        
+        
+        
 
 
 
       }
       catch (e) {
-        console.log("Error in dispatch", e)
+        // console.log("Error in dispatch", e)
       }
 
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced)
@@ -687,7 +666,7 @@ const Splash = ({ navigation }) => {
   // fetching data and checking for errors from the API-----------------------
   useEffect(() => {
     if (getAppThemeData) {
-      console.log("getAppThemeData", JSON.stringify(getAppThemeData?.body))
+      // console.log("getAppThemeData", JSON.stringify(getAppThemeData?.body))
       dispatch(setPrimaryThemeColor(getAppThemeData?.body?.theme?.color_shades["600"]))
       dispatch(setSecondaryThemeColor(getAppThemeData?.body?.theme?.color_shades["400"]))
       dispatch(setTernaryThemeColor(getAppThemeData?.body?.theme?.color_shades["700"]))
@@ -715,8 +694,7 @@ const Splash = ({ navigation }) => {
       getData()
     }
     else if (getAppThemeError) {
-      console.log("getAppThemeIsError", getAppThemeIsError)
-      console.log("getAppThemeError", getAppThemeError)
+      // console.log("getAppThemeError", getAppThemeError)
     }
    
   }, [getAppThemeData,getAppThemeError,locationEnabled,connected])
@@ -755,7 +733,7 @@ const Splash = ({ navigation }) => {
         {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
         {
       
-      (policyLoading || getAppThemeIsLoading ||  getUsersDataIsLoading || getWorkflowIsLoading || getFormIsLoading || getAppMenuIsLoading || getDashboardIsLoading || termsLoading || getMinVersionSupportIsLoading) && 
+      ( getBannerIsLoading || policyLoading || getAppThemeIsLoading ||  getUsersDataIsLoading || getWorkflowIsLoading || getFormIsLoading || getAppMenuIsLoading || getDashboardIsLoading || termsLoading || getMinVersionSupportIsLoading) && 
       
       <ActivityIndicator size={'large'} animating={true} color={MD2Colors.yellow800} />
         }

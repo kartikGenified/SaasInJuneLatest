@@ -56,7 +56,7 @@ const CampaignVideoModal = ({ isVisible, onClose }) => {
             console.log("getAppCampaignData", getAppCampaignData);
             setHide(getAppCampaignData?.body?.data?.[0]?.image?.can_user_hide);
         }
-        else {
+        else if (getAppCampaignError) {
             console.log("getAppCampaignIsError", getAppCampaignIsError);
         }
     }, [getAppCampaignData, getAppCampaignIsError])

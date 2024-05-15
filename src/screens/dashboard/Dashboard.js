@@ -186,7 +186,8 @@ const Dashboard = ({ navigation }) => {
         };
         handleLogout();
       }
-      else{
+      else
+      {
       setError(true)
       setMessage("Unable to fetch user point history.")
       }
