@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next';
 const Drawer = createDrawerNavigator();
 const CustomDrawer = () => {
   const [profileImage, setProfileImage] = useState()
-  const [drawerData, setDrawerData] = useState()
   const [myProgramVisible, setMyProgramVisibile] = useState(false);
   const [ozoneProductVisible, setOzoneProductVisible] = useState(false);
   const [communityVisible, setCommunityVisible] = useState(false);
@@ -44,7 +43,9 @@ const CustomDrawer = () => {
 
 
   const currentVersion = VersionCheck.getCurrentVersion();
-
+  const drawerData = useSelector(state=>state.drawerData.drawerData)
+  const getPolicyData =  useSelector(state=>state.termsPolicy.policy)
+  const getTermsData = useSelector(state=>state.termsPolicy.terms)
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -59,19 +60,9 @@ const CustomDrawer = () => {
   const kycData = useSelector(state => state.kycDataSlice.kycData)
 
 
-  const [getTermsAndCondition, {
-    data: getTermsData,
-    error: getTermsError,
-    isLoading: termsLoading,
-    isError: termsIsError
-  }] = useFetchLegalsMutation();
+  
 
-  const [getPolicies, {
-    data: getPolicyData,
-    error: getPolicyError,
-    isLoading: policyLoading,
-    isError: policyIsError
-  }] = useFetchLegalsMutation();
+  
 
   const [getFAQ, {
     data: getFAQData,
@@ -128,31 +119,12 @@ const CustomDrawer = () => {
     };
     fetchData()
     getMembership()
-    fetchTerms()
-    fetchPolicies()
     fetchFaq()
   }, [])
 
-  useEffect(() => {
-    if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
-    }
-    else if (getTermsError) {
-      console.log("gettermserror", getTermsError)
-    }
-  }, [getTermsData, getTermsError])
+  
 
-  useEffect(() => {
-    if (getPolicyData) {
-      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
-
-    }
-    else if (getPolicyError) {
-      setError(true)
-      setMessage(getPolicyError?.message)
-      console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
-    }
-  }, [getPolicyData, getPolicyError])
+  
 
   useEffect(() => {
     if (getFAQData) {
@@ -174,24 +146,6 @@ const CustomDrawer = () => {
 
     console.log('Done.')
 
-  }
-
-  const fetchTerms = async () => {
-    // const credentials = await Keychain.getGenericPassword();
-    // const token = credentials.username;
-    const params = {
-      type: "term-and-condition"
-    }
-    getTermsAndCondition(params)
-  }
-
-  const fetchPolicies = async () => {
-    // const credentials = await Keychain.getGenericPassword();
-    // const token = credentials.username;
-    const params = {
-      type: "privacy-policy"
-    }
-    getPolicies(params)
   }
 
 
@@ -256,34 +210,13 @@ const CustomDrawer = () => {
     // fetchTerms();
   }, [])
 
-  useEffect(() => {
-    if (getTermsData) {
-      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
-    }
-    else if (getTermsError) {
-      console.log("gettermserror", getTermsError)
-    }
-  }, [getTermsData, getTermsError]);
+  
 
   const modalClose = () => {
     setError(false);
   };
 
-  useEffect(() => {
-    if (getAppMenuData) {
-      // console.log("usertype", userData.user_type)
-      // console.log("getAppMenuData", JSON.stringify(getAppMenuData))
-      const tempDrawerData = getAppMenuData.body.filter((item) => {
-        return item.user_type === userData.user_type
-      })
-      // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
-      setDrawerData(tempDrawerData[0])
-    }
-    else if (getAppMenuError) {
-
-      console.log("getAppMenuError", getAppMenuError)
-    }
-  }, [getAppMenuData, getAppMenuError])
+  
 
   const DrawerItems = (props) => {
     const image = props.image
@@ -658,14 +591,14 @@ const CustomDrawer = () => {
                   }} style={{ fontSize: 15, color: ternaryThemeColor }}>{t("Tutorial")}</Text>
                 </TouchableOpacity>
 
-                {getPolicyData && getPolicyData?.body.length !== 0 && <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => [
-                  navigation.navigate("PdfComponent", { pdf: getPolicyData?.body?.data?.[0]?.files?.[0] })
+                {getPolicyData  && <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => [
+                  navigation.navigate("PdfComponent", { pdf: getPolicyData })
                 ]}>
                   <Text style={{ fontSize: 15, color: ternaryThemeColor }}>Policies</Text>
                 </TouchableOpacity>}
 
-                {getTermsData && getTermsData.body.data.length !== 0 && <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
-                  navigation.navigate('PdfComponent', { pdf: getTermsData.body.data?.[0]?.files[0] })
+                {getTermsData && <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }} onPress={() => {
+                  navigation.navigate('PdfComponent', { pdf: getTermsData })
                 }}>
                   <Text style={{ fontSize: 15, color: ternaryThemeColor }}>{t("T&C")}</Text>
                 </TouchableOpacity>}

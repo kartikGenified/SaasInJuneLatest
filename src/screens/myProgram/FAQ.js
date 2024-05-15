@@ -8,16 +8,18 @@ import { useFetchAllfaqsMutation } from '../../apiServices/faq/faqApi';
 import * as Keychain from 'react-native-keychain';
 import DataNotFound from '../data not found/DataNotFound';
 import FastImage from 'react-native-fast-image';
+import { useTranslation } from 'react-i18next';
 
 
 
 // create a component
 const FAQ = ({ navigation }) => {
-
+    
     const[faqData, setFAQData] = useState(null);
     const[error,setError] = useState(false);
 
     const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif')).uri;
+    const {t} = useTranslation()
 
     const [fetchFAQ, {
         data:fetchFAQData, 
@@ -27,18 +29,7 @@ const FAQ = ({ navigation }) => {
       }] = useFetchAllfaqsMutation()
   
 
-    const tempArr = [
-        {
-            que: 'What is FAQ',
-            ans: 'FAQ is FAQ dnjf jdnf df dsnka dsc vk vnd  vjk fkn nvndkv jl vfjfvnv jv    jfs nk'
-        },
-
-        {
-            que: 'What is Not FAQ',
-            ans: 'Not FAQ is Not FAQ'
-        },
-
-    ]
+   
 
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image, ImageBackground, PermissionsAndroid, Platform, Alert, Linking, BackHandler } from 'react-native';
-import DotHorizontalList from '../../components/molecules/DotHorizontalList';
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
 import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions, setIsOnlineVeriification, setSocials, setWebsite, setCustomerSupportMail, setCustomerSupportMobile, setExtraFeatures } from '../../../redux/slices/appThemeSlice';
 import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
 import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAppUserType, setAppUserName, setAppUserId, setUserData, setId } from '../../../redux/slices/appUserDataSlice';
 import messaging from '@react-native-firebase/messaging';
@@ -20,20 +18,23 @@ import ErrorModal from '../../components/modals/ErrorModal';
 import { setLocation } from '../../../redux/slices/userLocationSlice';
 import { GoogleMapsKey } from "@env"
 import { useCheckVersionSupportMutation } from '../../apiServices/minVersion/minVersionApi';
-import VideoGallery from '../video/VideoGallery';
 import VersionCheck from 'react-native-version-check';
 import LocationPermission from '../../components/organisms/LocationPermission';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 import { useGetAppDashboardDataMutation } from '../../apiServices/dashboard/AppUserDashboardApi';
 import { setDashboardData } from '../../../redux/slices/dashboardDataSlice';
-import * as Progress from 'react-native-progress';
 import { useGetAppUserBannerDataMutation } from '../../apiServices/dashboard/AppUserBannerApi';
 import { setBannerData } from '../../../redux/slices/dashboardDataSlice';
 import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowByTenant';
 import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
 import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
 import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
-
+import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalApi';
+import { setPolicy, setTerms } from '../../../redux/slices/termsPolicySlice';
+import { useGetAppMenuDataMutation } from '../../apiServices/dashboard/AppUserDashboardMenuAPi.js';
+import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
+import * as Keychain from 'react-native-keychain';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -42,6 +43,7 @@ const Splash = ({ navigation }) => {
   const [isSlowInternet, setIsSlowInternet] = useState(false)
   const [locationEnabled, setLocationEnabled] = useState(false)
   const [locationBoxEnabled, setLocationBoxEnabled] = useState(false)
+  const [showLoading, setShowLoading] = useState(true)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [parsedJsonValue, setParsedJsonValue] = useState()
@@ -95,12 +97,28 @@ const Splash = ({ navigation }) => {
     },
   ] = useGetAppUsersDataMutation();
 
+  const [getAppMenuFunc, {
+    data: getAppMenuData,
+    error: getAppMenuError,
+    isLoading: getAppMenuIsLoading,
+    isError: getAppMenuIsError
+  }] = useGetAppMenuDataMutation()
+
+
   const [getDashboardFunc, {
     data: getDashboardData,
     error: getDashboardError,
     isLoading: getDashboardIsLoading,
     isError: getDashboardIsError
   }] = useGetAppDashboardDataMutation()
+
+
+  const [getTermsAndCondition, {
+    data: getTermsData,
+    error: getTermsError,
+    isLoading: termsLoading,
+    isError: termsIsError
+  }] = useFetchLegalsMutation();
 
   const [
     getMinVersionSupportFunc,
@@ -113,16 +131,74 @@ const Splash = ({ navigation }) => {
   ] = useCheckVersionSupportMutation()
 
 
+
+  const [getPolicies, {
+    data: getPolicyData,
+    error: getPolicyError,
+    isLoading: policyLoading,
+    isError: policyIsError
+  }] = useFetchLegalsMutation();
+
+
+  
+
   useEffect(() => {
     getUsers();
     
     console.log("currentVersion",currentVersion)
     getMinVersionSupportFunc(currentVersion)
+
+    const fetchTerms = async () => {
+      // const credentials = await Keychain.getGenericPassword();
+      // const token = credentials.username;
+      const params = {
+        type: "term-and-condition"
+      }
+      getTermsAndCondition(params)
+    }
+    fetchTerms()
+
+
+    const fetchPolicies = async () => {
+      // const credentials = await Keychain.getGenericPassword();
+      // const token = credentials.username;
+      const params = {
+        type: "privacy-policy"
+      }
+      getPolicies(params)
+    }
+    fetchPolicies()
+    const fetchMenu = async () => {
+      console.log("fetching app menu getappmenufunc")
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        console.log(
+          'Credentials successfully loaded for user ' + credentials.username
+        );
+        const token = credentials.username
+        getAppMenuFunc(token)
+      }
+  
+    }
+    
+    fetchMenu()
+
   }, [])
+  
+  useEffect(() => {
+    if (getTermsData) {
+      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+      dispatch(setTerms(getTermsData.body.data?.[0]?.files[0]))
+    }
+    else if (getTermsError) {
+      console.log("gettermserror", getTermsError)
+    }
+  }, [getTermsData, getTermsError])
 
 
   const removerTokenData =async()=>{
     await AsyncStorage.removeItem('loginData');
+    setShowLoading(false)
     navigation.navigate("SelectUser")
   } 
 
@@ -136,10 +212,10 @@ const Splash = ({ navigation }) => {
       dispatch(setUserData(parsedJsonValue))
       dispatch(setId(parsedJsonValue.id))
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
-      setTimeout(() => {
-        minVersionSupport && navigation.navigate('Dashboard');
-        minVersionSupport && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
-      }, 1000);
+      setShowLoading(false)
+        minVersionSupport && getAppMenuData && navigation.navigate('Dashboard');
+        minVersionSupport&& getAppMenuData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+      
        
       
 
@@ -153,6 +229,38 @@ const Splash = ({ navigation }) => {
       }
     }
   }, [getDashboardData, getDashboardError])
+
+  useEffect(() => {
+    if (getAppMenuData) {
+      // console.log("usertype", userData.user_type)
+      console.log("getAppMenuData", JSON.stringify(getAppMenuData))
+      if(parsedJsonValue)
+      {
+        const tempDrawerData = getAppMenuData.body.filter((item) => {
+          return item.user_type === parsedJsonValue.user_type
+        })
+        // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
+        tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
+      }
+      
+    }
+    else if (getAppMenuError) {
+
+      console.log("getAppMenuError", getAppMenuError)
+    }
+  }, [getAppMenuData, getAppMenuError])
+
+  useEffect(() => {
+    if (getPolicyData) {
+      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
+      dispatch(setPolicy(getPolicyData?.body?.data?.[0]?.files?.[0]))
+    }
+    else if (getPolicyError) {
+      setError(true)
+      setMessage(getPolicyError?.message)
+      console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
+    }
+  }, [getPolicyData, getPolicyError])
 
   useEffect(() => {
     if (getFormData) {
@@ -541,14 +649,15 @@ const Splash = ({ navigation }) => {
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced)
     }
     else {
+      setShowLoading(false)
       if (value === "Yes") 
       {
         
-         minVersionSupport && navigation.navigate('SelectUser');
+         minVersionSupport  && navigation.navigate('SelectUser');
       }
       else 
       {
-         minVersionSupport && navigation.navigate('Introduction')
+         minVersionSupport  && navigation.navigate('Introduction')
         
       }
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
@@ -633,8 +742,8 @@ const Splash = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', }} source={require('../../../assets/images/splash2.png')}>
+    <View style={{ flex: 1,alignItems:'center',justifyContent:'center' }}>
+      <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash2.png')}>
       {!connected &&  <InternetModal comp = {NoInternetComp} />}
       {isSlowInternet && <InternetModal comp = {SlowInternetComp} /> }
      
@@ -645,8 +754,10 @@ const Splash = ({ navigation }) => {
           openModal={error}></ErrorModal>}
         {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
         {
-      getAppThemeIsLoading ||  getUsersDataIsLoading && 
-      <Progress.Circle color='yellow' size={100} indeterminate={true} />
+      
+      (policyLoading || getAppThemeIsLoading ||  getUsersDataIsLoading || getWorkflowIsLoading || getFormIsLoading || getAppMenuIsLoading || getDashboardIsLoading || termsLoading || getMinVersionSupportIsLoading) && 
+      
+      <ActivityIndicator size={'large'} animating={true} color={MD2Colors.yellow800} />
         }
       </ImageBackground>
 

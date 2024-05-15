@@ -38,12 +38,15 @@ import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowBy
 import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
 import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
 import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
-
-
+import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalApi';
+import { setPolicy,setTerms } from '../../../redux/slices/termsPolicySlice';
+import { useGetAppMenuDataMutation } from '../../apiServices/dashboard/AppUserDashboardMenuAPi.js';
+import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
 
 const VerifyOtp = ({ navigation, route }) => {
   const [mobile, setMobile] = useState(route.params.navigationParams.mobile);
   const [otp, setOtp] = useState('');
+  const [parsedJsonValue,setParsedJsonValue] = useState();
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
@@ -92,6 +95,30 @@ const VerifyOtp = ({ navigation, route }) => {
   // ------------------------------------------------
 
   // initializing mutations --------------------------------
+
+  const [getTermsAndCondition, {
+    data: getTermsData,
+    error: getTermsError,
+    isLoading: termsLoading,
+    isError: termsIsError
+  }] = useFetchLegalsMutation();
+
+  
+
+  const [getPolicies, {
+    data: getPolicyData,
+    error: getPolicyError,
+    isLoading: policyLoading,
+    isError: policyIsError
+  }] = useFetchLegalsMutation();
+
+  const [getAppMenuFunc, {
+    data: getAppMenuData,
+    error: getAppMenuError,
+    isLoading: getAppMenuIsLoading,
+    isError: getAppMenuIsError
+  }] = useGetAppMenuDataMutation()
+
   const [
     sendOtpFunc,
     {
@@ -132,6 +159,7 @@ const VerifyOtp = ({ navigation, route }) => {
     isError: getWorkflowIsError
   }] = useGetWorkflowMutation()
 
+  
   const [
     verifyLoginOtpFunc,
     {
@@ -171,6 +199,86 @@ const VerifyOtp = ({ navigation, route }) => {
 
   // retrieving data from api calls--------------------------
 
+  useEffect(()=>{
+    const fetchTerms = async () => {
+      // const credentials = await Keychain.getGenericPassword();
+      // const token = credentials.username;
+      const params = {
+        type: "term-and-condition"
+      }
+      getTermsAndCondition(params)
+    }
+    fetchTerms()
+
+
+    const fetchPolicies = async () => {
+      // const credentials = await Keychain.getGenericPassword();
+      // const token = credentials.username;
+      const params = {
+        type: "privacy-policy"
+      }
+      getPolicies(params)
+    }
+    fetchPolicies()
+    const fetchMenu = async () => {
+      console.log("fetching app menu getappmenufunc")
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        console.log(
+          'Credentials successfully loaded for user ' + credentials.username
+        );
+        const token = credentials.username
+        getAppMenuFunc(token)
+      }
+  
+    }
+    
+    fetchMenu()
+  },[])
+
+  useEffect(() => {
+    if (getAppMenuData) {
+      // console.log("usertype", userData.user_type)
+      console.log("getAppMenuData", JSON.stringify(getAppMenuData))
+      if(parsedJsonValue)
+      {
+        const tempDrawerData = getAppMenuData.body.filter((item) => {
+          return item.user_type === parsedJsonValue.user_type
+        })
+        // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
+        tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
+      }
+      
+    }
+    else if (getAppMenuError) {
+
+      console.log("getAppMenuError", getAppMenuError)
+    }
+  }, [getAppMenuData, getAppMenuError])
+
+
+  useEffect(() => {
+    if (getTermsData) {
+      console.log("getTermsData", getTermsData.body.data?.[0]?.files[0]);
+      dispatch(setTerms(getTermsData.body.data?.[0]?.files[0]))
+    }
+    else if (getTermsError) {
+      console.log("gettermserror", getTermsError)
+    }
+  }, [getTermsData, getTermsError])
+
+  useEffect(() => {
+    if (getPolicyData) {
+      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
+      dispatch(setPolicy(getPolicyData?.body?.data?.[0]?.files?.[0]))
+    }
+    else if (getPolicyError) {
+      setError(true)
+      setMessage(getPolicyError?.message)
+      console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
+    }
+  }, [getPolicyData, getPolicyError])
+
   useEffect(() => {
     if (sendOtpData) {
       // console.log(sendOtpData)
@@ -202,7 +310,7 @@ const VerifyOtp = ({ navigation, route }) => {
       const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
         return item !== "Warranty"
       })
-      // console.log("getWorkflowData", getWorkflowData)
+      console.log("getWorkflowData", getWorkflowData)
       dispatch(setProgram(removedWorkFlow))
       dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
 
@@ -284,7 +392,7 @@ const VerifyOtp = ({ navigation, route }) => {
       console.log("user Login Data", verifyOtpData)
       if (verifyOtpData?.success) {
         console.log(verifyOtpData?.body?.user_type_id, verifyOtpData?.body?.name, verifyOtpData?.body?.user_type)
-
+        setParsedJsonValue(verifyOtpData?.body)
         console.log("successfullyLoggedIn")
         saveToken(verifyOtpData?.body?.token)
         storeData(verifyOtpData?.body)
@@ -313,6 +421,9 @@ const VerifyOtp = ({ navigation, route }) => {
       if (verifyLoginOtpData?.success) {
         token && getDashboardFunc(token)
         token && getBannerFunc(token)
+        token && user_type_id && getWorkflowFunc({userId:user_type_id, token:token })
+        const form_type = "2"
+        token && getFormFunc({ form_type:form_type, token:token })
 
         verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token });
       }
@@ -331,7 +442,7 @@ const VerifyOtp = ({ navigation, route }) => {
   const modalWithBorderClose = () => {
     setModalWithBorder(false);
     setMessage('')
-    navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+    getAppMenuData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
   };
 
   const ModalContent = () => {

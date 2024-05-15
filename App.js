@@ -8,6 +8,8 @@ import VersionCheck from 'react-native-version-check';
 import Close from 'react-native-vector-icons/Ionicons';
 import ModalWithBorder from './src/components/modals/ModalWithBorder';
 import NetInfo from "@react-native-community/netinfo";
+import { PaperProvider } from 'react-native-paper';
+
 
 const App = () => {
   const [notifModal, setNotifModal] = useState(false)
@@ -103,6 +105,7 @@ const App = () => {
         
     return (
         <Provider store={store}>
+          <PaperProvider>
         <SafeAreaView style={{flex:1}}>
             <StackNavigator>
             {notifModal &&  <ModalWithBorder
@@ -115,6 +118,7 @@ const App = () => {
            
             </StackNavigator>
         </SafeAreaView>
+        </PaperProvider>
         </Provider>
     );
 }

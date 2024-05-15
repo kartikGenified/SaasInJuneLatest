@@ -34,6 +34,9 @@ import { useGetWorkflowMutation } from '../../apiServices/workflow/GetWorkflowBy
 import { setProgram, setWorkflow, setIsGenuinityOnly } from '../../../redux/slices/appWorkflowSlice';
 import { useGetFormMutation } from '../../apiServices/workflow/GetForms';
 import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSlice';
+import { setPolicy,setTerms } from '../../../redux/slices/termsPolicySlice';
+import { useGetAppMenuDataMutation } from '../../apiServices/dashboard/AppUserDashboardMenuAPi.js';
+import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
 
 
 // import * as Keychain from 'react-native-keychain';  
@@ -41,6 +44,7 @@ import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSl
 const PasswordLogin = ({ navigation, route }) => {
   const [username, setUsername] = useState("influencer_2")
   const [passwords, setPasswords] = useState("123456")
+  const [parsedJsonValue,setParsedJsonValue] = useState();
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
   const [message, setMessage] = useState("")
@@ -90,6 +94,22 @@ const PasswordLogin = ({ navigation, route }) => {
 
   // initializing mutations --------------------------------
 
+
+  
+  const [getPolicies, {
+    data: getPolicyData,
+    error: getPolicyError,
+    isLoading: policyLoading,
+    isError: policyIsError
+  }] = useFetchLegalsMutation();
+
+  const [getAppMenuFunc, {
+    data: getAppMenuData,
+    error: getAppMenuError,
+    isLoading: getAppMenuIsLoading,
+    isError: getAppMenuIsError
+  }] = useGetAppMenuDataMutation()
+
   const [getBannerFunc, {
     data: getBannerData,
     error: getBannerError,
@@ -137,6 +157,43 @@ const PasswordLogin = ({ navigation, route }) => {
   // retrieving data from api calls--------------------------
 
 
+  useEffect(()=>{
+    const fetchTerms = async () => {
+      // const credentials = await Keychain.getGenericPassword();
+      // const token = credentials.username;
+      const params = {
+        type: "term-and-condition"
+      }
+      getTermsAndCondition(params)
+    }
+    fetchTerms()
+
+
+    const fetchPolicies = async () => {
+      // const credentials = await Keychain.getGenericPassword();
+      // const token = credentials.username;
+      const params = {
+        type: "privacy-policy"
+      }
+      getPolicies(params)
+    }
+    fetchPolicies()
+    const fetchMenu = async () => {
+      console.log("fetching app menu getappmenufunc")
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        console.log(
+          'Credentials successfully loaded for user ' + credentials.username
+        );
+        const token = credentials.username
+        getAppMenuFunc(token)
+      }
+  
+    }
+    
+    fetchMenu()
+  },[])
+
   useEffect(() => {
     if (getDashboardData) {
       console.log("getDashboardData", getDashboardData)
@@ -173,9 +230,14 @@ const PasswordLogin = ({ navigation, route }) => {
     if (passwordLoginData) {
       console.log("Password Login Data", passwordLoginData)
       const token = passwordLoginData?.body?.token
+      const user_type_id = passwordLoginData?.body?.user_type_id
       if (passwordLoginData.success) {
+        setParsedJsonValue(passwordLoginData?.body)
         token && getDashboardFunc(token)
         token && getBannerFunc(token)
+        token && getWorkflowFunc({userId:user_type_id, token:token })
+        const form_type = "2"
+        token && getFormFunc({ form_type:form_type, token:token })
         storeData(passwordLoginData.body)
         saveUserDetails(passwordLoginData.body)
         saveToken(passwordLoginData.body.token)
@@ -261,6 +323,26 @@ const PasswordLogin = ({ navigation, route }) => {
     }
   }, [getBannerError, getBannerData])
 
+  useEffect(() => {
+    if (getAppMenuData) {
+      // console.log("usertype", userData.user_type)
+      console.log("getAppMenuData", JSON.stringify(getAppMenuData))
+      if(parsedJsonValue)
+      {
+        const tempDrawerData = getAppMenuData.body.filter((item) => {
+          return item.user_type === parsedJsonValue.user_type
+        })
+        // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
+        tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
+      }
+      
+    }
+    else if (getAppMenuError) {
+
+      console.log("getAppMenuError", getAppMenuError)
+    }
+  }, [getAppMenuData, getAppMenuError])
+
 
   useEffect(() => {
     if (getTermsData) {
@@ -271,6 +353,19 @@ const PasswordLogin = ({ navigation, route }) => {
     }
   }, [getTermsData, getTermsError])
 
+  
+
+  useEffect(() => {
+    if (getPolicyData) {
+      console.log("getPolicyData123>>>>>>>>>>>>>>>>>>>", getPolicyData);
+      dispatch(setPolicy(getPolicyData?.body?.data?.[0]?.files?.[0]))
+    }
+    else if (getPolicyError) {
+      setError(true)
+      setMessage(getPolicyError?.message)
+      console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
+    }
+  }, [getPolicyData, getPolicyError])
 
 
   const handleNavigationToRegister = () => {
@@ -350,9 +445,8 @@ const PasswordLogin = ({ navigation, route }) => {
   //function to handle Modal
   const modalWithBorderClose = () => {
     setModalWithBorder(false);
-    navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+   getAppMenuData &&  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
 
-    navigation.navigate("Dashboard")
 
   };
 

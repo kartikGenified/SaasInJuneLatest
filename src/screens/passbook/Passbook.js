@@ -55,7 +55,7 @@ const Passbook = ({ navigation }) => {
     console.log('userdata', userData)
     const workflowProgram = useSelector(state => state.appWorkflow.program);
     const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
-    console.log("pointSharingData", JSON.stringify(pointSharingData))
+    console.log("pointSharingData", JSON.stringify(pointSharingData),workflowProgram)
     const name = userData.name
     const membership = getActiveMembershipData && getActiveMembershipData.body?.tier.name;
 
@@ -199,7 +199,7 @@ const Passbook = ({ navigation }) => {
                 <View style={{ height: 44, width: 44, alignItems: "center", justifyContent: "center", borderRadius: 4, borderColor: ternaryThemeColor, borderWidth: 1, marginLeft: 10 }}>
                     <Image style={{ height: 26, width: 26, resizeMode: "contain" }} source={image}></Image>
                 </View>
-                <View style={{ height: 50, width: 210, alignItems: "flex-start", justifyContent: "center", marginLeft: 14 }}>
+                <View style={{  width: 210, alignItems: "flex-start", justifyContent: "center", marginLeft: 14 }}>
                     <PoppinsText style={{ color: 'black', fontSize: 14 }} content={visibleTitle}></PoppinsText>
                     <PoppinsTextMedium style={{ color: 'grey', fontSize: 12, textAlign: 'left' }} content={discription}></PoppinsTextMedium>
                 </View>
@@ -218,6 +218,9 @@ const Passbook = ({ navigation }) => {
         const discription = props.discription
         const image = props.image
         const navigateToPages = (data) => {
+
+            console.log("navigateToPages",data)
+            
             if (data === "Scanned History") {
                 navigation.navigate('ScannedHistory')
             }
@@ -249,7 +252,7 @@ const Passbook = ({ navigation }) => {
                 navigation.navigate('SharedPointsHistory')
 
             }
-            else if (data === "Previous Transactions History") {
+            else if (data === "Previous Transaction History") {
                 navigation.navigate('PreviousTransactionHistory')
 
             }
@@ -329,10 +332,13 @@ const Passbook = ({ navigation }) => {
                     <View style={{ width: '90%', alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: '#EEEEEE', borderRadius: 20, marginTop: 100 }}>
 
                         <View style={{ width: '100%', height: 50, flexDirection: "row", alignItems: "center", justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEEEEE' }}>
+                            <View style={{width:'70%',height:'100%',alignItems:'center',justifyContent:'center'}}>
                             {(getPointSharingData?.body?.total !== "0") ? <PoppinsTextMedium style={{ color: ternaryThemeColor, fontWeight: 'bold', position: 'absolute', left: 10 }} content={`${t("registration bonus")}: ${getPointSharingData?.body?.data?.[0]?.points ? getPointSharingData?.body?.data?.[0]?.points + "Points" : "loading"} `}></PoppinsTextMedium >
                                 : <PoppinsTextMedium style={{ fontWeight: 'bold', position: 'absolute', left: 10 }} content={t("what do you want to do")}></PoppinsTextMedium>
                             }
-                            <View style={{ flexDirection: 'row', position: 'absolute', right: 20 }}>
+                            </View>
+                            
+                            <View style={{ flexDirection: 'row', position: 'absolute', right: 20,width:'20%'}}>
 
                                 <TouchableOpacity style={{ backgroundColor: listView ? ternaryThemeColor : 'white', marginRight: 10, paddingHorizontal: 7, paddingVertical: 4 }} onPress={() => {
                                     setListView(true)

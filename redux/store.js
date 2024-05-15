@@ -22,6 +22,8 @@ import scanningSlice from './slices/scanningSlice';
 import pointWalletSlice from './slices/pointWalletSlice';
 import dashboardDataSlice from './slices/dashboardDataSlice';
 import authSlice from './slices/authSlice';
+import termsPolicySlice from './slices/termsPolicySlice';
+import drawerDataSlice from './slices/drawerDataSlice';
 
 export const store = configureStore({
   reducer: {
@@ -45,7 +47,9 @@ export const store = configureStore({
     scanning : scanningSlice,
     pointWallet:pointWalletSlice,
     dashboardData:dashboardDataSlice,
-    auth:authSlice
+    auth:authSlice,
+    termsPolicy:termsPolicySlice,
+    drawerData: drawerDataSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware, internetMiddleware), // Include networkMiddleware
