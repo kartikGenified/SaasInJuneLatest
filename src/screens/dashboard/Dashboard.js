@@ -58,7 +58,7 @@ const Dashboard = ({ navigation }) => {
   const pointSharingData = useSelector(state => state.pointSharing.pointSharing)
   const dashboardData = useSelector(state=>state.dashboardData.dashboardData)
   const bannerArray = useSelector(state=>state.dashboardData.banner)
-  console.log("Dashboard data is",dashboardData )
+  // console.log("Dashboard data is",dashboardData )
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )

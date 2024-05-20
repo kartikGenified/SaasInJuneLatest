@@ -12,6 +12,7 @@ const PrefilledTextInput = (props) => {
     const isEditable = props.isEditable
     const required = props.required ===undefined ? props.jsonData.required : props.required
     let displayText = props.placeHolder
+    const shouldReturnValue = props.shouldReturnValue
 
     const {t} = useTranslation()
 
@@ -40,7 +41,15 @@ const PrefilledTextInput = (props) => {
        
         let tempJsonData ={...props.jsonData,"value":value}
         console.log("tempJsonData",tempJsonData)
-        props.handleData(tempJsonData,props.placeHolder)
+        if(shouldReturnValue)
+        {
+            console.log("shouldReturnValue",value,placeHolder, props.value)
+            props.handleData(props.value, props.placeHolder)
+        }
+        else
+        {
+         props.handleData(tempJsonData,props.placeHolder)
+        }
         console.log("keyboard visible",keyboardShow,placeHolder)
     },[keyboardShow])
 
@@ -53,7 +62,15 @@ const PrefilledTextInput = (props) => {
     const handleInputEnd=()=>{
         let tempJsonData ={...props.jsonData,"value":value}
         console.log(tempJsonData)
-        props.handleData(tempJsonData, props.placeHolder)
+        if(shouldReturnValue)
+        {
+            console.log("shouldReturnValue",value,placeHolder, props.value)
+            props.handleData(props.value, placeHolder)
+        }
+        else
+        {
+         props.handleData(tempJsonData, placeHolder)
+        }
     }
 
     return (

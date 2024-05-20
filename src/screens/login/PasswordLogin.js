@@ -37,6 +37,7 @@ import { setWarrantyForm, setWarrantyFormId } from '../../../redux/slices/formSl
 import { setPolicy,setTerms } from '../../../redux/slices/termsPolicySlice';
 import { useGetAppMenuDataMutation } from '../../apiServices/dashboard/AppUserDashboardMenuAPi.js';
 import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 
 // import * as Keychain from 'react-native-keychain';  
@@ -178,26 +179,14 @@ const PasswordLogin = ({ navigation, route }) => {
       getPolicies(params)
     }
     fetchPolicies()
-    const fetchMenu = async () => {
-      console.log("fetching app menu getappmenufunc")
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log(
-          'Credentials successfully loaded for user ' + credentials.username
-        );
-        const token = credentials.username
-        getAppMenuFunc(token)
-      }
-  
-    }
     
-    fetchMenu()
   },[])
 
   useEffect(() => {
     if (getDashboardData) {
       console.log("getDashboardData", getDashboardData)
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
+      parsedJsonValue && getBannerFunc(parsedJsonValue?.token)
     }
     else if (getDashboardError) {
       
@@ -217,6 +206,8 @@ const PasswordLogin = ({ navigation, route }) => {
       // console.log("getWorkflowData", getWorkflowData)
       dispatch(setProgram(removedWorkFlow))
       dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
+      const form_type = "2"
+        parsedJsonValue && getFormFunc({ form_type:form_type, token:parsedJsonValue?.token })
 
     }
     else if(getWorkflowError) {
@@ -234,21 +225,19 @@ const PasswordLogin = ({ navigation, route }) => {
       if (passwordLoginData.success) {
         setParsedJsonValue(passwordLoginData?.body)
         token && getDashboardFunc(token)
-        token && getBannerFunc(token)
-        token && getWorkflowFunc({userId:user_type_id, token:token })
-        const form_type = "2"
-        token && getFormFunc({ form_type:form_type, token:token })
+        
+        
+        
         storeData(passwordLoginData.body)
         saveUserDetails(passwordLoginData.body)
         saveToken(passwordLoginData.body.token)
         setMessage(passwordLoginData.message)
-        setModalWithBorder(true)
       }
     }
     else if (passwordLoginError) {
       console.log("Password Login Error", passwordLoginError)
       setError(true)
-      setMessage("Login Failed")
+      setMessage(passwordLoginError?.message)
 
     }
   }, [passwordLoginData, passwordLoginError])
@@ -298,7 +287,12 @@ const PasswordLogin = ({ navigation, route }) => {
       // console.log("Form Fields", getFormData?.body)
       dispatch(setWarrantyForm(getFormData?.body?.template))
       dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
-
+      
+      parsedJsonValue &&  getAppMenuFunc(parsedJsonValue?.token)
+        
+    
+      
+      
     }
     else if(getFormError) {
       // console.log("Form Field Error", getFormError)
@@ -315,6 +309,7 @@ const PasswordLogin = ({ navigation, route }) => {
       })
       // console.log("imagesBanner", images)
       dispatch(setBannerData(images))
+      parsedJsonValue && getWorkflowFunc({userId:parsedJsonValue?.user_type_id, token:parsedJsonValue?.token })
     }
     else if(getBannerError){
       setError(true)
@@ -334,6 +329,7 @@ const PasswordLogin = ({ navigation, route }) => {
         })
         // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
         tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
+        setModalWithBorder(true)
       }
       
     }
@@ -456,6 +452,7 @@ const PasswordLogin = ({ navigation, route }) => {
         <View style={{ marginTop: 30, alignItems: 'center', maxWidth: '80%' }}>
           <Icon name="check-circle" size={53} color={ternaryThemeColor} />
           <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success!"}></PoppinsTextMedium>
+          <ActivityIndicator size={'small'} animating={true} color={ternaryThemeColor} />
 
           <View style={{ marginTop: 10, marginBottom: 30 }}>
             <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>

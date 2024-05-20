@@ -74,7 +74,7 @@ const CartList = ({ navigation, route }) => {
       dispatch(additem(cart))
   
      
-        navigation.navigate("ListAddress", {
+        navigation.replace("ListAddress", {
           cart: cart
         })
     }

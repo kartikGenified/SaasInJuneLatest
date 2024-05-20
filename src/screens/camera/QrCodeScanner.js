@@ -65,6 +65,8 @@ const QrCodeScanner = ({navigation}) => {
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state=>state.userLocation.location)
   
+  console.log("workflowProgram",workflowProgram)
+
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
   )
@@ -358,9 +360,7 @@ const QrCodeScanner = ({navigation}) => {
     (async () => {
       const credentials = await Keychain.getGenericPassword();
       const token = credentials.username;
-      (async () => {
-        const credentials = await Keychain.getGenericPassword();
-        const token = credentials.username;
+     
   
   const params ={
       token: token,
@@ -368,7 +368,7 @@ const QrCodeScanner = ({navigation}) => {
      
     }
         fetchUserPointsHistoryFunc(params);
-      })();
+      
       cashPerPointFunc(token)
      
     })();
@@ -377,7 +377,7 @@ const QrCodeScanner = ({navigation}) => {
  
   useEffect(() => {
     if (checkGenuinityData) {
-      // console.log('genuinity check', checkGenuinityData);
+      console.log('genuinity check', checkGenuinityData);
     } else if (checkGenuinityError) {
       if(checkGenuinityError.status == 401)
       {
@@ -403,7 +403,7 @@ const QrCodeScanner = ({navigation}) => {
 
   useEffect(() => {
     if (checkWarrantyData) {
-      // console.log('warranty check', checkWarrantyData);
+      console.log('warranty check', checkWarrantyData);
     } else if (checkWarrantyError) {
       if(checkWarrantyError.status == 401)
       {
@@ -486,7 +486,7 @@ const QrCodeScanner = ({navigation}) => {
         // console.log("productdata",body)
         dispatch(setProductData(productDataData?.body?.products[0]));
         
-        checkWarrantyFunc({form_type, token, body})
+        workflowProgram.includes("Warranty") && checkWarrantyFunc({form_type, token, body})
         setTimeout(() => {
           setShowProceed(true)
         }, 1000);
@@ -539,6 +539,7 @@ const QrCodeScanner = ({navigation}) => {
  
 const onSuccess = async (e) => {
   console.log('Qr data is ------', e?.data);
+  console.log("addedQrListIs",addedQrList)
   
   if (e?.data === undefined) {
     setError(true);
@@ -652,7 +653,8 @@ const onSuccess = async (e) => {
       //   'Credentials successfully loaded for user ' + credentials?.username, data
       // );
       const token = credentials?.username;
-      checkGenuinityFunc({qrId, token});
+
+    workflowProgram.includes("Genuinity" || "Genuinity+") &&  checkGenuinityFunc({qrId, token});
     productDataFunc({productCode, userType, token});
     }
     addedqr = addedQrList
@@ -1062,14 +1064,7 @@ const onSuccess = async (e) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          {error && verifyQrData && (
-            <ErrorModal
-              modalClose={modalClose}
-              productData = {verifyQrData?.body?.qr}
-              message={message}
-              isReportable = {isReportable}
-              openModal={error}></ErrorModal>
-          )}
+          
           {/* {error  && (
             <ErrorModal
               modalClose={modalClose}
@@ -1078,15 +1073,8 @@ const onSuccess = async (e) => {
               
               openModal={error}></ErrorModal>
           )} */}
-  {
-    success && (
-      <MessageModal
-              modalClose={modalClose}
-              title="Success"
-              message={message}
-              openModal={success}></MessageModal>
-    )
-  }
+
+
   {
     isLoading && <FastImage
     style={{ width: 60, height: 60, alignSelf: 'center' }}
@@ -1097,7 +1085,7 @@ const onSuccess = async (e) => {
     resizeMode={FastImage.resizeMode.contain}
   />
   }
-          {addedQrList.length === 0 ? (
+          {addedQrList.length===0  ? (
             <View
               style={{
                 height: '100%',
@@ -1114,14 +1102,14 @@ const onSuccess = async (e) => {
                   content={t("Please start scanning by pointing the camera towards the QR Code")}></PoppinsTextMedium>
               </ScrollView>
             </View>
-          ) : (
+          ) :  (
             <View
               style={{
                 width: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <FlatList
+               <FlatList
                 style={{width: '100%',height:300}}
                 data={addedQrList}
                 renderItem={({item, index}) => (
@@ -1131,7 +1119,7 @@ const onSuccess = async (e) => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    {!error && (
+                      
                       <ScannedListItem
                         handleDelete={deleteQrFromList}
                         unique_code={item.unique_code}
@@ -1140,13 +1128,31 @@ const onSuccess = async (e) => {
                         productName={item.name}
                         productCode={item.product_code}
                         batchCode={item.batch_code}></ScannedListItem>
-                    )}
+                  
                   </View>
                 )}
                 keyExtractor={item => item.id}
               />
             </View>
           )}
+          {error && verifyQrData && (
+            <ErrorModal
+              modalClose={modalClose}
+              productData = {verifyQrData?.body?.qr}
+              message={message}
+              isReportable = {isReportable}
+              
+              openModal={error}></ErrorModal>
+          )}
+  {
+    success && (
+      <MessageModal
+              modalClose={modalClose}
+              title="Success"
+              message={message}
+              openModal={success}></MessageModal>
+    )
+  }
           {
             showProceed &&
              <ButtonProceed

@@ -55,6 +55,7 @@ const TextInputRectangle = (props) => {
         ></PoppinsTextMedium>
       </View>
       <TextInput
+      
         onEndEditing={(text) => {
           handleInputEnd();
         }}

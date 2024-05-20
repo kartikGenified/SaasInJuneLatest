@@ -98,7 +98,7 @@ const RedeemCashback = ({navigation,route}) => {
       {
         if(Number(cashConversion)>=Number(maxCashConverted))
         {
-        navigation.navigate('BankAccounts',{type:"Cashback"})
+        navigation.replace('BankAccounts',{type:"Cashback"})
         }
         else{
           setError(true)

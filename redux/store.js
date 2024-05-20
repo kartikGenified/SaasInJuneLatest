@@ -24,7 +24,6 @@ import dashboardDataSlice from './slices/dashboardDataSlice';
 import authSlice from './slices/authSlice';
 import termsPolicySlice from './slices/termsPolicySlice';
 import drawerDataSlice from './slices/drawerDataSlice';
-
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,

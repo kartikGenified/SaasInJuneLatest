@@ -12,6 +12,7 @@ const TextInputPan = (props) => {
   const [keyboardShow, setKeyboardShow] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [panVerified, setPanVerified] = useState(false)
   const placeHolder = props.placeHolder
   const required = props.required
   let displayText = props.placeHolder
@@ -57,18 +58,33 @@ const TextInputPan = (props) => {
       }
     }
   }, [value])
+
+useEffect(()=>{
+  if(value==0 || panVerified)
+  {
+  props.panVerified(true)
+  }
+  else{
+  props.panVerified(false)
+
+  }
+
+},[panVerified,value])
+
   useEffect(() => {
     if (verifyPanData) {
       console.log("verifyPanData", verifyPanData)
       if (verifyPanData.success) {
         setModalVisible(true)
         setSuccess(true)
+        setPanVerified(true)
       }
     }
     else if (verifyPanError) {
       console.log("verifyPanError", verifyPanError)
       setError(true)
       setMessage(verifyPanError.data.message)
+      setPanVerified(false)
     }
   }, [verifyPanData, verifyPanError])
   useEffect(() => { handleInputEnd() }, [keyboardShow])

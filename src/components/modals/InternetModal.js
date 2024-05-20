@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Modal, Text, StyleSheet } from 'react-native';
 
 const InternetModal = (props) => {
+  const [modalVisible, setModalVisible] = useState(false)
   const Comp = props.comp
+  const visible = props.visible
+
+  useEffect(()=>{
+    setModalVisible(props.visible)
+  },[visible])
+
+  console.log("internet modal visible", visible)
+  
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={true} // You can replace this with your state variable indicating whether the modal should be shown or not
+      visible={modalVisible} // You can replace this with your state variable indicating whether the modal should be shown or not
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
@@ -20,7 +29,7 @@ const InternetModal = (props) => {
 
 const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

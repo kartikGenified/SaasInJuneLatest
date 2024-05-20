@@ -503,7 +503,7 @@ const AddUser = ({ navigation }) => {
                     </TextInputGST>
                   );
                 }
-                else if ((item.name).trim().toLowerCase() === "city" && location !== undefined) {
+                else if ((item.name).trim().toLowerCase() === "city" ) {
 
                   return (
                     <PrefilledTextInput
@@ -514,6 +514,7 @@ const AddUser = ({ navigation }) => {
                       value={location?.city}
                       label={item.label}
                       required={item.required}
+                      isEditable ={false}
                     ></PrefilledTextInput>
                   )
 
@@ -537,7 +538,7 @@ const AddUser = ({ navigation }) => {
                   )
                 }
 
-                else if ((item.name).trim().toLowerCase() === "state" && location !== undefined) {
+                else if ((item.name).trim().toLowerCase() === "state" ) {
                   console.log("inside state", item)
                   return (
                     <PrefilledTextInput
@@ -548,10 +549,11 @@ const AddUser = ({ navigation }) => {
                       value={location?.state}
                       label={item.label}
                       required={item.required}
+                      isEditable={false}
                     ></PrefilledTextInput>
                   )
                 }
-                else if ((item.name).trim().toLowerCase() === "district" && location !== undefined) {
+                else if ((item.name).trim().toLowerCase() === "district" ) {
 
                   return (
                     <PrefilledTextInput
@@ -562,6 +564,7 @@ const AddUser = ({ navigation }) => {
                       value={location?.district}
                       label={item.label}
                       required={item.required}
+                      isEditable={false}
                     ></PrefilledTextInput>
                   )
 

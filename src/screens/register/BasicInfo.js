@@ -69,10 +69,12 @@ const BasicInfo = ({ navigation, route }) => {
   const [hideButton, setHideButton] = useState(false)
   const [timer, setTimer] = useState(0)
   const [aadhaarVerified, setAadhaarVerified] = useState(true)
-
+  const [pansVerified, setPansVerified] = useState(true)
+  const [gstVerified, setGstVerified] = useState(true)
+  const [mobileVerified, setMobileVerified] = useState()
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
   const focused = useIsFocused()
-
+  let showSubmit = true;
 
 
   const dispatch = useDispatch()
@@ -563,6 +565,24 @@ console.log("navigation params from basic info",navigationParams)
     sendOtpFunc(params)
   }
 
+  const panVerified =(bool)=>{
+    
+    console.log("Pan Verified",bool)
+
+    if(bool)
+    {
+      setPansVerified(true)
+    }
+    else
+    {
+    setPansVerified(false)
+    }
+    
+  }
+
+
+  console.log("panVerifiedhideButton",hideButton)
+
   const addharVerified = (bool)=>{
     console.log("aadhar text input status", bool)
     if(!bool)
@@ -602,6 +622,7 @@ console.log("navigation params from basic info",navigationParams)
     
     }
     const body = inputFormData
+    console.log("registration output",body)
 
     if (otpVerified) {
       const keys = Object.keys(body)
@@ -905,6 +926,7 @@ console.log("navigation params from basic info",navigationParams)
                       placeHolder={item.name}
                       label={item.label}
                       displayText={item.name}
+                      panVerified = {panVerified}
                     >
                       {' '}
                     </TextInputPan>
@@ -934,6 +956,7 @@ console.log("navigation params from basic info",navigationParams)
                       value={location?.city}
                       displayText = {item.name}
                       label={item.label}
+                      isEditable={false}
                     ></PrefilledTextInput>
                   )
 
@@ -983,6 +1006,7 @@ console.log("navigation params from basic info",navigationParams)
                       value={location?.state}
                       label={item.label}
                       displayText = {item.name}
+                      isEditable={false}
                     ></PrefilledTextInput>
                   )
                 }
@@ -997,6 +1021,7 @@ console.log("navigation params from basic info",navigationParams)
                       value={location?.district}
                       label={item.label}
                       displayText = {item.name}
+                      isEditable={false}
 
                     ></PrefilledTextInput>
                   )
@@ -1050,7 +1075,7 @@ console.log("navigation params from basic info",navigationParams)
               }
             })}
 
-          {formFound && !hideButton && <ButtonOval
+          {formFound && !hideButton  && <ButtonOval
             handleOperation={() => {
               handleRegistrationFormSubmission();
             }}

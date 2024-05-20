@@ -42,6 +42,7 @@ import { useFetchLegalsMutation } from '../../apiServices/fetchLegal/FetchLegalA
 import { setPolicy,setTerms } from '../../../redux/slices/termsPolicySlice';
 import { useGetAppMenuDataMutation } from '../../apiServices/dashboard/AppUserDashboardMenuAPi.js';
 import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 const VerifyOtp = ({ navigation, route }) => {
   const [mobile, setMobile] = useState(route.params.navigationParams.mobile);
@@ -50,7 +51,6 @@ const VerifyOtp = ({ navigation, route }) => {
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false)
-  
   const [timer, setTimer] = useState(60)
 
   const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
@@ -220,20 +220,7 @@ const VerifyOtp = ({ navigation, route }) => {
       getPolicies(params)
     }
     fetchPolicies()
-    const fetchMenu = async () => {
-      console.log("fetching app menu getappmenufunc")
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log(
-          'Credentials successfully loaded for user ' + credentials.username
-        );
-        const token = credentials.username
-        getAppMenuFunc(token)
-      }
-  
-    }
-    
-    fetchMenu()
+   
   },[])
 
   useEffect(() => {
@@ -247,6 +234,8 @@ const VerifyOtp = ({ navigation, route }) => {
         })
         // console.log("tempDrawerData", JSON.stringify(tempDrawerData))
         tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
+        setModalWithBorder(true)
+
       }
       
     }
@@ -282,7 +271,7 @@ const VerifyOtp = ({ navigation, route }) => {
   useEffect(() => {
     if (sendOtpData) {
       // console.log(sendOtpData)
-    } else {
+    } else if(sendOtpError) {
       // console.log(sendOtpError)
     }
   }, [sendOtpData, sendOtpError]);
@@ -293,10 +282,24 @@ const VerifyOtp = ({ navigation, route }) => {
       // console.log("Form Fields", getFormData?.body)
       dispatch(setWarrantyForm(getFormData?.body?.template))
       dispatch(setWarrantyFormId(getFormData?.body?.form_template_id))
+      const fetchMenu = async () => {
+        console.log("fetching app menu getappmenufunc")
+        const credentials = await Keychain.getGenericPassword();
+        if (credentials) {
+          console.log(
+            'Credentials successfully loaded for user ' + credentials.username
+          );
+          const token = credentials.username
+          getAppMenuFunc(token)
+        }
+    
+      }
+      
+      fetchMenu()
 
     }
     else if(getFormError) {
-      // console.log("Form Field Error", getFormError)
+      console.log("getFormError", getFormError)
       setError(true)
       setMessage("Can't fetch forms for warranty.")
     }
@@ -313,10 +316,12 @@ const VerifyOtp = ({ navigation, route }) => {
       console.log("getWorkflowData", getWorkflowData)
       dispatch(setProgram(removedWorkFlow))
       dispatch(setWorkflow(getWorkflowData?.body[0]?.workflow_id))
+      const form_type = "2"
+        parsedJsonValue && getFormFunc({ form_type:form_type, token:parsedJsonValue?.token })
 
     }
     else if(getWorkflowError) {
-      // console.log("getWorkflowError",getWorkflowError)
+      console.log("getWorkflowError",getWorkflowError)
       setError(true)
       setMessage("Oops something went wrong")
     }
@@ -325,8 +330,9 @@ const VerifyOtp = ({ navigation, route }) => {
 
   useEffect(() => {
     if (getDashboardData) {
-      console.log("getDashboardData", getDashboardData)
+      console.log("getDashboardData", getDashboardData,parsedJsonValue.token)
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
+      parsedJsonValue && getBannerFunc(parsedJsonValue?.token)
     }
     else if (getDashboardError) {
       setError(true)
@@ -379,11 +385,13 @@ const VerifyOtp = ({ navigation, route }) => {
       })
       // console.log("imagesBanner", images)
       dispatch(setBannerData(images))
+      console.log("parsedJsonValue",parsedJsonValue)
+      parsedJsonValue && getWorkflowFunc({userId:parsedJsonValue?.user_type_id, token:parsedJsonValue?.token })
     }
     else if(getBannerError){
       setError(true)
       setMessage("Unable to fetch app banners")
-      // console.log(getBannerError)
+      console.log("getBannerError",getBannerError)
     }
   }, [getBannerError, getBannerData])
 
@@ -397,9 +405,9 @@ const VerifyOtp = ({ navigation, route }) => {
         saveToken(verifyOtpData?.body?.token)
         storeData(verifyOtpData?.body)
         saveUserDetails(verifyOtpData?.body)
+        verifyOtpData?.body?.token && getDashboardFunc(verifyOtpData?.body?.token)
         setMessage("Successfully Logged In")
         setSuccess(true)
-        setModalWithBorder(true)
       }
     } else if (verifyOtpError) {
       console.log("verifyOtpError", verifyOtpError)
@@ -419,11 +427,10 @@ const VerifyOtp = ({ navigation, route }) => {
       const fcm_token = fcmToken
       const token = verifyLoginOtpData?.body?.token
       if (verifyLoginOtpData?.success) {
-        token && getDashboardFunc(token)
-        token && getBannerFunc(token)
-        token && user_type_id && getWorkflowFunc({userId:user_type_id, token:token })
-        const form_type = "2"
-        token && getFormFunc({ form_type:form_type, token:token })
+
+        
+        
+        
 
         verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token });
       }
@@ -442,7 +449,7 @@ const VerifyOtp = ({ navigation, route }) => {
   const modalWithBorderClose = () => {
     setModalWithBorder(false);
     setMessage('')
-    getAppMenuData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+  navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
   };
 
   const ModalContent = () => {
@@ -451,10 +458,13 @@ const VerifyOtp = ({ navigation, route }) => {
         <View style={{ marginTop: 30, alignItems: 'center', maxWidth: '80%' }}>
           <Icon name="check-circle" size={53} color={ternaryThemeColor} />
           <PoppinsTextMedium style={{ fontSize: 27, fontWeight: '600', color: ternaryThemeColor, marginLeft: 5, marginTop: 5 }} content={"Success ! !"}></PoppinsTextMedium>
+          
+          <ActivityIndicator size={'small'} animating={true} color={ternaryThemeColor} />
 
           <View style={{ marginTop: 10, marginBottom: 30 }}>
             <PoppinsTextMedium style={{ fontSize: 16, fontWeight: '600', color: "#000000", marginLeft: 5, marginTop: 5, }} content={message}></PoppinsTextMedium>
           </View>
+
 
           {/* <View style={{ alignItems: 'center', marginBottom: 30 }}>
             <ButtonOval handleOperation={modalWithBorderClose} backgroundColor="#000000" content="OK" style={{ color: 'white', paddingVertical: 4 }} />

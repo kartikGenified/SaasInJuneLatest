@@ -19,7 +19,7 @@ const PincodeTextInput = (props) => {
 
     const placeHolder = props.placeHolder
     const label = props.label
-   
+    const shouldReturnValue = props.shouldReturnValue
     Keyboard.addListener('keyboardDidShow',()=>{
         setKeyboardShow(true)
     })
@@ -42,7 +42,11 @@ const PincodeTextInput = (props) => {
         props.handleFetchPincode(text)
         let tempJsonData ={...props.jsonData,"value":text}
         console.log(tempJsonData)
+        if(shouldReturnValue)
+        props.handleData(value, placeHolder)
+        else
         props.handleData(tempJsonData)
+
         }
         // props.handleData(value)
        
@@ -51,6 +55,9 @@ const PincodeTextInput = (props) => {
     const handleInputEnd=()=>{
         let tempJsonData ={...props.jsonData,"value":value}
         console.log(tempJsonData)
+        if(shouldReturnValue)
+        props.handleData(value, placeHolder)
+        else
         props.handleData(tempJsonData)
     }
 

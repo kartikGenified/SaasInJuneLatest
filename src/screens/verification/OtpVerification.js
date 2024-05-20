@@ -340,6 +340,7 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
     setSuccess(false)
   };
   const finalGiftRedemption=async()=>{
+    
     setShowRedeemButton(false)
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {

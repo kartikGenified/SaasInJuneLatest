@@ -422,7 +422,7 @@ const AddAddress = ({ navigation }) => {
             }}
             handleData={handleChildComponentData}
             placeHolder={"District"}
-            value={location.district}
+            value={location?.district}
             label={"District"}
           ></PrefilledTextInput>
           <PrefilledTextInput
@@ -436,7 +436,7 @@ const AddAddress = ({ navigation }) => {
             }}
             handleData={handleChildComponentData}
             placeHolder={"State"}
-            value={location.state}
+            value={location?.state}
             label={"State"}
           ></PrefilledTextInput>
 
@@ -452,7 +452,7 @@ const AddAddress = ({ navigation }) => {
             handleData={handleChildComponentData}
             handleFetchPincode={handleFetchPincode}
             placeHolder={"PostCode"}
-            value={location.postcode}
+            value={location?.postcode}
             label={"PostCOde"}
             maxLength={6}
           ></PincodeTextInput>
@@ -468,7 +468,7 @@ const AddAddress = ({ navigation }) => {
             }}
             handleData={handleChildComponentData}
             placeHolder={"Country"}
-            value={location.country}
+            value={location?.country}
             label={"Country"}
           ></PrefilledTextInput>
 

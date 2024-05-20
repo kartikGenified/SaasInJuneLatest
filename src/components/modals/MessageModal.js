@@ -48,15 +48,14 @@ const MessageModal = (props) => {
           navigation.navigate(navigateTo)
         }}>
         <View style={styles.centeredView}>
-          <View style={{...styles.modalView,borderWidth:2,borderColor:ternaryThemeColor}}>
-          <Text style={{color:'black',fontSize:24,fontWeight:'600'}}>{props.title}</Text>
-          <Icon name="cloud-done" size={100} color="green"></Icon>
-
-          <Text style={{...styles.modalText,fontSize:18,fontWeight:'600', color:'black'}}>{props.message}</Text>
+          <View style={{...styles.modalView,borderWidth:3,borderColor:'#2FBA7E'}}>
+          <Icon name="cloud-done" size={100} color="#2FBA7E"></Icon>
+          <Text style={{color:'black',fontSize:24,fontWeight:'600'}}>Success</Text>
+          <Text style={{...styles.modalText,fontSize:18,fontWeight:'500', color:'black',marginTop:20}}>{props.message}</Text>
             <Pressable
-              style={{...styles.button,backgroundColor:ternaryThemeColor,width:100}}
+              style={{...styles.button,backgroundColor:'#2FBA7E',width:240}}
               onPress={() => closeModal()}>
-              <Text style={styles.textStyle}>Close</Text>
+              <Text style={styles.textStyle}>Okay</Text>
             </Pressable>
           </View>
         </View>
@@ -77,6 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 60,
+    paddingTop:10,
+    paddingBottom:40,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -86,11 +87,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    position:"absolute"
+    position:"absolute",
+   
   },
   button: {
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 30,
+    padding: 14,
     elevation: 2,
   },
   buttonOpen: {

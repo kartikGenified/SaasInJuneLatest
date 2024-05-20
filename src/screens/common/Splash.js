@@ -35,6 +35,7 @@ import { useGetAppMenuDataMutation } from '../../apiServices/dashboard/AppUserDa
 import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
 import * as Keychain from 'react-native-keychain';
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
+import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -53,8 +54,12 @@ const Splash = ({ navigation }) => {
   // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   // const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
-  const currentVersion = VersionCheck.getCurrentVersion();
-  
+  let currentVersion;
+  if(isConnected?.isConnected)
+  {
+     currentVersion = VersionCheck.getCurrentVersion();
+
+  }
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
   // generating functions and constants for API use cases---------------------
   const [
@@ -147,44 +152,34 @@ const Splash = ({ navigation }) => {
     getUsers();
     
     // console.log("currentVersion",currentVersion)
+    if(isConnected.isConnected)
+    {
     getMinVersionSupportFunc(currentVersion)
 
-    const fetchTerms = async () => {
-      // const credentials = await Keychain.getGenericPassword();
-      // const token = credentials.username;
-      const params = {
-        type: "term-and-condition"
+      const fetchTerms = async () => {
+        // const credentials = await Keychain.getGenericPassword();
+        // const token = credentials.username;
+        const params = {
+          type: "term-and-condition"
+        }
+        getTermsAndCondition(params)
       }
-      getTermsAndCondition(params)
-    }
-    fetchTerms()
-
-
-    const fetchPolicies = async () => {
-      // const credentials = await Keychain.getGenericPassword();
-      // const token = credentials.username;
-      const params = {
-        type: "privacy-policy"
-      }
-      getPolicies(params)
-    }
-    fetchPolicies()
-    const fetchMenu = async () => {
-      // console.log("fetching app menu getappmenufunc")
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        // console.log(
-        //   'Credentials successfully loaded for user ' + credentials.username
-        // );
-        const token = credentials.username
-        getAppMenuFunc(token)
-      }
-  
-    }
+      fetchTerms()
     
-    fetchMenu()
-
+    
+      const fetchPolicies = async () => {
+        // const credentials = await Keychain.getGenericPassword();
+        // const token = credentials.username;
+        const params = {
+          type: "privacy-policy"
+        }
+         getPolicies(params)
+      }
+      fetchPolicies()
+    }
+   
   }, [])
+  
   
   useEffect(() => {
     if (getTermsData) {
@@ -215,9 +210,10 @@ const Splash = ({ navigation }) => {
       dispatch(setDashboardData(getDashboardData?.body?.app_dashboard))
       setShowLoading(false)
       
+      parsedJsonValue && getAppMenuFunc(parsedJsonValue?.token)
+      
       console.log("all data in one console",{getFormData,getAppMenuData,getDashboardData,getWorkflowData,getBannerData,minVersionSupport})
       
-      getFormData && minVersionSupport && getAppMenuData && getDashboardData && getWorkflowData && getBannerData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
       
        
       
@@ -242,6 +238,8 @@ const Splash = ({ navigation }) => {
           return item.user_type === parsedJsonValue.user_type
         })
         tempDrawerData &&  dispatch(setDrawerData(tempDrawerData[0]))
+      getFormData && minVersionSupport && getAppMenuData && getDashboardData && getWorkflowData && getBannerData && navigation.reset({ index: '0', routes: [{ name: 'Dashboard' }] })
+
       }
       
     }
@@ -259,7 +257,11 @@ const Splash = ({ navigation }) => {
     else if (getPolicyError) {
       setError(true)
       setMessage(getPolicyError?.message)
-      // console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
+      console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
+      if(getPolicyError?.data?.message =="Invalid JWT" && getPolicyError?.status == 401 )
+      {
+        removerTokenData()
+      }
     }
   }, [getPolicyData, getPolicyError])
 
@@ -273,7 +275,7 @@ const Splash = ({ navigation }) => {
 
     }
     else if(getFormError) {
-      // console.log("getFormError", getFormError)
+      console.log("getFormError", getFormError)
       setError(true)
       setMessage("Can't fetch forms for warranty.")
     }
@@ -295,7 +297,7 @@ const Splash = ({ navigation }) => {
 
     }
     else if(getWorkflowError) {
-      // console.log("getWorkflowError",getWorkflowError)
+      console.log("getWorkflowError",getWorkflowError)
       setError(true)
       setMessage("Oops something went wrong")
     }
@@ -315,7 +317,11 @@ const Splash = ({ navigation }) => {
     else if(getBannerError){
       setError(true)
       setMessage("Unable to fetch app banners")
-      // console.log("getBannerError",getBannerError)
+      console.log("getBannerError",getBannerError)
+      if(getBannerError?.data?.message =="Invalid JWT" && getBannerError?.status == 401 )
+      {
+        removerTokenData()
+      }
     }
   }, [getBannerError, getBannerData])
 
@@ -561,19 +567,13 @@ const Splash = ({ navigation }) => {
   }, [getMinVersionSupportData, getMinVersionSupportError])
 
   useEffect(() => {
-    if (isConnected) {
-      // console.log("internet status", isConnected)
-
+      console.log("internet status", isConnected)
       setConnected(isConnected.isConnected)
-      setIsSlowInternet(isConnected.isInternetReachable ? false : true)
+      setIsSlowInternet(isConnected.isInternetReachable)
       getUsers();
         getMinVersionSupportFunc(currentVersion)
         getAppTheme("ozone")
         getData()
-
-    }
-
-
   },[isConnected,locationEnabled])
   
   useEffect(() => {
@@ -613,13 +613,6 @@ const Splash = ({ navigation }) => {
         // console.log("parsedJsonValues",parsedJsonValues)
         setParsedJsonValue(parsedJsonValues)
         parsedJsonValues && getBannerFunc(parsedJsonValues?.token)
-         
-        
-        
-        
-
-
-
       }
       catch (e) {
         // console.log("Error in dispatch", e)
@@ -630,28 +623,16 @@ const Splash = ({ navigation }) => {
     else {
       setShowLoading(false)
       if (value === "Yes") 
-      {
-        
+      {   
          minVersionSupport  && navigation.navigate('SelectUser');
       }
       else 
       {
-         minVersionSupport  && navigation.navigate('Introduction')
-        
+         minVersionSupport  && navigation.navigate('Introduction') 
       }
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
 
-
-
-
-
     }
-
-
-
-
-
-
 
   };
 
@@ -704,7 +685,7 @@ const Splash = ({ navigation }) => {
   };
   const NoInternetComp = () => {
     return (
-      <View style={{ alignItems: 'center', justifyContent: 'center', width: '90%' }}>
+      <View style={{ alignItems: 'center', justifyContent: 'center', width: '90%',zIndex:1 }}>
         <Text style={{ color: 'black' }}>No Internet Connection</Text>
         <Text style={{ color: 'black' }}>Please check your internet connection and try again.</Text>
       </View>
@@ -719,27 +700,34 @@ const Splash = ({ navigation }) => {
     )
   }
 
+
+  // console.log("internet connection status",connected)
   return (
-    <View style={{ flex: 1,alignItems:'center',justifyContent:'center' }}>
-      <ImageBackground resizeMode='stretch' style={{ flex: 1, height: '100%', width: '100%', alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash2.png')}>
-      {!connected &&  <InternetModal comp = {NoInternetComp} />}
-      {isSlowInternet && <InternetModal comp = {SlowInternetComp} /> }
+    
+      <ImageBackground resizeMode='stretch' style={{  height: '100%', width: '100%', alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash2.png')}> 
+      <InternetModal visible={!connected} comp = {NoInternetComp} />
+      {connected && !isSlowInternet && <InternetModal visible={!isSlowInternet} comp = {SlowInternetComp} /> }
+
      
       {error &&  <ErrorModal
           modalClose={modalClose}
 
           message={message}
-          openModal={error}></ErrorModal>}
-        {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
+          openModal={error}></ErrorModal>
+      }
+      {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
         {
       
-      ( getBannerIsLoading || policyLoading || getAppThemeIsLoading ||  getUsersDataIsLoading || getWorkflowIsLoading || getFormIsLoading || getAppMenuIsLoading || getDashboardIsLoading || termsLoading || getMinVersionSupportIsLoading) && 
-      
-      <ActivityIndicator size={'large'} animating={true} color={MD2Colors.yellow800} />
-        }
-      </ImageBackground>
+       
+      <View style={{position:'absolute',bottom:30,height:40}}> 
+      <ActivityIndicator size={'medium'} animating={true} color={MD2Colors.yellow800} />
+      <PoppinsTextMedium style={{color:'white',marginTop:4}} content="Please Wait"></PoppinsTextMedium>
 
-    </View>
+      </View>
+        }
+       </ImageBackground> 
+
+   
 
 
   );

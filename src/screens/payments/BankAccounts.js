@@ -515,7 +515,7 @@ const BankAccounts = ({ navigation, route }) => {
            type==="Cashback" && <TouchableOpacity onPress={()=>{
             if(hasSelectedPaymentMethod)
             {
-            navigation.navigate("OtpVerification",{type:"Cashback",selectedAccount:hasSelectedPaymentMethod})
+            navigation.replace("OtpVerification",{type:"Cashback",selectedAccount:hasSelectedPaymentMethod})
             }
             }} style={{width:100,alignItems:'center',justifyContent:'center',backgroundColor:ternaryThemeColor,padding:8, position: 'absolute', bottom: 14, left: 20 }}>
               <PoppinsText content ={t("Get OTP")} style={{color:'white',fontSize:16}}></PoppinsText>

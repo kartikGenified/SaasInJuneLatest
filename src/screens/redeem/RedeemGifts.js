@@ -619,7 +619,7 @@ const RedeemGifts = ({navigation,route}) => {
         <TouchableOpacity onPress={()=>{
           if(cart.length!==0)
           {
-            navigation.navigate("CartList",{cart:cart})
+            navigation.replace("CartList",{cart:cart})
           }
           else (
             setError(true),

@@ -407,10 +407,15 @@ const PointHistory = ({ navigation }) => {
                     
                     <PoppinsTextMedium style={{ fontWeight: '400', fontSize: 12, color: 'black' }} content={time}></PoppinsTextMedium>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center",position:'absolute',right:10,width:'26%' }}>
-                    <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={  (status == 0 && (points<0) && is_reverted == true)?  require('../../../assets/images/minus_wallet.png') :  require('../../../assets/images/wallet.png')}></Image>
-                    <PoppinsTextMedium style={{ color: "#91B406", fontSize: 14, color: (status == 0 && (points<0) && is_reverted == true) ? "red" :'black' }} content={`${status == "1" ? " +" : status == "2" ? ' -' : ""} ${amount}`}></PoppinsTextMedium>
-                </View>
+                <View style={{ alignItems: "center", justifyContent: "center",position:'absolute',right:10,width:'26%' }}>
+                    <View style={{flexDirection:'row'}}>
+                    <Image style={{ height: 20, width: 20, resizeMode: "contain" }} source={  (status == 0  && is_reverted == true)?  require('../../../assets/images/minus_wallet.png') :  require('../../../assets/images/wallet.png')}></Image>
+                    <PoppinsTextMedium style={{ color: "#91B406", fontSize: 14, color: (status == 0  && is_reverted == true) ? "red" :'black' }} content={`${status == "1" ? " +" : status == "2" ? ' -' : ""} ${amount}`}></PoppinsTextMedium>    
+            
+                    </View>
+                   {is_reverted &&  <PoppinsTextMedium style={{color:'red'}} content ="reverted"></PoppinsTextMedium>}
+                        </View>
+                
             </View>
         )
     }
