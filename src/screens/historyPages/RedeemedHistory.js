@@ -78,6 +78,7 @@ const RedeemedHistory = ({ navigation }) => {
     isLoading: userPointIsLoading,
     isError: userPointIsError
   }] = useFetchUserPointsMutation()
+  
   const [cashPerPointFunc,{
     data:cashPerPointData,
     error:cashPerPointError,
@@ -468,27 +469,7 @@ const RedeemedHistory = ({ navigation }) => {
   }
   return (
     <View style={{ alignItems: "center", justifyContent: "flex-start", width: '100%', height: '100%', backgroundColor: "white" }}>
-      {error  && (
-        <ErrorModal
-          modalClose={modalClose}
-          message={message}
-          openModal={error}
-          ></ErrorModal>
-      )}
-      {error && navigateTo && (
-        <ErrorModal
-          modalClose={modalClose}
-          message={message}
-          openModal={error}
-          navigateTo={navigateTo}
-          ></ErrorModal>
-      )}
-      {success && (
-        <MessageModal
-          modalClose={modalClose}
-          message={message}
-          openModal={success}></MessageModal>
-      )}
+      
 
       <View style={{ alignItems: "center", justifyContent: "flex-start", flexDirection: "row", width: '100%', marginTop: 10, height: 40, marginLeft: 20 }}>
         <TouchableOpacity onPress={() => {
@@ -571,7 +552,27 @@ const RedeemedHistory = ({ navigation }) => {
           //   )
 
           // }) */}
-     
+     {error  && (
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+          ></ErrorModal>
+      )}
+      {error && navigateTo && (
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+          navigateTo={navigateTo}
+          ></ErrorModal>
+      )}
+      {success && (
+        <MessageModal
+          modalClose={modalClose}
+          message={message}
+          openModal={success}></MessageModal>
+      )}
 
       {
         fetchGiftsRedemptionsOfUserIsLoading &&

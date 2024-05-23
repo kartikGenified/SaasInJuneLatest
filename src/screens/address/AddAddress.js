@@ -12,20 +12,19 @@ import { useAddAddressMutation } from "../../apiServices/userAddress/UserAddress
 import MessageModal from "../../components/modals/MessageModal";
 import ErrorModal from "../../components/modals/ErrorModal";
 import { useIsFocused } from "@react-navigation/native";
-import {GoogleMapsKey} from "@env"
-
+import { GoogleMapsKey } from "@env";
 
 const AddAddress = ({ navigation }) => {
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [responseArray, setResponseArray] = useState([]);
-  const [fieldIsEmpty, setFieldIsEmpty] = useState(false)
-  const [hideButton, setHideButton] = useState(false)
+  const [fieldIsEmpty, setFieldIsEmpty] = useState(false);
+  const [hideButton, setHideButton] = useState(false);
   const [location, setLocation] = useState();
 
   const dispatch = useDispatch();
-  const focused = useIsFocused()
+  const focused = useIsFocused();
   const [
     getLocationFromPincodeFunc,
     {
@@ -45,24 +44,23 @@ const AddAddress = ({ navigation }) => {
     },
   ] = useAddAddressMutation();
 
-  useEffect(()=>{
-    setHideButton(false)
-  },[focused])
+  useEffect(() => {
+    setHideButton(false);
+  }, [focused]);
 
   useEffect(() => {
     if (addAddressData) {
       console.log("addAddressData", addAddressData);
-      if(addAddressData.success)
-      {
-        setHideButton(false)
-        setSuccess(true)
-        setMessage(addAddressData.message)
+      if (addAddressData.success) {
+        setHideButton(false);
+        setSuccess(true);
+        setMessage(addAddressData.message);
       }
     } else if (addAddressError) {
       console.log("addAddressError", addAddressError);
-      setError(true)
-      setHideButton(false)
-      setMessage("Address can't be added")
+      setError(true);
+      setHideButton(false);
+      setMessage("Address can't be added");
     }
   }, [addAddressData, addAddressError]);
 
@@ -153,7 +151,6 @@ const AddAddress = ({ navigation }) => {
     });
   }, []);
 
-  
   useEffect(() => {
     if (getLocationFormPincodeData) {
       console.log("getLocationFormPincodeData", getLocationFormPincodeData);
@@ -188,8 +185,7 @@ const AddAddress = ({ navigation }) => {
 
   const handleChildComponentData = (data) => {
     console.log("from text input", data);
-    
-      
+
     // Update the responseArray state with the new data
     setResponseArray((prevArray) => {
       const existingIndex = prevArray.findIndex(
@@ -217,7 +213,7 @@ const AddAddress = ({ navigation }) => {
   };
   const modalClose = () => {
     setError(false);
-    setSuccess(false)
+    setSuccess(false);
   };
 
   const getLocationFromPinCode = async (pin) => {
@@ -236,78 +232,58 @@ const AddAddress = ({ navigation }) => {
     }
   };
   const addAddress = async () => {
-    let check =false
+    let check = false;
     const credentials = await Keychain.getGenericPassword();
     if (credentials) {
       console.log(
         "Credentials successfully loaded for user " + credentials.username
       );
       const token = credentials.username;
-    if (responseArray.length !== 0) {
-      console.log("response array",responseArray)
-      let address = "";
-      let data = {}
-      for (var i = 0; i < responseArray.length; i++) {
-        if(i!==0)
-        {
-        address = address + ", " + responseArray[i].value;
+      if (responseArray.length !== 0) {
+        console.log("response array", responseArray);
+        let address = "";
+        let data = {};
+        for (var i = 0; i < responseArray.length; i++) {
+          if (i !== 0) {
+            address = address + ", " + responseArray[i].value;
+          } else {
+            address = address + responseArray[i].value;
+          }
         }
-        else 
-        {
-        address = address +responseArray[i].value;
+        data["address"] = address;
+        // console.log("address", address,responseArray);
+        for (var i = 0; i < responseArray.length; i++) {
+          if (responseArray[i].name === "state") {
+            data["state"] = responseArray[i]?.value;
+          } else if (responseArray[i].name === "city") {
+            data["city"] = responseArray[i]?.value;
+          } else if (responseArray[i].name === "district") {
+            data["district"] = responseArray[i]?.value;
+          } else if (responseArray[i].name === "postCode") {
+            data["pincode"] = responseArray[i]?.value;
+          } else if (responseArray[i].name === "houseNumber") {
+            if (responseArray[i]?.value === undefined) {
+              check = true;
+            }
+          } else if (responseArray[i].name === "street") {
+            if (responseArray[i].value === undefined) {
+              check = true;
+            }
+          }
+        }
+        console.log(data);
+        const params = {
+          token: token,
+          data: data,
+        };
 
-        }
+        !check && addAddressFunc(params);
+        !check && setHideButton(true);
+        check && alert("fields cant be empty");
+      } else {
+        console.log("response Array is empty");
       }
-      data["address"] = address
-      // console.log("address", address,responseArray);
-      for (var i = 0; i < responseArray.length; i++) {
-        if(responseArray[i].name ==="state")
-        {
-          data["state"] = responseArray[i]?.value
-        }
-        else if(responseArray[i].name ==="city")
-        {
-          data["city"] = responseArray[i]?.value
-        }
-        else if(responseArray[i].name ==="district")
-        {
-          data["district"] = responseArray[i]?.value
-        }
-        else if(responseArray[i].name ==="postCode")
-        {
-          data["pincode"] = responseArray[i]?.value
-        }
-        else if(responseArray[i].name==="houseNumber")
-        {
-          if(responseArray[i]?.value===undefined)
-{
-  check =true
-}
-        }
-        else if(responseArray[i].name==="street")
-        {
-          if(responseArray[i].value===undefined)
-{
- check=true
-}
-        }
-        
-      }
-      console.log(data)
-      const params = {
-        token:token,
-        data:data
-      }
-     
-       !check && addAddressFunc(params)
-       !check && setHideButton(true)
-        check && alert("fields cant be empty")
-     
-    } else {
-      console.log("response Array is empty");
     }
-    
-  }
   };
 
   return (
@@ -351,22 +327,22 @@ const AddAddress = ({ navigation }) => {
       </View>
       {/* navigator */}
       {error && (
-            <ErrorModal
-              modalClose={modalClose}
-              
-              message={message}
-              openModal={error}></ErrorModal>
-          )}
-           {success && (
-            <MessageModal
-              modalClose={modalClose}
-              title={"Thanks"}
-              message={message}
-              openModal={success}
-              navigateTo="ListAddress"
-              ></MessageModal>
-          )}
-      {(
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+        ></ErrorModal>
+      )}
+      {success && (
+        <MessageModal
+          modalClose={modalClose}
+          title={"Thanks"}
+          message={message}
+          openModal={success}
+          navigateTo="ListAddress"
+        ></MessageModal>
+      )}
+      {
         <View style={{ marginTop: 20, alignItems: "center" }}>
           <PrefilledTextInput
             jsonData={{
@@ -396,50 +372,6 @@ const AddAddress = ({ navigation }) => {
             label={"Street"}
           ></PrefilledTextInput>
 
-          <PrefilledTextInput
-            jsonData={{
-              label: "City",
-              maxLength: "100",
-              name: "city",
-              options: [],
-              required: true,
-              type: "text",
-            }}
-            handleData={handleChildComponentData}
-            placeHolder={"City"}
-            value={location?.city}
-            label={"City"}
-          ></PrefilledTextInput>
-
-          <PrefilledTextInput
-            jsonData={{
-              label: "District",
-              maxLength: "100",
-              name: "district",
-              options: [],
-              required: true,
-              type: "text",
-            }}
-            handleData={handleChildComponentData}
-            placeHolder={"District"}
-            value={location?.district}
-            label={"District"}
-          ></PrefilledTextInput>
-          <PrefilledTextInput
-            jsonData={{
-              label: "State",
-              maxLength: "100",
-              name: "state",
-              options: [],
-              required: true,
-              type: "text",
-            }}
-            handleData={handleChildComponentData}
-            placeHolder={"State"}
-            value={location?.state}
-            label={"State"}
-          ></PrefilledTextInput>
-
           <PincodeTextInput
             jsonData={{
               label: "PostCode",
@@ -456,42 +388,75 @@ const AddAddress = ({ navigation }) => {
             label={"PostCOde"}
             maxLength={6}
           ></PincodeTextInput>
-
           <PrefilledTextInput
             jsonData={{
-              label: "Country",
+              label: "City",
               maxLength: "100",
-              name: "country",
+              name: "city",
               options: [],
               required: true,
               type: "text",
             }}
             handleData={handleChildComponentData}
-            placeHolder={"Country"}
-            value={location?.country}
-            label={"Country"}
+            placeHolder={"City"}
+            value={location?.city}
+            label={"City"}
+            isEditable={false}
           ></PrefilledTextInput>
 
-          {!hideButton && <TouchableOpacity
-            onPress={() => {
-              addAddress();
+          <PrefilledTextInput
+            jsonData={{
+              label: "District",
+              maxLength: "100",
+              name: "district",
+              options: [],
+              required: true,
+              type: "text",
             }}
-            style={{
-              width: 300,
-              height: 50,
-              backgroundColor: ternaryThemeColor,
-              marginTop: 20,
-              alignItems: "center",
-              justifyContent: "center",
+            handleData={handleChildComponentData}
+            placeHolder={"District"}
+            value={location?.district}
+            label={"District"}
+            isEditable={false}
+          ></PrefilledTextInput>
+          <PrefilledTextInput
+            jsonData={{
+              label: "State",
+              maxLength: "100",
+              name: "state",
+              options: [],
+              required: true,
+              type: "text",
             }}
-          >
-            <PoppinsTextMedium
-              style={{ color: "white", fontWeight: "800", fontSize: 18 }}
-              content={"SUBMIT"}
-            ></PoppinsTextMedium>
-          </TouchableOpacity>}
+            handleData={handleChildComponentData}
+            placeHolder={"State"}
+            value={location?.state}
+            label={"State"}
+            isEditable={false}
+          ></PrefilledTextInput>
+
+          {!hideButton && (
+            <TouchableOpacity
+              onPress={() => {
+                addAddress();
+              }}
+              style={{
+                width: 300,
+                height: 50,
+                backgroundColor: ternaryThemeColor,
+                marginTop: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <PoppinsTextMedium
+                style={{ color: "white", fontWeight: "800", fontSize: 18 }}
+                content={"SUBMIT"}
+              ></PoppinsTextMedium>
+            </TouchableOpacity>
+          )}
         </View>
-      )}
+      }
     </View>
   );
 };

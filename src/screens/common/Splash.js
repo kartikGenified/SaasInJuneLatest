@@ -552,13 +552,24 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     if (getMinVersionSupportData) {
-      // console.log("getMinVersionSupportData", getMinVersionSupportData)
+      console.log("getMinVersionSupportData", getMinVersionSupportData)
       if (getMinVersionSupportData.success) {
         setMinVersionSupport(getMinVersionSupportData?.body?.data)
         if (!getMinVersionSupportData?.body?.data) {
-          alert("Kindly update the app to the latest version")
+          Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
+            
+            {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.netcarrots.ozone")},
+          ]);
         }
-
+      }
+      else{
+        if(Object.keys(getMinVersionSupportData?.body).length==0)
+        {
+          Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
+            
+            {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.netcarrots.ozone")},
+          ]);
+        }
       }
     }
     else if (getMinVersionSupportError) {

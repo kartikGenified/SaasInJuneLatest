@@ -20,11 +20,22 @@ import { useIsFocused } from '@react-navigation/native';
 import { useGetWalletBalanceMutation } from "../../apiServices/cashback/CashbackRedeemApi";
 import Wallet from 'react-native-vector-icons/Entypo'
 import { useTranslation } from "react-i18next";
+import { useCashPerPointMutation, useFetchUserPointsMutation } from "../../apiServices/workflow/rewards/GetPointsApi";
+import ErrorModal from "../../components/modals/ErrorModal";
 
 const CashbackHistory = ({ navigation }) => {
   const [showNoDataFound, setShowNoDataFound] = useState(false);
   const [totalCashbackEarned, setTotalCashbackEarned] = useState(0)
   const [displayData, setDisplayData] = useState(false)
+  const [minRedemptionPoints, setMinRedemptionPoints] = useState()
+  const [pointBalance, setPointBalance] = useState()
+  const [redemptionStartData, setRedemptionStartDate]  = useState()
+  const [redemptionEndDate, setRedemptionEndDate] = useState()
+  const [message, setMessage] = useState();
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false)
+  const [navigateTo, setNavigateTo] = useState()
+
   const focused = useIsFocused()
 
   const userId = useSelector((state) => state.appusersdata.userId);
@@ -46,6 +57,20 @@ const CashbackHistory = ({ navigation }) => {
   //     isLoading: fetchCashbackEnteriesIsLoading,
   //     isError: fetchCashbackEnteriesIsError
   // }] = useFetchCashbackEnteriesOfUserMutation()
+
+  const [userPointFunc, {
+    data: userPointData,
+    error: userPointError,
+    isLoading: userPointIsLoading,
+    isError: userPointIsError
+  }] = useFetchUserPointsMutation()
+
+  const [cashPerPointFunc,{
+    data:cashPerPointData,
+    error:cashPerPointError,
+    isLoading:cashPerPointIsLoading,
+    isError:cashPerPointIsError
+  }] = useCashPerPointMutation()
 
   const [
     getCashTransactionsFunc,
@@ -91,6 +116,44 @@ const CashbackHistory = ({ navigation }) => {
   //   getData();
   // }, []);
 
+  useEffect(()=>{
+    fetchPoints()
+
+  },[focused])
+
+  useEffect(()=>{
+    if(cashPerPointData)
+    {
+        console.log("cashPerPointData",cashPerPointData)
+        if(cashPerPointData.success)
+
+        {
+          const temp = cashPerPointData?.body
+          setRedemptionStartDate(temp?.redeem_start_date)
+          setRedemptionEndDate(temp?.redeem_end_date)
+          setMinRedemptionPoints(temp?.min_point_redeem)
+        }
+    }
+    else if(cashPerPointError){
+        console.log("cashPerPointError",cashPerPointError)
+        
+    }
+  },[cashPerPointData,cashPerPointError])
+
+  useEffect(() => {
+    if (userPointData) {
+      console.log("userPointData", userPointData)
+      if(userPointData.success)
+      {
+      setPointBalance(userPointData.body.point_balance)
+
+      }
+    }
+    else if (userPointError) {
+      console.log("userPointError", userPointError)
+    }
+
+  }, [userPointData, userPointError])
   useEffect(() => {
     const getData = async () => {
       const credentials = await Keychain.getGenericPassword();
@@ -144,6 +207,67 @@ useEffect(()=>{
     }
   }, [fetchCashbackEnteriesData, fetchCashbackEnteriesError]);
 
+
+  const fetchPoints = async () => {
+    const credentials = await Keychain.getGenericPassword();
+    const token = credentials.username;
+    const params = {
+      userId: userData.id,
+      token: token
+    }
+    userPointFunc(params)
+    cashPerPointFunc(token)
+
+  }
+
+  const modalClose = () => {
+    setError(false);
+    setSuccess(false)
+    
+  };
+
+  const handleRedeemButtonPress = () => {
+      
+    if (Number(userPointData.body.point_balance) <= 0 ) {
+      setError(true)
+      setMessage("Sorry you don't have enough points.")
+      setNavigateTo("CashbackHistory")
+    }
+  
+    else if(Number(minRedemptionPoints)>Number(pointBalance))
+    {
+      console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
+      setError(true)
+      setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
+      setNavigateTo("CashbackHistory")
+
+    }
+    else {
+      
+      if((Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) ) &&  ( Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime())) )
+      {
+        
+        console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
+      if(!showKyc)
+      {
+        navigation.navigate('RedeemCashback',{redemptionFrom:"Wallet"})
+      }
+      else{
+        setError(true)
+        setMessage("Kyc not completed yet")
+        setNavigateTo("Verification")
+      }
+      }
+      else{
+        setError(true)
+      setMessage("Redemption window starts from "+ moment(redemptionStartData).format("DD-MMM-YYYY") + " and ends on " +  moment(redemptionEndDate).format("DD-MMM-YYYY"))
+      setNavigateTo("CashbackHistory")
+
+      }
+    }
+
+  }
+
   const Header = () => {
     return (
       <View
@@ -192,7 +316,7 @@ useEffect(()=>{
           borderBottomWidth: 1,
           borderColor: "#DDDDDD",
           padding: 4,
-          height: 130,
+          height: 150,
           flexDirection: 'row'
         }}
       >
@@ -206,17 +330,27 @@ useEffect(()=>{
         >
           {console.log("item of item", props)}
           <PoppinsTextMedium
-            style={{ color:   props.items.approval_status === "2" ? "red" : props.items.approval_status === "3" ? "orange" : "green", fontWeight: "600", fontSize: 18 }}
+            style={{ color:   (props.items.approval_status === "2") ? "red" : props.items.approval_status === "3" ? "orange" : "green", fontWeight: "600", fontSize: 16 }}
             
             content={
              props.items.approval_status === "2"
                 ? "Declined from the panel"
-                :    props.items.approval_status === "3" ? "Pending from the panel" : "Credited to cash balance"
+                :    props.items.approval_status === "3" ? "Pending from the panel" : "Accepted from panel"
 
              
             }
           ></PoppinsTextMedium>
+          {props.items.approval_status != "2" &&  <PoppinsTextMedium
+            style={{ color:   (props.items.status === "0") ? "red" : props.items.tatus === "2" ? "orange" :(props.items.status === "0") && "green", fontWeight: "600", fontSize: 16 }}
+            
+            content={
+             props.items.status === "0"
+                ? "Declined from the Bank"
+                :    props.items.status === "2" ? "Pending at the Bank" : props.items.status==1 && "Accepted by Bank"
 
+             
+            }
+          ></PoppinsTextMedium>}
           <View
             style={{
               flexDirection: "row",
@@ -399,7 +533,7 @@ useEffect(()=>{
         </View>
         <View style={{width:'40%',alignItems:'center',justifyContent:'flex-start'}}>
           <TouchableOpacity onPress={()=>{
-            navigation.navigate('RedeemCashback',{redemptionFrom:"Wallet"})
+            handleRedeemButtonPress()
           }} style={{height:30,width:100,backgroundColor:ternaryThemeColor,alignItems:'center',justifyContent:'center',borderRadius:10}}>
             <PoppinsTextMedium style={{fontSize:16,fontWeight:'bold',color:'white'}} content={t("redeem")}></PoppinsTextMedium>
           </TouchableOpacity>
@@ -511,6 +645,8 @@ useEffect(()=>{
           <DataNotFound></DataNotFound>
         </View>
       }
+
+
       {displayData && fetchCashbackEnteriesData && <FlatList
         initialNumToRender={20}
         contentContainerStyle={{
@@ -539,6 +675,21 @@ useEffect(()=>{
         )}
         keyExtractor={(item, index) => index}
       />}
+      
+      {error && navigateTo && (
+        <ErrorModal
+          modalClose={modalClose}
+          message={message}
+          openModal={error}
+          navigateTo={navigateTo}
+          ></ErrorModal>
+      )}
+      {success && (
+        <MessageModal
+          modalClose={modalClose}
+          message={message}
+          openModal={success}></MessageModal>
+      )}
     </View>
   );
 };

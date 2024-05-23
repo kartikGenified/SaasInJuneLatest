@@ -40,6 +40,11 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setLocation } from '../../../redux/slices/userLocationSlice';
+import { GoogleMapsKey } from "@env"
+import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+
+
 
 const QrCodeScanner = ({navigation}) => {
   const [zoom, setZoom] = useState(0);
@@ -51,6 +56,8 @@ const QrCodeScanner = ({navigation}) => {
   const [error, setError] = useState(false);
   const [savedToken, setSavedToken] = useState();
   const [qr_id, setQr_id] = useState();
+  const [locationEnabled, setLocationEnabled] = useState(false)
+  const [fetchLocation, setFetchLocation] = useState(false)
   const [registrationBonus, setRegistrationBonus] = useState()
   const [helpModal, setHelpModal] = useState(false);
   const [isFirstScan, setIsFirstScan] = useState(false) 
@@ -348,8 +355,167 @@ const QrCodeScanner = ({navigation}) => {
   //   checkLocationStatus()
 
   // }
+  const openSettings = () => {
+    if (Platform.OS === 'android') {
+      Linking.openSettings();
+    } else {
+      Linking.openURL('app-settings:');
+    }
+  };
+  const getLocationPermission = async () => {
 
- 
+    if (Platform.OS == 'ios') {
+      Alert.alert(
+        'GPS Disabled',
+        'Please enable GPS/Location to use this feature. You can open it from the top sliding setting menu of your phone or from the setting section of your phone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          { text: 'Settings', onPress: () => Platform.OS == 'android' ? Linking.openSettings() : Linking.openURL('app-settings:') },
+        ],
+        { cancelable: false }
+      );
+    }
+    if (Platform.OS == 'android') {
+      LocationServicesDialogBox.checkLocationServicesIsEnabled({
+        message: "<h2 style='color: #0af13e'>Use Location ?</h2>Ozostars wants to change your device settings:<br/><br/>Enable location to use the application.<br/><br/><a href='#'>Learn more</a>",
+        ok: "YES",
+        cancel: "NO",
+        enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+        showDialog: true, // false => Opens the Location access page directly
+        openLocationServices: true, // false => Directly catch method is called if location services are turned off
+        preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
+        preventBackClick: true, // true => To prevent the location services popup from closing when it is clicked back button
+        providerListener: false, // true ==> Trigger locationProviderStatusChange listener when the location state changes
+        style: {
+          backgroundColor: "#DDDDDD",
+          positiveButtonTextColor: 'white',
+          positiveButtonBackgroundColor: "#298d7b",
+          negativeButtonTextColor: 'white',
+          negativeButtonBackgroundColor: '#ba5f5f',
+
+
+        }
+      }).then(function (success) {
+        // setLocationEnabled(true) // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
+        setFetchLocation(true)
+      }).catch((error) => {
+        setLocationEnabled(true)
+        // getLocationPermission()
+        // error.message => "disabled"
+      });
+    }
+
+  }
+  useEffect(() => {
+
+    let lat = ''
+    let lon = ''
+
+    
+
+    if (__DEV__) {
+      setLocationEnabled(true)
+    }
+
+    
+      try {
+        Geolocation.getCurrentPosition((res) => {
+          lat = res.coords.latitude
+          lon = res.coords.longitude
+          // getLocation(JSON.stringify(lat),JSON.stringify(lon))
+          let locationJson = {
+
+            lat: lat === undefined ? "N/A" : lat,
+            lon: lon === undefined ? "N/A" : lon,
+          }
+
+          var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
+              &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
+
+          fetch(url).then(response => response.json()).then(json => {
+
+
+            if (json.status == "OK") {
+              const formattedAddress = json?.results[0]?.formatted_address
+
+              locationJson["address"] = formattedAddress === undefined ? "N/A" : formattedAddress
+              const addressComponent = json?.results[0]?.address_components
+
+            
+            for (let i = 0; i <= addressComponent?.length; i++) {
+              if (i === addressComponent?.length) {
+                
+                dispatch(setLocation(locationJson))
+                setLocationEnabled(true)
+
+                }
+                else {
+                  if (addressComponent[i].types.includes("postal_code")) {
+
+                    locationJson["postcode"] = addressComponent[i]?.long_name
+                  }
+                  else if (addressComponent[i]?.types.includes("country")) {
+
+                    locationJson["country"] = addressComponent[i]?.long_name
+                  }
+                  else if (addressComponent[i]?.types.includes("administrative_area_level_1")) {
+
+                    locationJson["state"] = addressComponent[i]?.long_name
+                  }
+                  else if (addressComponent[i]?.types.includes("administrative_area_level_3")) {
+
+                    locationJson["district"] = addressComponent[i]?.long_name
+                  }
+                  else if (addressComponent[i]?.types.includes("locality")) {
+
+                    locationJson["city"] = addressComponent[i]?.long_name
+                  }
+                }
+
+              }
+            }
+
+
+
+          })
+        }, (error) => {
+          setLocationEnabled(false)
+          if (error.code === 1) {
+            // Permission Denied
+            Geolocation.requestAuthorization()
+
+          } else if (error.code === 2) {
+            // Position Unavailable
+            // if (!locationBoxEnabled)
+              getLocationPermission()
+
+          } else {
+            // Other errors
+            Alert.alert(
+              "Error",
+              "An error occurred while fetching your location.",
+              [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+              ],
+              { cancelable: false }
+            );
+          }
+        })
+
+      }
+      catch (e) {
+      }
+    
+
+
+
+
+
+
+  }, [navigation,fetchLocation])
  
 
  
@@ -915,7 +1081,8 @@ const onSuccess = async (e) => {
   return (
     <>
     
-      <QRCodeScanner
+      {locationEnabled && <QRCodeScanner
+      
       onRead={onSuccess}
       reactivate={true}
       vibrate={true}
@@ -1172,7 +1339,7 @@ const onSuccess = async (e) => {
             comp={helpModalComp}></ModalWithBorder>}
         </View>
       }
-    />
+    />}
     
     </>
     

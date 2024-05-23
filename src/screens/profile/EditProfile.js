@@ -667,7 +667,7 @@ const EditProfile = ({ navigation, route }) => {
                       value={location?.city}
                       displayText = {item.name}
                       label={item.label}
-                      isEditable={false}
+                      isEditable={true}
                       shouldReturnValue = {true}
                     ></PrefilledTextInput>
                   )

@@ -45,7 +45,7 @@ const MessageModal = (props) => {
         onRequestClose={() => {
             props.modalClose()
           setModalVisible(!modalVisible);
-          navigation.navigate(navigateTo)
+         navigateTo &&  navigation.navigate(navigateTo)
         }}>
         <View style={styles.centeredView}>
           <View style={{...styles.modalView,borderWidth:3,borderColor:'#2FBA7E'}}>

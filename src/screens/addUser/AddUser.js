@@ -514,7 +514,7 @@ const AddUser = ({ navigation }) => {
                       value={location?.city}
                       label={item.label}
                       required={item.required}
-                      isEditable ={false}
+                      isEditable ={true}
                     ></PrefilledTextInput>
                   )
 
