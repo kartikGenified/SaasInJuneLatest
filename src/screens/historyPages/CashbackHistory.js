@@ -228,35 +228,18 @@ useEffect(()=>{
 
   const handleRedeemButtonPress = () => {
       
-    if (Number(userPointData.body.point_balance) <= 0 ) {
-      setError(true)
-      setMessage("Sorry you don't have enough points.")
-      setNavigateTo("CashbackHistory")
-    }
-  
-    else if(Number(minRedemptionPoints)>Number(pointBalance))
-    {
-      console.log("Minimum Point required to redeem is : ",minRedemptionPoints)
-      setError(true)
-      setMessage(`Minimum Point required to redeem is : ${minRedemptionPoints}`)
-      setNavigateTo("CashbackHistory")
-
-    }
-    else {
+   
+    
       
       if((Number(new Date(redemptionStartData).getTime()) < Number(new Date().getTime()) ) &&  ( Number(new Date().getTime()) < Number(new Date(redemptionEndDate).getTime())) )
       {
         
         console.log("correct redemption date",new Date().getTime(),new Date(redemptionStartData).getTime(),new Date(redemptionEndDate).getTime())
-      if(!showKyc)
-      {
+      
+        console.log("cashPerPointData",cashPerPointData)
         navigation.navigate('RedeemCashback',{redemptionFrom:"Wallet"})
-      }
-      else{
-        setError(true)
-        setMessage("Kyc not completed yet")
-        setNavigateTo("Verification")
-      }
+      
+     
       }
       else{
         setError(true)
@@ -264,7 +247,7 @@ useEffect(()=>{
       setNavigateTo("CashbackHistory")
 
       }
-    }
+    
 
   }
 

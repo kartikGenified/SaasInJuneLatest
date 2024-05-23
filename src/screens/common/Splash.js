@@ -44,6 +44,7 @@ const Splash = ({ navigation }) => {
   const [isSlowInternet, setIsSlowInternet] = useState(false)
   const [locationEnabled, setLocationEnabled] = useState(false)
   const [locationBoxEnabled, setLocationBoxEnabled] = useState(false)
+  const [fetchLocation, setfetchLocation] = useState(false)
   const [showLoading, setShowLoading] = useState(true)
   const [message, setMessage] = useState();
   const [success, setSuccess] = useState(false);
@@ -346,65 +347,69 @@ const Splash = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
+  const openSettings = () => {
+    if (Platform.OS === 'android') {
+      Linking.openSettings();
+    } else {
+      Linking.openURL('app-settings:');
+    }
+  };
+  const getLocationPermission = async () => {
 
+    if (Platform.OS == 'ios') {
+      Alert.alert(
+        'GPS Disabled',
+        'Please enable GPS/Location to use this feature. You can open it from the top sliding setting menu of your phone or from the setting section of your phone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          { text: 'Settings', onPress: () => Platform.OS == 'android' ? Linking.openSettings() : Linking.openURL('app-settings:') },
+        ],
+        { cancelable: false }
+      );
+    }
+    if (Platform.OS == 'android') {
+      LocationServicesDialogBox.checkLocationServicesIsEnabled({
+        message: "<h2 style='color: #0af13e'>Use Location ?</h2>Ozostars wants to change your device settings:<br/><br/>Enable location to use the application.<br/><br/><a href='#'>Learn more</a>",
+        ok: "YES",
+        cancel: "NO",
+        enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+        showDialog: true, // false => Opens the Location access page directly
+        openLocationServices: true, // false => Directly catch method is called if location services are turned off
+        preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
+        preventBackClick: true, // true => To prevent the location services popup from closing when it is clicked back button
+        providerListener: false, // true ==> Trigger locationProviderStatusChange listener when the location state changes
+        style: {
+          backgroundColor: "#DDDDDD",
+          positiveButtonTextColor: 'white',
+          positiveButtonBackgroundColor: "#298d7b",
+          negativeButtonTextColor: 'white',
+          negativeButtonBackgroundColor: '#ba5f5f',
+
+
+        }
+      }).then(function (success) {
+        // setLocationEnabled(true)
+        setfetchLocation(true)
+         // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
+      }).catch((error) => {
+        setLocationEnabled(true)
+
+        // getLocationPermission()
+        // error.message => "disabled"
+      });
+    }
+
+  }
 
   useEffect(() => {
 
     let lat = ''
     let lon = ''
 
-    const openSettings = () => {
-      if (Platform.OS === 'android') {
-        Linking.openSettings();
-      } else {
-        Linking.openURL('app-settings:');
-      }
-    };
-    const getLocationPermission = async () => {
-
-      if (Platform.OS == 'ios') {
-        Alert.alert(
-          'GPS Disabled',
-          'Please enable GPS/Location to use this feature. You can open it from the top sliding setting menu of your phone or from the setting section of your phone.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            { text: 'Settings', onPress: () => Platform.OS == 'android' ? Linking.openSettings() : Linking.openURL('app-settings:') },
-          ],
-          { cancelable: false }
-        );
-      }
-      if (Platform.OS == 'android') {
-        LocationServicesDialogBox.checkLocationServicesIsEnabled({
-          message: "<h2 style='color: #0af13e'>Use Location ?</h2>Ozostars wants to change your device settings:<br/><br/>Enable location to use the application.<br/><br/><a href='#'>Learn more</a>",
-          ok: "YES",
-          cancel: "NO",
-          enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
-          showDialog: true, // false => Opens the Location access page directly
-          openLocationServices: true, // false => Directly catch method is called if location services are turned off
-          preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
-          preventBackClick: true, // true => To prevent the location services popup from closing when it is clicked back button
-          providerListener: false, // true ==> Trigger locationProviderStatusChange listener when the location state changes
-          style: {
-            backgroundColor: "#DDDDDD",
-            positiveButtonTextColor: 'white',
-            positiveButtonBackgroundColor: "#298d7b",
-            negativeButtonTextColor: 'white',
-            negativeButtonBackgroundColor: '#ba5f5f',
-
-
-          }
-        }).then(function (success) {
-          setLocationEnabled(true) // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
-        }).catch((error) => {
-          getLocationPermission()
-          // error.message => "disabled"
-        });
-      }
-
-    }
+    
 
     if (__DEV__) {
       setLocationEnabled(true)
@@ -481,7 +486,7 @@ const Splash = ({ navigation }) => {
           } else if (error.code === 2) {
             // Position Unavailable
             // if (!locationBoxEnabled)
-            //   getLocationPermission()
+              getLocationPermission()
 
           } else {
             // Other errors
@@ -506,7 +511,7 @@ const Splash = ({ navigation }) => {
 
 
 
-  }, [navigation])
+  }, [navigation,fetchLocation])
 
   useEffect(() => {
     getUsers();
