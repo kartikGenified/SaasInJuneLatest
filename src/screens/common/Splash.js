@@ -223,7 +223,7 @@ const Splash = ({ navigation }) => {
     else if (getDashboardError) {
 
       // console.log("getDashboardError", getDashboardError)
-      if(getDashboardError?.data?.message =="Invalid JWT" && getDashboardError?.status == 401 )
+      if(getDashboardError?.status == 401 )
       {
         removerTokenData()
       }
@@ -259,7 +259,7 @@ const Splash = ({ navigation }) => {
       setError(true)
       setMessage(getPolicyError?.message)
       console.log("getPolicyError>>>>>>>>>>>>>>>", getPolicyError)
-      if(getPolicyError?.data?.message =="Invalid JWT" && getPolicyError?.status == 401 )
+      if(getPolicyError?.status == 401 )
       {
         removerTokenData()
       }
@@ -319,7 +319,7 @@ const Splash = ({ navigation }) => {
       setError(true)
       setMessage("Unable to fetch app banners")
       console.log("getBannerError",getBannerError)
-      if(getBannerError?.data?.message =="Invalid JWT" && getBannerError?.status == 401 )
+      if(getBannerError?.status == 401 )
       {
         removerTokenData()
       }

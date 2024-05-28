@@ -9,6 +9,10 @@ import {
   Image,
   ScrollView,
   FlatList,
+  Alert,
+  Linking,
+  PermissionsAndroid
+
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
@@ -43,7 +47,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setLocation } from '../../../redux/slices/userLocationSlice';
 import { GoogleMapsKey } from "@env"
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
-
+import { useIsFocused } from '@react-navigation/native';
 
 
 const QrCodeScanner = ({navigation}) => {
@@ -52,6 +56,8 @@ const QrCodeScanner = ({navigation}) => {
   const [flash, setFlash] = useState(false);
   const [addedQrList, setAddedQrList] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [cameraAccessMessage, setCameraAccessMessage] = useState("")
+  const [cameraPermissionDenied, setCameraPermissionDenied] = useState(false)
   const [message, setMessage] = useState();
   const [error, setError] = useState(false);
   const [savedToken, setSavedToken] = useState();
@@ -71,7 +77,7 @@ const QrCodeScanner = ({navigation}) => {
   const userName = useSelector(state => state.appusersdata.name);
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state=>state.userLocation.location)
-  
+  const focused = useIsFocused()
   console.log("workflowProgram",workflowProgram)
 
   const ternaryThemeColor = useSelector(
@@ -148,6 +154,7 @@ const QrCodeScanner = ({navigation}) => {
     isLoading:addBulkQrIsLoading,
     isError:addBulkQrIsError
   }]= useAddBulkQrMutation()
+
 
 
   useEffect(()=>{
@@ -355,9 +362,16 @@ const QrCodeScanner = ({navigation}) => {
   //   checkLocationStatus()
 
   // }
+  
   const openSettings = () => {
     if (Platform.OS === 'android') {
-      Linking.openSettings();
+      Linking.openSettings().then((success,failure)=>{
+        setTimeout(() => {
+        setLocationEnabled(true)
+
+        }, 100);
+      });
+      
     } else {
       Linking.openURL('app-settings:');
     }
@@ -436,7 +450,7 @@ const QrCodeScanner = ({navigation}) => {
               &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
 
           fetch(url).then(response => response.json()).then(json => {
-
+            console.log("json data, ",json)
 
             if (json.status == "OK") {
               const formattedAddress = json?.results[0]?.formatted_address
@@ -450,7 +464,11 @@ const QrCodeScanner = ({navigation}) => {
                 
                 dispatch(setLocation(locationJson))
                 setLocationEnabled(true)
+                setTimeout(() => {
+                  handleCameraPermissions()
 
+                  }, 1000);
+              
                 }
                 else {
                   if (addressComponent[i].types.includes("postal_code")) {
@@ -483,30 +501,65 @@ const QrCodeScanner = ({navigation}) => {
           })
         }, (error) => {
           setLocationEnabled(false)
+          console.log("error in location permission ", error)
+          
           if (error.code === 1) {
             // Permission Denied
-            Geolocation.requestAuthorization()
+            console.log("permission denied for this application", error.code)
+            // Geolocation.requestAuthorization()
+            setTimeout(() => {
+              Alert.alert(
+                "Error",
+                `Allow Location Access To OzoStars ${cameraAccessMessage}` ,
+                [
+                  { text: "NO", onPress: () => {
+                    setLocationEnabled(true)
+                    setTimeout(() => {
+                    handleCameraPermissions()
 
+                    }, 1000);
+
+                  } },
+  
+                  { text: "Yes", onPress: () => {
+                    openSettings()
+                    setTimeout(() => {
+                      handleCameraPermissions()
+  
+                      }, 1000);
+                  }},
+  
+                ],
+                { cancelable: false }
+              );
+            }, 100);
+            
+            
           } else if (error.code === 2) {
             // Position Unavailable
             // if (!locationBoxEnabled)
               getLocationPermission()
 
+
           } else {
             // Other errors
-            Alert.alert(
-              "Error",
-              "An error occurred while fetching your location.",
-              [
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ],
-              { cancelable: false }
-            );
+            setLocationEnabled(true)
+            // Alert.alert(
+            //   "Error",
+            //   "An error occurred while fetching your location.",
+            //   [
+            //     { text: "OK", onPress: () => console.log("OK Pressed") }
+            //   ],
+            //   { cancelable: false }
+            // );
           }
         })
 
       }
       catch (e) {
+        Geolocation.requestAuthorization()
+
+        // console.log("error",e)
       }
     
 
@@ -515,9 +568,41 @@ const QrCodeScanner = ({navigation}) => {
 
 
 
-  }, [navigation,fetchLocation])
+  }, [navigation, fetchLocation,cameraPermissionDenied])
  
-
+  const handleCameraPermissions=async()=>{
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'OzoStars App Camera Permission',
+          message:
+            'OzoStars App needs access to your camera ',
+          // buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+        
+      } else {
+        console.log('Camera permission denied');
+        // setCameraAccessMessage("Also enable permission to access camera")
+        // setCameraPermissionDenied(true)
+        Alert.alert(
+          "Error",
+          "You have declined camera access to this app, kindly enable it from the settings.",
+          [
+            { text: "OK", onPress: () => Linking.openSettings() }
+          ],
+          { cancelable: false }
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
  
 
   useEffect(()=>{
@@ -1086,6 +1171,7 @@ const onSuccess = async (e) => {
       onRead={onSuccess}
       reactivate={true}
       vibrate={true}
+      checkAndroid6Permissions={true}
       reactivateTimeout={2000}
       fadeIn={true}
       flashMode={
