@@ -26,12 +26,13 @@ const PincodeTextInput = (props) => {
     Keyboard.addListener('keyboardDidHide',()=>{
         setKeyboardShow(false)
     })
+
     useEffect(()=>{
-       
-        setValue(props.value)
+    setValue(props.value)
     },[props.value])
+
     useEffect(()=>{
-        handleInputEnd()
+    handleInputEnd()
     },[keyboardShow])
 
     const handleInput=(text)=>{

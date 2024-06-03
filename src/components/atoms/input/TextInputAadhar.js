@@ -116,6 +116,10 @@ const TextInputAadhar = (props) => {
           setAadharExists(true)
         
         }
+        else if(sendAadharOtpIsLoading)
+        {
+          props.notVerified(false)
+        }
         },[sendAadharOtpData,sendAadharOtpError])
 
         useEffect(()=>{

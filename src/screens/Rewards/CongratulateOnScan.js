@@ -495,7 +495,7 @@ const gifUri = Image.resolveAssetSource(require('../../../assets/gif/loader.gif'
     navigation.navigate("Dashboard");
   };
   const navigateQrScanner = () => {
-    // navigation.navigate('QrCodeScanner')
+    // navigation.navigate('EnableCameraScreen')
     handleWorkflowNavigation();
   };
   const modalClose = () => {

@@ -326,6 +326,7 @@ const Dashboard = ({ navigation }) => {
 
   }, [])
   useEffect(()=>{
+
     const fetchOnPageActive = async()=>{
       try {
         // Retrieve the credentials
@@ -335,7 +336,6 @@ const Dashboard = ({ navigation }) => {
           //   'Credentials successfully loaded for user ' + credentials?.username
           // );
           const token = credentials?.username
-          const form_type = "2"
           // console.log("token from dashboard ", token)
           
           token && getKycStatusFunc(token)
@@ -349,7 +349,12 @@ const Dashboard = ({ navigation }) => {
         // console.log("Keychain couldn't be accessed!", error);
       }
     }
-    fetchOnPageActive()
+    if(focused)
+    {
+      fetchOnPageActive()
+    }
+    
+    
   },[focused])
 
 

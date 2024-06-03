@@ -77,6 +77,8 @@ const PasswordLogin = ({ navigation, route }) => {
   )
     ? useSelector(state => state.apptheme.ternaryThemeColor)
     : '#FFB533';
+  const currentVersion = useSelector((state)=>state.appusers.app_version)
+
 
   const icon = useSelector(state => state.apptheme.icon)
     ? useSelector(state => state.apptheme.icon)
@@ -244,7 +246,7 @@ const PasswordLogin = ({ navigation, route }) => {
 
   // ------------------------------------------
 
-
+ 
   const userType = route?.params?.userType
   const userId = route?.params?.userId
   const needsApproval = route?.params?.needsApproval
@@ -264,7 +266,7 @@ const PasswordLogin = ({ navigation, route }) => {
     const fcm_token = fcmToken
     console.log("fcmtoken password login", fcmToken)
     if (user_id !== "" && password !== "" && isChecked) {
-      passwordLoginfunc({ user_id, password, fcm_token })
+      passwordLoginfunc({ user_id, password, fcm_token,currentVersion })
     }
   }
 

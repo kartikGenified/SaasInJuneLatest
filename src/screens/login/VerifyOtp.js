@@ -93,7 +93,8 @@ const VerifyOtp = ({ navigation, route }) => {
     : require('../../../assets/images/demoIcon.png');
 
   // ------------------------------------------------
-
+  const currentVersion = useSelector((state)=>state.appusers.app_version)
+ 
   // initializing mutations --------------------------------
 
   const [getTermsAndCondition, {
@@ -426,13 +427,14 @@ const VerifyOtp = ({ navigation, route }) => {
       const user_type = navigationParams?.user_type;
       const fcm_token = fcmToken
       const token = verifyLoginOtpData?.body?.token
+      const app_version  = currentVersion
       if (verifyLoginOtpData?.success) {
 
         
         
-        
+        console.log("verifyOtpFunc data", currentVersion)
 
-        verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token });
+        verifyOtpFunc({ mobile, name, otp, user_type_id, user_type, fcm_token, app_version });
       }
     } else if (verifyLoginOtpError) {
       console.log("verifyLoginOtpError", verifyLoginOtpError)
@@ -532,7 +534,8 @@ const VerifyOtp = ({ navigation, route }) => {
     const user_type = navigationParams?.user_type;
     const is_approved_needed = navigationParams?.needsApproval;
     const fcm_token = fcmToken
-    console.log(mobile, name, user_type_id, user_type, otp, is_approved_needed);
+    const app_version = currentVersion
+    console.log("verifyLoginOtpFunc data",mobile, name, user_type_id, user_type, otp, is_approved_needed,app_version);
 
     verifyLoginOtpFunc({
       mobile,
@@ -541,7 +544,9 @@ const VerifyOtp = ({ navigation, route }) => {
       user_type,
       otp,
       is_approved_needed,
-      fcm_token
+      fcm_token,
+      currentVersion
+
     });
   };
 
