@@ -5,7 +5,8 @@ const initialState = {
   manualApproval : [],
   autoApproval : [],
   registrationRequired : [],
-  appUsersData:[]
+  appUsersData:[],
+  app_version:''
   
 }
 
@@ -31,11 +32,14 @@ export const appUserSlice = createSlice({
     },
     setAppUsersData : (state,action) =>{
       state.appUsersData = action.payload
+    },
+    setAppVersion: (state, action) =>{
+      state.app_version = action.payload
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setAppUsers, deleteAppUsers,setManualApproval,setAutoApproval,setRegistrationRequired,setAppUsersData} = appUserSlice.actions
+export const { setAppUsers, deleteAppUsers,setManualApproval,setAutoApproval,setRegistrationRequired,setAppUsersData,setAppVersion} = appUserSlice.actions
 
 export default appUserSlice.reducer

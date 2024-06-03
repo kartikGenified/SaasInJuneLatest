@@ -51,6 +51,8 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
   const userName = useSelector(state => state.appusersdata.name);
   const workflowProgram = useSelector(state => state.appWorkflow.program);
   const location = useSelector(state => state.userLocation.location)
+  const currentVersion = useSelector((state)=>state.appusers.app_version)
+
   const dispatch = useDispatch();
   
   const {t} = useTranslation()
@@ -58,6 +60,8 @@ const ScanAndRedirectToGenuinity = ({ navigation }) => {
 
   console.log('Workflow Program is ', workflowProgram);
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
+
+
 
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -413,6 +417,7 @@ else{
           state: location.state,
           district: location.district,
           city: location.city,
+          app_version:currentVersion
         };
         token && addQrFunc({ token, requestData });
       });

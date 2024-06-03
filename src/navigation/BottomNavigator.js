@@ -41,7 +41,7 @@ const {t} = useTranslation()
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("Gift Catalogue")}></PoppinsTextMedium>
     </TouchableOpacity>
     {/* ozone change */}
-    { ((userData.user_type).toLowerCase()!=="dealer"  && (userData.user_type).toLowerCase()!=="sales") ? <TouchableOpacity onPress={()=>{navigation.navigate('QrCodeScanner')}} style={{alignItems:"center",justifyContent:"center",}}>
+    { ((userData?.user_type).toLowerCase()!=="dealer"  && (userData?.user_type).toLowerCase()!=="sales") ? <TouchableOpacity onPress={()=>{navigation.navigate('EnableCameraScreen')}} style={{alignItems:"center",justifyContent:"center",}}>
     <Qrcode name="qrcode" size={24} color={ternaryThemeColor}></Qrcode>
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("Scan QR")}></PoppinsTextMedium>
     </TouchableOpacity>
@@ -51,14 +51,14 @@ const {t} = useTranslation()
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Check Genuinity"></PoppinsTextMedium>
     </TouchableOpacity>
     }
-    {(userData.user_type).toLowerCase()!=="sales" &&
+    {(userData?.user_type).toLowerCase()!=="sales" &&
       <TouchableOpacity onPress={()=>{navigation.navigate('Passbook')}} style={{alignItems:"center",justifyContent:"center",position:'absolute',right:30}}>
     <Book name="book" size={24} color={ternaryThemeColor}></Book>
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("passbook")}></PoppinsTextMedium>
     </TouchableOpacity>
     }
     
-    {(userData.user_type).toLowerCase()=="sales" &&
+    {(userData?.user_type).toLowerCase()=="sales" &&
       <TouchableOpacity onPress={()=>{navigation.navigate('ProductCatalogue')}} style={{alignItems:"center",justifyContent:"center",position:'absolute',right:20}}>
     <BookOpen name="open-book" size={24} color={ternaryThemeColor}></BookOpen>
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content="Product Catalogue"></PoppinsTextMedium>

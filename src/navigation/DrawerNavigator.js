@@ -238,7 +238,7 @@ const CustomDrawer = () => {
           <TouchableOpacity
             onPress={() => {
               if (props.title === "Scan QR Code" || props.title === "Scan and Win") {
-                navigation.navigate('QrCodeScanner')
+                navigation.navigate('EnableCameraScreen')
               }
               else if (props.title.toLowerCase() === "passbook") {
                 navigation.navigate("Passbook")
@@ -274,7 +274,7 @@ const CustomDrawer = () => {
                 navigation.navigate('ImageGallery')
               }
               else if (props.title.substring(0, 4).toLowerCase() === "scan" && (props.title).toLowerCase() !== "scan list") {
-                navigation.navigate('QrCodeScanner')
+                navigation.navigate('EnableCameraScreen')
               }
               else if (props.title.toLowerCase() === "scheme") {
                 navigation.navigate('Scheme')

@@ -4,7 +4,9 @@ import { slug } from "../../../utils/Slug";
 export const OtpLoginApi = baseApi.injectEndpoints({
     endpoints:(builder) =>({
         getAppLogin : builder.mutation({
-            query({mobile,name,user_type_id,user_type,otp,fcm_token}){
+            query({mobile,name,user_type_id,user_type,otp,fcm_token,app_version}){
+                console.log("verifyOtpMutation", app_version)
+                
                 return {
                     url:`/api/app/userOtp/add`,
                     method:'post',
@@ -18,7 +20,8 @@ export const OtpLoginApi = baseApi.injectEndpoints({
                         "otp" : otp,
                         "user_type_id" : user_type_id,
                         "user_type" : user_type,
-                        "fcm_token":fcm_token
+                        "fcm_token":fcm_token,
+                        "app_version": app_version
                         
                     }
                     

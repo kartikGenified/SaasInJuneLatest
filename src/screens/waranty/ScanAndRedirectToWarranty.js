@@ -53,7 +53,10 @@ const ScanAndRedirectToWarranty = ({ navigation }) => {
   const location = useSelector(state => state.userLocation.location)
   const dispatch = useDispatch();
   console.log('Workflow Program is ', workflowProgram);
-  
+  //check version 
+  const currentVersion = useSelector((state)=>state.appusers.app_version)
+
+  //---------------
   const {t} = useTranslation()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -64,6 +67,8 @@ const ScanAndRedirectToWarranty = ({ navigation }) => {
   // console.log("Selector state",useSelector((state)=>state.appusersdata.userId))
 
   // mutations ----------------------------------------
+  
+
   const [
     verifyQrFunc,
     {
@@ -388,11 +393,15 @@ else{
           state: location.state,
           district: location.district,
           city: location.city,
+          app_version : currentVersion
+         
         };
         token && addQrFunc({ token, requestData });
       });
   };
   // --------------------------------------------------------
+
+  
 
   return (
     <QRCodeScanner
