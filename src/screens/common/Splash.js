@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Image, ImageBackground, PermissionsAndroid, Pla
 import { useGetAppThemeDataMutation } from '../../apiServices/appTheme/AppThemeApi';
 import { useSelector, useDispatch } from 'react-redux'
 import { setPrimaryThemeColor, setSecondaryThemeColor, setIcon, setIconDrawer, setTernaryThemeColor, setOptLogin, setPasswordLogin, setButtonThemeColor, setColorShades, setKycOptions, setIsOnlineVeriification, setSocials, setWebsite, setCustomerSupportMail, setCustomerSupportMobile, setExtraFeatures } from '../../../redux/slices/appThemeSlice';
-import { setManualApproval, setAutoApproval, setRegistrationRequired } from '../../../redux/slices/appUserSlice';
+import { setManualApproval, setAutoApproval, setRegistrationRequired, setAppVersion } from '../../../redux/slices/appUserSlice';
 import { setPointSharing } from '../../../redux/slices/pointSharingSlice';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,7 +15,7 @@ import { useGetAppUsersDataMutation } from '../../apiServices/appUsers/AppUsersA
 import Geolocation from '@react-native-community/geolocation';
 import InternetModal from '../../components/modals/InternetModal';
 import ErrorModal from '../../components/modals/ErrorModal';
-import { setLocation } from '../../../redux/slices/userLocationSlice';
+import { setLocation, setLocationEnabled } from '../../../redux/slices/userLocationSlice';
 import { GoogleMapsKey } from "@env"
 import { useCheckVersionSupportMutation } from '../../apiServices/minVersion/minVersionApi';
 import VersionCheck from 'react-native-version-check';
@@ -36,13 +36,22 @@ import { setDrawerData } from '../../../redux/slices/drawerDataSlice';
 import * as Keychain from 'react-native-keychain';
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 import PoppinsTextMedium from '../../components/electrons/customFonts/PoppinsTextMedium';
+import { setLocationCheckVisited, setLocationPermissionStatus } from '../../../redux/slices/userLocationSlice';
+import SpInAppUpdates, {
+  NeedsUpdateResponse,
+  IAUUpdateKind,
+  StartUpdateOptions,
+} from 'sp-react-native-in-app-updates';
+import { useInternetSpeedContext } from '../../Contexts/useInternetSpeedContext';
+import { setSlowNetwork } from '../../../redux/slices/internetSlice';
+
 
 const Splash = ({ navigation }) => {
   const dispatch = useDispatch()
   const focused = useIsFocused()
   const [connected, setConnected] = useState(true)
   const [isSlowInternet, setIsSlowInternet] = useState(false)
-  const [locationEnabled, setLocationEnabled] = useState(false)
+  const [locationStatusChecked, setLocationCheckVisited] = useState(false)
   const [locationBoxEnabled, setLocationBoxEnabled] = useState(false)
   const [fetchLocation, setfetchLocation] = useState(false)
   const [showLoading, setShowLoading] = useState(true)
@@ -52,13 +61,18 @@ const Splash = ({ navigation }) => {
   const [minVersionSupport, setMinVersionSupport] = useState(false)
   const [dashboardDataLoaded, setDashboardDataLoaded] = useState(false)
   const [error, setError] = useState(false);
+  const [checkedForInAppUpdate, setCheckedForInAppUpdate] = useState(false)
   // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   // const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
   let currentVersion;
   if(isConnected?.isConnected)
+
   {
      currentVersion = VersionCheck.getCurrentVersion();
+    console.log("current version check",currentVersion)
+    dispatch(setAppVersion(currentVersion))
+
 
   }
   const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
@@ -148,13 +162,15 @@ const Splash = ({ navigation }) => {
 
 
   
+  
 
   useEffect(() => {
     getUsers();
     
-    // console.log("currentVersion",currentVersion)
+    console.log("currentVersion",currentVersion)
     if(isConnected.isConnected)
     {
+
     getMinVersionSupportFunc(currentVersion)
 
       const fetchTerms = async () => {
@@ -203,6 +219,8 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
     if (getDashboardData) {
       // console.log("getDashboardData", getDashboardData)
+      if(parsedJsonValue)
+      {
       dispatch(setAppUserId(parsedJsonValue.user_type_id))
       dispatch(setAppUserName(parsedJsonValue.name))
       dispatch(setAppUserType(parsedJsonValue.user_type))
@@ -214,6 +232,8 @@ const Splash = ({ navigation }) => {
       parsedJsonValue && getAppMenuFunc(parsedJsonValue?.token)
       
       console.log("all data in one console",{getFormData,getAppMenuData,getDashboardData,getWorkflowData,getBannerData,minVersionSupport})
+      }
+      
       
       
        
@@ -284,7 +304,7 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     if (getWorkflowData) {
-      if (getWorkflowData.length === 1 && getWorkflowData[0] === "Genuinity") {
+      if (getWorkflowData?.length === 1 && getWorkflowData[0] === "Genuinity") {
         dispatch(setIsGenuinityOnly())
       }
       const removedWorkFlow = getWorkflowData?.body[0]?.program.filter((item, index) => {
@@ -347,6 +367,8 @@ const Splash = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
+  const { responseTime, loading } = useInternetSpeedContext();
+
   const openSettings = () => {
     if (Platform.OS === 'android') {
       Linking.openSettings();
@@ -391,11 +413,14 @@ const Splash = ({ navigation }) => {
 
         }
       }).then(function (success) {
-        // setLocationEnabled(true)
+        // setLocationCheckVisited(true)
+        dispatch(setLocationEnabled(true))
         setfetchLocation(true)
          // success => {alreadyEnabled: false, enabled: true, status: "enabled"}
       }).catch((error) => {
-        setLocationEnabled(true)
+        dispatch(setLocationEnabled(false))
+        setLocationCheckVisited(true)
+
 
         // getLocationPermission()
         // error.message => "disabled"
@@ -411,11 +436,11 @@ const Splash = ({ navigation }) => {
 
     
 
-    if (__DEV__) {
-      setLocationEnabled(true)
-    }
+    // if (__DEV__) {
+    //   setLocationCheckVisited(true)
+    // }
 
-    if (!locationBoxEnabled) {
+    
       try {
         Geolocation.getCurrentPosition((res) => {
           lat = res.coords.latitude
@@ -426,7 +451,7 @@ const Splash = ({ navigation }) => {
             lat: lat === undefined ? "N/A" : lat,
             lon: lon === undefined ? "N/A" : lon,
           }
-          setLocationEnabled(true)
+          // setLocationCheckVisited(true)
 
           var url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${res?.coords?.latitude},${res?.coords?.longitude}
               &location_type=ROOFTOP&result_type=street_address&key=${GoogleMapsKey}`
@@ -443,9 +468,11 @@ const Splash = ({ navigation }) => {
             
             for (let i = 0; i <= addressComponent?.length; i++) {
               if (i === addressComponent?.length) {
-                
+                console.log("location json after iteration", locationJson)
+                dispatch(setLocationCheckVisited(true))
+                dispatch(setLocationPermissionStatus(true))
                 dispatch(setLocation(locationJson))
-                setLocationEnabled(true)
+                setLocationCheckVisited(true)
 
                 }
                 else {
@@ -478,15 +505,19 @@ const Splash = ({ navigation }) => {
 
           })
         }, (error) => {
-          setLocationEnabled(false)
+          console.log("location enabled error splash", error)
+          setLocationCheckVisited(false)
           if (error.code === 1) {
             // Permission Denied
-            Geolocation.requestAuthorization()
+            // Geolocation.requestAuthorization()
+            setLocationCheckVisited(true)
+            dispatch(setLocationPermissionStatus(false))
 
           } else if (error.code === 2) {
             // Position Unavailable
             // if (!locationBoxEnabled)
               getLocationPermission()
+              
 
           } else {
             // Other errors
@@ -503,13 +534,8 @@ const Splash = ({ navigation }) => {
 
       }
       catch (e) {
+
       }
-    }
-
-
-
-
-
 
   }, [navigation,fetchLocation])
 
@@ -568,7 +594,7 @@ const Splash = ({ navigation }) => {
         }
       }
       else{
-        if(Object.keys(getMinVersionSupportData?.body).length==0)
+        if(Object.keys(getMinVersionSupportData?.body)?.length==0)
         {
           Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
             
@@ -585,12 +611,14 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
       console.log("internet status", isConnected)
       setConnected(isConnected.isConnected)
-      setIsSlowInternet(isConnected.isInternetReachable)
+      // setIsSlowInternet(isConnected.isInternetReachable)
       getUsers();
+      dispatch(setAppVersion(currentVersion))
+
         getMinVersionSupportFunc(currentVersion)
         getAppTheme("ozone")
         getData()
-  },[isConnected,locationEnabled])
+  },[isConnected,locationStatusChecked])
   
   useEffect(() => {
     if (getUsersData) {
@@ -640,11 +668,11 @@ const Splash = ({ navigation }) => {
       setShowLoading(false)
       if (value === "Yes") 
       {   
-         minVersionSupport  && navigation.navigate('SelectUser');
+         minVersionSupport && locationStatusChecked  && navigation.navigate('SelectUser');
       }
       else 
       {
-         minVersionSupport  && navigation.navigate('Introduction') 
+         minVersionSupport && locationStatusChecked  && navigation.navigate('Introduction') 
       }
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
 
@@ -694,7 +722,51 @@ const Splash = ({ navigation }) => {
       // console.log("getAppThemeError", getAppThemeError)
     }
    
-  }, [getAppThemeData,getAppThemeError,locationEnabled,connected])
+  }, [getAppThemeData,getAppThemeError,locationStatusChecked,connected])
+
+  // in app update code 
+
+  // useEffect(()=>{
+  //   if(!checkedForInAppUpdate)
+  //   {
+  //     const inAppUpdates = new SpInAppUpdates(
+  //       false // isDebug
+  //     );
+  //     // curVersion is optional if you don't provide it will automatically take from the app using react-native-device-info
+  //   inAppUpdates.checkNeedsUpdate({ curVersion: '0.0.8' }).then((result) => {
+  //     if (result.shouldUpdate) {
+  //       let updateOptions = {};
+  //       if (Platform.OS === 'android') {
+  //         // android only, on iOS the user will be promped to go to your app store page
+  //         updateOptions = {
+  //           updateType: IAUUpdateKind.IMMEDIATE,
+  //         };
+  //       }
+  //       inAppUpdates.startUpdate(updateOptions); // https://github.com/SudoPlz/sp-react-native-in-app-updates/blob/master/src/types.ts#L78
+  //     }
+  //   });
+  //   setCheckedForInAppUpdate(true)
+  //   }
+    
+  // },[])
+
+  //------------------------------------------------------------------
+
+  // checking response time from google api
+
+  useEffect(()=>{
+    console.log("responseTime" ,responseTime)
+    if(responseTime>2000)
+    {
+      setIsSlowInternet(true)
+    }
+    if(responseTime<2000)
+    {
+      setIsSlowInternet(false)
+    }
+  },[responseTime,connected])
+
+//---------------------------------------
 
   const modalClose = () => {
     setError(false);
@@ -722,7 +794,7 @@ const Splash = ({ navigation }) => {
     
       <ImageBackground resizeMode='stretch' style={{  height: '100%', width: '100%', alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash2.png')}> 
       <InternetModal visible={!connected} comp = {NoInternetComp} />
-      {connected && !isSlowInternet && <InternetModal visible={!isSlowInternet} comp = {SlowInternetComp} /> }
+      {isSlowInternet && <InternetModal visible={isSlowInternet} comp = {SlowInternetComp} /> }
 
      
       {error &&  <ErrorModal
@@ -736,6 +808,14 @@ const Splash = ({ navigation }) => {
       
        
       <View style={{position:'absolute',bottom:30,height:40}}> 
+      <View>
+      {/* {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        
+        <Text>Response Time: {responseTime} ms</Text>
+      )} */}
+    </View>
       <ActivityIndicator size={'medium'} animating={true} color={MD2Colors.yellow800} />
       <PoppinsTextMedium style={{color:'white',marginTop:4}} content="Please Wait"></PoppinsTextMedium>
 

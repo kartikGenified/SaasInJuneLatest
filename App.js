@@ -9,7 +9,7 @@ import Close from 'react-native-vector-icons/Ionicons';
 import ModalWithBorder from './src/components/modals/ModalWithBorder';
 import NetInfo from "@react-native-community/netinfo";
 import { PaperProvider } from 'react-native-paper';
-
+import { InternetSpeedProvider } from './src/Contexts/useInternetSpeedContext';
 
 const App = () => {
   const [notifModal, setNotifModal] = useState(false)
@@ -106,6 +106,7 @@ const App = () => {
     return (
         <Provider store={store}>
           <PaperProvider>
+            <InternetSpeedProvider>
         <SafeAreaView style={{flex:1}}>
             <StackNavigator>
             {notifModal &&  <ModalWithBorder
@@ -118,6 +119,7 @@ const App = () => {
            
             </StackNavigator>
         </SafeAreaView>
+        </InternetSpeedProvider>
         </PaperProvider>
         </Provider>
     );

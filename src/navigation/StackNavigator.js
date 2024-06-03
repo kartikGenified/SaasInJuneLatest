@@ -80,6 +80,8 @@ import QueryList from '../screens/queryList/QueryList';
 import PreviousTransactionHistory from '../screens/historyPages/PreviousTransactionHistory';
 import RedeemCoupons from '../screens/redeem/RedeemCoupons';
 import CouponCartList from '../screens/redeem/CouponCartList';
+import EnableLocationScreen from '../screens/location/EnableLocationScreen';
+import EnableCameraScreen from '../screens/camera/EnableCameraScreen';
 
 const Stack = createNativeStackNavigator()
 
@@ -109,6 +111,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="RedeemCoupons" component={RedeemCoupons}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="EnableCameraScreen" component={EnableCameraScreen}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false
@@ -165,6 +172,11 @@ const StackNavigator = () => {
                         headerShown: false
                     }
                 } name="ProductCategory" component={ProductCategory}></Stack.Screen>
+                <Stack.Screen options={
+                    {
+                        headerShown: false
+                    }
+                } name="EnableLocationScreen" component={EnableLocationScreen}></Stack.Screen>
                 <Stack.Screen options={
                     {
                         headerShown: false

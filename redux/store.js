@@ -24,6 +24,8 @@ import dashboardDataSlice from './slices/dashboardDataSlice';
 import authSlice from './slices/authSlice';
 import termsPolicySlice from './slices/termsPolicySlice';
 import drawerDataSlice from './slices/drawerDataSlice';
+import cameraStatusSlice from './slices/cameraStatusSlice';
+
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
@@ -48,7 +50,8 @@ export const store = configureStore({
     dashboardData:dashboardDataSlice,
     auth:authSlice,
     termsPolicy:termsPolicySlice,
-    drawerData: drawerDataSlice
+    drawerData: drawerDataSlice,
+    cameraStatus:cameraStatusSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware, internetMiddleware), // Include networkMiddleware
