@@ -20,7 +20,7 @@ import { useCashPerPointMutation } from '../../apiServices/workflow/rewards/GetP
 import { useFetchUserPointsMutation } from '../../apiServices/workflow/rewards/GetPointsApi';
 import MessageModal from '../../components/modals/MessageModal';
 import { setPointConversionF,setCashConversionF } from '../../../redux/slices/redemptionDataSlice';
-import { useGetWalletBalanceMutation } from '../../apiServices/cashback/CashbackRedeemApi';
+import { useCheckBeforeRedeemMutation, useGetWalletBalanceMutation } from '../../apiServices/cashback/CashbackRedeemApi';
 import { setWalletBalance } from '../../../redux/slices/pointWalletSlice';
 import { useTranslation } from 'react-i18next';
 
@@ -31,6 +31,15 @@ const RedeemCashback = ({navigation,route}) => {
   const [cashConversion,setCashConversion] = useState()
   const [pointsConversion, setPointsConversion] = useState(1)
   const [walletConversion, setWalletConversion] = useState()
+
+  //checks
+
+  const [isReedemable, setIsReedemable] = useState(null)
+  const [perTransationDay, setPerTransactionDay] = useState(null)
+  const [maxAmountPerDay, setMaxAmountPerDay] = useState(null)
+  const [minAmountRedeem, setMinAmountRedeem] = useState(null)
+
+
   const dispatch = useDispatch()
   const ternaryThemeColor = useSelector(
     state => state.apptheme.ternaryThemeColor,
@@ -59,6 +68,14 @@ const RedeemCashback = ({navigation,route}) => {
     isError:userPointIsError
 }]= useFetchUserPointsMutation()
 
+const [checkBeforeRedeem, {
+  data: checkBeforeRedeemData,
+  error: checkBeforeRedeemError,
+  isLoading: checkBeforeRedeemIsLoading,
+  isError: checkBeforeRedeemIsError
+}] = useCheckBeforeRedeemMutation()
+
+
   const [cashPerPointFunc,{
     data:cashPerPointData,
     error:cashPerPointError,
@@ -83,55 +100,173 @@ const RedeemCashback = ({navigation,route}) => {
   const height = Dimensions.get('window').height
 
 
-  const redeemCashback = async () => {
-  if(redemptionFrom != "Wallet")
-  {
-        if(Number(minPointsRedeemed)<=(pointsConversion))
-    {
-      console.log("shjadjhashgdhjgasjgd", pointsConversion,points)
-      if(Number(pointsConversion)>=Number(points))
-      {
-        setError(true)
-      setMessage("You only have "+points+" points")
-      }
-      else
-      {
-        if(Number(cashConversion)>=Number(maxCashConverted))
-        {
-        navigation.replace('BankAccounts',{type:"Cashback"})
-        }
-        else{
-          setError(true)
-          setMessage(`Minimum cash redemption value is ${maxCashConverted}`)
-        }
-      }
-    }
-    else{
-      setError(true)
-      setMessage("Min Points required to redeem is "+minPointsRedeemed)
-    }
-  }
-  else{
-    if(cashConversion<=getWalletBalanceData?.body?.cashback_balance)
-    {
-      if(cashConversion == 0)
-      {
-        setError(true)
-        setMessage("Cannot redeem 0 amount")
-      }
-      else{
-      navigation.navigate('BankAccounts',{type:"Cashback"})
+  // const redeemCashback = async () => {
+  // if(redemptionFrom != "Wallet")
+  // {
+  //       if(Number(minPointsRedeemed)<=(pointsConversion))
+  //   {
+  //     console.log("shjadjhashgdhjgasjgd", pointsConversion,points)
+  //     if(Number(pointsConversion)>=Number(points))
+  //     {
+  //       setError(true)
+  //     setMessage("You only have "+points+" points")
+  //     }
+  //     else
+  //     {
+  //       if(Number(cashConversion)>=Number(maxCashConverted))
+  //       {
+  //       navigation.replace('BankAccounts',{type:"Cashback"})
+  //       }
+  //       else{
+  //         setError(true)
+  //         setMessage(`Minimum cash redemption value is ${maxCashConverted}`)
+  //       }
+  //     }
+  //   }
+  //   else{
+  //     setError(true)
+  //     setMessage("Min Points required to redeem is "+minPointsRedeemed)
+  //   }
+  // }
+  // else{
+  //   if(cashConversion<=getWalletBalanceData?.body?.cashback_balance)
+  //   {
+  //     if(cashConversion == 0)
+  //     {
+  //       setError(true)
+  //       setMessage("Cannot redeem 0 amount")
+  //     }
+  //     else{
+  //     navigation.navigate('BankAccounts',{type:"Cashback"})
 
-      }
-    }
-    else{
-      // console.log("cashConversionqwerty",cashConversion)
-      setError(true)
-      setMessage("You don't have enough wallet balance kindly redeem using your point")
-    }
-  }
+  //     }
+  //   }
+  //   else{
+  //     // console.log("cashConversionqwerty",cashConversion)
+  //     setError(true)
+  //     setMessage("You don't have enough wallet balance kindly redeem using your point")
+  //   }
+  // }
 
    
+
+  //   // const credentials = await Keychain.getGenericPassword();
+  //   // if (credentials) {
+  //   //   console.log(
+  //   //     'Credentials successfully loaded for user ' + credentials.username,
+  //   //   );
+  //   //   const token = credentials.username;
+     
+  //   // }
+  // };
+  const redeemCashback = async () => {
+    if (redemptionFrom != "Wallet") {
+      if (Number(minPointsRedeemed) <= (pointsConversion)) {
+        console.log("shjadjhashgdhjgasjgd", pointsConversion, points)
+        
+        if (Number(pointsConversion) >= Number(points)) {
+          setError(true)
+          setMessage("You only have " + points + " points")
+        }
+
+        if(Number(cashConversion)> Number(isReedemable)){
+          console.log("max amount per transaction", isReedemable,cashConversion)
+          console.log("checking boolean bakchodi",isReedemable ==cashConversion )
+          setError(true)
+          // setMessage("Maximum Amount Trasaction Per Day Is : " + isReedemable)
+          setMessage("Maximum Amount Per Trasaction  : " + isReedemable)
+
+          return
+        }
+
+        if(Number(minAmountRedeem) >=Number(pointsConversion)){
+          setError(true)
+          setMessage("Minimum Amount per transaction : " + minAmountRedeem)
+          return
+        }
+      
+        else if(Number(cashConversion) >= Number(maxAmountPerDay)){
+          setError(true)
+          setMessage("Maximum Amount Per Day  : " + maxAmountPerDay)
+          return
+        }
+        else if(!checkBeforeRedeemData.body.data){
+          setError(true)
+          setMessage(checkBeforeRedeemData.message)
+          return
+        }
+     
+        else if(Number(cashConversion)>= Number(maxAmountPerDay)){
+          setError(true)
+          setMessage("Maximum Amount Per transaction is: " + isReedemable)
+          return
+        }
+
+        else {
+          if (Number(cashConversion) >= Number(maxCashConverted)) {
+            navigation.replace('BankAccounts', { type: "Cashback" })
+          }
+          else {
+            setError(true)
+            setMessage(`Minimum cash redemption value is ${maxCashConverted}`)
+          }
+        }
+      }
+      else {
+        setError(true)
+        setMessage("Min Points required to redeem : " + minPointsRedeemed)
+      }
+    }
+    else {
+      console.log("cashConversion===>",cashConversion,getWalletBalanceData?.body?.cashback_balance, cashConversion <= getWalletBalanceData?.body?.cashback_balance)
+
+      // (150<=90) false
+
+      if (Number(cashConversion) <= Number(getWalletBalanceData?.body?.cashback_balance)) {
+        console.log("cashhhhh", isReedemable, cashConversion)
+        if (cashConversion == 0) {
+          setError(true)
+          setMessage("Cannot redeem 0 amount")
+        }
+        else {
+          
+        if(Number(cashConversion) > Number(isReedemable)){
+          setError(true)
+          setMessage("Maximum Amount Per Trasaction  : " + isReedemable)
+          return
+        }
+        else if(Number(cashConversion) >= Number(maxAmountPerDay)){
+          setError(true)
+          setMessage("Maximum Amount Per Day  : " + maxAmountPerDay)
+          return
+        }
+        else if(!checkBeforeRedeemData.body.data){
+          setError(true)
+          setMessage(checkBeforeRedeemData.message)
+          return
+        }
+        if(Number(minAmountRedeem) >= Number(pointsConversion)){
+          setError(true)
+          setMessage("Minimum Amount per transaction : " + minAmountRedeem)
+          return
+        }
+        else{
+          navigation.navigate('BankAccounts', { type: "Cashback" })
+
+        }
+
+        }
+      }
+
+      else {
+        // console.log("cashConversionqwerty",cashConversion)
+        setError(true)
+        setMessage("You don't have enough wallet balance kindly redeem using your point")
+      }
+    }
+
+
+
 
     // const credentials = await Keychain.getGenericPassword();
     // if (credentials) {
@@ -139,10 +274,9 @@ const RedeemCashback = ({navigation,route}) => {
     //     'Credentials successfully loaded for user ' + credentials.username,
     //   );
     //   const token = credentials.username;
-     
+
     // }
   };
-
   useEffect(()=>{
     if(getWalletBalanceData)
     {
@@ -158,15 +292,28 @@ const RedeemCashback = ({navigation,route}) => {
     }
   },[getWalletBalanceData,getWalletBalanceError])
 
-  useEffect(()=>{
-    if(cashPerPointData)
-    {
-     
+  useEffect(() => {
+    if (cashPerPointData) {
+      console.log("cashperpointData ", cashPerPointData)
       const conversionFactor = cashPerPointData.body.cash_per_point
-      redemptionFrom == "Wallet" ? setCashConversion(pointsConversion) :  setCashConversion(pointsConversion*conversionFactor)  
-      redemptionFrom == "Wallet" ? dispatch(setCashConversionF(pointsConversion)) : dispatch(setCashConversionF(pointsConversion*conversionFactor))
-  }
-  },[cashPerPointData,pointsConversion])
+      redemptionFrom == "Wallet" ? setCashConversion(pointsConversion) : setCashConversion(pointsConversion * conversionFactor)
+      redemptionFrom == "Wallet" ? dispatch(setCashConversionF(pointsConversion)) : dispatch(setCashConversionF(pointsConversion * conversionFactor))
+      setIsReedemable(cashPerPointData.body.max_amount_per_transaction)
+      setMaxAmountPerDay(cashPerPointData.body.max_amount_per_day)
+      setPerTransactionDay(cashPerPointData.body.max_transaction_per_day)
+      setMinAmountRedeem(cashPerPointData.body.min_cash_redeem)
+    }
+  }, [cashPerPointData, pointsConversion])
+
+  useEffect(()=>{
+    if(checkBeforeRedeemData){
+      console.log("checkBeforeRedeemData",checkBeforeRedeemData)
+    }
+    else if(checkBeforeRedeemError){
+      console.log("checkBeforeRedeemError",checkBeforeRedeemError)
+
+    }
+},[checkBeforeRedeemData, checkBeforeRedeemError])
   
   useEffect(()=>{
     fetchToken(userData.id)
@@ -188,6 +335,8 @@ const RedeemCashback = ({navigation,route}) => {
       cashPerPointFunc(token)
       getWalletBalanceFunc(paramsWallet)
       userPointFunc(params)
+      checkBeforeRedeem(params)
+
     }
   }
   useEffect(()=>{

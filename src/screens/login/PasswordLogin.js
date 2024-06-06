@@ -238,8 +238,20 @@ const PasswordLogin = ({ navigation, route }) => {
     }
     else if (passwordLoginError) {
       console.log("Password Login Error", passwordLoginError)
-      setError(true)
+      
+      if(passwordLoginError.status===400)
+      {
+      alert("Your contact is under process please contact OzoStars")
+      }
+      else if(passwordLoginError?.message){
+        setError(true)
       setMessage(passwordLoginError?.message)
+      }
+      else if(passwordLoginError?.data?.message)
+      {
+        setError(true)
+      setMessage(passwordLoginError?.data?.message)
+      }
 
     }
   }, [passwordLoginData, passwordLoginError])

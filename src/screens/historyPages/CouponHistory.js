@@ -85,15 +85,18 @@ else if(getAllCouponsError){
         const refNo =props.refNo
         const couponCode = props.couponCode
         const redeemedOn = props.redeemedOn
+        const denomination = props?.data?.denomination
+        const couponValue = props?.data?.coupon_value
         const expiresOn = props.expiresOn
         const data = props.data
         const approvalStatus = data.approval_status
         
         console.log(data)
         return(
-            <TouchableOpacity onPress={()=>{navigation.navigate('CouponDetails',{
-                data:data
-            })}} style={{padding:10,alignItems:"center",justifyContent:"center",borderColor:'grey',borderRadius:10,margin:10,width:(width/2)-30,backgroundColor:'#F8F8F8',elevation:4}}>
+            <TouchableOpacity 
+            // onPress={()=>{navigation.navigate('CouponDetails',{
+            //     data:data})}}
+             style={{padding:10,alignItems:"center",justifyContent:"center",borderColor:'grey',borderRadius:10,margin:10,width:(width/2)-30,backgroundColor:'#F8F8F8',elevation:4}}>
                 <View style={{height:80,width:80,alignItems:"center",justifyContent:"center",borderRadius:40,backgroundColor:"white"}}>
                 <Image style={{height:50,width:50,resizeMode:"contain"}} source={require('../../../assets/images/voucher.png')}></Image>
                 </View>
@@ -106,8 +109,16 @@ else if(getAllCouponsError){
                     <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={approvalStatus=="1" ? "Approval Pending" : approvalStatus=="2" ? "Approved" : "Rejected" }></PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:"center",marginTop:20}}>
-                    <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Coupon Code"></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Brand Name"></PoppinsTextMedium>
                     <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={approvalStatus=="2" ?  couponCode  : "----------"}></PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:"center",marginTop:20}}>
+                    <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Denomination"></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={denomination}></PoppinsTextMedium>
+                </View>
+                <View style={{alignItems:"center",justifyContent:"center",marginTop:20}}>
+                    <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Value"></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{color:'black',fontSize:12,fontWeight:'700'}} content={couponValue}></PoppinsTextMedium>
                 </View>
                 <View style={{alignItems:"center",justifyContent:"center",marginTop:20,borderTopWidth:1,borderBottomWidth:1,borderStyle:'dotted',flexDirection:'row',padding:4,width:'100%',}}>
                     <PoppinsTextMedium style={{color:'grey',fontSize:12}} content="Redeemed on"></PoppinsTextMedium>
@@ -120,8 +131,8 @@ else if(getAllCouponsError){
     }
 
     return (
-        <View style={{alignItems:'center',justifyContent:"center",backgroundColor:"white",height:'100%',width:'100%'}}>
-            <View style={{alignItems:"center",justifyContent:"flex-start",flexDirection:"row",width:'100%',marginTop:10,height:40,marginLeft:20}}>
+        <View style={{alignItems:'center',justifyContent:"flex-start",backgroundColor:"white",height:'100%',width:'100%'}}>
+            <View style={{alignItems:"center",justifyContent:"flex-start",flexDirection:"row",width:'100%',height:40,marginTop:10}}>
                 <TouchableOpacity onPress={()=>{
                     navigation.goBack()
                 }}>

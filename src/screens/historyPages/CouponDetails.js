@@ -34,6 +34,8 @@ const CouponDetails = ({navigation,route}) => {
         Clipboard.setString(couponCode);
       };
 
+
+      console.log("Coupon Code data",data)
   return (
     <View
       style={{
@@ -112,7 +114,7 @@ const CouponDetails = ({navigation,route}) => {
               fontWeight: '700',
               marginTop: 10,
             }}
-            content="Coupon Code"></PoppinsTextMedium>
+            content="Brand Name"></PoppinsTextMedium>
           <View
             style={{
               flexDirection: 'row',
