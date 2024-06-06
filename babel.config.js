@@ -8,7 +8,7 @@ module.exports = {
     production: {
       plugins:[
         ['react-native-paper/babel'],
-      ["react-native-worklets-core/plugin"]
+     
     ],
     },
   },

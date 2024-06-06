@@ -241,7 +241,7 @@ const PasswordLogin = ({ navigation, route }) => {
       
       if(passwordLoginError.status===400)
       {
-      alert("Your contact is under process please contact OzoStars")
+      alert("Your status is under process, please contact OzoStars")
       }
       else if(passwordLoginError?.message){
         setError(true)

@@ -40,7 +40,9 @@ const OtpVerification = ({navigation,route}) => {
   const walletBalance = useSelector(state=>state.pointWallet.walletBalance)
   const pointsConversion = useSelector(state=>state.redemptionData.pointConversion)
   const cashConversion = useSelector(state=>state.redemptionData.cashConversion)
-console.log("Point conversion and cash conversion data",pointsConversion,cashConversion,walletBalance)
+  const storedLocation = useSelector(state => state.userLocation.location)
+
+console.log("Point conversion and cash conversion data",pointsConversion,cashConversion,walletBalance,storedLocation)
   const [
     verifyOtpForNormalUseFunc,
     {
@@ -137,7 +139,9 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
   }, [timer, timeOutCallback]);
 
   useEffect(() => {
-    let lat = ''
+    if(Object.keys(storedLocation).length==0)
+    {
+      let lat = ''
     let lon = ''
     Geolocation.getCurrentPosition((res) => {
       console.log("res", res)
@@ -203,6 +207,11 @@ console.log("Point conversion and cash conversion data",pointsConversion,cashCon
 
       })
     })
+    }
+    else{
+    setLocation(storedLocation)
+    }
+    
 
   }, [])
 

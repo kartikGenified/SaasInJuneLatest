@@ -179,7 +179,7 @@ const [checkBeforeRedeem, {
           return
         }
 
-        if(Number(minAmountRedeem) >=Number(pointsConversion)){
+        if(Number(minAmountRedeem) >=Number(cashConversion)){
           setError(true)
           setMessage("Minimum Amount per transaction : " + minAmountRedeem)
           return
@@ -245,7 +245,7 @@ const [checkBeforeRedeem, {
           setMessage(checkBeforeRedeemData.message)
           return
         }
-        if(Number(minAmountRedeem) >= Number(pointsConversion)){
+        if(Number(minAmountRedeem) >= Number(cashConversion)){
           setError(true)
           setMessage("Minimum Amount per transaction : " + minAmountRedeem)
           return
