@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, StyleSheet,ScrollView,Dimensions} from 'react-native';
+import {View, StyleSheet,ScrollView,Dimensions,Platform} from 'react-native';
 import MenuItems from '../atoms/MenuItems';
 import { BaseUrl } from '../../utils/BaseUrl';
+import QrCodeScanner from '../../screens/camera/QrCodeScanner';
 
 
 const DashboardMenuBox=(props)=>{
@@ -12,7 +13,7 @@ const DashboardMenuBox=(props)=>{
     const handleMenuItemPress=(data)=>{
         if(data.substring(0,4).toLowerCase()==="scan" )
         {
-            navigation.navigate('EnableCameraScreen')
+           Platform.OS == 'android' ? navigation.navigate('EnableCameraScreen') : navigation.navigate("QrCodeScanner")
         }
         else if(data.toLowerCase()==="passbook")
         {

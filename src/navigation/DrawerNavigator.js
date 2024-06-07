@@ -238,7 +238,8 @@ const CustomDrawer = () => {
           <TouchableOpacity
             onPress={() => {
               if (props.title === "Scan QR Code" || props.title === "Scan and Win") {
-                navigation.navigate('EnableCameraScreen')
+                Platform.OS == 'android' ? navigation.navigate('EnableCameraScreen') : navigation.navigate("QrCodeScanner")
+
               }
               else if (props.title.toLowerCase() === "passbook") {
                 navigation.navigate("Passbook")
@@ -274,7 +275,8 @@ const CustomDrawer = () => {
                 navigation.navigate('ImageGallery')
               }
               else if (props.title.substring(0, 4).toLowerCase() === "scan" && (props.title).toLowerCase() !== "scan list") {
-                navigation.navigate('EnableCameraScreen')
+                Platform.OS == 'android' ? navigation.navigate('EnableCameraScreen') : navigation.navigate("QrCodeScanner")
+
               }
               else if (props.title.toLowerCase() === "scheme") {
                 navigation.navigate('Scheme')
@@ -307,7 +309,7 @@ const CustomDrawer = () => {
             }}>
             {/* {console.log("props.title", props.title)} */}
             <Text style={{ color: primaryThemeColor, fontSize: 15 }}>{
-              props.title == "Passbook" ? `${t('My Loyality')}` :
+              props.title == "Passbook" ? `${t('My Loyalty')}` :
                 props.title == "My Profile" ? `${t("My Profile")}`
                   : props.title == "Profile" ? `${t("profile")}`
                     : props.title == "Scan History" ? `${t("scan history")}`

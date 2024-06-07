@@ -13,13 +13,13 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>70020</string>
+	<string>70021</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>70020</string>
+	<string>70021</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -103,9 +103,9 @@
 		<string>armv7</string>
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
-<array>
-  <string>itms-apps</string>
-</array>
+	<array>
+		<string>itms-apps</string>
+	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
