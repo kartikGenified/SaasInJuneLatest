@@ -468,7 +468,7 @@ const BankAccounts = ({ navigation, route }) => {
                   borderWidth: 0.8,
                   borderRadius: 10,
                   marginTop: 20,
-                  minHeight: 140
+                  minHeight: 100
                 }}>
                 {console.log("listAccountData in view", listAccountData?.body.length)}
                 {
