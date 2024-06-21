@@ -41,7 +41,8 @@ const {t} = useTranslation()
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("Gift Catalogue")}></PoppinsTextMedium>
     </TouchableOpacity>
     {/* ozone change */}
-    { ((userData?.user_type).toLowerCase()!=="dealer"  && (userData?.user_type).toLowerCase()!=="sales") ? <TouchableOpacity onPress={()=>{navigation.navigate('EnableCameraScreen')}} style={{alignItems:"center",justifyContent:"center",}}>
+    { ((userData?.user_type).toLowerCase()!=="dealer"  && (userData?.user_type).toLowerCase()!=="sales") ? <TouchableOpacity onPress={()=>{Platform.OS == 'android' ? navigation.navigate('EnableCameraScreen') : navigation.navigate("QrCodeScanner")
+}} style={{alignItems:"center",justifyContent:"center",}}>
     <Qrcode name="qrcode" size={24} color={ternaryThemeColor}></Qrcode>
     <PoppinsTextMedium style={{marginTop:4,fontSize:12,fontWeight:platformFontWeight,color:'black'}} content={t("Scan QR")}></PoppinsTextMedium>
     </TouchableOpacity>
