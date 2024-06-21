@@ -10,7 +10,6 @@ import ModalWithBorder from './src/components/modals/ModalWithBorder';
 import NetInfo from "@react-native-community/netinfo";
 import { PaperProvider } from 'react-native-paper';
 import { InternetSpeedProvider } from './src/Contexts/useInternetSpeedContext';
-
 const App = () => {
   const [notifModal, setNotifModal] = useState(false)
   const [notifData, setNotifData] = useState(null)
@@ -108,6 +107,7 @@ const App = () => {
           <PaperProvider>
             <InternetSpeedProvider>
         <SafeAreaView style={{flex:1}}>
+          
             <StackNavigator>
             {notifModal &&  <ModalWithBorder
             modalClose={() => {

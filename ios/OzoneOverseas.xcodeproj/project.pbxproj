@@ -31,6 +31,8 @@
 		D6E44A13696D485083EFABC2 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8DB51198E9EA4355BC888C2C /* Poppins-ExtraLight.ttf */; };
 		DA5D18081DF44D2E90FAD56A /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DDCCDBC21DE445887EF6F40 /* Poppins-LightItalic.ttf */; };
 		E9222AD82BA4338E006B4478 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9222AD72BA4338E006B4478 /* GoogleService-Info.plist */; };
+		E92D62832C11F03D00DB57CF /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = E92D62822C11F03D00DB57CF /* main.jsbundle */; };
+		E92D62842C11F04400DB57CF /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E9F2F9A02BA97CFE0008C98C /* assets */; };
 		E92EE8EA2B4156DE00162902 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E92EE8E92B4156DE00162902 /* Assets.xcassets */; };
 		E9B14AB22A8CDED1004DE909 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9B14A9F2A8CDED1004DE909 /* Fontisto.ttf */; };
 		E9B14AB32A8CDED1004DE909 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9B14AA02A8CDED1004DE909 /* Octicons.ttf */; };
@@ -52,8 +54,6 @@
 		E9B14AC32A8CDED1004DE909 /* FontAwesome6_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9B14AB02A8CDED1004DE909 /* FontAwesome6_Brands.ttf */; };
 		E9B14AC42A8CDED1004DE909 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9B14AB12A8CDED1004DE909 /* MaterialIcons.ttf */; };
 		E9B14AC72A8E3BD3004DE909 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B14AC62A8E3BD3004DE909 /* File.swift */; };
-		E9F2F99F2BA97CF60008C98C /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = E9F2F99E2BA97CF60008C98C /* main.jsbundle */; };
-		E9F2F9A12BA97CFE0008C98C /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E9F2F9A02BA97CFE0008C98C /* assets */; };
 		F21D0A43777744B6B8C56F9B /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4ECDB724FABA4B5C8ABD00FD /* Poppins-ExtraLightItalic.ttf */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +101,7 @@
 		DA5C77B66CA720F9A6FF74E6 /* Pods-OzoneOverseas-OzoneOverseasTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OzoneOverseas-OzoneOverseasTests.release.xcconfig"; path = "Target Support Files/Pods-OzoneOverseas-OzoneOverseasTests/Pods-OzoneOverseas-OzoneOverseasTests.release.xcconfig"; sourceTree = "<group>"; };
 		E245633C7E561AF902E4B366 /* Pods_OzoneOverseas_OzoneOverseasTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OzoneOverseas_OzoneOverseasTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9222AD72BA4338E006B4478 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E92D62822C11F03D00DB57CF /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		E92D73692B3B5093009D7BC1 /* hermes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = hermes.xcframework; path = "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework"; sourceTree = "<group>"; };
 		E92D736B2B3B50B3009D7BC1 /* libReact-hermes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libReact-hermes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E92D736D2B3B549D009D7BC1 /* OpenSSL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OpenSSL.xcframework; path = "Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework"; sourceTree = "<group>"; };
@@ -238,6 +239,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E92D62822C11F03D00DB57CF /* main.jsbundle */,
 				E9F2F9A02BA97CFE0008C98C /* assets */,
 				E9F2F99E2BA97CF60008C98C /* main.jsbundle */,
 				E9222AD72BA4338E006B4478 /* GoogleService-Info.plist */,
@@ -400,8 +402,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9F2F9A12BA97CFE0008C98C /* assets in Resources */,
-				E9F2F99F2BA97CF60008C98C /* main.jsbundle in Resources */,
+				E92D62842C11F04400DB57CF /* assets in Resources */,
+				E92D62832C11F03D00DB57CF /* main.jsbundle in Resources */,
 				E9B14AB32A8CDED1004DE909 /* Octicons.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				E9B14ABD2A8CDED1004DE909 /* FontAwesome5_Regular.ttf in Resources */,
@@ -821,10 +823,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_CFLAGS = "$(inherited)  ";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -898,10 +897,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_CFLAGS = "$(inherited)  ";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",

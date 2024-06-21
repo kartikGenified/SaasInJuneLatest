@@ -29,6 +29,10 @@ const PincodeTextInput = (props) => {
 
     useEffect(()=>{
     setValue(props.value)
+    if(props?.value?.length  == 6)
+    {
+        handleInput(props.value)
+    }
     },[props.value])
 
     useEffect(()=>{

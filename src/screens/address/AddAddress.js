@@ -228,7 +228,6 @@ const AddAddress = ({ navigation }) => {
         token: token,
       };
       getLocationFromPincodeFunc(params);
-      setLocation();
     }
   };
   const addAddress = async () => {
@@ -376,7 +375,7 @@ const AddAddress = ({ navigation }) => {
             jsonData={{
               label: "PostCode",
               maxLength: "100",
-              name: "postCode",
+              name: "postcode",
               options: [],
               required: true,
               type: "text",

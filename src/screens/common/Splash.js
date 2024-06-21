@@ -62,6 +62,9 @@ const Splash = ({ navigation }) => {
   const [dashboardDataLoaded, setDashboardDataLoaded] = useState(false)
   const [error, setError] = useState(false);
   const [checkedForInAppUpdate, setCheckedForInAppUpdate] = useState(false)
+
+  const { responseTime, loading } = useInternetSpeedContext();
+
   // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   // const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
@@ -367,7 +370,6 @@ const Splash = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
-  const { responseTime, loading } = useInternetSpeedContext();
 
   const openSettings = () => {
     if (Platform.OS === 'android') {
@@ -756,11 +758,11 @@ const Splash = ({ navigation }) => {
 
   useEffect(()=>{
     console.log("responseTime" ,responseTime)
-    if(responseTime>2000)
+    if(responseTime>4000)
     {
       setIsSlowInternet(true)
     }
-    if(responseTime<2000)
+    if(responseTime<4000)
     {
       setIsSlowInternet(false)
     }

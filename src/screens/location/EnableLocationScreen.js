@@ -196,13 +196,13 @@ const [locationPermission, setLocationPermissionEnabled] = useState(false)
         {!locationEnabledd && !locationPermissionStatus &&  <PoppinsTextMedium style={{color:'black',fontSize:22,fontWeight:'700'}} content="Checking Location Access"></PoppinsTextMedium>}
         {locationEnabledd && locationPermissionStatus && <PoppinsTextMedium style={{color:ternaryThemeColor,fontSize:22,fontWeight:'700'}} content="Location Access Granted"></PoppinsTextMedium>}
 
-        {!locationEnabledd && !locationPermissionStatus && <TouchableOpacity
+        <TouchableOpacity
           onPress={() => getLocation()}
           style={[styles.button, { backgroundColor: ternaryThemeColor }]}
         >
           <PoppinsTextMedium style={{...styles.buttonText,color:'white'}} content="Enable Device Location"></PoppinsTextMedium>
-        </TouchableOpacity>}
-        {!locationEnabledd && !locationPermissionStatus &&<TouchableOpacity
+        </TouchableOpacity>
+       <TouchableOpacity
           onPress={() => {
             // props.locationStatus(true)
             // handleCameraPermissions()
@@ -214,7 +214,7 @@ const [locationPermission, setLocationPermissionEnabled] = useState(false)
           style={{...styles.button, ...styles.buttonOutline, borderColor: ternaryThemeColor }}
         >
           <PoppinsTextMedium style={{...styles.buttonText, color: ternaryThemeColor }} content="Continue Without Location"></PoppinsTextMedium>
-        </TouchableOpacity>}
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
