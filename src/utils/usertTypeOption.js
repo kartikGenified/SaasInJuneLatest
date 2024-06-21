@@ -1,1 +1,1 @@
-export const user_type_option ="single"  //type single for single user and multiple for multiple users
+export const user_type_option ="multiple"  //type single for single user and multiple for multiple users
