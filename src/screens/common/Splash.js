@@ -44,6 +44,7 @@ import SpInAppUpdates, {
 } from 'sp-react-native-in-app-updates';
 import { useInternetSpeedContext } from '../../Contexts/useInternetSpeedContext';
 import { setSlowNetwork } from '../../../redux/slices/internetSlice';
+import { user_type_option } from '../../utils/usertTypeOption';
 
 
 const Splash = ({ navigation }) => {
@@ -53,6 +54,7 @@ const Splash = ({ navigation }) => {
   const [isSlowInternet, setIsSlowInternet] = useState(false)
   const [locationStatusChecked, setLocationCheckVisited] = useState(false)
   const [locationBoxEnabled, setLocationBoxEnabled] = useState(false)
+  const[userList,setUserList] = useState();
   const [fetchLocation, setfetchLocation] = useState(false)
   const [showLoading, setShowLoading] = useState(true)
   const [message, setMessage] = useState();
@@ -62,9 +64,8 @@ const Splash = ({ navigation }) => {
   const [dashboardDataLoaded, setDashboardDataLoaded] = useState(false)
   const [error, setError] = useState(false);
   const [checkedForInAppUpdate, setCheckedForInAppUpdate] = useState(false)
-
-  const { responseTime, loading } = useInternetSpeedContext();
-
+  const registrationRequired = useSelector(state => state.appusers.registrationRequired)
+  const manualApproval = useSelector(state => state.appusers.manualApproval)
   // const [isAlreadyIntroduced, setIsAlreadyIntroduced] = useState(null);
   // const [gotLoginData, setGotLoginData] = useState()
   const isConnected = useSelector(state => state.internet.isConnected);
@@ -78,7 +79,7 @@ const Splash = ({ navigation }) => {
 
 
   }
-  const gifUri = Image.resolveAssetSource(require('../../../assets/gif/ozoStars.gif')).uri;
+  // const gifUri = Image.resolveAssetSource(require('../../../assets/gif/Tibcon.gif')).uri;
   // generating functions and constants for API use cases---------------------
   const [
     getAppTheme,
@@ -370,6 +371,7 @@ const Splash = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
+  const { responseTime, loading } = useInternetSpeedContext();
 
   const openSettings = () => {
     if (Platform.OS === 'android') {
@@ -396,7 +398,7 @@ const Splash = ({ navigation }) => {
     }
     if (Platform.OS == 'android') {
       LocationServicesDialogBox.checkLocationServicesIsEnabled({
-        message: "<h2 style='color: #0af13e'>Use Location ?</h2>Ozostars wants to change your device settings:<br/><br/>Enable location to use the application.<br/><br/><a href='#'>Learn more</a>",
+        message: "<h2 style='color: #0af13e'>Use Location ?</h2>Tibcon wants to change your device settings:<br/><br/>Enable location to use the application.<br/><br/><a href='#'>Learn more</a>",
         ok: "YES",
         cancel: "NO",
         enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
@@ -543,7 +545,7 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     getUsers();
-    getAppTheme("ozone")
+    getAppTheme("Tibcon")
     const checkToken = async () => {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
@@ -591,7 +593,7 @@ const Splash = ({ navigation }) => {
         if (!getMinVersionSupportData?.body?.data) {
           Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
             
-            {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.netcarrots.ozone")},
+            {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.saasinjune")},
           ]);
         }
       }
@@ -600,7 +602,7 @@ const Splash = ({ navigation }) => {
         {
           Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
             
-            {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.netcarrots.ozone")},
+            {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.saasinjune")},
           ]);
         }
       }
@@ -618,13 +620,14 @@ const Splash = ({ navigation }) => {
       dispatch(setAppVersion(currentVersion))
 
         getMinVersionSupportFunc(currentVersion)
-        getAppTheme("ozone")
+        getAppTheme("Tibcon")
         getData()
   },[isConnected,locationStatusChecked])
   
   useEffect(() => {
     if (getUsersData) {
       // console.log("getUsersData", getUsersData?.body);
+      setUserList(getUsersData?.body)
       const appUsers = getUsersData?.body.map((item, index) => {
         return item.name
       })
@@ -670,11 +673,17 @@ const Splash = ({ navigation }) => {
       setShowLoading(false)
       if (value === "Yes") 
       {   
-         minVersionSupport && locationStatusChecked  && navigation.navigate('SelectUser');
+       __DEV__ && setLocationCheckVisited(true)
+       if(user_type_option == "single"){
+        minVersionSupport   && locationStatusChecked && navigation.navigate('OtpLogin',{ needsApproval: manualApproval.includes(userList?.[0].user_type),userType:userList?.[0]?.user_type,userId:userList?.[0]?.user_type_id, registrationRequired:registrationRequired}) 
+       }
+       else{
+        minVersionSupport   && locationStatusChecked && navigation.navigate('SelectUser')
+       }
       }
       else 
       {
-         minVersionSupport && locationStatusChecked  && navigation.navigate('Introduction') 
+       (!__DEV__) ?  minVersionSupport && locationStatusChecked  && navigation.navigate('Introduction')  :  navigation.navigate('Introduction')
       }
       // console.log("isAlreadyIntroduced",isAlreadyIntroduced,gotLoginData)
 
@@ -758,11 +767,11 @@ const Splash = ({ navigation }) => {
 
   useEffect(()=>{
     console.log("responseTime" ,responseTime)
-    if(responseTime>4000)
+    if(responseTime>2000)
     {
       setIsSlowInternet(true)
     }
-    if(responseTime<4000)
+    if(responseTime<2000)
     {
       setIsSlowInternet(false)
     }
@@ -794,9 +803,9 @@ const Splash = ({ navigation }) => {
   // console.log("internet connection status",connected)
   return (
     
-      <ImageBackground resizeMode='stretch' style={{  height: '100%', width: '100%', alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash2.png')}> 
-      <InternetModal visible={!connected} comp = {NoInternetComp} />
-      {isSlowInternet && <InternetModal visible={isSlowInternet} comp = {SlowInternetComp} /> }
+      <ImageBackground resizeMode='stretch' style={{  height: '100%', width: '100%', alignItems:'center',justifyContent:'center' }} source={require('../../../assets/images/splash3.png')}> 
+      {/* <InternetModal visible={!connected} comp = {NoInternetComp} /> */}
+      {/* {isSlowInternet && <InternetModal visible={isSlowInternet} comp = {SlowInternetComp} /> } */}
 
      
       {error &&  <ErrorModal
@@ -805,7 +814,7 @@ const Splash = ({ navigation }) => {
           message={message}
           openModal={error}></ErrorModal>
       }
-      {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/ozonegif.gif')} /> */}
+      {/* <Image  style={{ width: 200, height: 200,  }}  source={require('../../../assets/gif/Tibcongif.gif')} /> */}
         {
       
        

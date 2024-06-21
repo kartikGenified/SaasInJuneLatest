@@ -8,11 +8,9 @@ import PoppinsText from '../electrons/customFonts/PoppinsText';
 import { ScrollView } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { useGetAppCampaignMutation } from '../../apiServices/campaign/CampaignApi';
-import { BaseUrlImages } from '../../utils/BaseUrlImages';
 import Close from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
-
+import RotateViewAnimation from '../animations/RotateViewAnimation';
 
 
 
@@ -20,9 +18,7 @@ import { useTranslation } from 'react-i18next'; // Import useTranslation
 const CampaignVideoModal = ({ isVisible, onClose }) => {
 
     const [hide, setHide] = useState(true);
-  const { t } = useTranslation(); // Initialize useTranslation
-
-
+    const [showModal, setShowModal] = useState(true)
     const ternaryThemeColor = useSelector(
         state => state.apptheme.ternaryThemeColor,
     )
@@ -54,9 +50,12 @@ const CampaignVideoModal = ({ isVisible, onClose }) => {
     useEffect(() => {
         if (getAppCampaignData) {
             console.log("getAppCampaignData", getAppCampaignData);
+            if (getAppCampaignData?.body?.data.length == 0) {
+                setShowModal(false)
+            }
             setHide(getAppCampaignData?.body?.data?.[0]?.image?.can_user_hide);
         }
-        else if (getAppCampaignError) {
+        else {
             console.log("getAppCampaignIsError", getAppCampaignIsError);
         }
     }, [getAppCampaignData, getAppCampaignIsError])
@@ -75,37 +74,56 @@ const CampaignVideoModal = ({ isVisible, onClose }) => {
     return (
         <Modal
             transparent={true}
-            visible={isVisible}
+            visible={isVisible && showModal}
             onRequestClose={onClose}
             animationType="slide"
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <PoppinsTextMedium style={{ fontWeight: '800', color: 'black', fontSize: 20 }} content={t("campaign app promotion")}></PoppinsTextMedium>
+                    <PoppinsTextMedium style={{ fontWeight: '800', color: 'black', fontSize: 20 }} content="Campaign App Promotion"></PoppinsTextMedium>
                     {getAppCampaignData &&
-                        <Image style={{ width: '100%', height: 150, resizeMode: "center", marginTop: 10 }} source={{ uri: BaseUrlImages + getAppCampaignData?.body?.data?.[0]?.image }}></Image>
+                        <Image style={{ width: '100%', height: 150, resizeMode: "center", marginTop: 10 }} source={{ uri: getAppCampaignData?.body?.data?.[0]?.image }}></Image>
                     }
 
 
                     <TouchableOpacity style={{ width: '80%', borderRadius: 5, height: 40, backgroundColor: '#E10c68', alignItems: 'center', justifyContent: 'center', marginTop: 20, alignSelf: 'center' }} onPress={() => {
                         touchedVideo()
                     }}>
-                        <PoppinsTextMedium content={t('video')} style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}></PoppinsTextMedium>
+                        <PoppinsTextMedium content="VIDEO" style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}></PoppinsTextMedium>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{ width: '80%', borderRadius: 5, height: 40, backgroundColor: '#2C2C2C', alignItems: 'center', justifyContent: 'center', marginTop: 10, alignSelf: 'center' }} onPress={() => {
                         touchedKnowMore()
                     }}>
-                        <PoppinsTextMedium content={t("know more")} style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}></PoppinsTextMedium>
+                        <PoppinsTextMedium content="KNOW MORE" style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}></PoppinsTextMedium>
                     </TouchableOpacity>
 
 
                     {
                         !hide &&
-                        <TouchableOpacity accessibilityLabel='close' style={[{
+                        <TouchableOpacity accessibilityLabel="cancel" style={[{
                             backgroundColor: ternaryThemeColor, padding: 6, borderRadius: 5, position: 'absolute', top: -10, right: -10,
                         }]} onPress={() => { onClose() }}>
-                            <Close name="close" size={17} color="#ffffff" />
+                            <RotateViewAnimation outputRange={["0deg", "360deg", "360deg", "360deg"]} inputRange={[0, 1, 2, 3]} comp={() => {
+                                return (
+                                    <View style={{ alignItems: 'center', marginTop: 5 }}>
+                                        {/* <Close name="close" size={22} color="#ffffff" /> */}
+                                        <RotateViewAnimation outputRange={["0deg", "30deg", "360deg", "0deg"]} inputRange={[0, 1, 2, 3]} comp={() => {
+                                            return (
+                                                <View style={{ alignItems: 'center', }}>
+                                                    <Close name="close" size={25} color="#ffffff" />
+
+                                                </View>
+
+                                            )
+                                        }} style={{ height: 30, width: 30 }}></RotateViewAnimation>
+
+                                    </View>
+
+                                )
+                            }} style={{ height: 30, width: 30 }}></RotateViewAnimation>
+
+
                         </TouchableOpacity>
                     }
 
