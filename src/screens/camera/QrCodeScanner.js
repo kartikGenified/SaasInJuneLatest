@@ -63,6 +63,7 @@ import InternetModal from "../../components/modals/InternetModal";
 import { Camera, useCameraDevice, useCameraDevices, useCameraPermission, useCodeScanner } from "react-native-vision-camera";
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import scanDelay from "../../utils/ScannedDelayUtil";
+import {ScannerType}  from "@env"
 
 
 const QrCodeScanner = ({ navigation,route }) => {
@@ -627,7 +628,9 @@ const QrCodeScanner = ({ navigation,route }) => {
 };
 
 const codeScanner = useCodeScanner({
-  codeTypes: ['qr'],
+ 
+  codeTypes: (ScannerType == "Bar") ?  ['code-128','qr'] : ['qr'],
+
   onCodeScanned: debounce((codes) => {
     
       console.log(`Scanned ${codes.length} codes!`, codes[0]?.value);
@@ -637,6 +640,9 @@ const codeScanner = useCodeScanner({
       })
       
   }, 100) // Debounce time: adjust as needed
+
+
+  
 });
 
 
