@@ -598,9 +598,10 @@ const Splash = ({ navigation }) => {
         }
       }
       else{
-        if(Object.keys(getMinVersionSupportData?.body)?.length==0)
+        if(Object.keys(getMinVersionSupportData?.body)?.length==0 )
         {
-          Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
+          
+      ( !__DEV__ ) &&   Alert.alert('Kindly update the app to the latest version', 'Your version of app is not supported anymore, kindly update', [
             
             {text: 'Update', onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=com.saasinjune")},
           ]);
@@ -675,10 +676,10 @@ const Splash = ({ navigation }) => {
       {   
        __DEV__ && setLocationCheckVisited(true)
        if(user_type_option == "single"){
-        minVersionSupport   && locationStatusChecked && navigation.navigate('OtpLogin',{ needsApproval: manualApproval.includes(userList?.[0].user_type),userType:userList?.[0]?.user_type,userId:userList?.[0]?.user_type_id, registrationRequired:registrationRequired}) 
+        (__DEV__ || minVersionSupport )  && locationStatusChecked && navigation.navigate('OtpLogin',{ needsApproval: manualApproval.includes(userList?.[0].user_type),userType:userList?.[0]?.user_type,userId:userList?.[0]?.user_type_id, registrationRequired:registrationRequired}) 
        }
        else{
-        minVersionSupport   && locationStatusChecked && navigation.navigate('SelectUser')
+      (__DEV__ || minVersionSupport )  && locationStatusChecked && navigation.navigate('SelectUser')
        }
       }
       else 
