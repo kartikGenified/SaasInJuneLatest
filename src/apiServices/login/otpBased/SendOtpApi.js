@@ -4,7 +4,7 @@ import { slug } from "../../../utils/Slug";
 export const SendOtpApi = baseApi.injectEndpoints({
     endpoints:(builder) =>({
         getLoginOtp : builder.mutation({
-            query({mobile,name,user_type_id,user_type}){
+            query({mobile,name,user_type_id,user_type,type}){
                 console.log("From api",mobile,name,user_type_id,user_type)
                 return {
                     url:`/api/app/userOtp/add`,
@@ -18,6 +18,7 @@ export const SendOtpApi = baseApi.injectEndpoints({
                         "name":name,
                         "user_type_id" : user_type_id,
                         "user_type" : user_type,
+                        "type":type
                         
                     }
                     

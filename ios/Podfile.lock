@@ -451,7 +451,7 @@ PODS:
     - React-Core
   - react-native-pdf (6.7.5):
     - React-Core
-  - react-native-safe-area-context (4.10.3):
+  - react-native-safe-area-context (4.10.5):
     - React-Core
   - react-native-version-check (3.4.7):
     - React-Core
@@ -460,8 +460,12 @@ PODS:
     - react-native-video/Video (= 5.2.1)
   - react-native-video/Video (5.2.1):
     - React-Core
-  - react-native-webview (13.10.2):
+  - react-native-webview (13.10.3):
     - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+  - react-native-worklets-core (1.3.3):
+    - React
+    - React-callinvoker
     - React-Core
   - React-NativeModulesApple (0.72.3):
     - React-callinvoker
@@ -595,7 +599,7 @@ PODS:
     - FirebaseCoreExtension (= 10.20.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.16.2):
+  - RNGestureHandler (2.17.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNImageCropPicker (0.40.3):
@@ -641,7 +645,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.31.1):
+  - RNScreens (3.32.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-RCTImage
@@ -656,14 +660,12 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
-
   - TOCropViewController (2.6.1)
-  - VisionCamera (4.0.5):
-    - VisionCamera/Core (= 4.0.5)
-    - VisionCamera/React (= 4.0.5)
-  - VisionCamera/Core (4.0.5)
-  - VisionCamera/React (4.0.5):
+  - VisionCamera (3.9.2):
+    - React
+    - React-callinvoker
     - React-Core
+    - react-native-worklets-core
   - Yoga (1.14.0)
   - ZXingObjC (3.6.9):
     - ZXingObjC/All (= 3.6.9)
@@ -705,6 +707,7 @@ DEPENDENCIES:
   - react-native-version-check (from `../node_modules/react-native-version-check`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
+  - react-native-worklets-core (from `../node_modules/react-native-worklets-core`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -836,6 +839,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-video"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  react-native-worklets-core:
+    :path: "../node_modules/react-native-worklets-core"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-perflogger:
@@ -942,7 +947,7 @@ SPEC CHECKSUMS:
   React-Core: 8293312ad137ea82fd2c29deb163dbc24aa4e00e
   React-CoreModules: 32fab1d62416849a3b6dac6feff9d54e5ddc2d1e
   React-cxxreact: 55d0f7cb6b4cc09ba9190797f1da87182d1a2fb6
-  React-debug: 4837cd581cffb7987153ab49ed6e9acfcc7e8b24
+  React-debug: 5e294983438e5885c695a02b247390b417b65120
   React-jsc: 0db8e8cc2074d979c37ffa7b8d7c914833960497
   React-jsi: 58677ff4848ceb6aeb9118fe03448a843ea5e16a
   React-jsiexecutor: 2c15ba1bace70177492368d5180b564f165870fd
@@ -957,11 +962,12 @@ SPEC CHECKSUMS:
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-notifications: 4601a5a8db4ced6ae7cfc43b44d35fe437ac50c4
   react-native-pdf: 103940c90d62adfd259f63cca99c7c0c306b514c
-  react-native-safe-area-context: b01d8f42d4e62a7be5a3e69fd332e0c7e67584c7
+  react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
-  react-native-webview: 6830a4a7c5c7dbe2a564f6b019c51349672a9b7c
-  React-NativeModulesApple: b6544347b31015a00f9288bad226ff3b79875c43
+  react-native-webview: 2cea2ee27b7194802cbd43628c83c3de93c3e150
+  react-native-worklets-core: f51430dd07bf5343d4918d28a4bb00fe8f98b982
+  React-NativeModulesApple: cf729807b62e00560180649040fe6b73ff0e8305
   React-perflogger: 6bd153e776e6beed54c56b0847e1220a3ff92ba5
   React-RCTActionSheet: c0b62af44e610e69d9a2049a682f5dba4e9dff17
   React-RCTAnimation: fe7005136b58f58871cab2f70732343b6e330d30
@@ -975,9 +981,9 @@ SPEC CHECKSUMS:
   React-RCTVibration: ea3a68a49873a54ced927c90923fc6932baf344a
   React-rncore: 9672a017af4a7da7495d911f0b690cbcae9dd18d
   React-runtimeexecutor: 369ae9bb3f83b65201c0c8f7d50b72280b5a1dbc
-  React-runtimescheduler: 904bd88f30441b183a17a038422ed76ebdd2973b
-  React-utils: 66352d036bd3652d9bf3d10f2554afa63a30ce74
-  ReactCommon: 276a273252bbf63ee667a07461d7e2d463c9a1a2
+  React-runtimescheduler: 9a300f57ee849526317dc09248a60883ce61a14d
+  React-utils: 71d704cb36ba3119f4d24307a9c65a8b7cd1596a
+  ReactCommon: f64ef3e460a8e2f8529e8c3ba1de3ac9af757c5a
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCClipboard: 0a720adef5ec193aa0e3de24c3977222c7e52a37
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
@@ -986,20 +992,20 @@ SPEC CHECKSUMS:
   RNFBApp: 9b25191f7a5e72c185b7e43fffb0d906869c4659
   RNFBCrashlytics: 28f83084ae8a4b9e6ad128e3a644c28bb5e16007
   RNFBMessaging: 99621af036e0aa85506390f77d79c9e6353aacca
-  RNGestureHandler: ee924bd0024545efc4bc88c1e856f24b785d2ca2
+  RNGestureHandler: d1045bfa68a989ce8e5d700237cbf99253ca6aba
   RNImageCropPicker: e7ab6fb43d2fc3e84651e786ef4a080d63b0ed3d
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNPermissions: 7e6b2dd65e393807326937a5b0dfb612268d0ca3
   RNQrGenerator: 1676221c08bfabec978242989c733810dad20959
   RNReanimated: f8379347f71248607d530a21e31e4140c5910c25
-  RNScreens: 396c07678c1c35614bc5feba74a56df387bf1965
+  RNScreens: 835807a1f3c74c8ea0d0b9e089bf14333141f17f
   RNShare: 32e97adc8d8c97d4a26bcdd3c45516882184f8b6
   RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
-  VisionCamera: 59949b04a51c00a52a6d7125425d01664792c9bd
+  VisionCamera: 6c8ca7d04fc62fafccd8f8ad584e96f5303671f5
   Yoga: 8796b55dba14d7004f980b54bcc9833ee45b28ce
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
