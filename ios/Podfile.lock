@@ -661,11 +661,18 @@ PODS:
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
   - TOCropViewController (2.7.4)
-  - VisionCamera (3.9.2):
+  - VisionCamera (4.3.2):
+    - VisionCamera/Core (= 4.3.2)
+    - VisionCamera/FrameProcessors (= 4.3.2)
+    - VisionCamera/React (= 4.3.2)
+  - VisionCamera/Core (4.3.2)
+  - VisionCamera/FrameProcessors (4.3.2):
     - React
     - React-callinvoker
-    - React-Core
     - react-native-worklets-core
+  - VisionCamera/React (4.3.2):
+    - React-Core
+    - VisionCamera/FrameProcessors
   - Yoga (1.14.0)
   - ZXingObjC (3.6.9):
     - ZXingObjC/All (= 3.6.9)
@@ -1005,7 +1012,7 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
-  VisionCamera: 6c8ca7d04fc62fafccd8f8ad584e96f5303671f5
+  VisionCamera: 9f7b70431c8662ff933e1ed66d074bdba3a63f7d
   Yoga: 8796b55dba14d7004f980b54bcc9833ee45b28ce
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
